@@ -1,10 +1,14 @@
 {
-  "appName": {
-    "message": "whiteLabelNewTab",
-    "description": "The name of the application"
-  },
-  "appDescription": {
-    "message": "White Labeling the internets.",
-    "description": "The description of the application"
-  }
+   "extDescription": {
+      "description": "",
+      "message": "The old new tab page is back!"
+   },
+   "extName": {
+      "description": "",
+      "message": "The Classic New Tab"
+   },
+   "extVersion": {
+      "dscription": "",
+      "message": "1"
+   }
 }

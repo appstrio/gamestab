@@ -1,0 +1,12 @@
+<div class="details-wrapper">
+    <div style="direction : {{=it.item.direction}}" class="title">{{=it.item.title}}</div>
+    <div style="direction : {{=it.item.direction}}" class="meta">
+        <span style="color : {{=it.color}}" class="source">{{=it.item.from[0].name}} &nbsp;</span>
+        <span class="time">&nbsp;{{item.niceDate}}</span>
+    </div>
+    <div class="thumbnail-wrapper"><img src="{{=it.item.image}}"/></div>
+    <div style="direction : {{=it.item.direction}}" class="content">{{=it.item.content}}</div>
+    <div class="read-more">
+        <a href="{{=it.item.link}}" target="_blank">READ MORE...</a>
+    </div>
+</div>

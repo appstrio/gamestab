@@ -1,0 +1,9 @@
+<div class="app launchable" data-id="{{=it.id}}">
+    <div class="inner">
+        <div style="background-image : url({{=it.icon}})"  class="thumbnail"></div>
+        <div class="title">
+            <span class="app-remove-button remove-button">x</span>
+            {{=it.name}}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/html" ng-csp="ng-csp"></html>
+<head>
+    <link href="img/favicons/favicongray16.png" rel="shortcut icon"/>
+    <link href="css/style.css" rel="stylesheet"/>
+    <link href="css/bootstrap.css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="google" content="notranslate"/>
+    <script src="./js/env.js"></script>
+    <!--load common modules-->
+    <script src="js/libs/common.js"></script>
+    <script src="./js/modules/Storage.js"></script>
+    <script src="./js/first.js"></script>
+    <script src="./js/libs/jquery.2.0.1.min.js"></script>
+    <script src="./js/libs/angular.js"></script>
+    <script src="./js/second.js"></script>
+    <title>New Tab</title>
+</head>
+<body ng-controller="MainCtrl" class="searchy">
+<div ng-controller="SearchCtrl" style="" class="searchy-wrapper search-wrapper">
+    <div style="" class="inner">
+        <input placeholder="Search the web or launch an app..." ng-model="query" typeahead="suggestion as suggestion.title for suggestion in getSuggestions($viewValue) | filter:{title: $viewValue} | limitTo:8" search-input="search-input"/><img src="/img/search-icon.png"/>
+    </div>
+</div>
+<!--load jquery, angular and libs-->
+<script src="./js/libs/ng-infinite-scroll.js"></script>
+<script src="./js/libs/underscore.min.js"></script>
+<script src="./js/libs/restangular.js"></script>
+<script src="./js/libs/uri.js"></script>
+<script src="./js/libs/jFeed.js"></script>
+<!--///////////////////////////////-->
+<script src="./js/build/newtab.js"></script>
+<!--///////////////////////////////-->
+<!-- typeahead-->
+<script src="vendor/ui-bootstrap/bindHtml.js"></script>
+<script src="vendor/ui-bootstrap/position.js"></script>
+<script src="vendor/ui-bootstrap/typeahead.js"></script>
+</body>

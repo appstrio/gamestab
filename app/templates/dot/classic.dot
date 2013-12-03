@@ -1,0 +1,15 @@
+<div class="classic-container">
+    <div class="search-wrapper"></div>
+    <div class="top-wrapper">
+        <div class="viewport">
+           <div class="dials-wrapper"></div>
+            <div class="apps-wrapper"></div>
+        </div>
+    </div>
+    <div class="bottom-wrapper">
+        <div class="buttons">
+            <a href="#" class="dials-switch selected"> Home </a>
+            <a href="#" class="apps-switch"> Apps </a>
+        </div>
+    </div>
+</div>
