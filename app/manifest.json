@@ -8,10 +8,7 @@
         "128": "images/icon-128.png"
     },
     "default_locale": "en",
-    "background": {
-        "scripts": [
-            "scripts/background.js"
-        ]
-    },
-  "options_page": "options.html"
+    "chrome_url_overrides": { "newtab": "newtab.html"}
+//    "background": { "scripts": [ "scripts/background.js" ] },
+//    "options_page": "options.html"
 }

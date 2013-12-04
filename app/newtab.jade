@@ -1,0 +1,44 @@
+doctype 5
+html(lang="en", ng-app)
+    head
+        title= NewTab
+        link(href='img/favicons/favicongray16.png', rel='shortcut icon')
+        link(href='css/style.css', rel='stylesheet')
+        link(href='css/bootstrap.css', rel='stylesheet')
+
+        meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+        meta(name='google', content='notranslate')
+
+        script(src='./js/env.js')
+        script(src='./js/libs/jquery.2.0.1.min.js')
+    body
+        #wrapper
+            .classic-container
+                .search-wrapper 
+                    .inner
+                        .input-container
+                            .search-icon
+                            input.search-input(type='text', placeholder='Search the web...', autocomplete='off')
+                        button.submit-button.btn.btn-large Search
+                .top-wrapper
+                    .viewport
+                        .dials-wrapper
+                            .dial(data-url='http://github.com/')
+                                a.inner(href='http://github.com/')
+                                    .thumbnail-wrapper(style='background-image: url(filesystem:chrome-extension://jhgjbbippjagcjampfdcecphjhppdabi/persistent/screenshot-1576437593.png);')
+                                        .favicon
+                                            img(src='chrome://favicon/http://github.com/')
+                                        //-TODO: X is default
+                                        .dial-remove-button X
+                                    .title GitHub
+                        .apps-wrapper
+                            .app(data-id='aiahmijlpehemcpleichkcokhegllfjl')
+                                a.inner(href='#')
+                                    .thumbnail-wrapper(style='background-image:url(chrome://extension-icon/aiahmijlpehemcpleichkcokhegllfjl/128/0)')
+                                        //-TODO: X is default
+                                        .app-remove-button x
+                                    .name Duolingo
+                .bottom-wrapper
+                    .buttons
+                        a.dials-switch.selected(href='#')  Home
+                        a.apps-switch(href='#')  Apps
