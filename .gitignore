@@ -6,6 +6,9 @@ dist
 app/bower_components
 test/bower_components
 package
-*.idea*
-*.sublime*
+.idea
 .DS_Store
+
+*.sublime*
+
+app/*.html

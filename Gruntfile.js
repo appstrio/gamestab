@@ -24,7 +24,9 @@ module.exports = function (grunt) {
                     pretty:true
                 },
                 files: [{
-                    "app/newtab.html":"app/newtab.jade"
+                    "app/newtab.html":"app/newtab.jade",
+                    "app/options.html":"app/options.jade",
+                    "app/background.html":"app/background.jade"
                 },{}]
             },
             prod:{
