@@ -1,16 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-csp="ng-csp">
   <head>
-    <title></title>
+    <link href="img/favicons/favicongray16.png" rel="shortcut icon">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="google" content="notranslate">
+    <script src="./js/env.js"></script>
+    <script src="./js/libs/jquery.2.0.1.min.js"></script>
+    <!-- load common modules-->
+    <script src="js/libs/common.js"></script>
+    <script src="./js/modules/Storage.js"></script>
+    <script src="./js/modules/Config.js"></script>
+    <script src="./js/first.js"></script>
+    <title>New Tab</title>
   </head>
-  <body>
-    <h1>Jade - node template engine</h1>
-    <div id="container" class="col">
-      <p>Get on it!</p>
-      <p>
-        Jade is a terse and simple templating language with a
-        strong focus on performance and powerful features.
-      </p>
-    </div>
+  <body ng-controller="MainCtrl">
+    <!-- .main-loading-wrapper<img src="/img/loader.light.bg.gif"/>-->
+    <div id="wrapper"></div>
+    <!-- load jquery, angular and libs-->
+    <script src="./js/libs/underscore.min.js"></script>
+    <script src="./js/libs/uri.js"></script>
+    <script src="./js/libs/moment.min.js"></script>
+    <script src="./js/libs/jFeed.js"></script>
+    <script src="./vendor/bootstrap/js/bootstrap.js"></script>
+    <!-- ///////////////////////////////-->
+    <script src="./js/build/newtab.js"></script>
   </body>
 </html>
