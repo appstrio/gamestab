@@ -1,11 +1,11 @@
 {
-   "extDescription": {
+   "appDescription": {
       "description": "",
-      "message": "The old new tab page is back!"
+      "message": "This description should be replaced"
    },
-   "extName": {
+   "appName": {
       "description": "",
-      "message": "The Classic New Tab"
+      "message": "WhiteLabeled NewTab"
    },
    "extVersion": {
       "dscription": "",

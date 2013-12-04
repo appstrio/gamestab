@@ -10,7 +10,7 @@
         "16": "img/favicons/16x16.png",
         "48": "img/favicons/48x48.png"
     },
-    "optional_permissions": [ "bookmarks" ],
+    "optional_permisssions": [ "bookmarks" ],
     "permissions": [ "tabs", "history", "management", "idle", "\u003Call_urls\u003E", "chrome://favicon/", "topSites", "alarms", "storage", "notifications", "unlimitedStorage", "background", "webNavigation", "contextMenus", "geolocation" ],
     "web_accessible_resources": [ "newtab.html", "launcher.html" ],
     "version": "1.0.0.0",
