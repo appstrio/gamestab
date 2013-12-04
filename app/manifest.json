@@ -1,24 +1,14 @@
 {
-   "background": {
-      "page": "background.html",
-      "persistent": false
-   },
-   "chrome_url_overrides": {
-      "newtab": "./newtab.html"
-   },
-   "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self'",
-   "default_locale": "en",
-   "description": "__MSG_extDescription__",
-   "icons": {
-      "128": "img/favicons/128x128.png",
-      "16": "img/favicons/16x16.png",
-      "48": "img/favicons/48x48.png"
-   },
-   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/ukRtztyiLH2TuZFmfhIHxagW9KG3vPl42KlRqclPiI0P0/wxTXkK0jG3hj/ptW0nTPf3ONOmnmpSWdf4Koj8fLKThB1HJnj2V1fPy3iB4bLrHoryJTdRD++UPKZmhd9bkYsoCVJWGFPQHLMKwndtA+jZmXnuMr5bqqnhIj8MSwIDAQAB",
-   "manifest_version": 2,
-   "name": "__MSG_extName__",
-   "optional_permissions": [ "bookmarks" ],
-   "permissions": [ "tabs", "history", "management", "idle", "\u003Call_urls\u003E", "chrome://favicon/", "topSites", "alarms", "storage", "notifications", "unlimitedStorage", "background", "webNavigation", "contextMenus", "geolocation" ],
-   "version": "2.0.0.0",
-   "web_accessible_resources": [ "newtab.html" ]
+    "name": "__MSG_appName__",
+    "version": "0.0.1",
+    "manifest_version": 2,
+    "description": "__MSG_appDescription__",
+    "icons": {
+        "16": "images/icon-16.png",
+        "128": "images/icon-128.png"
+    },
+    "default_locale": "en",
+    "chrome_url_overrides": { "newtab": "newtab.html"}
+//    "background": { "scripts": [ "scripts/background.js" ] },
+//    "options_page": "options.html"
 }
