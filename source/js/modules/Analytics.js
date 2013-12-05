@@ -155,7 +155,6 @@ Analytics.prototype.init = function () {
         self.sendEvent({category: 'Pageload', action: 'with booster', label: 'with booster'});
     }
 
-
     (function () {
         var ga = document.createElement('script');
         ga.type = 'text/javascript';

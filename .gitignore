@@ -1,14 +1,15 @@
 # Modules
 node_modules
-app/bower_components
-test/bower_components
+bower_components
 
 # GruntBuild tmp folders
 parts.min
 
 # Builds
-package
-app/*.html
+builds
+tmp-build
+
+COMMIT_MSG
 
 # Bullshit
 temp

@@ -1,7 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e207fb8f-7871-4623-bbaa-fd4956a66fed" name="Default" comment="" />
+    <list default="true" id="e207fb8f-7871-4623-bbaa-fd4956a66fed" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/whiteLabelNewTab.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bower.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p.sublime-project" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\.bowerrc" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\.jshintrc" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\Gruntfile-backup.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\_locales\en\messages.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\background.html" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\background.jade" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\css\bootstrap.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\css\classic.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\css\common.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\css\fonts\HelveticaNeue-UltraLight.otf" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\css\fonts\meteocons-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\css\fonts\meteocons-webfont.ttf" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\css\launch.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\css\main.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\css\style.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\anonymous-50x50.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\cursors\cursor_arrow_left.cur" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\cursors\cursor_arrow_left.gif" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\cursors\cursor_arrow_left.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\cursors\cursor_arrow_right.cur" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\cursors\cursor_arrow_right.gif" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\cursors\cursor_arrow_right.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\favicons\128x128.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\favicons\16x16.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\favicons\32x32.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\favicons\48x48.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\favicons\75x75.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\favicons\96x96.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\favicons\favicongray16.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\globe-icon.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\icons\bank-18.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\icons\basketball-18.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\icons\fast-food-18.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\icons\fire-station-18.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\icons\rocket-18.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\icons\toilets-18.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\icons\warehouse-18.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\loader.dark.bg.gif" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\loader.gif" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\loader.light.bg.gif" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\loader.small.light.bg.gif" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\loading_thumbnail.gif" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\providers-icons\drive-16x16.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\providers-icons\dropbox-16x16.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\providers-icons\facebook-16x16.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\providers-icons\facebook-40x40.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\providers-icons\gmail-40x40.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\providers-icons\gmail-red-16x16.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\providers-icons\google-red-16x16.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\providers-icons\instagram-16x16.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\providers-icons\search\search-providers-sprite.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\providers-icons\twitter-16x16.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\providers-icons\twitter-40x40.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\search-icon.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\sprite\newsbar-buttons.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\sprite\settings-sprite.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\sprite\sprite.onefeed.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\img\sprite\walkthrough-items.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\background.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\build\background.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\build\background.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\build\newtab.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\build\newtab.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\content_scripts\auth.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\content_scripts\capture.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\env.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\first.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\Analytics.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\ChromeApps.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\ClassicLauncher.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\Config.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\FileSystem.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\Geo.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\Launcher.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\News.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\Renderer.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\Screenshot.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\Search.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\Setup.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\Storage.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\Topsites.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\modules\Weather.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\newtab.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\js\templates.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\manifest.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\newtab.html" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\newtab.jade" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\options.html" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\options.jade" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\classic-app.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\classic-dial.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\classic.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\item-details.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\launcher-app.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\launcher-dial.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\launcher-wrapper.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\news-wrapper.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\search-wrapper.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\title-wrapper.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\weather-wrapper.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\templates\dot\wrapper.dot" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\vendor\bootstrap\img\glyphicons-halflings-white.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\vendor\bootstrap\img\glyphicons-halflings.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\vendor\bootstrap\js\bootstrap.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\app\vendor\bootstrap\js\bootstrap.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\assets\libs\jFeed.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\assets\libs\underscore.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\assets\libs\uri.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\wildeyes\Documents\wint\p.sublime-workspace" afterPath="" />
+    </list>
+    <list id="5f9c9cad-38d3-4189-aec6-2479e35fe2f7" name="Don't commit those" comment="" />
     <ignored path="whiteLabelNewTab.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,37 +144,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="manifest.json" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/manifest.json">
+      <file leaf-file-name="package.json" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="37" selection-start="283" selection-end="289" vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="300">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="newtab.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/newtab.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="10" selection-start="335" selection-end="335" vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="315">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="newtab.jade" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/newtab.jade">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="32" selection-start="570" selection-end="570" vertical-scroll-proportion="0.16809605" vertical-offset="142" max-vertical-offset="750">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Gruntfile.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Gruntfile.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="31" selection-start="497" selection-end="497" vertical-scroll-proportion="0.0" vertical-offset="345" max-vertical-offset="795">
+            <state line="4" column="21" selection-start="161" selection-end="161" vertical-scroll-proportion="0.11124122" vertical-offset="0" max-vertical-offset="854">
               <folding />
             </state>
           </provider>
@@ -66,23 +160,65 @@
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitLogSettings">
+    <option name="myStructureFilterPaths" />
+    <option name="myDateState">
+      <MyDateState />
+    </option>
+  </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/app/newtab.html" />
         <option value="$PROJECT_DIR$/app/manifest.json" />
-        <option value="$PROJECT_DIR$/Gruntfile.js" />
-        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/app/newtab.html" />
+        <option value="$PROJECT_DIR$/app/background.html" />
+        <option value="$PROJECT_DIR$/app/background.jade" />
         <option value="$PROJECT_DIR$/app/newtab.jade" />
+        <option value="$PROJECT_DIR$/app/js/modules/ChromeApps.js" />
+        <option value="$PROJECT_DIR$/app/js/modules/Geo.js" />
+        <option value="$PROJECT_DIR$/app/js/modules/FileSystem.js" />
+        <option value="$PROJECT_DIR$/app/js/modules/News.js" />
+        <option value="$PROJECT_DIR$/app/js/modules/Weather.js" />
+        <option value="$PROJECT_DIR$/app/js/env.js" />
+        <option value="$PROJECT_DIR$/app/js/modules/Config.js" />
+        <option value="$PROJECT_DIR$/app/js/first.js" />
+        <option value="$PROJECT_DIR$/Gruntfile.coffee" />
+        <option value="$PROJECT_DIR$/app/js/modules/Analytics.js" />
+        <option value="$PROJECT_DIR$/app/js/content_scripts/capture.js" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="22" />
-    <option name="width" value="1280" />
-    <option name="height" value="744" />
+    <option name="x" value="-1920" />
+    <option name="width" value="960" />
+    <option name="height" value="1040" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>General</id>
+          </State>
+          <State>
+            <id>XPath</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>CoffeeScript</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -117,20 +253,97 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="whiteLabelNewTab" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wint" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="whiteLabelNewTab" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wint" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tmp-build" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="whiteLabelNewTab" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wint" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="whiteLabelNewTab" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wint" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="286" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="304" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="reference.idesettings.quicklists" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="308" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="310" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="990" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="982" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="303" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="297" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
     <property name="FullScreen" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
+    <property name="options.lastSelected" value="Errors" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
     <property name="options.searchVisible" value="true" />
-    <property name="options.splitter.details.proportions" value="0.2" />
+  </component>
+  <component name="PublishConfig" stopOnFirstError="true" />
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\wildeyes\Documents\wint\source" />
+      <recent name="C:\Users\wildeyes\Documents\wint\tmp-build" />
+      <recent name="C:\Users\wildeyes\Documents\wint\assets" />
+      <recent name="C:\Users\wildeyes\Documents\wint" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
@@ -192,29 +405,50 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="e207fb8f-7871-4623-bbaa-fd4956a66fed" name="Default" comment="" />
+      <changelist id="5f9c9cad-38d3-4189-aec6-2479e35fe2f7" name="Don't commit those" comment="" />
       <created>1386064317250</created>
       <updated>1386064317250</updated>
     </task>
     <servers />
   </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1280" height="744" extended-state="0" />
-    <editor active="false" />
+    <frame x="-1920" y="0" width="960" height="1040" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296582" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296582" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24963397" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1125" sideWeight="0.6710311" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22563559" sideWeight="0.6706392" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296582" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3289689" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32936078" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32936078" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -230,108 +464,46 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="2" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Gruntfile.js">
+    <entry file="file://$PROJECT_DIR$/builds.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="31" selection-start="497" selection-end="497" vertical-scroll-proportion="0.0" vertical-offset="345" max-vertical-offset="795">
-          <folding />
-        </state>
+        <state line="4" column="21" selection-start="110" selection-end="110" vertical-scroll-proportion="-2.8148148" vertical-offset="0" max-vertical-offset="589" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/manifest.json">
+    <entry file="file://$PROJECT_DIR$/Gruntfile.coffee">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="37" selection-start="283" selection-end="289" vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="300">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/newtab.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="10" selection-start="335" selection-end="335" vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="315">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/newtab.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="32" selection-start="570" selection-end="570" vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="750">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Gruntfile.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="31" selection-start="497" selection-end="497" vertical-scroll-proportion="0.0" vertical-offset="345" max-vertical-offset="795">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.bowerrc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="835" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.editorconfig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="20" selection-start="346" selection-end="366" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="459" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitattributes">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="835" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/_locales/en/messages.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="1" selection-start="237" selection-end="237" vertical-scroll-proportion="0.2843866" vertical-offset="0" max-vertical-offset="538" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="7" selection-start="91" selection-end="98" vertical-scroll-proportion="0.23247863" vertical-offset="0" max-vertical-offset="585" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.jshintrc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="1" selection-start="438" selection-end="438" vertical-scroll-proportion="0.6994633" vertical-offset="0" max-vertical-offset="559" />
+        <state line="37" column="29" selection-start="1030" selection-end="1030" vertical-scroll-proportion="0.86509275" vertical-offset="190" max-vertical-offset="2451" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="224" selection-end="224" vertical-scroll-proportion="0.15205725" vertical-offset="0" max-vertical-offset="697" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Gruntfile.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="31" selection-start="497" selection-end="497" vertical-scroll-proportion="0.0" vertical-offset="316" max-vertical-offset="901">
+        <state line="4" column="21" selection-start="161" selection-end="161" vertical-scroll-proportion="0.11124122" vertical-offset="0" max-vertical-offset="854">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/manifest.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="37" selection-start="283" selection-end="289" vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="300">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/newtab.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="10" selection-start="335" selection-end="335" vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="315">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/newtab.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="32" selection-start="570" selection-end="570" vertical-scroll-proportion="0.16809605" vertical-offset="142" max-vertical-offset="750">
-          <folding />
-        </state>
-      </provider>
-    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <last-edited>OnlySource</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+          <order>
+            <scope name="OnlySource" />
+          </order>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
 
