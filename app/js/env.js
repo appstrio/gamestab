@@ -1,2 +1,3 @@
 'use strict';
-var ENV = 'PRODUCTION';
+var app = {}
+app.env = 'PRODUCTION';
