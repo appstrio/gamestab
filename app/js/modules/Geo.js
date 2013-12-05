@@ -41,17 +41,17 @@ Geo.prototype.get = function(done){
                         address : locationTemp.formatted_address
                     };
 
-                    (done||common.noop)(null, location);
+                    done && done(null, location);
 
                 }else{
-                    (done||common.noop)(true);
+                    done && done(true);
                 }
             },function(err){
                 console.error('err',err);
-                (done||common.noop)(true);
+                done && done(true);
             })
         }else{
-            (done||common.noop)(true);
+            done && done(true);
         }
     });
 

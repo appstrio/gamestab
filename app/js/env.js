@@ -1,2 +1,2 @@
 'use strict';
-ENV = 'PRODUCTION';
+var ENV = 'PRODUCTION';

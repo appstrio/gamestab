@@ -34,9 +34,8 @@ module.exports = (grunt) ->
       "#{path.modules}/Weather.js"
     ]
     libs: [
-      "#{path.libs}/common.js"
-      "#{path.libs}/jFeed.js"
       "#{path.libs}/jquery.2.0.1.min.js"
+      "#{path.libs}/jFeed.js"
       "#{path.libs}/moment.min.js"
       "#{path.libs}/underscore.min.js"
       "#{path.libs}/uri.min.js"
@@ -45,14 +44,14 @@ module.exports = (grunt) ->
 
   files =
     jade:[
-        dest: "#{path.build}/newtab.html"
-        src : "#{path.app}/newtab.jade"
-      ,
-        dest: "#{path.build}/options.html"
-        src : "#{path.app}/options.jade"
-      ,
-        dest: "#{path.build}/background.html"
-        src : "#{path.app}/background.jade"
+      dest: "#{path.build}/newtab.html"
+      src : "#{path.app}/newtab.jade"
+    ,
+      dest: "#{path.build}/options.html"
+      src : "#{path.app}/options.jade"
+    ,
+      dest: "#{path.build}/background.html"
+      src : "#{path.app}/background.jade"
     ]
     uglify:
       includes:
@@ -61,31 +60,36 @@ module.exports = (grunt) ->
       dev: [
         dest: "#{path.app}/js/build/background.min.js"
         src : [
+          "#{path.js}/env.js"
           "#{path.js}/parts.min/libs.min.js"
           "#{path.js}/modules/modules.min.js"
-          "#{path.js}/env.js"
           "#{path.js}/background.js"
         ]
       ,
         dest: "#{path.app}/js/build/newtab.min.js"
         src : [
-          "#{path.js}/parts.min/modules.min.js"
           "#{path.js}/env.js"
+          "#{path.js}/parts.min/modules.min.js"
           "#{path.js}/first.js"
           "#{path.js}/newtab.js"
         ]
       ]
-#  console.log('\n** Gruntfile.coffee [exports] in line #: 68 ** ' + JSON.stringify(files.uglify));﻿
+
+  watcherOptsDefaults =
+    options:
+      interrupt: true # If file changes while running relevant grunt task, stop aformentioned grunt task and restart it.
+  watchers =
+    uglify:
+      options:watcherOptsDefaults
+      files: files.uglify
+    # default:
+    #   options: watcherOptsDefaults
+    #   files: 'Gruntfile.coffee'
+    #   tasks: ['<%= gruntTestCmd %>']
 
   grunt.initConfig
     gruntTestCmd: 'uglify:dev'
-    watch:
-      grunt:
-        options:
-          nospawn: true
-          interrupt: true
-        files: 'Gruntfile.coffee'
-        tasks: ['<%= gruntTestCmd %>']
+    watch:watchers
     jshint:
       options: {}
       files: []
@@ -114,3 +118,5 @@ module.exports = (grunt) ->
 
 # 'test'
 # 'build'
+
+mergeDefaults = (defaultObject, object) -> (object[key] = val if not object[key]? for own key, val of defaultObject)

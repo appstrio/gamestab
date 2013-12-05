@@ -8,7 +8,7 @@ function ChromeApps(done){
         });
 
 
-        (done || common.noop)();
+        done && done();
     });
 
 };

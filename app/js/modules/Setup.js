@@ -13,10 +13,10 @@ function Setup(done){
                 self.getLocation(function(location){
                     self.setup.location = location;
                     self.store();
-                    (done||common.noop)(null, self.setup);
+                    done && done(null, self.setup);
                 });
             }else{
-                (done||common.noop)(null, self.setup);
+                done && done(null, self.setup);
             }
         }else{
             self.run(done);
@@ -63,12 +63,12 @@ Setup.prototype.run = function(done){
         self.storeConfig();
         self.store();
 
-        (done || common.noop)(null, self.setup);
+        done && done(null, self.setup);
     });
 };
 
 Setup.prototype.store = function(done){
-    if(!this.setup) return (done||common.noop)();
+    if(!this.setup) return done && done();
     this.setup.timestamp = Date.now();
     var objToStore = {};
     objToStore[this.key] = this.setup;

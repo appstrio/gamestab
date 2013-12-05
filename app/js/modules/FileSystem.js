@@ -19,9 +19,9 @@ function FileSystem (done){
                 //file system open listener
                 self.fs = fileSystem;
                 self.fsReady = true;
-                (done||common.noop)(null);
+                done && done(null);
             }, function(err){
-                (done||common.noop)(err);
+                done && done(err);
                 self.errorHandler.apply(arguments);
             });
         }, function fileStorageService_init_requestQuota_error (e) {
@@ -70,11 +70,11 @@ FileSystem.prototype.write = function filesStorageService_write(fileName, type, 
             fileEntry.createWriter(function filesStorageService_write_getFile_createWriter(fileWriter) {
 
                 fileWriter.onwriteend = function filesStorageService_write_getFile_createWriter_onwriteend(e) {
-                    (done || common.noop)(null, fileEntry.toURL());
+                    done && done(null, fileEntry.toURL());
                 };
 
                 fileWriter.onerror = function filesStorageService_write_getFile_createWriter_onerror(e) {
-                    (done || common.noop)('err');
+                    done && done('err');
                 };
 
 
@@ -112,7 +112,7 @@ FileSystem.prototype.read = function filesStorageService_read(fileName, done) {
                 var reader = new FileReader();
 
                 reader.onloadend = function filesStorageService_read_getFile_file_onloadend(e) {
-                    (done || common.noop)(this.result);
+                    done && done(this.result);
                 };
 
                 reader.readAsText(file);
@@ -137,7 +137,7 @@ FileSystem.prototype.append = function filesStorageService_append(fileName, type
                 var blob = new Blob([content], {type: type});
 
                 fileWriter.write(blob);
-                (done || common.noop)(fileEntry.toURL());
+                done && done(fileEntry.toURL());
 
             }, errorHandler);
 
@@ -152,7 +152,7 @@ FileSystem.prototype.remove = function filesStorageService_remove(fileName, done
         fs.root.getFile(fileName, {create: false}, function filesStorageService_remove_getFile(fileEntry) {
 
             fileEntry.remove(function filesStorageService_remove_getFile_remove() {
-                (done || common.noop)();
+                done && done();
             }, self.errorHandler);
 
         }, self.errorHandler);
@@ -166,9 +166,9 @@ FileSystem.prototype.removeByPath = function filesStorageService_removeByPath(pa
         if (split.length > 0) {
             remove(split[split.length - 1], done);
         } else {
-            (done || common.noop)(null, 'not a valid path');
+            done && done(null, 'not a valid path');
         }
     } else {
-        (done || common.noop)(null, 'not a valid path');
+        done && done(null, 'not a valid path');
     }
 };

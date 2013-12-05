@@ -21,29 +21,29 @@ function News(renderer, weather, setup){
 
 
 News.prototype.getOrUpdate = function(done){
-    if(!MY_CONFIG.config.with_news) return (done||common.noop)(true);
+    if(!MY_CONFIG.config.with_news) return done && done(true);
 
     var self = this;
     self.get(function(err, _news){
         if(err || !_news){
             self.updateNews(done);
         }else{
-            (done||common.noop)(null, _news);
+            done && done(null, _news);
         }
     })
 };
 
 
 News.prototype.get = function(done){
-    if(!MY_CONFIG.config.with_news) return (done||common.noop)(true);
+    if(!MY_CONFIG.config.with_news) return done && done(true);
 
     var self = this;
     self.storage.get(self.key, function(result){
        if(!result){
-           return (done || common.noop)(true);
+           return done && done(true);
        }else{
             self.news = result[self.key];
-            return (done||common.noop)(null, self.news);
+            return done && done(null, self.news);
        }
     });
 };
@@ -73,7 +73,7 @@ News.prototype.updateNews = function(done){
 
                 self.news = items;
                 self.store(self.news);
-                (done||common.noop)(null, self.news);
+                done && done(null, self.news);
 
             },
             error:function(err){

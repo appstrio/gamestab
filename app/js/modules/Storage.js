@@ -18,9 +18,9 @@ MyStorage.prototype = {
                     obj[i] = null;
                 }
                 obj = null;
-                (done || common.noop)(null, true);
+                done && done(null, true);
             } catch (e) {
-                (done || common.noop)(e);
+                done && done(e);
             }
         };
 

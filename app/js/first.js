@@ -1,5 +1,4 @@
-MY_CONFIG = new Config();
-USE_BOOSTER = false;
+var MY_CONFIG = new Config(), USE_BOOSTER = false;
 
 var useBooster = function(){
     return (MY_CONFIG.config.booster_enabled && MY_CONFIG.config.with_booster && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1);

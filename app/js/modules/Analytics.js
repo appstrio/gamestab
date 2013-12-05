@@ -94,7 +94,7 @@ Analytics.prototype.push = function(arr, done){
     // if we want a 'done' callback to be sent back to the caller
     if (done) {
         _gaq.push(function () {
-                (done || common.noop)();
+                done && done();
         });
     }
 
