@@ -1,3 +1,4 @@
+// RUN THIS BEFORE ANYTHING ELSE
 MY_CONFIG = new Config();
 USE_BOOSTER = false;
 

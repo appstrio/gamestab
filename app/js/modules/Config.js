@@ -5,20 +5,23 @@ function Config(){
 
 Config.prototype.init = function(done){
     var self = this;
+
+    // get the config object from the localstorage or from the file
     this.loadFromStorage(function(err, _localConfig){
-        if(_localConfig){
+        if(!err && _localConfig){
             self.config = _localConfig;
             self.setDefaults(_localConfig);
             self.setClientVersion();
-            (done||common.noop)(_localConfig);
+            done && done(null, _localConfig);
         }else{
             self.loadFromFile(function(err, _fileConfig){
                 if(_fileConfig){
                     self.config = _fileConfig;
+                    self.setDefaults(_localConfig);
                     self.setClientVersion();
-                    (done||common.noop)(_fileConfig);
+                    done && done(null, _fileConfig);
                 }else{
-                    // ERROR LOADING CONFIG
+                    done && done(true);
                 }
             });
 
@@ -26,55 +29,40 @@ Config.prototype.init = function(done){
     });
 };
 
-
+// load the config object from localstorage
 Config.prototype.loadFromStorage = function(done){
     var self = this;
     this.storage.get(this.key, function(result){
-        (done||self.noop)(null, result[self.key]);
+        done && done(null, result[self.key]);
     });
 };
 
 
+// load the config object from file
 Config.prototype.loadFromFile = function(done){
     var env = ENV.toLowerCase(),
         self = this;
 
     $.getJSON('/' + env + '.json', function(result){
-        console.log('result',result);
         if(result.config){
             result.config.timestamp = Date.now();
 
-            // cache build options
-            var buildOptions = result.config.build_options;
-
-            // override buildOptions by config options
-            var tempConfig = _.extend(buildOptions, result.config);
-            // delete temp build_options
-            delete tempConfig.build_options;
-
-            // copy temp config
-            var real_config = _.extend({}, tempConfig);
-            // re-add build options
-            real_config.build_options = buildOptions;
-
-            console.log('real_config',real_config);
-
-            self.setDefaults(real_config, function(){
-                (done||this.noop)(null, real_config);
+            self.setDefaults(result.config, function(){
+                done && done(null, result.config);
             });
 
         }else{
-            (done||this.noop)('Config file is empty');
+            done && done('Config file is empty');
         }
 
-
-
     }, function(err){
-        (done||this.noop)(err);
+        done && done(err);
     });
 };
 
 
+
+// set the config object defaults
 Config.prototype.setDefaults = function(obj, done){
     var needToStore;
 
@@ -96,18 +84,20 @@ Config.prototype.setDefaults = function(obj, done){
     if(needToStore){
         this.storeConfigObject(obj,done);
     }else{
-        (done||common.noop)();
+        done && done(null);
     }
 
 };
 
+
+// get client version from the chrome manifest
 Config.prototype.setClientVersion = function(){
-    this.config.client_version = (chrome && chrome.app && chrome.app.getDetails()) ? chrome.app.getDetails().version : '';
+    this.config.client_version = (chrome && chrome.app && chrome.app.getDetails()) ? chrome.app.getDetails().version : 0;
 
 };
 
 
-
+// store config object in the localstorage
 Config.prototype.storeConfigObject = function(_config, done){
     _config = _config || this.config;
     var objToStore = {};
