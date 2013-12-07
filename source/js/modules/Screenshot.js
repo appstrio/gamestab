@@ -12,7 +12,7 @@ function Screenshot(fs, done){
 
     self.storage.get(self.key, function(_screenshots){
         self.screenshots = _screenshots || [];
-        (done||common.noop)();
+        done && done();
     });
 };
 
@@ -53,13 +53,13 @@ Screenshot.prototype.capture = function(params, done){
             currentTab;
 
         if (!url) {
-            return (done || common.noop)('no url was specified');
+            return done && done('no url was specified');
         }
         settings.url = url;
 
         // try to get the local copy of the url
         if(self.screenshots[url]){
-            return (done||common.noop)(null, self.screenshots[url]);
+            return done && done(null, self.screenshots[url]);
         }else{
             //haven't found local copy of the url, let's capture a screenshoot
 

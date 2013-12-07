@@ -1,14 +1,20 @@
+# Modules
 node_modules
+bower_components
+
+# GruntBuild tmp folders
+parts.min
+
+# Builds
+builds
+tmp-build
+
+COMMIT_MSG
+
+# Bullshit
 temp
 .tmp
-dist
 .sass-cache
-app/bower_components
-test/bower_components
-package
 .idea
 .DS_Store
-
 *.sublime*
-
-app/*.html

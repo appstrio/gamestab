@@ -136,16 +136,16 @@ Weather.prototype.doGet = function(city, latitude, longitude, days, cc, done){
         self.days = newArr;
         self.store(newArr);
 
-        (done||common.noop)(null, newArr);
+        done && done(null, newArr);
     }, function(err){
-        (done||common.noop)(true);
+        done && done(true);
     });
 
 };
 
 
 Weather.prototype.get = function(params, done){
-        if(!MY_CONFIG.config.with_weather) return (done||common.noop)(true);
+        if(!MY_CONFIG.config.with_weather) return done && done(true);
 
         var self = this;
         var oldPeriod = this.oldPeriod;
@@ -157,16 +157,16 @@ Weather.prototype.get = function(params, done){
             console.log('local _weather',_weather)
             if(_weather && _weather.weather && Date.now() - _weather.weather.timestamp < oldPeriod){
                 self.days = _weather[self.key].days;
-                (done||common.noop)(null, _weather[self.key]);
+                done && done(null, _weather[self.key]);
             }else{
                 if(city){
                     return self.doGet(city,null,null,days, cc, done);
                 }else{
-                    (done||common.noop)(true);
+                    done && done(true);
                 }
             }
         }, function(err){
-            (done||common.noop)(true);
+            done && done(true);
         });
 };
 

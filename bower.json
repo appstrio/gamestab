@@ -1,6 +1,24 @@
 {
-  "name": "whitelabelnewtab",
+  "name": "wint",
   "version": "0.0.0",
-  "dependencies": {},
-  "devDependencies": {}
+  "homepage": "https://github.com/hlandao/wint",
+  "authors": [
+    "WildEyes <xwildeyes@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.0.2",
+    "jquery": "~2.0.3",
+    "moment": "~2.4.0",
+    "underscore": "~1.5.2",
+    "uri.js": "~1.11.2"
+  }
 }

@@ -1,4 +1,4 @@
-{
+[{
     "config": {
         "name": "The Classic New Tab",
         "env": "PRODUCTION",
@@ -16,4 +16,4 @@
         "superfishSupportedCCS" : ["US", "CA", "UK", "DE", "FR", "AU", "NZ","SE","CH","NO","NL","BE","AT","FL","IS","IE","LU","IE", "ES", "IT", "BR","AR","IL"]
 
     }
-}
+}]

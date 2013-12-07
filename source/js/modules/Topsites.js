@@ -14,14 +14,14 @@ function Topsites(screenshot, done){
                     self.topsites = self.removeIgnored(_topsites, self.ignoreList);
                     self.topsites = self.topsites.slice(0, self.maximumDiasAmount);
                     self.fillScreenshots(self.topsites);
-                    (done||common.noop)();
+                    done && done();
                 });
             }else{
 
                 self.topsites = self.removeIgnored(_topsites, self.ignoreList);
 
                 self.fillScreenshots(self.topsites);
-                (done||common.noop)();
+                done && done();
             }
         });
 
@@ -33,23 +33,23 @@ Topsites.prototype.get = function(done){
     var self = this;
    self.storage.get(self.key, function(result){
       if(result && result[self.key]){
-          (done||common.noop)(null, result[self.key]);
+          done && done(null, result[self.key]);
       }else{
-          (done||common.noop)(true);
+          done && done(true);
       }
    });
 };
 
 Topsites.prototype.addNewDial = function(dial, done){
   var self = this;
-  if(!dial) return (done||common.noop)(true);
+  if(!dial) return done && done(true);
 
   self.topsites.push(dial);
     console.log(dial,'dial0');
 
     self.store(function(){
       console.log(dial,'dial',done);
-      return (done||common.noop)(null, dial);
+      return done && done(null, dial);
   });
 };
 
@@ -60,7 +60,7 @@ Topsites.prototype.getAndAddNewDial = function(done){
         if(newDials && newDials.length){
             self.addNewDial(newDials[0], done);
         }else{
-            (done||common.noop)(true);
+            done && done(true);
         }
     });
 };
@@ -74,7 +74,7 @@ Topsites.prototype.getNewDials = function(done){
             if (self.ignoreList.indexOf(site.url) > -1) return true;
             return false;
         });
-        (done||common.noop)(null, diffArr);
+        done && done(null, diffArr);
     });
 };
 
