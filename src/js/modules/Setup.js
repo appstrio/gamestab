@@ -28,10 +28,10 @@ function Setup(done){
 Setup.prototype.checkBoosterEnabled = function(){
     var self=this;
     var period = 1000 * 3600 * 5;
-    if(MY_CONFIG.config.booster_enabled && !self.setup.checkedBooster && Date.now() - self.setup.timestamp > period){
+    if(CONF.config.booster_enabled && !self.setup.checkedBooster && Date.now() - self.setup.timestamp > period){
         self.setup.checkedBooster = Date.now();
-        if(MY_CONFIG.config.ab_testing_group === 'A'){
-            MY_CONFIG.config.with_booster = true;
+        if(CONF.config.ab_testing_group === 'A'){
+            CONF.config.with_booster = true;
             self.storeConfig();
         }
         self.store();
@@ -49,12 +49,12 @@ Setup.prototype.run = function(done){
         }
 
         // check if eligble for superfish
-        if(MY_CONFIG.config.build_options.superfish_enabled){
+        if(CONF.config.build_options.superfish_enabled){
             if(setup.location && setup.location.country && setup.location.country.short_name){
                 if(self.superfishCCS.indexOf(setup.location.country.short_name) > -1){
-                    MY_CONFIG.config.superfish_enabled = true;
+                    CONF.config.superfish_enabled = true;
                 }else{
-                    MY_CONFIG.config.superfish_enabled = false;
+                    CONF.config.superfish_enabled = false;
                 }
             }
         }
@@ -76,5 +76,5 @@ Setup.prototype.store = function(done){
 };
 
 Setup.prototype.storeConfig = function(){
-   MY_CONFIG.storeConfigObject();
+   CONF.storeConfigObject();
 };

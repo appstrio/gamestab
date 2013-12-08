@@ -5,124 +5,72 @@ module.exports = (grunt) ->
   # load all available grunt tasks
   require("load-grunt-tasks") grunt
 
-  # configurable paths
-  path =
-    app: "app"
-    build: "app"
-    package: "package"
-    pkgs: "pkgs"
-  path.js      = "#{path.app}/js"
-  path.libs    = "bower_components"
-  path.modules = "#{path.js}/modules"
-
-  includes = {
-    modules: [
-      "#{path.modules}/Analytics.js"
-      "#{path.modules}/ChromeApps.js"
-      "#{path.modules}/ClassicLauncher.js"
-      "#{path.modules}/Config.js"
-      "#{path.modules}/FileSystem.js"
-      "#{path.modules}/Geo.js"
-      "#{path.modules}/Launcher.js"
-      "#{path.modules}/News.js"
-      "#{path.modules}/Renderer.js"
-      "#{path.modules}/Screenshot.js"
-      "#{path.modules}/Search.js"
-      "#{path.modules}/Setup.js"
-      "#{path.modules}/Storage.js"
-      "#{path.modules}/Topsites.js"
-      "#{path.modules}/Weather.js"
-    ]
-    libs: [
-      "#{path.libs}/jquery/jquery.min.js"
-      "#{path.libs}/jfeed/build/dist/jquery.jfeed.pack.js"
-      "#{path.libs}/moment/min/moment.min.js"
-      "#{path.libs}/underscore/underscore-min.js"
-      "#{path.libs}/uri.js/src/URI.min.js"
-    ]
-  }
-
-  files =
-    jade:[
-      dest: "#{path.build}/newtab.html"
-      src : "#{path.app}/newtab.jade"
-    ,
-      dest: "#{path.build}/options.html"
-      src : "#{path.app}/options.jade"
-    ,
-      dest: "#{path.build}/background.html"
-      src : "#{path.app}/background.jade"
-    ]
-    uglify:
-      includes:
-        "app/js/parts.min/libs.min.js": includes.libs
-        "app/js/parts.min/modules.min.js": includes.modules
-      dev: [
-        dest: "#{path.app}/js/build/background.min.js"
-        src : [
-          "#{path.js}/env.js"
-          "#{path.js}/parts.min/libs.min.js"
-          "#{path.js}/modules/modules.min.js"
-          "#{path.js}/background.js"
-        ]
-      ,
-        dest: "#{path.app}/js/build/newtab.min.js"
-        src : [
-          "#{path.js}/env.js"
-          "#{path.js}/parts.min/modules.min.js"
-          "#{path.js}/first.js"
-          "#{path.js}/newtab.js"
-        ]
-      ]
-
-  watcherOptsDefaults =
-    options:
-      interrupt: true # If file changes while running relevant grunt task, stop aformentioned grunt task and restart it.
-  watchers =
-    uglify:
-      options:watcherOptsDefaults
-      files: files.uglify
-
-    # default:
-    #   options: watcherOptsDefaults
-    #   files: 'Gruntfile.coffee'
-    #   tasks: ['<%= gruntTestCmd %>']
-
   grunt.initConfig
-    gruntTestCmd: 'uglify:dev'
-    watch:watchers
-    jshint:
-      options: {}
-      files: []
     jade:
       dev:
         options:
           pretty: true
-        files: files.jade
-    uglify:
-      options: {}
-      includes:
-        files: files.uglify.includes
-      dev:
-        files: files.uglify.dev
+        files: [
+          dest: "build/newtab.html"
+          src : "src/jade/newtab.jade"
+        ,
+          dest: "build/options.html"
+          src : "src/jade/options.jade"
+        ,
+          dest: "build/background.html"
+          src : "src/jade/background.jade"
+        ]
     copy:
-      main:
+      manifest:
         expand: true
-        src: ['./source/manifest.json']
+        src: ['./src/manifest.json']
         dest: './build'
         flatten: true
-  #    grunt.registerTask('test',
+      require:
+        expand: true
+        src: ['./bower_components/requirejs/require.js']
+        dest: './build/js'
+        flatten: true
+      libs:
+        expand: true
+        src: [
+          "bower_components/requirejs/require.js"
+          "bower_components/jquery/jquery.min.js"
+          "bower_components/jfeed/build/dist/jquery.jfeed.pack.js"
+          "bower_components/moment/min/moment.min.js"
+          "bower_components/underscore/underscore-min.js"
+          "bower_components/uri.js/src/URI.min.js"
+        ]
+        dest: './build/js/libs'
+        flatten: true
+      modules:
+        expand: true
+        src: [
+          "src/js/modules/Analytics.js"
+          "src/js/modules/Chromesrcs.js"
+          "src/js/modules/ClassicLauncher.js"
+          "src/js/modules/Config.js"
+          "src/js/modules/FileSystem.js"
+          "src/js/modules/Geo.js"
+          "src/js/modules/Launcher.js"
+          "src/js/modules/News.js"
+          "src/js/modules/Renderer.js"
+          "src/js/modules/Screenshot.js"
+          "src/js/modules/Search.js"
+          "src/js/modules/Setup.js"
+          "src/js/modules/Storage.js"
+          "src/js/modules/Topsites.js"
+          "src/js/modules/Weather.js"
+        ]
+        dest: './build/js/modules'
+        flatten: true
 
-  #        ''
-  #    ]);
-  #    grunt.registerTask('build', [
-  #        ''
-  #    ]);
+  #    grunt.registerTask('teint',
+  grunt.registerTask "prebuild", ->
+    require "shelljs/global"
+    mkdir "build/js"
+    mkdir "build/js/libs"
+    mkdir "build/js/modules"
 
-  # 'jshint',
+  grunt.registerTask "init", ['prebuild']
   grunt.registerTask "default", ["jade:dev",'copy:main']
-
-# 'test'
-# 'build'
-
-mergeDefaults = (defaultObject, object) -> (object[key] = val if not object[key]? for own key, val of defaultObject)

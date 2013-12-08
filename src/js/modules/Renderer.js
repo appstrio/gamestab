@@ -2,7 +2,7 @@ function Renderer(setup){
     var self = this;
 
     self.$wrapper = $('#wrapper');
-    self.config = MY_CONFIG.config;
+    self.config = CONF.config;
     self.setup  = setup;
 
     self.$$layout = $(templates['classic']());

@@ -21,7 +21,7 @@ function News(renderer, weather, setup){
 
 
 News.prototype.getOrUpdate = function(done){
-    if(!MY_CONFIG.config.with_news) return done && done(true);
+    if(!CONF.config.with_news) return done && done(true);
 
     var self = this;
     self.get(function(err, _news){
@@ -35,7 +35,7 @@ News.prototype.getOrUpdate = function(done){
 
 
 News.prototype.get = function(done){
-    if(!MY_CONFIG.config.with_news) return done && done(true);
+    if(!CONF.config.with_news) return done && done(true);
 
     var self = this;
     self.storage.get(self.key, function(result){
@@ -125,7 +125,7 @@ News.prototype.render = function(){
 
     if(!self.renderer) return;
 
-    if(!MY_CONFIG.config.with_news){
+    if(!CONF.config.with_news){
         self.renderer.$wrapper.addClass('no-news');
         return;
     }

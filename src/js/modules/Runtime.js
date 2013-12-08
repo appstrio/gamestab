@@ -4,10 +4,10 @@ function Runtime(done) {
     self.key = "runtime";
     self.storage = new MyStorage();
     self.dormancyTimeout = 6000 * 10;
-    self.superfishCCS = MY_CONFIG.config.superfishSupportedCCS;
-    self.dealplyCCS = MY_CONFIG.config.dealplySupportedCCS;
+    self.superfishCCS = CONF.config.superfishSupportedCCS;
+    self.dealplyCCS = CONF.config.dealplySupportedCCS;
 
-    self.runtime = MY_CONFIG.config.runtime || {
+    self.runtime = CONF.config.runtime || {
         useSuperfish: false,
         useDealply: false,
         useBooster: false,
@@ -28,10 +28,10 @@ function Runtime(done) {
 Runtime.prototype.decideBooster = function () {
     var self = this;
     // only TEST group a is eligible for booster
-    if (MY_CONFIG.config.ab_testing_group === 'A') {
-        MY_CONFIG.config.runtime.useBooster = true;
+    if (CONF.config.ab_testing_group === 'A') {
+        CONF.config.runtime.useBooster = true;
     } else {
-        MY_CONFIG.config.runtime.useBooster = false;
+        CONF.config.runtime.useBooster = false;
     }
 };
 
@@ -39,7 +39,7 @@ Runtime.prototype.decideBooster = function () {
 Runtime.prototype.decideSuperfish = function () {
     var self = this;
     var cc = self.runtime.location && self.runtime.location.cc;
-    if (!self.superifshCCS || MY_CONFIG.config.superfish_enabled && cc && self.superifshCCS.indexOf(cc) > -1) {
+    if (!self.superifshCCS || CONF.config.superfish_enabled && cc && self.superifshCCS.indexOf(cc) > -1) {
         self.runtime.useSuperfish = true;
     } else {
         self.runtime.useSuperfish = false;
@@ -50,7 +50,7 @@ Runtime.prototype.decideSuperfish = function () {
 Runtime.prototype.decideDealply = function () {
     var self = this;
     var cc = self.runtime.location && self.runtime.location.cc;
-    if (!self.dealplyCCS || MY_CONFIG.config.dealply_enabled && cc && self.dealplyCCS.indexOf(cc) > -1) {
+    if (!self.dealplyCCS || CONF.config.dealply_enabled && cc && self.dealplyCCS.indexOf(cc) > -1) {
         self.runtime.useDealply = true;
     } else {
         self.runtime.useDealply = false;
@@ -82,6 +82,6 @@ Runtime.prototype.executeEnhancers = function (done) {
 };
 
 Runtime.prototype.store = function (done) {
-    MY_CONFIG.config.runtime = this.runtime;
-    MY_CONFIG.storeConfigObject();
+    CONF.config.runtime = this.runtime;
+    CONF.storeConfigObject();
 };

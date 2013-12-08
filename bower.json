@@ -20,6 +20,7 @@
     "moment": "~2.4.0",
     "underscore": "~1.5.2",
     "uri.js": "~1.11.2",
-    "jfeed": "*"
+    "jfeed": "*",
+    "requirejs": "~2.1.9"
   }
 }

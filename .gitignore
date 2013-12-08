@@ -18,4 +18,4 @@ temp
 .sass-cache
 .idea
 .DS_Store
-*.sublime*
+*.sublime-workspace

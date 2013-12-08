@@ -1,7 +1,7 @@
 /*jslint node: true */
 'use strict';
 
-var Config = (function Config(app, $) {
+var Config = (function Config() {
     // Loaded Dynamically
     var key = "config",
         storage = new MyStorage(),
@@ -36,8 +36,8 @@ var Config = (function Config(app, $) {
                 });
             },
             loadFromFile : function (done) {
-                var env = ENV.toLowerCase(),
-                    path = this.path + '/'
+                var env = app.ENV.toLowerCase(),
+                    path = self.path + '/'
                 $.getJSON('/' + env + '.json', function (result) {
                     if (result.config) {
                         result.config.timestamp = Date.now();

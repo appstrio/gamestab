@@ -1,6 +1,6 @@
 function Search(renderer, setup){
     var self = this;
-    var config = MY_CONFIG.config;
+    var config = CONF.config;
 
     self.setup = setup;
     self.cc = self.setup.setup.location.country.short_name;

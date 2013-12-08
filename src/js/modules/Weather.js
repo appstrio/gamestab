@@ -145,7 +145,7 @@ Weather.prototype.doGet = function(city, latitude, longitude, days, cc, done){
 
 
 Weather.prototype.get = function(params, done){
-        if(!MY_CONFIG.config.with_weather) return done && done(true);
+        if(!CONF.config.with_weather) return done && done(true);
 
         var self = this;
         var oldPeriod = this.oldPeriod;
@@ -187,7 +187,7 @@ Weather.prototype.render = function(){
 
     if(!self.renderer) return;
 
-    if(!MY_CONFIG.config.with_weather){
+    if(!CONF.config.with_weather){
         self.renderer.$wrapper.addClass('no-weather');
         return;
     }

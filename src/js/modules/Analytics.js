@@ -36,7 +36,7 @@ function Analytics(setup) {
         t4: 0.2
     };
 
-    self.googleAnalyticsUid = MY_CONFIG.config.google_analytics_uid;
+    self.googleAnalyticsUid = CONF.config.google_analytics_uid;
 
     self.init();
 
@@ -114,39 +114,39 @@ Analytics.prototype.init = function () {
     self.push(['_trackPageview']);
 
 
-    if (MY_CONFIG.config.ab_testing_group) {
+    if (CONF.config.ab_testing_group) {
         self.push(['_setCustomVar',
             1,
             'AB_TESTING',
-            MY_CONFIG.config.ab_testing_group,
+            CONF.config.ab_testing_group,
             1
         ]);
     }
 
-    if (MY_CONFIG.config.install_week_number) {
+    if (CONF.config.install_week_number) {
         self.push(['_setCustomVar',
             2,
             'INSTALL_WEEK_NUMBER',
-            MY_CONFIG.config.install_week_number,
+            CONF.config.install_week_number,
             1
         ]);
     }
 
-    if (MY_CONFIG.config.client_version) {
+    if (CONF.config.client_version) {
         self.push(['_setCustomVar',
             4,
             'CLIENT_VERSION',
-            MY_CONFIG.config.client_version,
+            CONF.config.client_version,
             1
         ]);
     }
 
 
-    if (MY_CONFIG.config.superfish_enabled) {
+    if (CONF.config.superfish_enabled) {
         self.push(['_setCustomVar',
             5,
             'IS_SUPERFISH_COUNTRY',
-            (MY_CONFIG.config.superfish_enabled) ? true : false,
+            (CONF.config.superfish_enabled) ? true : false,
             1
         ]);
     }
