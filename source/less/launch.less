@@ -1,0 +1,401 @@
+#wrapper.launcher-maximized {
+    .launcher-wrapper {
+        height: 80%;
+        overflow-y: scroll;
+        div#launcher {
+            div.viewport {
+                & > .inner {
+                    div.launchable {
+                        .inner {
+                            .thumbnail {
+                                opacity: 1 !important;
+                                -webkit-transition: width 0.2s ease, top 0.2s ease, height 0.2s ease, opacity 0.2s ease 0.7s;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .launcher-wrapper.popup {
+        bottom: 0px;
+    }
+}
+width: {
+    130px {
+        !important; {
+            #wrapper .main-wrapper .weather-wrapper .day;
+        }
+    }
+}
+#wrapper.no-news {
+    .title-wrapper {
+        padding-top: 40px;
+    }
+}
+display: {
+    none {
+        !important; {
+            #wrapper .main-wrapper .weather-wrapper .day:first-child;
+        }
+    }
+    none; {
+        #wrapper .main-wrapper .title-wrapper h1.title span.sub-title;
+    }
+}
+@media {
+    all {
+        and {
+            (max-width: {
+                1200px) {
+                    #wrapper .main-wrapper .title-wrapper h1.title span.date #wrapper .main-wrapper .news-wrapper > #news-inner #wrapper .main-wrapper .news-wrapper > #news-inner .collection-wrapper .item;
+                }
+                960px) {
+                    #wrapper .main-wrapper .title-wrapper h1.title > span #wrapper .main-wrapper .weather-wrapper .weather;
+                }
+            }
+        }
+    }
+}
+#wrapper {
+    .top-wrapper {
+        width: 100%;
+        background: #fff;
+        -webkit-box-flex: 1;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+    }
+    .launcher-wrapper {
+        height: 101px;
+        width: 100%;
+        overflow-y: hidden;
+        -webkit-transition: height 0.3s ease-in;
+        div#launcher {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: -webkit-box;
+            -webkit-box-orient: horizontal;
+            div.viewport {
+                -webkit-box-flex: 1;
+                width: 100%;
+                height: 100%;
+                & > .inner {
+                    background: #f2f2f2;
+                    div.launchable {
+                        width: 130px;
+                        height: 115px;
+                        position: relative;
+                        display: inline-block;
+                        margin: 0;
+                        padding: 15px 30px 40px 30px;
+                        -webkit-user-select: none;
+                        cursor: pointer;
+                        .inner {
+                            width: 100%;
+                            height: 100%;
+                            position: relative;
+                            cursor: pointer;
+                            .thumbnail.screenshot {
+                                top: 0;
+                                left: 0;
+                                width: 80px;
+                                height: 50px;
+                                border: 1px solid rgba(0, 0, 0, 0.2);
+                                -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, transparent), to(rgba(255, 255, 255, 0.1)));
+                            }
+                            .loading-thumbnail {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 80px;
+                                height: 50px;
+                                font-size: 10px;
+                                font-family: sans-serif;
+                                display: -webkit-box;
+                                -webkit-box-pack: center;
+                                -webkit-box-align: center;
+                                text-align: center;
+                            }
+                            .title {
+                                position: absolute;
+                                top: 58px;
+                                overflow: hidden;
+                                height: 12px;
+                                font-size: 10px;
+                                font-weight: bold;
+                                line-height: 12px;
+                                font-family: sans-serif;
+                                text-align: center;
+                                word-break: break-all;
+                                -webkit-transition: all 0.2s ease;
+                                width: 100%;
+                                color: #534A5A;
+                                .remove-button {
+                                    font-family: sans-serif, arial;
+                                    color: red;
+                                    font-weight: bold;
+                                    font-size: 12px;
+                                    cursor: pointer;
+                                    opacity: 0;
+                                    -webkit-transition: opacity 0.2s ease 0s;
+                                    margin-right: 5px;
+                                }
+                            }
+                            .thumbnail {
+                                position: absolute;
+                                top: 0;
+                                left: 15px;
+                                width: 50px;
+                                height: 50px;
+                                background-size: 100% 100%;
+                                border-radius: 2px;
+                                -webkit-transition: width 0.2s ease, top 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+                                opacity: 1;
+                            }
+                        }
+                        .inner:hover {
+                            .thumbnail.screenshot {
+                                top: -5px;
+                                width: 85px;
+                                height: 60px;
+                            }
+                            .title {
+                                .remove-button {
+                                    opacity: 1;
+                                    -webkit-transition: opacity 0.2s ease 1s;
+                                }
+                            }
+                            .thumbnail {
+                                top: -3px;
+                                width: 55px;
+                                height: 55px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .main-wrapper {
+        -webkit-box-flex: 1;
+        .weather-wrapper {
+            margin: 10px 0 50px;
+            .day {
+                width: 130px;
+                text-align: center;
+                display: inline-block;
+                .temp {
+                    font-size: 25px;
+                    font-family: sans-serif;
+                    .max {
+                        color: #999;
+                    }
+                    .min {
+                        color: #555;
+                    }
+                }
+                .icon {
+                    font-size: 70px;
+                    font-family: MeteoconsRegular;
+                }
+                .title {
+                    font-size: 20px;
+                    font-family: HelveticaNeue-UltraLight, sans-serif;
+                }
+            }
+            .day:first-child {
+                .title {
+                    font-size: 22px;
+                    color: #20d02a;
+                }
+            }
+            .weather {
+                margin: 0 auto;
+                width: 650px;
+            }
+        }
+        .title-wrapper {
+            h1.title {
+                text-align: center;
+                font-family: "HelveticaNeue-UltraLight", HelveticaNeue-UltraLight, sans-serif;
+                font-size: 35px;
+                margin-bottom: 1.2em;
+                img {
+                    width: 32px;
+                    height: 32px;
+                    margin-right: 15px;
+                    margin-top: 5px;
+                }
+                .sub-title {
+                    color: #aaa;
+                    margin-left: 20px;
+                }
+                span {
+                    vertical-align: top;
+                }
+            }
+        }
+        .news-wrapper {
+            -webkit-box-flex: 1;
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            & > #news-inner {
+                width: 600px;
+                margin: 0 auto;
+                display: -webkit-box;
+                -webkit-box-orient: horizontal;
+                overflow-y: hidden;
+                padding: 15px 40px 40px 0px;
+                -webkit-box-flex: 1;
+                position: relative;
+                .loading-wrapper {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: -webkit-box;
+                    -webkit-box-pack: center;
+                    background: rgba(255, 255, 255, 0.9);
+                    padding-top: 200px;
+                }
+                .collection-wrapper {
+                    padding-bottom: 140px;
+                    .item {
+                        clear: both;
+                        width: 600px;
+                        .details-wrapper {
+                            border: 1px solid rgba(0, 0, 0, 0.3);
+                            padding: 15px;
+                            min-height: 200px;
+                            margin-top: 10px;
+                            width: 600px;
+                            .content {
+                                font-size: 15px;
+                                color: #111;
+                                font-family: sans-serif;
+                                margin-top: 20px;
+                                line-height: 20px;
+                            }
+                            .read-more {
+                                margin-top: 6px;
+                                a {
+                                    color: #20d02a;
+                                    text-decoration: none;
+                                    font-family: sans-serif;
+                                    font-size: 11px;
+                                    font-weight: bold;
+                                }
+                            }
+                            .thumbnail-wrapper {
+                                margin: 5px auto 10px;
+                                width: 100%;
+                                img {
+                                    margin: 0 auto;
+                                    max-width: 100%;
+                                    display: block;
+                                }
+                            }
+                            .meta {
+                                font-weight: bold;
+                                font-size: 15px;
+                                color: #999;
+                                font-family: sans-serif;
+                                margin-bottom: 10px;
+                            }
+                            .title {
+                                width: 100%;
+                                overflow: hidden;
+                                font-size: 25px;
+                                line-height: 31px;
+                                font-family: sans-serif;
+                                font-weight: bold;
+                                margin-bottom: 15px;
+                            }
+                        }
+                        .inner {
+                            height: 100px;
+                            width: 600px;
+                            margin: 24px 0px;
+                            cursor: pointer;
+                            .thumbnail-wrapper {
+                                float: left;
+                                width: 200px;
+                                height: 100px;
+                                margin-right: 20px;
+                                border: 1px solid rgba(240, 240, 240, 0.5);
+                                & > div {
+                                    width: 100%;
+                                    height: 100%;
+                                    background-size: cover;
+                                }
+                            }
+                            .content-wrapper {
+                                margin-left: 224px;
+                                .content {
+                                    font-size: 14px;
+                                    color: #555;
+                                    font-family: sans-serif;
+                                    margin-bottom: 6px;
+                                }
+                                .read-more {
+                                    margin-top: 3px;
+                                    a {
+                                        color: #8e928e;
+                                        text-decoration: none;
+                                        font-family: sans-serif;
+                                        font-size: 10px;
+                                        font-weight: bold;
+                                    }
+                                }
+                                .meta {
+                                    font-size: 12px;
+                                    color: #999;
+                                    font-family: sans-serif;
+                                }
+                                .title {
+                                    width: 100%;
+                                    overflow: hidden;
+                                    font-size: 15px;
+                                    line-height: 21px;
+                                    height: 21px;
+                                    font-family: sans-serif;
+                                    font-weight: bold;
+                                    margin-bottom: 6px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .scrollable {
+            overflow-y: auto;
+            height: 100%;
+        }
+    }
+    .launcher-wrapper.popup {
+        position: absolute;
+        bottom: -87px;
+        -webkit-transition: bottom 0.2s ease 5s;
+    }
+    .container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+}
+#wrapper .launcher-wrapper.popup:hover,#wrapper .launcher-wrapper.popup .hover {
+    -webkit-transition: bottom 0.2s ease;
+    bottom: 0;
+}
