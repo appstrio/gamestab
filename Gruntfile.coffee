@@ -12,7 +12,7 @@ module.exports = (grunt) ->
     package: "package"
     pkgs: "pkgs"
   path.js      = "#{path.app}/js"
-  path.libs    = "#{path.js}/libs"
+  path.libs    = "bower_components"
   path.modules = "#{path.js}/modules"
 
   includes = {
@@ -34,11 +34,11 @@ module.exports = (grunt) ->
       "#{path.modules}/Weather.js"
     ]
     libs: [
-      "#{path.libs}/jquery.2.0.1.min.js"
-      "#{path.libs}/jFeed.js"
-      "#{path.libs}/moment.min.js"
-      "#{path.libs}/underscore.min.js"
-      "#{path.libs}/uri.min.js"
+      "#{path.libs}/jquery/jquery.min.js"
+      "#{path.libs}/jfeed/build/dist/jquery.jfeed.pack.js"
+      "#{path.libs}/moment/min/moment.min.js"
+      "#{path.libs}/underscore/underscore-min.js"
+      "#{path.libs}/uri.js/src/URI.min.js"
     ]
   }
 
@@ -82,6 +82,7 @@ module.exports = (grunt) ->
     uglify:
       options:watcherOptsDefaults
       files: files.uglify
+
     # default:
     #   options: watcherOptsDefaults
     #   files: 'Gruntfile.coffee'
@@ -104,7 +105,12 @@ module.exports = (grunt) ->
         files: files.uglify.includes
       dev:
         files: files.uglify.dev
-
+    copy:
+      main:
+        expand: true
+        src: ['./source/manifest.json']
+        dest: './build'
+        flatten: true
   #    grunt.registerTask('test',
 
   #        ''
@@ -114,7 +120,7 @@ module.exports = (grunt) ->
   #    ]);
 
   # 'jshint',
-  grunt.registerTask "default", ["jade:dev"]
+  grunt.registerTask "default", ["jade:dev",'copy:main']
 
 # 'test'
 # 'build'
