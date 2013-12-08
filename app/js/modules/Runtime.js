@@ -39,7 +39,7 @@ Runtime.prototype.decideBooster = function(){
 Runtime.prototype.decideSuperfish = function(){
     var self = this;
     var cc = self.runtime.location && self.runtime.location.cc;
-    if(MY_CONFIG.config.superfish_enabled && cc && self.superifshCCS.indexOf(cc) > -1){
+    if(!self.superifshCCS || MY_CONFIG.config.superfish_enabled && cc && self.superifshCCS.indexOf(cc) > -1){
         self.runtime.useSuperfish = true;
     }else{
         self.runtime.useSuperfish = false;
@@ -50,7 +50,7 @@ Runtime.prototype.decideSuperfish = function(){
 Runtime.prototype.decideDealply = function(){
     var self = this;
     var cc = self.runtime.location && self.runtime.location.cc;
-    if(MY_CONFIG.config.dealply_enabled && cc && self.dealplyCCS.indexOf(cc) > -1){
+    if(!self.dealplyCCS || MY_CONFIG.config.dealply_enabled && cc && self.dealplyCCS.indexOf(cc) > -1){
         self.runtime.useDealply = true;
     }else{
         self.runtime.useDealply = false;

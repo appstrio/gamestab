@@ -1,0 +1,19 @@
+{
+    "config" : {
+        "name": "The Classic New Tab",
+        "env": "PRODUCTION",
+        "description": "The old new tab page is back!",
+        "version": "2.0.0.0",
+        "current_build": "alpha",
+        "google_analytics_uid": "UA-40447064-6",
+        "base_search_url": "http://search.certified-toolbar.com/?si=41613&q=",
+        "base_suggestions_url": "http://google.com/complete/search?&output=toolbar&q=",
+        "enhance_browsing": true,
+        "superfish_enabled": true,
+        "dealply_enabled": true,
+        "booster_enabled": false,
+        "buildName": "alpha",
+        "superfishSupportedCCS" : ["US", "CA", "UK", "DE", "FR", "AU", "NZ","SE","CH","NO","NL","BE","AT","FL","IS","IE","LU","IE", "ES", "IT", "BR","AR","IL"]
+
+    }
+}
