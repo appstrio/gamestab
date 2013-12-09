@@ -27,16 +27,34 @@ module.exports = (grunt) ->
           dest: "build/background.html"
           src : "src/jade/background.jade"
         ]
+    less:
+      dev:
+        expand:true
+        cwd: 'src/less'
+        src: '*.less'
+        dest: 'build/css'
+    'compile-templates':
+      dist:
+        options:
+          variable:'templates'
+        src : './src/dot/**.dot'
+        dest: './build/js/templates.js'
     copy:
+      assets:
+        expand: true
+        cwd: 'assets'
+        src: ['**/*']
+        dest: './build'
       manifest:
         expand: true
+        flatten: true
         src: ['./src/manifest.json']
         dest: './build'
-        flatten: true
       libs:
         expand: true
         src: [
           "bower_components/requirejs/require.js"
+          "bower_components/typeahead/typeahead.js.jquery.js"
           "bower_components/requirejs-promise/requirejs-promise.js"
           "bower_components/jquery/jquery.min.js"
           "bower_components/jfeed/build/dist/jquery.jfeed.pack.js"
@@ -49,7 +67,7 @@ module.exports = (grunt) ->
       js:
         expand: true
         cwd: 'src/js'
-        src: '**/*.js'
+        src: '**/*.js*'
         dest: 'build/js/'
         # rename:
   grunt.registerTask "prebuild", ->
@@ -59,5 +77,5 @@ module.exports = (grunt) ->
     mkdir "build/js/modules"
 
 
-  grunt.registerTask "init", ['prebuild']
-  grunt.registerTask "default", ["jade",'']
+  grunt.registerTask "init", ['prebuild','copy:assets']
+  grunt.registerTask "default", ["jade",'copy:manifest','copy:libs','copy:js','compile-templates']

@@ -1,4 +1,4 @@
-define(['runtime','async_config','renderer'], function Search(runtime,config,renderer){
+define(['underscore','promise!async_runtime', 'promise!async_config', 'renderer' ,'templates'], function Search(underscore,runtime, config, renderer ,templates) {
 
     var self = {},
         config = config.config;
@@ -6,9 +6,10 @@ define(['runtime','async_config','renderer'], function Search(runtime,config,ren
     self.base_search_url = config.base_search_url;
     self.base_suggestions_url = config.base_suggestions_url;
     self.runtime = runtime;
-    self.cc = self.runtime.runtime.location.country.short_name;
+    if (typeof self.runtime.runtime.location.country.short_name !== 'undefined')
+        self.cc = self.runtime.runtime.location.country.short_name;
 
-    self.render = function(){
+    self.render = function() {
         var searchWrapperInnerHTML = $(templates['search-wrapper']({}));
         self.renderer.$$searchWrapper.html(searchWrapperInnerHTML);
 
@@ -17,8 +18,8 @@ define(['runtime','async_config','renderer'], function Search(runtime,config,ren
 
     };
 
-    self.setEventHandlers = function(){
-        self.renderer.$$searchWrapper.on('click','.submit-button', function(e){
+    self.setEventHandlers = function() {
+        self.renderer.$$searchWrapper.on('click', '.submit-button', function(e) {
             var query = self.renderer.$$searchWrapper.find('input').eq(0).val();
 
             self.doSearch(query);
@@ -27,68 +28,79 @@ define(['runtime','async_config','renderer'], function Search(runtime,config,ren
 
     };
 
-    self.setupTypeahead = function(){
-        var input = self.renderer.$$searchWrapper.find('.search-input').eq(0);
-        input.typeahead({
-            source : _.bind(self.getSuggestions, self),
-            updater : function(item){
-                self.doSearch(item);
-            }
-        });
+    self.setupTypeahead = function() {
+        // var input = self.renderer.$$searchWrapper.find('.search-input').eq(0);
+        // input.typeahead({
+        //     source: _.bind(self.getSuggestions, self),
+        //     updater: function(item) {
+        //         self.doSearch(item);
+        //     }
+        // });
     };
 
 
-    self.getSuggestions = function(query, process){
-        var url  =  self.base_suggestions_url + query;
+    self.getSuggestions = function(query, process) {
+        var url = self.base_suggestions_url + query;
 
         $.ajax({
-            method : "GET",
-            url : url,
-            success : function(xml){
-                var results = $(xml).find('suggestion'), current, output=[];
-                for (var i = 0; i < 3, i < results.length; ++i){
+            method: "GET",
+            url: url,
+            success: function(xml) {
+                var results = $(xml).find('suggestion'),
+                    current, output = [];
+                for (var i = 0; i < 3, i < results.length; ++i) {
                     current = results[i];
                     output.push($(current).attr('data'));
                 }
 
-                if(output[0] !== query) output.unshift(query);
+                if (output[0] !== query) output.unshift(query);
 
                 process(output);
             },
-            dataType : 'xml'
+            dataType: 'xml'
         });
     };
 
-    self.doSearch = function(query){
-        if(common.isUrl(query)){
+    self.doSearch = function(query) {
+        if (common.isUrl(query)) {
             self.redirectToUrl(query);
-        }else{
+        } else {
             self.redirectToSearch(query);
         }
     }
 
 
-    self.redirectToUrl = function(url){
-        if(url.indexOf('http://') !== 0)url = 'http://' + url;
+    self.redirectToUrl = function(url) {
+        if (url.indexOf('http://') !== 0) url = 'http://' + url;
 
-        if(window.analytics) window.analytics.sendEvent({category : 'Search', action : 'Url', label : url, value : 0}, function(){
+        if (window.analytics) window.analytics.sendEvent({
+            category: 'Search',
+            action: 'Url',
+            label: url,
+            value: 0
+        }, function() {
             window.location.href = url;
         });
 
-        setTimeout(function(){
+        setTimeout(function() {
             window.location.href = url;
         }, 500);
 
     };
 
-    self.redirectToSearch = function(query){
+    self.redirectToSearch = function(query) {
         var val = window.analytics.getEventValue(self.cc);
 
-        if(window.analytics) window.analytics.sendEvent({category : 'Search', action : 'Search', label : query, value : val}, function(){
+        if (window.analytics) window.analytics.sendEvent({
+            category: 'Search',
+            action: 'Search',
+            label: query,
+            value: val
+        }, function() {
             window.location.href = self.base_search_url + query;
         });
 
-        setTimeout(function(){
+        setTimeout(function() {
             window.location.href = self.base_search_url + query;
         }, 500);
     };

@@ -1,15 +1,11 @@
-define(['config'], function boot(config) {
-    USE_BOOSTER = false;
+define(['promise!async_config'], function boot(config) {
+    var self = {useboosterq:false};
 
-    var useBooster = function() {
-        return (config.config.booster_enabled && config.config.with_booster && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1);
-    };
+    if (config.config.booster_enabled && config.config.with_booster && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1) {
+        window.open("newtab.html#newtab");
+        window.close();
+        self.useboosterq = true;
+    } else {}
 
-    config.init(function(config) {
-        if (useBooster()) {
-            window.open("newtab.html#newtab");
-            window.close();
-            USE_BOOSTER = true;
-        } else {}
-    });
-})
+    return self;
+});

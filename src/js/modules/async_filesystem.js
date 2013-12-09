@@ -1,38 +1,5 @@
-define(function async_filesystem() {
+define(['jquery'], function async_filesystem($) {
     var self = {}, deferred = new $.Deferred();
-
-    self.init = function() {
-        try {
-            //support change in file system api prefix
-            window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-            var fileSystemSize = 10 * 1024 * 1024, // in byts =10 megabits
-                apiType = window.PERSISTENT,  // or window.TEMPORARY
-
-                storageType = {
-                    persistent: 'webkitPersistentStorage',
-                    temporary: 'temporaryStorage'
-                };
-
-            /**
-             * New Version
-             */
-            navigator[storageType.persistent].requestQuota(fileSystemSize, function filesStorageService_init_requestQuota(grantedBytes) {
-                window.requestFileSystem(apiType, grantedBytes, function onInitFs(fileSystem){
-                    //file system open listener
-                    self.fs = fileSystem;
-                    self.fsReady = true;
-                    deferred.resolve(self);
-                }, function(err) {
-                    deferred.reject(err);
-                    self.errorHandler.apply(arguments);
-                });
-            }, function fileStorageService_init_requestQuota_error (e) {
-                deferred.reject(err);
-            });
-        } catch (err) {
-            deferred.reject(err);
-        }
-    };
 
     self.errorHandler = function(){
             var msg = '';
@@ -171,5 +138,39 @@ define(function async_filesystem() {
             done && done(null, 'not a valid path');
         }
     };
+
+    self.init = (function() {
+        try {
+            //support change in file system api prefix
+            window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+            var fileSystemSize = 10 * 1024 * 1024, // in byts =10 megabits
+                apiType = window.PERSISTENT,  // or window.TEMPORARY
+
+                storageType = {
+                    persistent: 'webkitPersistentStorage',
+                    temporary: 'temporaryStorage'
+                };
+
+            /**
+             * New Version
+             */
+            navigator[storageType.persistent].requestQuota(fileSystemSize, function filesStorageService_init_requestQuota(grantedBytes) {
+                window.requestFileSystem(apiType, grantedBytes, function onInitFs(fileSystem){
+                    //file system open listener
+                    self.fs = fileSystem;
+                    self.fsReady = true;
+                    deferred.resolve(self);
+                }, function(err) {
+                    deferred.reject(err);
+                    self.errorHandler.apply(arguments);
+                });
+            }, function fileStorageService_init_requestQuota_error (e) {
+                deferred.reject(err);
+            });
+        } catch (err) {
+            deferred.reject(err);
+        }
+    })();
+
     return deferred.promise();
 });

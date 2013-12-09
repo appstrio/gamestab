@@ -22,6 +22,7 @@
     "uri.js": "~1.11.2",
     "jfeed": "*",
     "requirejs": "~2.1.9",
-    "requirejs-promise": "*"
+    "requirejs-promise": "*",
+    "typeahead.js": "~0.9.3"
   }
 }

@@ -1,4 +1,4 @@
-define(function MyStorage() {
+define(['jquery'], function MyStorage($) {
     var self = {};
     self.initChromeStorage =  function STORAGE_initChromeStorage() {
         $.extend(self, chrome.storage.local);
@@ -27,18 +27,18 @@ define(function MyStorage() {
                 if(item && item !== 'undefined') item = JSON.parse(item);
                 var obj = {};
                 obj[key] = item;
-                (done || common.nope)(obj);
+                done && done(obj);
             }, 0);
         } catch (e) {
             var obj = {};
             obj[key] = item;
-            (done || common.nope)(item);
+            done && done(item);
         }
     };
 
     self.remove = function STORAGE_remove_from_localstorage(key, done) {
         localStorage.removeItem(key);
-        (done || common.nope)();
+        done && done();
     }
 
     if (1 > 2 && chrome && chrome.storage && chrome.storage.local) self.initChromeStorage();

@@ -1,32 +1,10 @@
-define(['screenshot'], function Topsites(screenshot) {
+define(['underscore','promise!async_screenshot','jquery','storage'],  function Topsites(underscore,screenshot, $, storage) {
     var self = {}, deferred = new $.Deferred();
     self.maximumDiasAmount = 8;
     self.key = "topsites";
     self.ignoreListKey = "ignoreList";
-    self.storage = new MyStorage();
+    self.storage = storage;
     self.screenshot = screenshot;
-
-    self.init = (function() {
-        self.getIgnoreList(function(err, _ignoreList) {
-            self.ignoreList = _ignoreList || [];
-            self.get(function(err, _topsites) {
-                if (err) {
-                    self.getFromChrome(function(_topsites) {
-                        self.topsites = self.removeIgnored(_topsites, self.ignoreList);
-                        self.topsites = self.topsites.slice(0, self.maximumDiasAmount);
-                        self.fillScreenshots(self.topsites);
-                        deferred.resolve(self);
-                    });
-                } else {
-
-                    self.topsites = self.removeIgnored(_topsites, self.ignoreList);
-
-                    self.fillScreenshots(self.topsites);
-                    deferred.resolve(self);
-                }
-            });
-        })
-    })();
 
     self.get = function(done) {
         self.storage.get(self.key, function(result) {
@@ -155,6 +133,28 @@ define(['screenshot'], function Topsites(screenshot) {
 
         return topsites;
     };
+
+    self.init = (function() {
+        self.getIgnoreList(function(err, _ignoreList) {
+            self.ignoreList = _ignoreList || [];
+            self.get(function(err, _topsites) {
+                if (err) {
+                    self.getFromChrome(function(_topsites) {
+                        self.topsites = self.removeIgnored(_topsites, self.ignoreList);
+                        self.topsites = self.topsites.slice(0, self.maximumDiasAmount);
+                        self.fillScreenshots(self.topsites);
+                        deferred.resolve(self);
+                    });
+                } else {
+
+                    self.topsites = self.removeIgnored(_topsites, self.ignoreList);
+
+                    self.fillScreenshots(self.topsites);
+                    deferred.resolve(self);
+                }
+            });
+        })
+    })();
 
     return deferred.promise();
 });

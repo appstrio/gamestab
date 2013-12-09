@@ -1,7 +1,7 @@
-define(['async_config','runtime','renderer'], function Weather(config,runtime,renderer) {
+define(['promise!async_config','promise!async_runtime','renderer','storage'], function Weather(storage,config,runtime,renderer) {
     var self = {};
     self.renderer = renderer;
-    self.storage = new MyStorage();
+    self.storage = storage;
 
     self.key = "weather";
     self.baseURL = "http://api.openweathermap.org/data/2.5/forecast/daily?mode=json"
@@ -189,4 +189,4 @@ define(['async_config','runtime','renderer'], function Weather(config,runtime,re
     };
 
     return self;
-};
+});

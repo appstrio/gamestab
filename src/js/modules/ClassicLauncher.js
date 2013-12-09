@@ -1,14 +1,14 @@
-define(['renderer', 'chromeapps', 'topsites'], function ClassicLauncher(renderer, chromeApps, topsites) {
+define(['underscore','renderer', 'promise!async_chromeapps', 'promise!async_topsites', 'templates'], function ClassicLauncher(underscore,renderer, chromeapps, topsites, templates) {
     var self = {};
 
     self.renderer = renderer;
-    self.chromeApps = chromeApps;
+    self.chromeapps = chromeapps;
     self.topsites = topsites;
-    self.$dialsWrapper = self.renderer.$$wrapper.find('.dials-wrapper').eq(0);
-    self.$appsWrapper = self.renderer.$$wrapper.find('.apps-wrapper').eq(0);
+    self.$dialsWrapper = self.renderer.$wrapper.find('.dials-wrapper').eq(0);
+    self.$appsWrapper = self.renderer.$wrapper.find('.apps-wrapper').eq(0);
 
-    self.$appsSwitch = self.renderer.$$wrapper.find('.apps-switch').eq(0);
-    self.$dialsSwitch = self.renderer.$$wrapper.find('.dials-switch').eq(0);
+    self.$appsSwitch = self.renderer.$wrapper.find('.apps-switch').eq(0);
+    self.$dialsSwitch = self.renderer.$wrapper.find('.dials-switch').eq(0);
 
     self.render = function () {
         var newDial;
@@ -16,7 +16,7 @@ define(['renderer', 'chromeapps', 'topsites'], function ClassicLauncher(renderer
             self.renderDial(dial);
         });
 
-        _.each(self.chromeApps.apps, function (app) {
+        _.each(self.chromeapps.apps, function (app) {
             self.renderApp(app);
         });
 
@@ -42,14 +42,14 @@ define(['renderer', 'chromeapps', 'topsites'], function ClassicLauncher(renderer
     };
 
     self.setEventHandlers = function () {
-        self.renderer.$$wrapper.on('click', '.dial', _.bind(self.dialClickHandler, self));
-        self.renderer.$$wrapper.on('click', '.dial-remove-button', _.bind(self.dialRemoveClickHandler, self));
+        self.renderer.$wrapper.on('click', '.dial', _.bind(self.dialClickHandler, self));
+        self.renderer.$wrapper.on('click', '.dial-remove-button', _.bind(self.dialRemoveClickHandler, self));
 
-        self.renderer.$$wrapper.on('click', '.app', _.bind(self.appClickHandler, self));
-        self.renderer.$$wrapper.on('click', '.app-remove-button', _.bind(self.appRemoveClickHandler, self));
+        self.renderer.$wrapper.on('click', '.app', _.bind(self.appClickHandler, self));
+        self.renderer.$wrapper.on('click', '.app-remove-button', _.bind(self.appRemoveClickHandler, self));
 
-        self.renderer.$$wrapper.on('click', '.apps-switch', _.bind(self.appsSwitchClickHandler, self));
-        self.renderer.$$wrapper.on('click', '.dials-switch', _.bind(self.dialsSwitchClickHandler, self));
+        self.renderer.$wrapper.on('click', '.apps-switch', _.bind(self.appsSwitchClickHandler, self));
+        self.renderer.$wrapper.on('click', '.dials-switch', _.bind(self.dialsSwitchClickHandler, self));
 
     };
 
@@ -65,8 +65,6 @@ define(['renderer', 'chromeapps', 'topsites'], function ClassicLauncher(renderer
         setTimeout(function () {
             window.location.href = url;
         }, 500);
-
-
     };
 
     self.dialRemoveClickHandler = function (e) {
@@ -136,9 +134,9 @@ define(['renderer', 'chromeapps', 'topsites'], function ClassicLauncher(renderer
 
     self.wrapperClickHandler = function (e) {
         e.stopPropagation();
-        console.log('self.renderer.$$wrapper', self.renderer.$$wrapper);
+        console.log('self.renderer.$wrapper', self.renderer.$wrapper);
         self.renderer.$wrapper.toggleClass('launcher-maximized');
-    }
+    };
 
     return self;
 });

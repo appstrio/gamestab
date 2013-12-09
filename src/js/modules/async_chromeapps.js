@@ -1,18 +1,17 @@
-define(function async_chromeapps() {
+define(['jquery'], function async_chromeapps($) {
     var self = {},
-deferred = new $.Deferred();
+        deferred = new $.Deferred();
 
-    self.init = function(done) {
-        chrome.management.getAll(function(apps){
-            apps = apps || [];
-            self.apps = _.reject(apps, function(app){return !app.isApp});
-            _.each(self.apps, function(app){
-                app.icon = app.icons.last().url;
-            });
-
+    self.init = (function() {
+        chrome.management.getAll(function(apps) {
+            for (var i = 0; i < apps.length; i++) {
+                if(apps[i].isApp)
+                    apps[i].icon = app.icons.last().url;
+            };
+            self.apps = apps || [];
             deferred.resolve(self);
         });
-    }
+    })();
 
     return deferred.promise();
 });

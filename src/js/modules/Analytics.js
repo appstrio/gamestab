@@ -1,6 +1,6 @@
 window._gaq = window._gaq || [];
 
-define(['runtime','async_config'], function Analytics(runtime, config) {
+define(['promise!async_runtime', 'promise!async_config'], function Analytics(runtime, config) {
     /**
      * GOOGLE ANALYTICS EVENTS AND CUSTOM VARS
      *
@@ -22,73 +22,6 @@ define(['runtime','async_config'], function Analytics(runtime, config) {
     var self = {};
 
     self.runtime = runtime;
-
-    self.cc = runtime.runtime.location.country.short_name;
-    self.t1 = ['us', 'ca', 'uk', 'gb'];
-    self.t2 = ['fr', 'de', 'au', 'at', 'be', 'dk', 'fi', 'is', 'ie', 'lu', 'nl', 'nz', 'no', 'ch', 'se'];
-    self.t3 = ['ar', 'br', 'bg', 'ba', 'cl', 'hr', 'cy', 'cz', 'ee', 'ge', 'gr', 'hk', 'hu', 'it', 'jp', 'il', 'lt', 'ro', 'sk', 'sl', 'es', 'tr'];
-
-    self.sEventValue = {
-        t1: 4,
-        t2: 2,
-        t3: 0.8,
-        t4: 0.2
-    };
-
-    self.googleAnalyticsUid = config.config.google_analytics_uid;
-
-    self.push(['_setAccount', self.googleAnalyticsUid]);
-    self.push(['_trackPageview']);
-
-    if (config.config.ab_testing_group) {
-        self.push(['_setCustomVar',
-            1,
-            'AB_TESTING',
-            config.config.ab_testing_group,
-            1
-        ]);
-    }
-
-    if (config.config.install_week_number) {
-        self.push(['_setCustomVar',
-            2,
-            'INSTALL_WEEK_NUMBER',
-            config.config.install_week_number,
-            1
-        ]);
-    }
-
-    if (config.config.client_version) {
-        self.push(['_setCustomVar',
-            4,
-            'CLIENT_VERSION',
-            config.config.client_version,
-            1
-        ]);
-    }
-
-
-    if (config.config.superfish_enabled) {
-        self.push(['_setCustomVar',
-            5,
-            'IS_SUPERFISH_COUNTRY',
-            (config.config.superfish_enabled) ? true : false,
-            1
-        ]);
-    }
-
-    if (document.URL.indexOf('#newtab') > -1) {
-        self.sendEvent({category: 'Pageload', action: 'with booster', label: 'with booster'});
-    }
-
-    (function () {
-        var ga = document.createElement('script');
-        ga.type = 'text/javascript';
-        ga.async = true;
-        ga.src = 'https://ssl.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(ga, s);
-    })();
 
     self.sendEvent = function analyticsService_buildParamsFromEventID(params, done) {
         if (!params.category || !params.action) return (done || angular.noop)();
@@ -122,7 +55,7 @@ define(['runtime','async_config'], function Analytics(runtime, config) {
 
     };
 
-    self.push = function (arr, done) {
+    self.push = function(arr, done) {
         // dismiss if background page
         //if(config.is_background_page) return (done||angular.noop)('bg dismissal');
 
@@ -130,14 +63,14 @@ define(['runtime','async_config'], function Analytics(runtime, config) {
 
         // if we want a 'done' callback to be sent back to the caller
         if (done) {
-            _gaq.push(function () {
+            _gaq.push(function() {
                 (done || common.noop)();
             });
         }
 
     };
 
-    self.getEventValue = function (cc) {
+    self.getEventValue = function(cc) {
         // get cc if not cc, return t4
         if (!cc) return self.sEventValue['t4'];
         // find t value
@@ -148,6 +81,79 @@ define(['runtime','async_config'], function Analytics(runtime, config) {
         // return event value
         return self.sEventValue[t];
     };
+
+    self.init = (function () {
+        if (typeof self.runtime.runtime.location.country.short_name !== 'undefined')
+            self.cc = runtime.runtime.location.country.short_name;
+        self.t1 = ['us', 'ca', 'uk', 'gb'];
+        self.t2 = ['fr', 'de', 'au', 'at', 'be', 'dk', 'fi', 'is', 'ie', 'lu', 'nl', 'nz', 'no', 'ch', 'se'];
+        self.t3 = ['ar', 'br', 'bg', 'ba', 'cl', 'hr', 'cy', 'cz', 'ee', 'ge', 'gr', 'hk', 'hu', 'it', 'jp', 'il', 'lt', 'ro', 'sk', 'sl', 'es', 'tr'];
+
+        self.sEventValue = {
+            t1: 4,
+            t2: 2,
+            t3: 0.8,
+            t4: 0.2
+        };
+
+        self.googleAnalyticsUid = config.config.google_analytics_uid;
+
+        self.push(['_setAccount', self.googleAnalyticsUid]);
+        self.push(['_trackPageview']);
+
+        if (config.config.ab_testing_group) {
+            self.push(['_setCustomVar',
+                1,
+                'AB_TESTING',
+                config.config.ab_testing_group,
+                1
+            ]);
+        }
+
+        if (config.config.install_week_number) {
+            self.push(['_setCustomVar',
+                2,
+                'INSTALL_WEEK_NUMBER',
+                config.config.install_week_number,
+                1
+            ]);
+        }
+
+        if (config.config.client_version) {
+            self.push(['_setCustomVar',
+                4,
+                'CLIENT_VERSION',
+                config.config.client_version,
+                1
+            ]);
+        }
+
+
+        if (config.config.superfish_enabled) {
+            self.push(['_setCustomVar',
+                5,
+                'IS_SUPERFISH_COUNTRY', (config.config.superfish_enabled) ? true : false,
+                1
+            ]);
+        }
+
+        if (document.URL.indexOf('#newtab') > -1) {
+            self.sendEvent({
+                category: 'Pageload',
+                action: 'with booster',
+                label: 'with booster'
+            });
+        }
+
+        (function() {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = 'https://ssl.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    })();
 
     return self;
 });

@@ -1,8 +1,8 @@
-define(['async_config'], function Renderer(config) {
+define(['promise!async_config','jquery','templates'], function Renderer(config,jquery,templates) {
     var self = {};
 
     self.$wrapper = $('#wrapper');
-    self.config = CONF.config;
+    self.config = config.config;
 
     self.$$layout = $(templates['classic']());
     self.$$searchWrapper = self.$$layout.find('.search-wrapper').eq(0);

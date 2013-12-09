@@ -1,11 +1,11 @@
-define(['async_config','renderer','weather','runtime'], function News(config, renderer, weather, runtime) {
+define(['underscore','promise!async_config','renderer','weather','promise!async_runtime','storage'], function News(underscore,config, renderer, weather, runtime,storage) {
     var self = {};
         self.renderer = renderer;
         self.weather = weather;
         self.runtime = runtime;
         self.baseUrl = 'http://news.google.com?ned=';
         self.key = "news";
-        self.storage = new MyStorage();
+        self.storage = storage;
 
         self.countriesNEDS = {
             il : "iw_il",
