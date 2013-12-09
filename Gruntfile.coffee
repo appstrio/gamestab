@@ -6,6 +6,13 @@ module.exports = (grunt) ->
   require("load-grunt-tasks") grunt
 
   grunt.initConfig
+    watch:
+      pages:
+        files: '<%= jade.dev.files %>'
+        tasks: ['jade:dev']
+      modules:
+        files: '<%= copy.modules.files %>'
+        tasks: ['copy:modules']
     jade:
       dev:
         options:
@@ -26,15 +33,11 @@ module.exports = (grunt) ->
         src: ['./src/manifest.json']
         dest: './build'
         flatten: true
-      require:
-        expand: true
-        src: ['./bower_components/requirejs/require.js']
-        dest: './build/js'
-        flatten: true
       libs:
         expand: true
         src: [
           "bower_components/requirejs/require.js"
+          "bower_components/requirejs-promise/requirejs-promise.js"
           "bower_components/jquery/jquery.min.js"
           "bower_components/jfeed/build/dist/jquery.jfeed.pack.js"
           "bower_components/moment/min/moment.min.js"
@@ -43,34 +46,18 @@ module.exports = (grunt) ->
         ]
         dest: './build/js/libs'
         flatten: true
-      modules:
+      js:
         expand: true
-        src: [
-          "src/js/modules/Analytics.js"
-          "src/js/modules/Chromesrcs.js"
-          "src/js/modules/ClassicLauncher.js"
-          "src/js/modules/Config.js"
-          "src/js/modules/FileSystem.js"
-          "src/js/modules/Geo.js"
-          "src/js/modules/Launcher.js"
-          "src/js/modules/News.js"
-          "src/js/modules/Renderer.js"
-          "src/js/modules/Screenshot.js"
-          "src/js/modules/Search.js"
-          "src/js/modules/Setup.js"
-          "src/js/modules/Storage.js"
-          "src/js/modules/Topsites.js"
-          "src/js/modules/Weather.js"
-        ]
-        dest: './build/js/modules'
-        flatten: true
-
-  #    grunt.registerTask('teint',
+        cwd: 'src/js'
+        src: '**/*.js'
+        dest: 'build/js/'
+        # rename:
   grunt.registerTask "prebuild", ->
     require "shelljs/global"
     mkdir "build/js"
     mkdir "build/js/libs"
     mkdir "build/js/modules"
 
+
   grunt.registerTask "init", ['prebuild']
-  grunt.registerTask "default", ["jade:dev",'copy:main']
+  grunt.registerTask "default", ["jade",'']
