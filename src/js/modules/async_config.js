@@ -1,7 +1,6 @@
 define(['underscore','jquery','moment','env','storage'],function Config(underscore,$,moment,env,storage) {
     // Loaded Dynamically
     var key = "config",
-        // env = 'PRODUCTION',
         self = {
             path : 'js',
             config : {},
@@ -15,8 +14,8 @@ define(['underscore','jquery','moment','env','storage'],function Config(undersco
         });
     };
     self.loadFromFile = function (done) {
-        env = 'production'; // var env = env.toLowerCase(),
-        var path = self.path + '/' + env + '.json';
+        var env = env.env.toLowerCase(),
+            path = self.path + '/' + env + '.json';
         $.getJSON(path, function (result) {
             if (result.config) {
                 result.config.timestamp = Date.now();

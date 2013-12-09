@@ -5,33 +5,39 @@ module.exports = (grunt) ->
   # load all available grunt tasks
   require("load-grunt-tasks") grunt
 
+  # misc
+  watchDefaultOptions =
+    spawn:false
+
   grunt.initConfig
     watch:
-      pages:
-        files: '<%= jade.dev.files %>'
+      jade:
+        options: watchDefaultOptions
+        files: "<%= jade.dev.src %>"
         tasks: ['jade:dev']
-      modules:
-        files: '<%= copy.modules.files %>'
-        tasks: ['copy:modules']
+      less:
+        options: watchDefaultOptions
+        files: "<%= less.dev.src %>"
+        tasks: ['less:dev']
+      copyManifest:
+        options: watchDefaultOptions
+        files: "<%= copy.manifest.src %>"
+        tasks: ['copy:manifest']
+      copyJs:
+        options: watchDefaultOptions
+        files: "<%= copy.js.cwd %>/<%= copy.js.src %>"
+        tasks: ['copy:js']
     jade:
       dev:
-        options:
-          pretty: true
-        files: [
-          dest: "build/newtab.html"
-          src : "src/jade/newtab.jade"
-        ,
-          dest: "build/options.html"
-          src : "src/jade/options.jade"
-        ,
-          dest: "build/background.html"
-          src : "src/jade/background.jade"
-        ]
+        expand:true
+        flatten:true
+        src: './src/jade/*.jade'
+        dest: './build'
     less:
       dev:
         expand:true
-        cwd: 'src/less'
-        src: '*.less'
+        flatten: true
+        src: 'src/less/*.less'
         dest: 'build/css'
     'compile-templates':
       dist:
@@ -43,12 +49,12 @@ module.exports = (grunt) ->
       assets:
         expand: true
         cwd: 'assets'
-        src: ['**/*']
+        src: '**/*'
         dest: './build'
       manifest:
         expand: true
         flatten: true
-        src: ['./src/manifest.json']
+        src: './src/manifest.json'
         dest: './build'
       libs:
         expand: true
@@ -69,13 +75,23 @@ module.exports = (grunt) ->
         cwd: 'src/js'
         src: '**/*.js*'
         dest: 'build/js/'
-        # rename:
+
   grunt.registerTask "prebuild", ->
     require "shelljs/global"
     mkdir "build/js"
     mkdir "build/js/libs"
     mkdir "build/js/modules"
 
+  # change filepath on the fly to compile only the changed file
+  grunt.event.on 'watch', (action, fpath, watchtarget) ->
+    preconfiguredPath = grunt.config "watch.#{watchtarget}.path"
+    if preconfiguredPath?
+      actualtarget = preconfiguredPath
+    else
+      actualtarget = grunt.config("watch.#{watchtarget}.tasks")[0].replace(':','.') # Assuming only one task
+    console.log action, fpath, watchtarget, actualtarget
+    grunt.config "#{actualtarget}.src", fpath
+    grunt.config "#{actualtarget}.cwd", '' # fpath contains full path
 
   grunt.registerTask "init", ['prebuild','copy:assets']
   grunt.registerTask "default", ["jade",'copy:manifest','copy:libs','copy:js','compile-templates']

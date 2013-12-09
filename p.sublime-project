@@ -14,9 +14,5 @@
 			"follow_symlinks": true,
 			"path": "C:\\Users\\wildeyes\\Documents\\wint"
 		},
-		{
-			"follow_symlinks": true,
-			"path": "bower_components\\requirejs"
-		}
 	]
 }

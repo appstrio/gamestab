@@ -39,7 +39,7 @@ define(['boot', 'promise!async_filesystem', 'promise!async_screenshot', 'promise
         search.render();
         renderer.apply();
         window.analytics = analytics;
-        _.defer(boost);
+        _.defer(self.boost);
     };
 
     self.renderClassic = function() {
@@ -47,7 +47,7 @@ define(['boot', 'promise!async_filesystem', 'promise!async_screenshot', 'promise
         classiclauncher.render();
         renderer.applyClassic();
         window.analytics = analytics;
-        _.defer(boost);
+        _.defer(self.boost);
     };
 
     self.boost = function() {
@@ -62,5 +62,7 @@ define(['boot', 'promise!async_filesystem', 'promise!async_screenshot', 'promise
 
     if (!boot.useboosterq) {
         self.renderClassic();
+    } else {
+
     }
 });
