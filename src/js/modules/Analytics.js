@@ -24,7 +24,7 @@ define(['promise!async_runtime', 'promise!async_config'], function Analytics(run
     self.runtime = runtime;
 
     self.sendEvent = function analyticsService_buildParamsFromEventID(params, done) {
-        if (!params.category || !params.action) return (done || angular.noop)();
+        if (!params.category || !params.action) return done && done();
 
         var category = params.category;
         var action = params.action;

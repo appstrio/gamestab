@@ -124,10 +124,12 @@ define(['underscore','promise!async_filesystem','jquery','storage'],  function a
         self.fs.write(fileName,type,base64,function imageService_urlToFile_getBase64Image_write (err, fileUrl){
             self.screenshots[url] = fileUrl;
             self.storeScreenshots();
-            (done||angular.noop)(null, fileUrl);
+            done && done(null, fileUrl);
         });
     };
-
+    String.prototype.hashCode = function hashCode () {
+        return this + "" + Date.now();
+    }
 
     self.generateFileNameByUrl = function (prefix,url,type) {
         if(!url ) { return null; }

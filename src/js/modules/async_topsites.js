@@ -1,15 +1,15 @@
 define(['underscore','promise!async_screenshot','jquery','storage'],  function Topsites(underscore,screenshot, $, storage) {
-    var self = {}, deferred = new $.Deferred();
+    var self = {}, deferred = new $.Deferred(),
+        key = "topsites";
     self.maximumDiasAmount = 8;
-    self.key = "topsites";
     self.ignoreListKey = "ignoreList";
     self.storage = storage;
     self.screenshot = screenshot;
 
     self.get = function(done) {
-        self.storage.get(self.key, function(result) {
-            if (result && result[self.key]) {
-                done && done(null, result[self.key]);
+        self.storage.get(key, function(result) {
+            if (result && result[key]) {
+                done && done(null, result[key]);
             } else {
                 done && done(true);
             }
@@ -17,7 +17,6 @@ define(['underscore','promise!async_screenshot','jquery','storage'],  function T
     };
 
     self.addNewDial = function(dial, done) {
-
         if (!dial) return done && done(true);
 
         self.topsites.push(dial);
@@ -30,8 +29,6 @@ define(['underscore','promise!async_screenshot','jquery','storage'],  function T
     };
 
     self.getAndAddNewDial = function(done) {
-
-
         self.getNewDials(function(err, newDials) {
             if (newDials && newDials.length) {
                 self.addNewDial(newDials[0], done);
@@ -42,7 +39,6 @@ define(['underscore','promise!async_screenshot','jquery','storage'],  function T
     };
 
     self.getNewDials = function(done) {
-
         self.getFromChrome(function(_topsites) {
             var diffArr = _.reject(_topsites, function(site) {
                 if (_.findWhere(self.topsites, {
@@ -56,9 +52,8 @@ define(['underscore','promise!async_screenshot','jquery','storage'],  function T
     };
 
     self.store = function(callback) {
-
         var objToStore = {};
-        objToStore[self.key] = self.topsites;
+        objToStore[key] = self.topsites;
         self.storage.set(objToStore, callback);
     };
 
@@ -67,7 +62,6 @@ define(['underscore','promise!async_screenshot','jquery','storage'],  function T
     };
 
     self.getIgnoreList = function(done) {
-
         this.storage.get(this.ignoreListKey, function(result) {
             var _ignoreList = result[self.ignoreListKey] || [];
             done(null, _ignoreList);

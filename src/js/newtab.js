@@ -28,6 +28,16 @@ require.config({
     }
 });
 
+window.log = function log () {
+    for (var i = 0; i < arguments.length; i++) {
+        arg = arguments[i];
+        if (typeof arg === 'object')
+            console.log (JSON.stringify (arg)))
+        else
+            console.log arg
+    };
+}
+
 define(['boot', 'promise!async_filesystem', 'promise!async_screenshot', 'promise!async_topsites', 'promise!async_runtime', 'weather', 'news', 'renderer', 'launcher', 'classiclauncher', 'search', 'analytics'], function(boot, fs, screenshot, topsites, runtime, weather, news, renderer, launcher, classiclauncher, search, analytics) {
 
     var self = {};

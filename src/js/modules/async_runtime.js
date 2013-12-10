@@ -49,6 +49,7 @@ define(['promise!async_config', 'jquery', 'geo', 'storage'], function async_runt
     self.executeEnhancers = function() {
         self.runtime.enhancersTimestamp = Date.now();
         // get the user geo-location
+        log geo.get
         self.geo.get(function(err, location) {
             // we can still run without location
             if (!err && location) {
