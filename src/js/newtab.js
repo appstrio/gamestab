@@ -5,6 +5,7 @@ require.config({
         promise: 'libs/requirejs-promise',
         underscore: 'libs/underscore-min',
         jquery: 'libs/jquery.min',
+        uri: 'libs/uri.min',
         moment: 'libs/moment.min',
         env: 'env',
         boot: 'boot',

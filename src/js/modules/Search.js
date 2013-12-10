@@ -1,4 +1,4 @@
-define(['underscore','promise!async_runtime', 'promise!async_config', 'renderer' ,'templates'], function Search(underscore,runtime, config, renderer ,templates) {
+define(['uri','underscore','promise!async_runtime', 'promise!async_config', 'renderer' ,'templates'], function Search(uri,underscore,runtime, config, renderer ,templates) {
 
     var self = {},
         config = config.config;
