@@ -28,7 +28,6 @@ require.config({
 });
 
 window.log = function log() {
-    this.count = 0;
     for (var i = 0; i < arguments.length; i++) {
         var arg = arguments[i],
             obj;
@@ -37,7 +36,7 @@ window.log = function log() {
         else
             obj = arg;
 
-        console.log("LOG " + this.count + "#:" + obj)
+        console.log("LOG " + 0 + "#:" + obj)
     };
 }
 
@@ -45,8 +44,8 @@ define(function(require) {
     // Using requirejs' require to specify loading order
 
     var async_config = require('modules/async_config'),
-        renderer = require('modules/renderer'),
-        dialprovider = require('modules/dialsprovider-topsites')
+        dialprovider = require('modules/dpTopsites'),
+        renderer = require('modules/renderer')
 
     //Load config
     async_config.then(function InitOrRunBooster(data) { // TODO: @hlandao Why booster_enabled and with_booster?
@@ -59,8 +58,7 @@ define(function(require) {
         } else {
             (function renderNewTab() {
                 renderer.render();
-
-            // dialprovider.provide().then(renderer.renderDials);
+                dialprovider.provide().then(renderer.renderDials);
             // require everything else
             // require('modules/analytics');
             // TODO when is this called?

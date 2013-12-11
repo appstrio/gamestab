@@ -3,18 +3,11 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         $wrapper: $('#wrapper'),
         $layout: $(templates['classic']())
     };
-    $.extend(self, {
-        $searchWrapper : self.$layout.find('.search-wrapper').eq(0),
-        $dialsWrapper  : self.$wrapper.find('.dials-wrapper').eq(0),
-        $appsWrapper   : self.$wrapper.find('.apps-wrapper').eq(0),
-        $appsSwitch    : self.$wrapper.find('.apps-switch').eq(0),
-        $dialsSwitch   : self.$wrapper.find('.dials-switch').eq(0)
-    });
 
     self.renderDial = function (dial) {
-        var $dial = $(templates['classic-dial'](dial));
+        var $dial = $(templates['classic-dial'](dial))
             // .data('dial', dial);
-        $dial.find('.thumbnail-wrapper').html(dial.url);
+        // $dial.find('.thumbnail-wrapper').html(dial.url);
         self.$dialsWrapper.append($dial);
 
         // if (dial.screenshotDefer && dial.screenshotDefer.promise) {
@@ -22,7 +15,6 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         //         //css('background-image', 'url(' + dial.screenshot + ')');
         //     });
         // }
-
     };
 
     self.renderApp = function (app) {
@@ -72,7 +64,7 @@ define(['jquery', 'templates'], function Renderer($, templates) {
 
     self.renderDials = function renderDials (dialsArr) {
         for (var i = dialsArr.length - 1; i >= 0; i--) {
-            dial = dialsArr[i];
+            var dial = dialsArr[i];
             self.renderDial(dial);
         };
     }
@@ -81,6 +73,14 @@ define(['jquery', 'templates'], function Renderer($, templates) {
     self.render = function initRenderer (dials) {
         // setup generel layout
         self.$wrapper.html(self.$layout);
+
+        $.extend(self, {
+            $searchWrapper : self.$layout.find('.search-wrapper').eq(0),
+            $dialsWrapper  : self.$wrapper.find('.dials-wrapper').eq(0),
+            $appsWrapper   : self.$wrapper.find('.apps-wrapper').eq(0),
+            $appsSwitch    : self.$wrapper.find('.apps-switch').eq(0),
+            $dialsSwitch   : self.$wrapper.find('.dials-switch').eq(0)
+        });
         // // setup search layout
         self.$searchWrapper.html($(templates['search-wrapper']())); // WAS {}
     }
