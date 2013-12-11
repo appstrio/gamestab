@@ -1,3 +1,3 @@
-define(function() {
-  return {env:'PRODUCTION'};
+define(function env() {
+    return {env:'PRODUCTION'};
 });

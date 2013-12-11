@@ -4,21 +4,17 @@ module.exports = (grunt) ->
   # load all available grunt tasks
   require("load-grunt-tasks") grunt
 
-  flattenAndExpand =
-    flatten: true
-    expand: true
-
   initConfig =
     path:
       build: 'build'
     jade:
-      dev:
-        files:[
-          expand:true
-          flatten:true
-          src: 'src/jade/*.jade'
-          dest: '<%= path.build %>'
-        ]
+      compile:
+        expand:true
+        flatten:true
+        cwd:  "./src/jade/"
+        dest: "<%= path.build %>"
+        src : "*.jade"
+        ext : ".html"
     less:
       compile:
         expand:true
@@ -32,16 +28,20 @@ module.exports = (grunt) ->
         src : 'src/dot/**.dot'
         dest: '<%= path.build %>/js/templates.js'
     copy:
-        options: flattenAndExpand
+      # options: flattenAndExpand
       assets:
+        expand: true
         cwd: 'assets'
         src: '**/*'
         dest: '<%= path.build %>'
       manifest:
-        options: flattenAndExpand
+        flatten: true
+        expand: true
         src: 'src/manifest.json'
         dest: '<%= path.build %>'
       libs:
+        flatten: true
+        expand: true
         src: [
           "bower_components/requirejs/require.js"
           "bower_components/typeahead/typeahead.js.jquery.js"
@@ -52,21 +52,24 @@ module.exports = (grunt) ->
           "bower_components/underscore/underscore-min.js"
           "bower_components/uri.js/src/URI.min.js"
         ]
-        dest: '<%= path.build %>/js/libs'
+        dest: "<%= path.build %>/js/libs"
       js:
-        options: flattenAndExpand
+        flatten: true
+        expand: true
         cwd: 'src/js'
         src: '*.js*'
         dest: '<%= path.build %>/js'
       modules:
-        options: flattenAndExpand
+        flatten: true
+        expand: true
         cwd: 'src/js/modules'
         src: '*.js*'
         dest: '<%= path.build %>/js/modules'
 
   # Dynamic watchers building
-  initConfig.watch = buildWatchers initConfig, 'copy:assets'
+  initConfig.watch = buildWatchers initConfig, ['path','copy:libs','copy:assets']
   grunt.initConfig initConfig
+  # log   initConfig.watch
 
   grunt.registerTask "preinit", ->
     require "shelljs/global"
@@ -84,21 +87,21 @@ module.exports = (grunt) ->
     grunt.config "#{actualtarget}.src", fpath
     grunt.config "#{actualtarget}.cwd", '' # fpath contains full path
 
-  grunt.registerTask "init", ['preinit','copy','jade']
+  grunt.registerTask "init", ['preinit','copy','jade','compile-templates']
   grunt.registerTask "default", ["watch"]
   grunt.registerTask "publish", []
 
 log = -> console.log JSON.stringify arg, undefined, 2 for arg in arguments
 String.prototype.capitalize = (string) -> this.charAt(0).toUpperCase() + this.slice(1)
 buildWatchers = (initConfig, excludeArray) ->
-  excludeArray = if typeof excludeArray is 'string' then [excludeArray]
+  excludeArray = if typeof excludeArray is 'string' then [excludeArray] else excludeArray
   watch =
     options:
       spawn:false
-      forever:true
+      forever:false
   for own taskType, targets of initConfig
     for own targetName, targetContents of targets
-      if "#{taskType}:#{targetName}" not in excludeArray
+      if "#{taskType}" not in excludeArray and "#{taskType}:#{targetName}" not in excludeArray
         cwd = if targetContents.cwd? then targetContents.cwd else '.'
         if Array.isArray targetContents.src
           files = "#{cwd}/#{src}" for src in targetContents.src

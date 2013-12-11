@@ -12,45 +12,28 @@ define(['underscore','renderer', 'promise!async_chromeapps', 'promise!async_tops
 
     self.render = function () {
         var newDial;
-        _.each(self.topsites.topsites, function (dial) {
+        for(self.topsites.topsites, function (dial) {
             self.renderDial(dial);
         });
 
-        _.each(self.chromeapps.apps, function (app) {
+        for(self.chromeapps.apps, function (app) {
             self.renderApp(app);
         });
 
-        self.setEventHandlers();
+        // self.setEventHandlers();
     };
 
-    self.renderDial = function (dial) {
-        var newDial = $(templates['classic-dial'](dial));
-        newDial.data('dial', dial);
-        self.$dialsWrapper.append(newDial);
-        if (dial.screenshotDefer && dial.screenshotDefer.promise) {
-            dial.screenshotDefer.promise().done(function () {
-                newDial.find('.thumbnail-wrapper').css('background-image', 'url(' + dial.screenshot + ')');
-            });
-        }
 
-    };
-
-    self.renderApp = function (app) {
-        var newApp = $(templates['classic-app'](app));
-        newApp.data('app', app);
-        self.$appsWrapper.append(newApp);
-    };
 
     self.setEventHandlers = function () {
-        self.renderer.$wrapper.on('click', '.dial', _.bind(self.dialClickHandler, self));
-        self.renderer.$wrapper.on('click', '.dial-remove-button', _.bind(self.dialRemoveClickHandler, self));
+        // self.renderer.$wrapper.on('click', '.dial', self.dialClickHandler);
+        // self.renderer.$wrapper.on('click', '.dial-remove-button', self.dialRemoveClickHandler);
 
-        self.renderer.$wrapper.on('click', '.app', _.bind(self.appClickHandler, self));
-        self.renderer.$wrapper.on('click', '.app-remove-button', _.bind(self.appRemoveClickHandler, self));
+        // self.renderer.$wrapper.on('click', '.app', self.appClickHandler);
+        // self.renderer.$wrapper.on('click', '.app-remove-button', self.appRemoveClickHandler);
 
-        self.renderer.$wrapper.on('click', '.apps-switch', _.bind(self.appsSwitchClickHandler, self));
-        self.renderer.$wrapper.on('click', '.dials-switch', _.bind(self.dialsSwitchClickHandler, self));
-
+        // self.renderer.$wrapper.on('click', '.apps-switch', self.appsSwitchClickHandler);
+        // self.renderer.$wrapper.on('click', '.dials-switch', self.dialsSwitchClickHandler);
     };
 
     self.dialClickHandler = function (e) {

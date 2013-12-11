@@ -1,55 +1,10 @@
-define(['underscore','promise!async_screenshot','jquery','storage'],  function Topsites(underscore,screenshot, $, storage) {
+define(['underscore','jquery','storage'],  function Topsites(underscore, $, storage) {
+
     var self = {}, deferred = new $.Deferred(),
         key = "topsites";
-    self.maximumDiasAmount = 8;
+    self.maximumDialsAmount = 8;
     self.ignoreListKey = "ignoreList";
     self.storage = storage;
-    self.screenshot = screenshot;
-
-    self.get = function(done) {
-        self.storage.get(key, function(result) {
-            if (result && result[key]) {
-                done && done(null, result[key]);
-            } else {
-                done && done(true);
-            }
-        });
-    };
-
-    self.addNewDial = function(dial, done) {
-        if (!dial) return done && done(true);
-
-        self.topsites.push(dial);
-        console.log(dial, 'dial0');
-
-        self.store(function() {
-            console.log(dial, 'dial', done);
-            return done && done(null, dial);
-        });
-    };
-
-    self.getAndAddNewDial = function(done) {
-        self.getNewDials(function(err, newDials) {
-            if (newDials && newDials.length) {
-                self.addNewDial(newDials[0], done);
-            } else {
-                done && done(true);
-            }
-        });
-    };
-
-    self.getNewDials = function(done) {
-        self.getFromChrome(function(_topsites) {
-            var diffArr = _.reject(_topsites, function(site) {
-                if (_.findWhere(self.topsites, {
-                    url: site.url
-                })) return true;
-                if (self.ignoreList.indexOf(site.url) > -1) return true;
-                return false;
-            });
-            done && done(null, diffArr);
-        });
-    };
 
     self.store = function(callback) {
         var objToStore = {};
@@ -100,34 +55,6 @@ define(['underscore','promise!async_screenshot','jquery','storage'],  function T
         self.storeIgnoreList(self.ignoreList);
     };
 
-    self.fillScreenshots = function(topsites) {
-        _.each(topsites, function(site) {
-            if (site.screenshot || site.screenshotsRetries > 4) {
-
-            } else {
-                site.screenshotDefer = $.Deferred();
-
-                self.screenshot.capture({
-                    url: site.url
-                }, function(err, screenshotURL) {
-                    if (screenshotURL) {
-                        site.screenshot = screenshotURL;
-                        site.screenshotDefer.resolve();
-                        self.store();
-                    } else {
-                        site.screenshotsRetries = site.screenshotsRetries || 0;
-                        ++site.screenshotsRetries;
-                        site.screenshotDefer.reject();
-                        self.store();
-                    }
-                });
-            }
-
-        });
-
-        return topsites;
-    };
-
     self.init = (function() {
         self.getIgnoreList(function(err, _ignoreList) {
             self.ignoreList = _ignoreList || [];
@@ -135,14 +62,13 @@ define(['underscore','promise!async_screenshot','jquery','storage'],  function T
                 if (err) {
                     self.getFromChrome(function(_topsites) {
                         self.topsites = self.removeIgnored(_topsites, self.ignoreList);
-                        self.topsites = self.topsites.slice(0, self.maximumDiasAmount);
+                        self.topsites = self.topsites.slice(0, self.maximumDialsAmount);
                         self.fillScreenshots(self.topsites);
                         deferred.resolve(self);
                     });
                 } else {
 
                     self.topsites = self.removeIgnored(_topsites, self.ignoreList);
-
                     self.fillScreenshots(self.topsites);
                     deferred.resolve(self);
                 }

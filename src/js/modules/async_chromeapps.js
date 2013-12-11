@@ -1,4 +1,5 @@
 define(['jquery'], function async_chromeapps($) {
+    console.log('chr');
     var self = {},
         deferred = new $.Deferred();
 
@@ -9,6 +10,7 @@ define(['jquery'], function async_chromeapps($) {
             //         apps[i].icon = app.icons.last().url;
             // };
             self.apps = apps || [];
+            console.log('chro finished');
             deferred.resolve(self);
         });
     })();

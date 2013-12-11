@@ -1,7 +1,8 @@
-define(['jquery'], function async_filesystem($) {
-    var self = {}, deferred = new $.Deferred();
+define(['jquery'], function async_filesystem($local) {
+    console.log('fs');
+    var self = {}, deferred = new $local.Deferred();
 
-    self.errorHandler = function(){
+    self.errorHandler = function(e) {
             var msg = '';
             switch (e.code) {
                 case FileError.QUOTA_EXCEEDED_ERR:
@@ -158,9 +159,9 @@ define(['jquery'], function async_filesystem($) {
                 window.requestFileSystem(apiType, grantedBytes, function onInitFs(fileSystem){
                     //file system open listener
                     self.fs = fileSystem;
-                    self.fsReady = true;
+                    self.fsReady = true;console.log('fs finished');
                     deferred.resolve(self);
-                }, function(err) {
+                }, function(err) {            console.log('fs finished');
                     deferred.reject(err);
                     self.errorHandler.apply(arguments);
                 });
