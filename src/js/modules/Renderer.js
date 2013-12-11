@@ -6,8 +6,6 @@ define(['jquery', 'templates'], function Renderer($, templates) {
 
     self.renderDial = function (dial) {
         var $dial = $(templates['classic-dial'](dial))
-            // .data('dial', dial);
-        // $dial.find('.thumbnail-wrapper').html(dial.url);
         self.$dialsWrapper.append($dial);
 
         // if (dial.screenshotDefer && dial.screenshotDefer.promise) {
@@ -15,51 +13,50 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         //         //css('background-image', 'url(' + dial.screenshot + ')');
         //     });
         // }
+        self.$wrapper.on('click', '.dial', dial.click);
+        self.$wrapper.on('click', '.dial-remove-button', dial.remove);
     };
 
     self.renderApp = function (app) {
         var newApp = $(templates['classic-app'](app));
-        newApp.data('app', app);
+        // newApp.data('app', app);
         self.$appsWrapper.append(newApp);
+
+        self.$wrapper.on('click', '.app', app.click);
+        self.$wrapper.on('click', '.app-remove-button', app.remove);
     };
 
     self.wrapperClickHandler = function (e) {
-        // e.stopPropagation();
-        // console.log('renderer.$wrapper', renderer.$wrapper);
-        // renderer.$wrapper.toggleClass('launcher-maximized');
+        e.stopPropagation();
+        console.log('renderer.$wrapper', self.$wrapper);
+        self.$wrapper.toggleClass('launcher-maximized');
     };
 
     self.appsSwitchClickHandler = function (e) {
         e.stopPropagation();
-        // e.preventDefault();
+        e.preventDefault();
 
-        // self.$appsSwitch.addClass('selected');
-        // self.$dialsSwitch.removeClass('selected');
+        self.$appsSwitch.addClass('selected');
+        self.$dialsSwitch.removeClass('selected');
 
-        // self.$dialsWrapper.hide();
-        // self.$appsWrapper.show();
+        self.$dialsWrapper.hide();
+        self.$appsWrapper.show();
     };
 
     self.dialsSwitchClickHandler = function (e) {
-        // e.stopPropagation();
-        // e.preventDefault();
+        e.stopPropagation();
+        e.preventDefault();
 
-        // self.$appsSwitch.removeClass('selected');
-        // self.$dialsSwitch.addClass('selected');
+        self.$appsSwitch.removeClass('selected');
+        self.$dialsSwitch.addClass('selected');
 
-        // self.$dialsWrapper.show();
-        // self.$appsWrapper.hide();
+        self.$dialsWrapper.show();
+        self.$appsWrapper.hide();
     };
 
     self.setEventHandlers = function () {
-        // renderer.$wrapper.on('click', '.dial', self.dialClickHandler);
-        // renderer.$wrapper.on('click', '.dial-remove-button', self.dialRemoveClickHandler);
-
-        // renderer.$wrapper.on('click', '.app', self.appClickHandler);
-        // renderer.$wrapper.on('click', '.app-remove-button', self.appRemoveClickHandler);
-
-        // renderer.$wrapper.on('click', '.apps-switch', self.appsSwitchClickHandler);
-        // renderer.$wrapper.on('click', '.dials-switch', self.dialsSwitchClickHandler);
+        self.$wrapper.on('click', '.apps-switch', self.appsSwitchClickHandler);
+        self.$wrapper.on('click', '.dials-switch', self.dialsSwitchClickHandler);
     };
 
     self.renderDials = function renderDials (dialsArr) {
@@ -68,7 +65,12 @@ define(['jquery', 'templates'], function Renderer($, templates) {
             self.renderDial(dial);
         };
     }
-
+    self.renderApps = function renderApps (dialsArr) {
+        for (var i = dialsArr.length - 1; i >= 0; i--) {
+            var appDial = dialsArr[i];
+            self.renderApp(appDial)
+        };
+    }
 
     self.render = function initRenderer (dials) {
         // setup generel layout
@@ -81,8 +83,9 @@ define(['jquery', 'templates'], function Renderer($, templates) {
             $appsSwitch    : self.$wrapper.find('.apps-switch').eq(0),
             $dialsSwitch   : self.$wrapper.find('.dials-switch').eq(0)
         });
-        // // setup search layout
+        // setup search layout
         self.$searchWrapper.html($(templates['search-wrapper']())); // WAS {}
+        self.setEventHandlers();
     }
 
     return self;

@@ -67,7 +67,8 @@ module.exports = (grunt) ->
         dest: '<%= path.build %>/js/modules'
 
   # Dynamic watchers building
-  initConfig.watch = buildWatchers initConfig, ['path','copy:libs','copy:assets']
+  watchSingleExclude = ['compile-templates']
+  initConfig.watch   = buildWatchers initConfig, ['path','copy:libs','copy:assets']
   grunt.initConfig initConfig
   # log   initConfig.watch
 
@@ -84,8 +85,10 @@ module.exports = (grunt) ->
       actualtarget = preconfiguredPath
     else
       actualtarget = grunt.config("watch.#{watchtarget}.tasks")[0].replace(':','.') # Assuming only one task
-    grunt.config "#{actualtarget}.src", fpath
-    grunt.config "#{actualtarget}.cwd", '' # fpath contains full path
+    log actualtarget, watchSingleExclude, watchtarget
+    if actualtarget not in watchSingleExclude and actualtarget.split('.')[0] not in watchSingleExclude
+      grunt.config "#{actualtarget}.src", fpath
+      grunt.config "#{actualtarget}.cwd", '' # fpath contains full path
 
   grunt.registerTask "init", ['preinit','copy','jade','compile-templates']
   grunt.registerTask "default", ["watch"]
