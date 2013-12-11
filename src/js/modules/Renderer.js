@@ -12,8 +12,8 @@ define(['jquery', 'templates'], function Renderer($, templates) {
     });
 
     self.renderDial = function (dial) {
-        var $dial = $(templates['classic-dial'](dial))
-            .data('dial', dial);
+        var $dial = $(templates['classic-dial'](dial));
+            // .data('dial', dial);
         $dial.find('.thumbnail-wrapper').html(dial.url);
         self.$dialsWrapper.append($dial);
 
@@ -70,10 +70,18 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         // renderer.$wrapper.on('click', '.dials-switch', self.dialsSwitchClickHandler);
     };
 
-    self.render = function initRenderer () {
+    self.renderDials = function renderDials (dialsArr) {
+        for (var i = dialsArr.length - 1; i >= 0; i--) {
+            dial = dialsArr[i];
+            self.renderDial(dial);
+        };
+    }
+
+
+    self.render = function initRenderer (dials) {
         // setup generel layout
         self.$wrapper.html(self.$layout);
-        // setup search layout
+        // // setup search layout
         self.$searchWrapper.html($(templates['search-wrapper']())); // WAS {}
     }
 

@@ -1,6 +1,5 @@
 require.config({
     baseUrl: 'js/',
-    waitSeconds: 30,
     paths: {
         promise: 'libs/requirejs-promise',
         underscore: 'libs/underscore-min',
@@ -46,7 +45,9 @@ define(function(require) {
     // Using requirejs' require to specify loading order
 
     var async_config = require('modules/async_config'),
-        renderer = require('modules/renderer');
+        renderer = require('modules/renderer'),
+        dialprovider = require('modules/dialsprovider-topsites')
+
     //Load config
     async_config.then(function InitOrRunBooster(data) { // TODO: @hlandao Why booster_enabled and with_booster?
         //Check whether we want to use the "booster"
@@ -58,19 +59,21 @@ define(function(require) {
         } else {
             (function renderNewTab() {
                 renderer.render();
-                // require everything else
-                // require('modules/analytics');
-                // TODO when is this called?
-                // setTimeout(function boost() {
-                //     chrome.tabs.getCurrent(function(tab) {
-                //         chrome.tabs.update(tab.id, {
-                //             selected: true
-                //         }, function() {
-                //             $('.search-input').blur().focus();
-                //         });
-                //     });
-                // },0);
-            })()
-        }
-    })
+
+            // dialprovider.provide().then(renderer.renderDials);
+            // require everything else
+            // require('modules/analytics');
+            // TODO when is this called?
+            // setTimeout(function boost() {
+            //     chrome.tabs.getCurrent(function(tab) {
+            //         chrome.tabs.update(tab.id, {
+            //             selected: true
+            //         }, function() {
+            //             $('.search-input').blur().focus();
+            //         });
+            //     });
+            // },0);
+            })();
+        };
+    });
 });

@@ -1,22 +1,25 @@
-define(['jquery'], function dialsProvider_Topsites ($) {
+define(['jquery','renderer'], function dialsProvider_Topsites ($,renderer) {
     var deferred = new $.Deferred();
         self = {
             ignored: []
         };
 
-    self.provide = function  () {
+    self.provide = function () {
         var deferred = new $.Deferred(),
-            dials = chrome.topsites.get(deferred.resolve);
-        deferred.then(function createDials (topsites) {
+            deferredTopsites = new $.Deferred();
+        deferredTopsites.then(function createDials (topsites) {
+            var dials = []
             for (var i = topsites.length - 1; i >= 0; i--) {
-                var topsiteObject = topsites[i],
-                    dial = {
+                var topsiteObject = topsites[i];
+                dials[i] = {
                         url   : topsiteObject.url,
                         title : topsiteObject.title
                     };
-                log(dial);
+                log(dials[i]);
             };
-        });
+            deferred.resolve(dials);
+        }).fail(deferred.fail);
+
         //Filter out ignoredDials
         // var diffArr = _.reject(_topsites, function(site) {
         //         if (_.findWhere(self.topsites, {
@@ -25,6 +28,9 @@ define(['jquery'], function dialsProvider_Topsites ($) {
         //         if (self.ignoreList.indexOf(site.url) > -1) return true;
         //         return false;
         //     });
+
+        chrome.topsites.get(deferredTopsites.resolve);
+        return deferred;
     }
 
     self.dialClickHandler = function (e) {
