@@ -5,6 +5,7 @@ define(['jquery', 'templates'], function Renderer($, templates) {
     };
 
     self.renderDial = function (dial) {
+        log(dial);
         var $dial = $(templates['classic-dial'](dial))
             .on('click', dial.click);
         $dial.find('.dial-remove-button').on('click', dial.remove)

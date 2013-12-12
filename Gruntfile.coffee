@@ -68,8 +68,11 @@ module.exports = (grunt) ->
         dest: '<%= path.build %>/js/modules'
 
   # Dynamic watchers building
-  watchSingleExclude = ['compile-templates']
+  watchSingleExclude = ['compile-templates','less']
   initConfig.watch   = buildWatchers initConfig, ['path','copy:libs','copy:assets']
+  initConfig.watch.lessCompile =
+    files: ['src/less/**/*.less']
+    tasks: ['less:compile']
   grunt.initConfig initConfig
   # log   initConfig.watch
 
@@ -78,6 +81,8 @@ module.exports = (grunt) ->
     mkdir '-p', "build/js"
     mkdir "build/js/libs"
     mkdir "build/js/modules"
+
+
 
   # change filepath on the fly to compile only the changed file NOTE only works with flatten:true for some reason, has something todo with cwd
   grunt.event.on 'watch', (action, fpath, watchtarget) ->

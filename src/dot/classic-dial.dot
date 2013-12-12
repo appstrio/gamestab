@@ -1,7 +1,7 @@
 <div class="dial" data-url="{{=it.url}}">
     <a class="inner" href="{{=it.url}}">
-        {{? it.screenshot }}
-            <div class="thumbnail-wrapper" style="background-image:url({{=it.screenshot}})">
+        {{? it.thumbnail }}
+            <div class="thumbnail-wrapper" style="background-image:url({{=it.thumbnail}})">
                 <div class="favicon">
                     <img src="chrome://favicon/{{=it.url}}"></img>
                 </div>

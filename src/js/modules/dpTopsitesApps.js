@@ -4,6 +4,27 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
             ignored: []
         };
 
+    var predefinedTopsites = [
+        {title : 'Gmail', url : 'http://www.gmail.com', thumbnail : '/img/logo_icons/gmail175x175.jpg'},
+        {title : 'Facebook', url : 'http://www.facebook.com', thumbnail : '/img/logo_icons/facebook175x175.jpg'},
+        {title : 'Twitter', url : 'http://www.twitter.com', thumbnail : '/img/logo_icons/twitter175x175.jpg'},
+        {title : 'Dropbox', url : 'http://www.dropbox.com', thumbnail : '/img/logo_icons/dropbox175x175.jpg'},
+        {title : 'Yahoo!', url : 'http://www.yahoo.com', thumbnail : '/img/logo_icons/yahoo175x175.jpg'},
+        {title : 'Amazon', url : 'http://www.amazon.com', thumbnail : '/img/logo_icons/amazon175x175.jpg'},
+        {title : 'Pinterest', url : 'http://www.pinterest.com', thumbnail : '/img/logo_icons/pinterest175x175.jpg'},
+        {title : 'Ebay', url : 'http://www.ebay.com', thumbnail : '/img/logo_icons/ebay175x175.jpg'},
+        {
+            url: "http://www.lovedgames.com/games/ashes2ashes",
+            thumbnail: "http://cdn.lovedgames.com/widgets/bg/1000/ashes2ashes_tumb.gif",
+            title: "Ashes 2 Ashes"
+        }, {
+            url: "http://www.lovedgames.com/games/cloudyspil",
+            thumbnail: "http://cdn.lovedgames.com/widgets/bg/1000/cloudy_tumb.gif",
+            title: "Cloudy"
+        }
+    ];
+
+
     self.provide = function (type) {
         var def = new $.Deferred(),
             innerDef = new $.Deferred(),
@@ -14,7 +35,7 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
                     log(app);
 
                     if(isApp(app))
-                        dials.push({
+                        dials.unshift({
                             id     : app.id,
                             name   : app.shortName,
                             icon   : app.icons.last().url,
@@ -27,14 +48,15 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
             },
             createTopsitesDials = function createTopsitesDials (topsites) {
                 var dials = [];
-                for (var i = topsites.length - 1; i >= 0; i--) {
+                for (var i = 0; i < topsites.length; i++) {
                     var topsiteObject = topsites[i];
-                    dials[i] = {
-                            url    : topsiteObject.url,
-                            title  : topsiteObject.title,
-                            click  : self.dialClickHandler,
-                            remove : self.dialRemoveClickHandler
-                        };
+                    dials.unshift({
+                        url    : topsiteObject.url,
+                        title  : topsiteObject.title,
+                        thumbnail  : topsiteObject.thumbnail,
+                        click  : self.dialClickHandler,
+                        remove : self.dialRemoveClickHandler
+                    });
                 };
                 def.resolve(dials);
             },
@@ -42,7 +64,8 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
         if(type === "apps")
             chrome.management.getAll(innerDef.resolve);
         else
-            chrome.topSites.get(innerDef.resolve);
+            //chrome.topSites.get(innerDef.resolve);
+            innerDef.resolve(predefinedTopsites);
         innerDef.then(method).fail(def.fail);
 
         //Filter out ignoredDials
