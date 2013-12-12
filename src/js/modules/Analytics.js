@@ -1,7 +1,6 @@
 window._gaq = window._gaq || [];
 
 define(['promise!async_runtime', 'promise!async_config'], function Analytics(runtime, config) {
-    console.log('anala start')
     /**
      * GOOGLE ANALYTICS EVENTS AND CUSTOM VARS
      *
