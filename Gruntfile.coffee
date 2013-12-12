@@ -20,7 +20,8 @@ module.exports = (grunt) ->
         expand:true
         flatten: true
         src: 'src/less/*.less'
-        dest: '<%= path.build %>/css'
+        dest: '<%= path.build %>/css/',
+        ext: '.css'
     'compile-templates':
       compile:
         options:
@@ -89,7 +90,7 @@ module.exports = (grunt) ->
       grunt.config "#{actualtarget}.src", fpath
       grunt.config "#{actualtarget}.cwd", '' # fpath contains full path
 
-  grunt.registerTask "init", ['preinit','copy','jade','compile-templates']
+  grunt.registerTask "init", ['preinit','copy','jade','less','compile-templates']
   grunt.registerTask "default", ["watch"]
   grunt.registerTask "publish", []
 
