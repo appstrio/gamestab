@@ -1,5 +1,9 @@
 var env = {
-    type: "production"
+    type: "production",
+    force:{
+        loadConfigFromFile:true
+    },
+    debug:true
 };
 
 define(['jquery','storage'], function config($,storage) {
@@ -9,13 +13,6 @@ define(['jquery','storage'], function config($,storage) {
             data: deferred.promise()
         };
 
-    self.loadFromFile = function(done) {
-        var path = 'js/' + env.type + '.json',
-            deferred = new $.Deferred();
-        $.getJSON(path, deferred.resolve, deferred.fail);
-        return deferred;
-    };
-
     // self.initChromeStorage = function STORAGE_initChromeStorage() {
     //     $.extend(self, chrome.storage.local);
     // };
@@ -23,11 +20,11 @@ define(['jquery','storage'], function config($,storage) {
     self.init = (function() {
         // Try to fetch appdata from the localstorage
         var data = storage.get("data");
-        if(data)
+        if(!(env.debug && env.force.loadConfigFromFile) && data)
             deferred.resolve(data);
         else {
             // Or try to load it from the JSON that's included with the extension
-            self.loadFromFile().then(function (fetchedConfig) {
+            hello = $.getJSON('/js/' + env.type + '.json').then(function (fetchedConfig) {
                 data = fetchedConfig;
                 data.timestamp = Date.now(); // TODO: @hlandao Do we want this ever refreshed?
                 data.ab_testing_group = (Math.random() > 0.5) ? "A" : "B";
@@ -35,7 +32,9 @@ define(['jquery','storage'], function config($,storage) {
                 data.client_version = (chrome && chrome.app && chrome.app.getDetails()) ? chrome.app.getDetails().version : '';
                 storage.set('data',data);
                 deferred.resolve(data);
-            }).fail(deferred.fail);
+            }).fail(function  (argument) {
+                alert(JSON.stringify(argument));
+            });
         }
     })();
 

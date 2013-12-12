@@ -85,7 +85,7 @@ module.exports = (grunt) ->
       actualtarget = preconfiguredPath
     else
       actualtarget = grunt.config("watch.#{watchtarget}.tasks")[0].replace(':','.') # Assuming only one task
-    log actualtarget, watchSingleExclude, watchtarget
+    # log actualtarget, watchSingleExclude, watchtarget
     if actualtarget not in watchSingleExclude and actualtarget.split('.')[0] not in watchSingleExclude
       grunt.config "#{actualtarget}.src", fpath
       grunt.config "#{actualtarget}.cwd", '' # fpath contains full path
