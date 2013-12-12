@@ -1,55 +1,55 @@
-//['uri','underscore','promise!async_runtime', 'promise!async_config', 'renderer' ,'templates'],
-define(['jquery','renderer','async_config'], function Search($,renderer,async_config) {
+define(function Search(require) {
+
 
     var self = {
-        base_search_url      : '',
-        base_suggestions_url : ''
-    };
+        base_search_url: '',
+        base_suggestions_url: ''
+    }, renderer = require('renderer');
 
     self.setEventHandlers = function() {
-        // self.renderer.$searchWrapper.on('click', '.submit-button', function(e) {
-        //     var query = self.renderer.$searchWrapper.find('input').eq(0).val();
-
-        //     self.doSearch(query);
-        // });
+        renderer.$searchWrapper.on('click', '.submit-button', function(e) {
+            var query = renderer.$searchWrapper.find('input').eq(0).val();
+            self.doSearch(query);
+        });
     }
     self.setupTypeahead = function() {
-        // var input = self.renderer.$$searchWrapper.find('.search-input').eq(0);
-        // input.typeahead({
-        //     source: _.bind(self.getSuggestions, self),
-        //     updater: function(item) {
-        //         self.doSearch(item);
-        //     }
-        // });
+        require('typeahead');
+        var input = renderer.$searchWrapper.find('.search-input').eq(0);
+        input.typeahead({
+            source: self.getSuggestions,
+            updater: function(item) {
+                self.doSearch(item);
+            }
+        });
     };
 
     self.getSuggestions = function(query, process) {
-        // var url = self.base_suggestions_url + query;
+        var url = self.base_suggestions_url + query;
 
-        // $.ajax({
-        //     method: "GET",
-        //     url: url,
-        //     success: function(xml) {
-        //         var results = $(xml).find('suggestion'),
-        //             current, output = [];
-        //         for (var i = 0; i < 3, i < results.length; ++i) {
-        //             current = results[i];
-        //             output.push($(current).attr('data'));
-        //         }
+        $.ajax({
+            method: "GET",
+            url: url,
+            success: function(xml) {
+                var results = $(xml).find('suggestion'),
+                    current, output = [];
+                for (var i = 0; i < 3, i < results.length; ++i) {
+                    current = results[i];
+                    output.push($(current).attr('data'));
+                }
 
-        //         if (output[0] !== query) output.unshift(query);
+                if (output[0] !== query) output.unshift(query);
 
-        //         process(output);
-        //     },
-        //     dataType: 'xml'
-        // });
+                process(output);
+            },
+            dataType: 'xml'
+        });
     };
 
     self.doSearch = function(query) {
         // if (common.isUrl(query)) { //TODO : Who would type a URL into a search box? (especially with our users) \ do we really want a whole lib for one fun?
         //     self.redirectToUrl(query);
         // } else {
-            self.redirectToSearch(query);
+        self.redirectToSearch(query);
         // }
     };
 
@@ -88,15 +88,17 @@ define(['jquery','renderer','async_config'], function Search($,renderer,async_co
         }, 500);
     };
 
-    self.init = (function () {
+    self.init = (function() {
+        var $             = require('jquery'),
+            async_runtime = require('async_runtime');
         //TODO should we timeout 0 to increase speed?
-        async_config.data.then(function () {
-            self.base_search_url = config.base_search_url;
-            self.base_suggestions_url = config.base_suggestions_url;
-        });
+        async_runtime.then(function(runtime) {
+            self.base_search_url = runtime.base_search_url;
+            self.base_suggestions_url = runtime.base_suggestions_url;
 
-        // self.setEventHandlers()
-        // self.setupTypeahead()
+            self.setEventHandlers()
+            self.setupTypeahead()
+        });
         // self.cc = self.runtime.runtime.location.country.short_name;
     })();
 

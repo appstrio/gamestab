@@ -1,11 +1,11 @@
 require.config({
     baseUrl: 'js/',
     paths: {
-        promise          : 'libs/requirejs-promise',
         underscore       : 'libs/underscore-min',
         jquery           : 'libs/jquery.min',
         uri              : 'libs/uri.min',
         moment           : 'libs/moment.min',
+        typeahead        : 'libs/typeahead.min',
         env              : 'env',
         templates        : 'templates',
         async_chromeapps : 'modules/async_chromeapps',
@@ -13,6 +13,7 @@ require.config({
         async_screenshot : 'modules/async_screenshot',
         async_runtime    : 'modules/async_runtime',
         async_topsites   : 'modules/async_topsites',
+        dpTopsitesApps   : 'modules/dpTopsitesApps',
         locator          : 'modules/locator',
         analytics        : 'modules/analytics',
         thumbly          : 'modules/thumbly',
@@ -46,7 +47,7 @@ define(function(require) {
     // Using requirejs' require to specify loading order
 
     //Load config, and then
-    require('modules/async_runtime').then(function InitOrRunBooster(runtime) {
+    require('async_runtime').then(function InitOrRunBooster(runtime) {
         //Check whether we want to use the "booster"
         if (runtime.booster_enabled && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1) {
             //Close & Open tab to move focus to the "main input"
@@ -63,9 +64,9 @@ define(function(require) {
                     });
                 },0);
             (function renderNewTab() {
-                var dialprovider = require('modules/dpTopsitesApps'),
-                    renderer = require('modules/renderer')
-                renderer.render();
+                var dialprovider = require('dpTopsitesApps'),
+                    renderer = require('renderer')
+                require('search');
                 dialprovider.provide("topsites").then(renderer.renderDials);
                 dialprovider.provide("apps").then(renderer.renderApps);
                 // require everything else

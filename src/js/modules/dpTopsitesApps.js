@@ -11,7 +11,6 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
                 var dials = [];
                 for (var i = 0; i < apps.length; i++) {
                     var app = apps[i];
-                    log(app);
 
                     if(isApp(app))
                         dials.push({

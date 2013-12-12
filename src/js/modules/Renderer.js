@@ -6,8 +6,8 @@ define(['jquery', 'templates'], function Renderer($, templates) {
 
     self.renderDial = function (dial) {
         var $dial = $(templates['classic-dial'](dial))
-            .on('click', dial.click);
-        $dial.find('.dial-remove-button').on('click', dial.remove)
+            .on('click', dial.click)
+            .on('click', '.dial-remove-button', dial.remove);
         return self.$dialsWrapper.append($dial)
         // if (dial.screenshotDefer && dial.screenshotDefer.promise) {
         //     dial.screenshotDefer.promise().done(function () {
@@ -19,15 +19,9 @@ define(['jquery', 'templates'], function Renderer($, templates) {
     self.renderApp = function (app) {
         var $newApp = $(templates['classic-app'](app))
             .data('app', app)
-            .on('click',app.click);
-        $newApp.find('.app-remove-button').on('click',app.remove);
+            .on('click',app.click)
+            .on('click', '.app-remove-button', app.remove);
         return self.$appsWrapper.append($newApp);
-    };
-
-    self.wrapperClickHandler = function (e) {
-        e.stopPropagation();
-        console.log('renderer.$wrapper', self.$wrapper);
-        self.$wrapper.toggleClass('launcher-maximized');
     };
 
     self.appsSwitchClickHandler = function (e) {
@@ -70,7 +64,7 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         };
     }
 
-    self.render = function initRenderer (dials) {
+    self.render = (function initRenderer () {
         // setup generel layout
         self.$wrapper.html(self.$layout);
 
@@ -84,7 +78,7 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         // setup search layout
         self.$searchWrapper.html($(templates['search-wrapper']())); // WAS {}
         self.setEventHandlers();
-    }
+    })();
 
     return self;
 });
