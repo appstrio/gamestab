@@ -30,9 +30,9 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
                 for (var i = topsites.length - 1; i >= 0; i--) {
                     var topsiteObject = topsites[i];
                     dials[i] = {
-                            url   : topsiteObject.url,
-                            title : topsiteObject.title,
-                            click : self.dialClickHandler,
+                            url    : topsiteObject.url,
+                            title  : topsiteObject.title,
+                            click  : self.dialClickHandler,
                             remove : self.dialRemoveClickHandler
                         };
                 };
@@ -121,5 +121,5 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
     return self;
 });
 var isApp = function isApp (ExtensionInfo) {
-    return true; //ExtensionInfo.type === 'hosted_app' || ExtensionInfo.type === 'packaged_app' || ExtensionInfo.type === 'legacy_packaged_app';
+    return ExtensionInfo.type === 'hosted_app' || ExtensionInfo.type === 'packaged_app' || ExtensionInfo.type === 'legacy_packaged_app';
 }

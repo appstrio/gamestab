@@ -45,34 +45,31 @@ window.log = function log() {
 define(function(require) {
     // Using requirejs' require to specify loading order
 
-    var async_config = require('modules/async_config'),
-        dialprovider = require('modules/dpTopsitesApps'),
-        renderer = require('modules/renderer')
-
-    //Load config
-    async_config.then(function InitOrRunBooster(data) { // TODO: @hlandao Why booster_enabled and with_booster?
+    //Load config, and then
+    require('modules/async_runtime').then(function InitOrRunBooster(runtime) {
         //Check whether we want to use the "booster"
-        if (data.booster_enabled && data.with_booster && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1) {
+        if (runtime.booster_enabled && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1) {
             //Close & Open tab to move focus to the "main input"
             window.open("newtab.html#newtab");
             window.close();
         } else {
+            setTimeout(function boost() {
+                    chrome.tabs.getCurrent(function(tab) {
+                        chrome.tabs.update(tab.id, {
+                            selected: true
+                        }, function() {
+                            $('.search-input').blur().focus();
+                        });
+                    });
+                },0);
             (function renderNewTab() {
+                var dialprovider = require('modules/dpTopsitesApps'),
+                    renderer = require('modules/renderer')
                 renderer.render();
                 dialprovider.provide("topsites").then(renderer.renderDials);
                 dialprovider.provide("apps").then(renderer.renderApps);
-            // require everything else
-            // require('modules/analytics');
-            // TODO when is this called?
-            // setTimeout(function boost() {
-            //     chrome.tabs.getCurrent(function(tab) {
-            //         chrome.tabs.update(tab.id, {
-            //             selected: true
-            //         }, function() {
-            //             $('.search-input').blur().focus();
-            //         });
-            //     });
-            // },0);
+                // require everything else
+                // require('modules/analytics');
             })();
         };
     });
