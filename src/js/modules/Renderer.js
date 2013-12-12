@@ -6,24 +6,22 @@ define(['jquery', 'templates'], function Renderer($, templates) {
 
     self.renderDial = function (dial) {
         var $dial = $(templates['classic-dial'](dial))
-        self.$dialsWrapper.append($dial);
-
+            .on('click', dial.click);
+        $dial.find('.dial-remove-button').on('click', dial.remove)
+        return self.$dialsWrapper.append($dial)
         // if (dial.screenshotDefer && dial.screenshotDefer.promise) {
         //     dial.screenshotDefer.promise().done(function () {
         //         //css('background-image', 'url(' + dial.screenshot + ')');
         //     });
         // }
-        self.$wrapper.on('click', '.dial', dial.click);
-        self.$wrapper.on('click', '.dial-remove-button', dial.remove);
     };
 
     self.renderApp = function (app) {
-        var newApp = $(templates['classic-app'](app));
-        // newApp.data('app', app);
-        self.$appsWrapper.append(newApp);
-
-        self.$wrapper.on('click', '.app', app.click);
-        self.$wrapper.on('click', '.app-remove-button', app.remove);
+        var $newApp = $(templates['classic-app'](app))
+            .data('app', app)
+            .on('click',app.click);
+        $newApp.find('.app-remove-button').on('click',app.remove);
+        return self.$appsWrapper.append($newApp);
     };
 
     self.wrapperClickHandler = function (e) {

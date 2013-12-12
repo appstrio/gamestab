@@ -52,7 +52,7 @@ html {
   padding: 0 10px;
 }
 @media all and (max-width: 960px) {
-  
+
 }
 .search-wrapper .inner {
   min-width: 400px;
@@ -335,8 +335,8 @@ body.searchy > .searchy-wrapper > .inner img {
 }
 #wrapper .classic-container .top-wrapper .apps-wrapper {
   display: none;
-  padding: 20px 80px;
   width: 100%;
+  max-width: 1000px;
 }
 #wrapper .classic-container .top-wrapper .apps-wrapper .app {
   width: 60px;
