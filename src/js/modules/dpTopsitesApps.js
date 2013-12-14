@@ -5,21 +5,21 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
         };
 
     var predefinedTopsites = [
-        {title : 'Gmail', url : 'http://www.gmail.com', thumbnail : '/img/logo_icons/gmail175x175.jpg'},
-        {title : 'Facebook', url : 'http://www.facebook.com', thumbnail : '/img/logo_icons/facebook175x175.jpg'},
-        {title : 'Twitter', url : 'http://www.twitter.com', thumbnail : '/img/logo_icons/twitter175x175.jpg'},
-        {title : 'Dropbox', url : 'http://www.dropbox.com', thumbnail : '/img/logo_icons/dropbox175x175.jpg'},
-        {title : 'Yahoo!', url : 'http://www.yahoo.com', thumbnail : '/img/logo_icons/yahoo175x175.jpg'},
-        {title : 'Amazon', url : 'http://www.amazon.com', thumbnail : '/img/logo_icons/amazon175x175.jpg'},
-        {title : 'Pinterest', url : 'http://www.pinterest.com', thumbnail : '/img/logo_icons/pinterest175x175.jpg'},
-        {title : 'Ebay', url : 'http://www.ebay.com', thumbnail : '/img/logo_icons/ebay175x175.jpg'},
+        {title : 'Gmail', url : 'http://www.gmail.com', icon : '/img/logo_icons/gmail175x175.jpg'},
+        {title : 'Facebook', url : 'http://www.facebook.com', icon : '/img/logo_icons/facebook175x175.jpg'},
+        {title : 'Twitter', url : 'http://www.twitter.com', icon : '/img/logo_icons/twitter175x175.jpg'},
+        {title : 'Dropbox', url : 'http://www.dropbox.com', icon : '/img/logo_icons/dropbox175x175.jpg'},
+        {title : 'Yahoo!', url : 'http://www.yahoo.com', icon : '/img/logo_icons/yahoo175x175.jpg'},
+        {title : 'Amazon', url : 'http://www.amazon.com', icon : '/img/logo_icons/amazon175x175.jpg'},
+        {title : 'Pinterest', url : 'http://www.pinterest.com', icon : '/img/logo_icons/pinterest175x175.jpg'},
+        {title : 'Ebay', url : 'http://www.ebay.com', icon : '/img/logo_icons/ebay175x175.jpg'},
         {
             url: "http://www.lovedgames.com/games/ashes2ashes",
-            thumbnail: "http://cdn.lovedgames.com/widgets/bg/1000/ashes2ashes_tumb.gif",
+            icon: "http://cdn.lovedgames.com/widgets/bg/1000/ashes2ashes_tumb.gif",
             title: "Ashes 2 Ashes"
         }, {
             url: "http://www.lovedgames.com/games/cloudyspil",
-            thumbnail: "http://cdn.lovedgames.com/widgets/bg/1000/cloudy_tumb.gif",
+            icon: "http://cdn.lovedgames.com/widgets/bg/1000/cloudy_tumb.gif",
             title: "Cloudy"
         }
     ];
@@ -36,6 +36,7 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
                     if(isApp(app))
                         dials.unshift({
                             id     : app.id,
+                            title   : app.shortName,
                             name   : app.shortName,
                             icon   : app.icons.last().url,
                             description: app.description,
@@ -52,7 +53,7 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
                     dials.unshift({
                         url    : topsiteObject.url,
                         title  : topsiteObject.title,
-                        thumbnail  : topsiteObject.thumbnail,
+                        icon  : topsiteObject.icon,
                         click  : self.dialClickHandler,
                         remove : self.dialRemoveClickHandler
                     });

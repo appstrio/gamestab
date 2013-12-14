@@ -2,8 +2,8 @@
     <div class="search-wrapper"></div>
     <div class="top-wrapper">
         <div class="viewport">
-           <div class="dials-wrapper"></div>
-            <div class="apps-wrapper"></div>
+           <div class="dials-wrapper page0"></div>
+            <div class="dials-wrapper page1"></div>
         </div>
     </div>
     <div class="bottom-wrapper">

@@ -9,7 +9,7 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         var $dial = $(templates['classic-dial'](dial))
             .on('click', dial.click)
             .on('click', '.dial-remove-button', dial.remove);
-        return self.$dialsWrapper.append($dial)
+        return self.$dialsPage.append($dial)
         // if (dial.screenshotDefer && dial.screenshotDefer.promise) {
         //     dial.screenshotDefer.promise().done(function () {
         //         //css('background-image', 'url(' + dial.screenshot + ')');
@@ -18,11 +18,11 @@ define(['jquery', 'templates'], function Renderer($, templates) {
     };
 
     self.renderApp = function (app) {
-        var $newApp = $(templates['classic-app'](app))
+        var $newApp = $(templates['classic-dial'](app))
             .data('app', app)
             .on('click',app.click)
             .on('click', '.app-remove-button', app.remove);
-        return self.$appsWrapper.append($newApp);
+        return self.$appsPage.append($newApp);
     };
 
     self.appsSwitchClickHandler = function (e) {
@@ -32,8 +32,8 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         self.$appsSwitch.addClass('selected');
         self.$dialsSwitch.removeClass('selected');
 
-        self.$dialsWrapper.hide();
-        self.$appsWrapper.show();
+        self.$dialsPage.hide();
+        self.$appsPage.show();
     };
 
     self.dialsSwitchClickHandler = function (e) {
@@ -43,8 +43,8 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         self.$appsSwitch.removeClass('selected');
         self.$dialsSwitch.addClass('selected');
 
-        self.$dialsWrapper.show();
-        self.$appsWrapper.hide();
+        self.$dialsPage.show();
+        self.$appsPage.hide();
     };
 
     self.setEventHandlers = function () {
@@ -58,9 +58,9 @@ define(['jquery', 'templates'], function Renderer($, templates) {
             self.renderDial(dial);
         };
     }
-    self.renderApps = function renderApps (dialsArr) {
-        for (var i = dialsArr.length - 1; i >= 0; i--) {
-            var appDial = dialsArr[i];
+    self.renderApps = function renderApps (appsArr) {
+        for (var i = appsArr.length - 1; i >= 0; i--) {
+            var appDial = appsArr[i];
             self.renderApp(appDial)
         };
     }
@@ -71,8 +71,8 @@ define(['jquery', 'templates'], function Renderer($, templates) {
 
         $.extend(self, {
             $searchWrapper : self.$layout.find('.search-wrapper').eq(0),
-            $dialsWrapper  : self.$wrapper.find('.dials-wrapper').eq(0),
-            $appsWrapper   : self.$wrapper.find('.apps-wrapper').eq(0),
+            $dialsPage  : self.$wrapper.find('.page0').eq(0),
+            $appsPage   : self.$wrapper.find('.page1').eq(0),
             $appsSwitch    : self.$wrapper.find('.apps-switch').eq(0),
             $dialsSwitch   : self.$wrapper.find('.dials-switch').eq(0)
         });

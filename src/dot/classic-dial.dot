@@ -1,17 +1,11 @@
-<div class="dial" data-url="{{=it.url}}">
+<div class="dial"">
     <a class="inner" href="{{=it.url}}">
-        {{? it.thumbnail }}
-            <div class="thumbnail-wrapper" style="background-image:url({{=it.thumbnail}})">
-                <div class="favicon">
-                    <img src="chrome://favicon/{{=it.url}}"></img>
-                </div>
+        {{? it.icon }}
+            <div class="thumbnail-wrapper" style="background-image:url({{=it.icon}})">
                 <div class="dial-remove-button">x</div>
             </div>
         {{?? true }}
         <div class="thumbnail-wrapper">
-            <div class="favicon">
-                <img src="chrome://favicon/{{=it.url}}"></img>
-            </div>
             <div class="dial-remove-button">X</div>
         </div>
         {{? }}
