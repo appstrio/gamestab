@@ -45,7 +45,7 @@ module.exports = (grunt) ->
         expand: true
         src: [
           "bower_components/requirejs/require.js"
-          "bower_components/typeahead.js/dist/typeahead.min.js"
+          "bower_components/typeahead_modified.js/dist/typeahead.min.js"
           "bower_components/jquery/jquery.min.js"
           "bower_components/jfeed/build/dist/jquery.jfeed.pack.js"
           "bower_components/moment/min/moment.min.js"

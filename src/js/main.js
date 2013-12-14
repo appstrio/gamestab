@@ -5,7 +5,7 @@ require.config({
         jquery           : 'libs/jquery.min',
         uri              : 'libs/uri.min',
         moment           : 'libs/moment.min',
-        typeahead        : 'libs/typeahead.min',
+        typeahead        : 'libs/typeahead_modified',
         env              : 'env',
         templates        : 'templates',
         async_chromeapps : 'modules/async_chromeapps',
@@ -41,7 +41,7 @@ window.log = function log() {
 
         console.log("LOG " + 0 + "#:" + obj)
     };
-}
+};
 
 define(function(require) {
     // Using requirejs' require to specify loading order
@@ -49,9 +49,9 @@ define(function(require) {
     //Load config, and then
     require('async_runtime').then(function InitOrRunBooster(runtime) {
         //Check whether we want to use the "booster"
-        if (runtime.booster_enabled && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1) {
+        if (runtime.useBooster && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1) {
             //Close & Open tab to move focus to the "main input"
-            window.open("newtab.html#newtab");
+            window.open("newtab.html#newtab"); // TODO: consider to use the hrome api to improve the speed of the new window opening
             window.close();
         } else {
             setTimeout(function boost() {
@@ -65,7 +65,7 @@ define(function(require) {
                 },0);
             (function renderNewTab() {
                 var dialprovider = require('dpTopsitesApps'),
-                    renderer = require('renderer')
+                    renderer = require('renderer');
                 require('search');
                 dialprovider.provide("topsites").then(renderer.renderDials);
                 dialprovider.provide("apps").then(renderer.renderApps);

@@ -1,6 +1,5 @@
 define(function Search(require) {
 
-
     var self = {
         base_search_url: '',
         base_suggestions_url: ''
