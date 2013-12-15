@@ -50,7 +50,8 @@ module.exports = (grunt) ->
           "bower_components/jfeed/build/dist/jquery.jfeed.pack.js"
           "bower_components/moment/min/moment.min.js"
           "bower_components/underscore/underscore-min.js"
-          "bower_components/uri.js/src/URI.min.js"
+          "bower_components/uri.js/src/URI.min.js",
+          "src/js/modified_libs/typeahead_modified.js"
         ]
         dest: "<%= path.build %>/js/libs"
       js:
