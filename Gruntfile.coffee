@@ -46,6 +46,7 @@ module.exports = (grunt) ->
         src: [
           "bower_components/requirejs/require.js"
           "bower_components/typeahead_modified.js/dist/typeahead.min.js"
+          # "bower_components/when/when.js"
           "bower_components/jquery/jquery.min.js"
           "bower_components/jfeed/build/dist/jquery.jfeed.pack.js"
           "bower_components/moment/min/moment.min.js"
@@ -82,8 +83,6 @@ module.exports = (grunt) ->
     mkdir "build/js/libs"
     mkdir "build/js/modules"
 
-
-
   # change filepath on the fly to compile only the changed file NOTE only works with flatten:true for some reason, has something todo with cwd
   grunt.event.on 'watch', (action, fpath, watchtarget) ->
     preconfiguredPath = grunt.config "watch.#{watchtarget}.path"
@@ -96,7 +95,7 @@ module.exports = (grunt) ->
       grunt.config "#{actualtarget}.src", fpath
       grunt.config "#{actualtarget}.cwd", '' # fpath contains full path
 
-  grunt.registerTask "init", ['preinit','copy','jade','less','compile-templates']
+  grunt.registerTask "build", ['preinit','copy','jade','less','compile-templates']
   grunt.registerTask "default", ["watch"]
   grunt.registerTask "publish", []
 

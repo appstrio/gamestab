@@ -35,13 +35,13 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
 
                     if(isApp(app))
                         dials.unshift({
-                            id     : app.id,
-                            title   : app.shortName,
-                            name   : app.shortName,
-                            icon   : app.icons.last().url,
-                            description: app.description,
-                            click  : self.appClickHandler,
-                            remove : self.appRemoveClickHandler
+                            id          : app.id,
+                            title       : app.shortName,
+                            name        : app.shortName,
+                            icon        : app.icons.last().url,
+                            description : app.description,
+                            click       : self.appClickHandler,
+                            remove      : self.appRemoveClickHandler
                         });
                 };
                 def.resolve(dials);
@@ -51,9 +51,10 @@ define(['jquery'], function dialsProviderTopsitesAndApps ($) {
                 for (var i = 0; i < topsites.length; i++) {
                     var topsiteObject = topsites[i];
                     dials.unshift({
+                        id    : '', // To be consistent with the app API.
                         url    : topsiteObject.url,
                         title  : topsiteObject.title,
-                        icon  : topsiteObject.icon,
+                        icon   : topsiteObject.icon,
                         click  : self.dialClickHandler,
                         remove : self.dialRemoveClickHandler
                     });
