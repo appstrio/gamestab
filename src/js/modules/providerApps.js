@@ -1,6 +1,10 @@
 define(['jquery', 'when','provider'], function($, when, provider) {
     return (function(self) {
 
+        var isApp = function isApp(ExtensionInfo) {
+            return ExtensionInfo.type === 'hosted_app' || ExtensionInfo.type === 'packaged_app' || ExtensionInfo.type === 'legacy_packaged_app';
+        }
+
         self.clickHandler = function(e) {
             e.stopPropagation();
             e.preventDefault();
@@ -27,20 +31,20 @@ define(['jquery', 'when','provider'], function($, when, provider) {
             });
         };
 
-        self.fetch = function fetchTopsites() {
+        self.fetch = function fetchApps() {
             var def = when.defer();
             chrome.management.getAll(function(stuff) {
                 for (var i = stuff.length - 1; i >= 0; i--) {
-                    var stuffObject = stuff[i];
-                    self.inventory.push({
-                        id          : stuffObject.id,
-                        title       : stuffObject.shortName,
-                        name        : stuffObject.shortName,
-                        icon        : stuffObject.icons.last().url,
-                        description : stuffObject.description,
-                        click       : self.handlers.click,
-                        remove      : self.handlers.remove
-                    });
+                    if (isApp(stuffObject))
+                        self.inventory.push({
+                            id          : stuffObject.id,
+                            title       : stuffObject.shortName,
+                            name        : stuffObject.shortName,
+                            icon        : stuffObject.icons.last().url,
+                            description : stuffObject.description,
+                            click       : self.handlers.click,
+                            remove      : self.handlers.remove
+                        });
                 };
                 def.resolve(self.inventory);
             });
