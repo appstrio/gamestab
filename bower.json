@@ -23,6 +23,7 @@
     "jfeed": "*",
     "requirejs": "~2.1.9",
     "requirejs-promise": "*",
-    "typeahead.js": "~0.9.3"
+    "typeahead.js": "~0.9.3",
+    "when": "~2.7.0"
   }
 }
