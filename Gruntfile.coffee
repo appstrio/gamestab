@@ -28,8 +28,19 @@ module.exports = (grunt) ->
           variable:'templates'
         src : 'src/dot/**.dot'
         dest: '<%= path.build %>/js/templates.js'
-    copy:
       # options: flattenAndExpand
+    copy:
+      libs:
+        files:
+          "<%= path.build %>/js/libs/require.js"         : "bower_components/requirejs/require.js"
+          "<%= path.build %>/js/libs/when.js"            : "bower_components/when/when.js"
+          "<%= path.build %>/js/libs/jquery.js"          : "bower_components/jquery/jquery.min.js"
+          "<%= path.build %>/js/libs/jfeed.js"           : "bower_components/jfeed/build/dist/jquery.jfeed.pack.js"
+          "<%= path.build %>/js/libs/moment.js"          : "bower_components/moment/min/moment.min.js"
+          "<%= path.build %>/js/libs/underscore.js"      : "bower_components/underscore/underscore-min.js"
+          "<%= path.build %>/js/libs/uri.js"             : "bower_components/uri.js/src/URI.min.js",
+          # Modified Typeahead contains base typeahead.js "<%= path.build %>/js/libs/typeaheadBase.js"   : "bower_components/typeahead_modified.js/dist/typeahead.min.js"
+          "<%= path.build %>/js/libs/typeahead.js" : "src/js/modified_libs/typeahead_modified.js"
       assets:
         expand: true
         cwd: 'assets'
@@ -40,21 +51,6 @@ module.exports = (grunt) ->
         expand: true
         src: 'src/manifest.json'
         dest: '<%= path.build %>'
-      libs:
-        flatten: true
-        expand: true
-        src: [
-          "bower_components/requirejs/require.js"
-          "bower_components/typeahead_modified.js/dist/typeahead.min.js"
-          "bower_components/when/when.js"
-          "bower_components/jquery/jquery.min.js"
-          "bower_components/jfeed/build/dist/jquery.jfeed.pack.js"
-          "bower_components/moment/min/moment.min.js"
-          "bower_components/underscore/underscore-min.js"
-          "bower_components/uri.js/src/URI.min.js",
-          "src/js/modified_libs/typeahead_modified.js"
-        ]
-        dest: "<%= path.build %>/js/libs"
       js:
         flatten: true
         expand: true
