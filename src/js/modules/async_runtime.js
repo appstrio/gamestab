@@ -34,7 +34,7 @@ define(function async_runtime(require) {
     // decide whether to use the booster
     var decideBooster = function() {
         // only TEST group a is eligible for booster
-        if (self.configCopy.ab_testing_group === 'A') {
+        if (self.config.ab_testing_group === 'A') {
             self.runtime.useBooster = true;
         } else {
             self.runtime.useBooster = false;
@@ -44,7 +44,10 @@ define(function async_runtime(require) {
     // decide whether to use the superfish
     var decideSuperfish = function() {
         var cc = self.location && self.location.cc;
-        if (!self.superfishCCS || configuration.superfish_enabled && cc && self.superfishCCS.indexOf(cc) > -1) {
+        if (!self.runtime.superfishCCS
+            || self.runtime.superfish_enabled
+            && cc
+            && self.runtime.superfishCCS.indexOf(cc) > -1) {
             self.runtime.useSuperfish = true;
         } else {
             self.runtime.useSuperfish = false;
@@ -54,7 +57,10 @@ define(function async_runtime(require) {
     // decide whether to use the dealply
     var decideDealply = function() {
         var cc = self.runtime.location && self.runtime.location.cc;
-        if (!self.dealplyCCS || configuration.dealply_enabled && cc && self.dealplyCCS.indexOf(cc) > -1) {
+        if (!self.runtime.dealplyCCS
+           || self.runtime.dealply_enabled
+           && cc
+           && self.runtime.dealplyCCS.indexOf(cc) > -1) {
             self.runtime.useDealply = true;
         } else {
             self.runtime.useDealply = false;
@@ -79,10 +85,10 @@ define(function async_runtime(require) {
 
         var gettingLocation = getLocation();
         gettingLocation.then(function() {
-            self.enhancersTimestamp = Date.now();
-            self.decideBooster();
-            self.decideSuperfish();
-            self.decideDealply();
+            self.runtime.enhancersTimestamp = Date.now();
+            decideBooster();
+            decideSuperfish();
+            decideDealply();
         }, def.reject);
 
         var finished = when.all([fetchingDials, gettingLocation])
@@ -103,7 +109,7 @@ define(function async_runtime(require) {
             if (self.runtime) {
 
                 // check enhancers timeout
-                if (!self.runtime.enhancersTimestamp || Date.now() - self.runtime.enhancersTimestamp < self.runtime.dormancyTimeout) {
+                if (!self.runtime.enhancersTimestamp || Date.now() - self.runtime.enhancersTimestamp < self.config.dormancyTimeout) {
 
                     self.runtime.enhancersTimestamp = Date.now();
                     decideBooster();

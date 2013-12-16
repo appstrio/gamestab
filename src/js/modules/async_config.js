@@ -34,7 +34,7 @@ define(['jquery', 'storage', 'env', 'when'], function config($, storage, env, wh
                 config.ab_testing_group = (Math.random() > 0.5) ? "A" : "B";
                 config.install_week_number = weekNumber();
                 config.client_version = (chrome && chrome.app && chrome.app.getDetails()) ? chrome.app.getDetails().version : '';
-                storeConfig(key, config);
+                self.storeConfig(key, config);
                 self.config = config;
                 def.resolve(self);
             }).fail(function(argument) {
