@@ -1,7 +1,5 @@
-define(function async_runtime(require) {
+define(['jquery', 'when','async_config'], function async_runtime($, when, async_config) {
     var self = {},
-        $ = require('jquery'),
-        when = require('when'),
         initting = when.defer(),
         defaultRuntimeSettings = {
             useBooster : false, // whether we should use the booster at startup or not
@@ -12,10 +10,7 @@ define(function async_runtime(require) {
             updatedAt : 0 // last update of the runtime object
         }
 
-    self.async_config = require('async_config');
-    self.async_config.then(function (config) {
-        console.log('config.runtime',config.runtime);
-
+    async_config.promise.then(function (config) {
         // run everytime as we bootstrap the app
         self.init = function(){
             // check if we ran the runtime in the past
