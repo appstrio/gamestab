@@ -2,7 +2,7 @@ define(function env() {
     return {
         type: "production",
         force: {
-            loadConfigFromFile: true
+            // loadConfigFromFile: true
         },
         debug: true
     };

@@ -1,37 +1,15 @@
 "use strict";
 
-define(['jquery', 'storage', 'env'], function config($, storage, env) {
+define(['jquery', 'storage', 'env', 'when'], function config($, storage, env, when) {
     var key = "config",
-        deferred = new $.Deferred(),
-        self = {
-            data: deferred.promise()
-        };
+        def = when.defer(),
+        self = {};
 
-    self.init = (function() {
-        // Try to fetch appdata from the localstorage
-        var data = storage.get(key);
-        if (!(env.debug && env.force.loadConfigFromFile) && data)
-            deferred.resolve(data);
-        else {
-            // Or try to load it from the JSON that's included with the extension
-            $.getJSON('/js/' + env.type + '.json').then(function(fetchedConfig) {
-                data = fetchedConfig;
-                data.timestamp = Date.now(); // TODO: @hlandao Do we want this ever refreshed?, @daniel - yes we might use the server to update this part.
-                data.ab_testing_group = (Math.random() > 0.5) ? "A" : "B";
-                data.install_week_number = weekNumber();
-                data.client_version = (chrome && chrome.app && chrome.app.getDetails()) ? chrome.app.getDetails().version : '';
-                storage.set(key, data);
-                deferred.resolve(data);
-            }).fail(function(argument) {
-                alert(JSON.stringify(argument));
-            });
-        }
-    })();
-
-
-    self.store = function(data){
-        console.log('data',data);
-        storage.set(key, data);
+    var getConfig = function () {
+        return storage.get("config");
+    }
+    self.storeConfig = function(){
+        return storage.set("config", self.config);
     }
 
     // get week number
@@ -41,6 +19,29 @@ define(['jquery', 'storage', 'env'], function config($, storage, env) {
         return Math.ceil((((newdate - onejan) / 86400000) + onejan.getDay()+1)/7);
     };
 
+    self.init = (function() {
+        // Try to fetch appconfig from the localstorage
+        var config = getConfig();
+        if (!(env.debug && env.force.loadConfigFromFile) && config) {
+            self.config = config;
+            def.resolve(self);
+        }
+        else {
+            // Or try to load it from the JSON that's included with the extension
+            $.getJSON('/js/' + env.type + '.json').then(function(fetchedConfig) {
+                config = fetchedConfig;
+                config.timestamp = Date.now(); // TODO: @hlandao Do we want this ever refreshed?, @daniel - yes we might use the server to update this part.
+                config.ab_testing_group = (Math.random() > 0.5) ? "A" : "B";
+                config.install_week_number = weekNumber();
+                config.client_version = (chrome && chrome.app && chrome.app.getDetails()) ? chrome.app.getDetails().version : '';
+                storeConfig(key, config);
+                self.config = config;
+                def.resolve(self);
+            }).fail(function(argument) {
+                alert(JSON.stringify(argument));
+            });
+        };
+    })();
 
-    return self.data;
+    return def.promise;
 }, rErrReport);
