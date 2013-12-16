@@ -1,12 +1,12 @@
 {
   "name": "whitelabelnewtab",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Generic template (hopefuly) to whitelabel the internet's new tab.",
   "dependencies": {},
   "repository": "https://github.com/hlandao/whiteLabelNewTab",
   "scripts": {
-    "start"      : "grunt",
-    "preinstall" : "npm i && npm i -g mocha should && bower i && grunt build"
+    "start"      : "grunt build && grunt",
+  "preinstall" : "npm i && npm i -g mocha should && bower i && grunt build"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

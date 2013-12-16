@@ -1,17 +1,21 @@
 WINT (White Label New Tab)
 --------------------------
 
-## Install
+## First Installation
 
 1. Clone repo.
-2. Run `npm start` which will bootstrap everything.
+2. Run `npm preinstall` which will bootstrap everything.
 3. Load unpacked extension, at `build`.
-4. Run `grunt`.
-5. [Not Yet Ready] //Start developing, while grunt compiles your changes on the fly with `watch`.
+4. Run `npm start`.
+5. Start developing, while grunt compiles your changes on the fly with `watch`.
+
+## Reinstallation
+
+1. Just run `npm start`.
 
 ## Includes
 
-An include is either a `lib` or `module`.
+An include is a `lib`.
 **New include?** add it in the relevant array in the Gruntfile.
 
 ## File Structure

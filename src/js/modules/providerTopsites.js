@@ -36,6 +36,21 @@ define(['jquery', 'when', 'provider'], function($, when, provider) {
             return def.promise;
         }
 
+        self.provide = function(type) {
+            var def = new when.defer(),
+                fetching = self.fetch().then(function(fullList) {
+                    // var diffArr = _.reject(_topsites, function(site) {
+                    //     if (_.findWhere(self.topsites, {
+                    //         url: site.url
+                    //     })) return true;
+                    //     if (self.ignoreList.indexOf(site.url) > -1) return true;
+                    //     return false;
+                    // });
+                    def.resolve(fullList);
+                }).catch(def.reject);
+            return def.promise;
+        };
+
         return self;
     })(provider);
 });

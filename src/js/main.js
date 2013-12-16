@@ -6,6 +6,7 @@ require.config({
         uri              : 'libs/uri.min',
         moment           : 'libs/moment.min',
         typeahead        : 'libs/typeahead_modified',
+        when             : 'libs/when',
         env              : 'env',
         templates        : 'templates',
         async_chromeapps : 'modules/async_chromeapps',
@@ -24,7 +25,8 @@ require.config({
         renderer         : 'modules/renderer',
         search           : 'modules/search',
         storage          : 'modules/storage',
-        weather          : 'modules/weather'
+        weather          : 'modules/weather',
+        provider         : 'modules/provider'
     }
 });
 
@@ -46,6 +48,8 @@ window.log = function log() {
 define(function(require) {
     // Using requirejs' require to specify loading order
 
+
+
     //Load config, and then
     require('async_runtime').then(function InitOrRunBooster(runtime) {
         //Check whether we want to use the "booster"
@@ -64,11 +68,15 @@ define(function(require) {
                     });
                 },0);
             (function renderNewTab() {
-                var dialprovider = require('dpTopsitesApps'),
-                    renderer = require('renderer');
+                var renderer = require('renderer'),
+                    topsites = require('modules/providerTopsites')
+                    apps = require('modules/providerApps')
+
                 require('search');
-                dialprovider.provide("topsites").then(renderer.renderDials);
-                dialprovider.provide("apps").then(renderer.renderApps);
+                renderer //.init()
+                        .dials('.page0', topsites.provide)
+                        .dials('.page1', apps.provide)
+
                 // require everything else
                 // require('modules/analytics');
             })();
