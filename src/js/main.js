@@ -11,7 +11,12 @@ window.log = function log() {
         console.log("LOG " + i + "#:" + obj)
     };
 };
-Array.prototype.last = function() { return this[this.length - 1]; }; // ProTip: Will fail miserably if this.length == 0;
+
+
+
+Array.prototype.last = function() { return this.length && this[this.length - 1]; }; // ProTip: Will fail miserably if this.length == 0;
+
+
 window.rErrReport = function requireJSErrorReport (err) { log(err); };
 //RequireJS Configuration
 (function initRequireConfig() {
@@ -42,11 +47,11 @@ window.rErrReport = function requireJSErrorReport (err) { log(err); };
         'weather',
         'provider',
         'providerTopsites',
-        'providerApps',
+        'providerApps'
     ],
     dynamicPaths = {
         env: 'env',
-        templates: 'templates',
+        templates: 'templates'
     };
 
     while (modules.length) {
@@ -72,7 +77,7 @@ define(function(require) {
         //Check whether we want to use the "booster"
         if (runtime.useBooster && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1) {
             //Close & Open tab to move focus to the "main input"
-            window.open("newtab.html#newtab"); // TODO: consider to use the hrome api to improve the speed of the new window opening
+            window.open("newtab.html#newtab"); // TODO: consider to use the chrome api to improve the speed of the new window opening
             window.close();
         } else {
             setTimeout(function boost() {
