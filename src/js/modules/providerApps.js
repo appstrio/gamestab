@@ -8,13 +8,13 @@ define(['jquery', 'when','provider'], function($, when, provider) {
             return ExtensionInfo.type === 'hosted_app' || ExtensionInfo.type === 'packaged_app' || ExtensionInfo.type === 'legacy_packaged_app';
         }
 
-        self.clickHandler = function(e) {
+        self.handlers.click = function(e) {
             e.stopPropagation();
             e.preventDefault();
-            chrome.management.launchApp(e.currentTarget['data-id'], function() {});
+            chrome.management.launchApp(e.currentTarget.dataset.id, function() {});
         };
 
-        self.removeHandler = function(e) {
+        self.handlers.remove = function(e) {
             e.stopPropagation();
             e.preventDefault();
             var $target = $(e.currentTarget).parents('.app').eq(0);
@@ -41,10 +41,10 @@ define(['jquery', 'when','provider'], function($, when, provider) {
                 for (var i = stuff.length - 1; i >= 0; i--) {
                     var stuffObject = stuff[i];
                     if (isApp(stuffObject))
-                        self.inventory.push({
+                        inventory.push({
                             id          : stuffObject.id,
                             title       : stuffObject.shortName,
-                            // name        : stuffObject.shortName,
+                            url         : '',
                             icon        : stuffObject.icons.last().url,
                             description : stuffObject.description,
                             click       : self.handlers.click,
@@ -52,7 +52,7 @@ define(['jquery', 'when','provider'], function($, when, provider) {
                         });
                 };
                 self.inventory = inventory;
-                def.resolve(self.inventory);
+                def.resolve(inventory);
             });
 
             return def.promise;

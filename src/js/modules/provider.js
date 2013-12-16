@@ -39,20 +39,13 @@ define(['jquery', 'when'], function($, when) {
         }, 500);
     };
 
-    self.init = (function init() {
-        self.handlers = {
-            click: self.clickHandler,
-            remove: self.removeHandler
-        }
-    })();
-
     self.fetch = function fetchStuff() {
         throw "Fetch is not implemented on provider.js"
     }
 
     self.provide = function(type) {
         var def = new when.defer(),
-            fetching = self.fetch().then(function(fullList) {
+            fetching = this.fetch().then(function(fullList) {
                 // var diffArr = _.reject(_topsites, function(site) {
                 //     if (_.findWhere(self.topsites, {
                 //         url: site.url

@@ -47,7 +47,8 @@ window.rErrReport = function requireJSErrorReport (err) { log(err); };
         'weather',
         'provider',
         'providerTopsites',
-        'providerApps'
+        'providerApps',
+        'providerSitesByJSON',
     ],
     dynamicPaths = {
         env: 'env',
@@ -91,12 +92,15 @@ define(function(require) {
             }, 0);
             (function renderNewTab() {
                 var renderer = require('renderer'),
-                    topsites = require('providerTopsites')
-                    // apps = require('providerApps')
+                    sites = require('providerSitesByJSON')
+                    // sites = require('providerTopsites')
+                    apps = require('providerApps')
 
                 require('search');
-                renderer.dials('.page0', topsites);
-                // .dials('.page1', apps)
+
+                renderer
+                    .dials('.page0', sites)
+                    .dials('.page1', apps)
             })();
         };
     });
