@@ -41,7 +41,7 @@ define(['jquery', 'when','provider'], function($, when, provider) {
                 for (var i = stuff.length - 1; i >= 0; i--) {
                     var stuffObject = stuff[i];
                     if (isApp(stuffObject))
-                        self.inventory.push({
+                        inventory.push({
                             id          : stuffObject.id,
                             title       : stuffObject.shortName,
                             // name        : stuffObject.shortName,
