@@ -7,6 +7,10 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         var $dial = $(templates['classic-dial'](dial))
             .on('click', dial.click)
             .on('click', '.dial-remove-button', dial.remove);
+
+        if(dial.id)
+            $dial.data('id',dial.id);
+
         return self.$wrapper.find(location).append($dial);
     };
 
@@ -47,7 +51,7 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         };
 
         provider.provide().then(function (dials) {
-            for (var i =  0; i < dials.length && i <= self.maxDials; i++) {
+            for (var i =  0; i < dials.length && i < self.maxDials; i++) {
                 var dial = dials[i];
                 self.renderDial(template, dial);
             };
