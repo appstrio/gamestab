@@ -1,3 +1,6 @@
+"use strict";
+window.DEBUG = window.DEBUG || true;
+
 //Helper functions
 window.log = function log() {
     for (var i = 0; i < arguments.length; i++) {
@@ -92,8 +95,7 @@ define(function(require) {
             }, 0);
             (function renderNewTab() {
                 var renderer = require('renderer'),
-                    sites = require('providerSitesByJSON')
-                    // sites = require('providerTopsites')
+                    sites = require('providerSitesByJSON'),
                     apps = require('providerApps')
 
                 require('search');

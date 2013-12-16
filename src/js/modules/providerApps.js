@@ -8,13 +8,13 @@ define(['jquery', 'when','provider'], function($, when, provider) {
             return ExtensionInfo.type === 'hosted_app' || ExtensionInfo.type === 'packaged_app' || ExtensionInfo.type === 'legacy_packaged_app';
         }
 
-        self.handlers.click = function(e) {
+        var clickHandler = function(e) {
             e.stopPropagation();
             e.preventDefault();
             chrome.management.launchApp(e.currentTarget.dataset.id, function() {});
         };
 
-        self.handlers.remove = function(e) {
+        var removeHandler = function(e) {
             e.stopPropagation();
             e.preventDefault();
             var $target = $(e.currentTarget).parents('.app').eq(0);
@@ -57,6 +57,14 @@ define(['jquery', 'when','provider'], function($, when, provider) {
 
             return def.promise;
         }
+
+        // Init is simpler like this (no closure)
+        $.extend(self, {
+            handlers:{
+                click:clickHandler,
+                remove:removeHandler,
+            }
+        });
 
         return self;
     })(provider);
