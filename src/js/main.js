@@ -70,12 +70,12 @@ define(function(require) {
             (function renderNewTab() {
                 var renderer = require('renderer'),
                     topsites = require('modules/providerTopsites')
-                    apps = require('modules/providerApps')
+                    // apps = require('modules/providerApps')
 
                 require('search');
                 renderer //.init()
-                        .dials('.page0', topsites.provide)
-                        .dials('.page1', apps.provide)
+                        .dials('.page0', topsites)
+                        // .dials('.page1', apps)
 
                 // require everything else
                 // require('modules/analytics');
