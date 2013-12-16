@@ -1,3 +1,9 @@
 define(function env() {
-    return {env:'PRODUCTION'};
+    return {
+        type: "production",
+        force: {
+            loadConfigFromFile: true
+        },
+        debug: true
+    };
 });
