@@ -66,7 +66,7 @@ window.rErrReport = function requireJSErrorReport (err) { log(err); };
         var currentLib = libs.pop();
         dynamicPaths[currentLib] = 'libs/' + currentLib;
     }
-    log(dynamicPaths);
+    //log(dynamicPaths);
     require.config({
         baseUrl: 'js/',
         paths: dynamicPaths

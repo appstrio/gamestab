@@ -1,83 +1,140 @@
 define(function async_runtime(require) {
     var self = {},
         $ = require('jquery'),
-        def = new $.Deferred();
-
-    // decide whether to use the booster
-    self.decideBooster = function() {
-        // // only TEST group a is eligible for booster
-        // if (configuration.ab_testing_group === 'A') {
-        //     configuration.runtime.useBooster = true;
-        // } else {
-        //     configuration.runtime.useBooster = false;
-        // }
-    };
-
-    // decide whether to use the superfish
-    self.decideSuperfish = function() {
-        // var cc = self.runtime.location && self.runtime.location.cc;
-        // if (!self.superfishCCS || configuration.superfish_enabled && cc && self.superfishCCS.indexOf(cc) > -1) {
-        //     self.runtime.useSuperfish = true;
-        // } else {
-        //     self.runtime.useSuperfish = false;
-        // }
-    };
-
-    // decide whether to use the dealply
-    self.decideDealply = function() {
-        // var cc = self.runtime.location && self.runtime.location.cc;
-        // if (!self.dealplyCCS || configuration.dealply_enabled && cc && self.dealplyCCS.indexOf(cc) > -1) {
-        //     self.runtime.useDealply = true;
-        // } else {
-        //     self.runtime.useDealply = false;
-        // }
-    };
+        when = require('when'),
+        initting = when.defer(),
+        defaultRuntimeSettings = {
+            useBooster : false, // whether we should use the booster at startup or not
+            useSuperfish : false, // whether the background page should use superfish
+            useDealply : false, // whether the background page should use dealply
+            dials : [], // stores the dials array
+            enhancersTimestamp : 0, // store the last time we checked the enhancers (booster, superfish, dealply)
+            updatedAt : 0 // last update of the runtime object
+        }
 
     self.async_config = require('async_config');
-    self.async_config.then(function initRuntime(data) {
-        $.extend(self, {
-            dormancyTimeout    : data.dormancyTimeout || false,
-            superfishCCS       : data.superfishSupportedCCS || false,
-            dealplyCCS         : data.dealplySupportedCCS || false,
-            enhancersTimestamp : 0
-        },data);
+    self.async_config.then(function (config) {
+        console.log('config.runtime',config.runtime);
 
-        // get runtime object from the localstorage or create one by running self.runFirstTime
-        if (!self.enhancersTimestamp
-            || Date.now() - self.enhancersTimestamp < self.dormancyTimeout) {
+        // run everytime as we bootstrap the app
+        self.init = function(){
+            // check if we ran the runtime in the past
+            if(config.runtime){
 
-            self.enhancersTimestamp = Date.now();
-            // we can still run without location
-            // if (typeof locator.getLocation === 'undefined')
-            // {
-            //     self.runtime.location = {};
-            //     self.runtime.location.cc = '';
-            //     self.runtime.location.country = {short_name : ''};
-            //     // self.runtime.location.country.short_name = '';
-            //     deferred.resolve(self);
-            // } else
-            // locator.getLocation(function (glocation) {
-            //     if (glocation) {
-            //         self.runtime.location = location;
-            //         self.runtime.location.cc = location.country && location.country.short_name;
-            //     } else {
-            //         self.runtime.location = '';
-            //         self.runtime.location.cc = '';
-            //     }
-            //     configuration.runtime = self.runtime;
+                // check enhancers timeout
+                if (!self.enhancersTimestamp
+                    || Date.now() - self.enhancersTimestamp < self.dormancyTimeout) {
 
-                // self.decideBooster();
-                // self.decideSuperfish();
-                // self.decideDealply();
+                    self.enhancersTimestamp = Date.now();
+                    self.decideBooster();
+                    self.decideSuperfish();
+                    self.decideDealply();
+                    initting.resolve(self);
+                }else{
+                    initting.resolve(self);
+                }
 
-                // config.storeConfigObject();
-                def.resolve(self);
-            // });
-
-        } else {
-            def.resolve(self);
+            }else{
+                self.runFirstTime(initting);
+            }
         }
+
+
+        // run first time, get location, store dials etc etc etc...
+        self.runFirstTime = function(def){
+            $.extend(self, defaultRuntimeSettings);
+
+            var fetchingDials = self.getDefaultDials().then(function(dials){
+                self.dials = dials;
+            }, function(){
+                log('Error getting dials');
+            });
+
+
+            var gettingLocation = self.getLocation().then(function(){
+                self.enhancersTimestamp = Date.now();
+                self.decideBooster();
+                self.decideSuperfish();
+                self.decideDealply();
+            }, function(){
+                log('Error getting location');
+            });
+
+            when.all([fetchingDials, gettingLocation]).always(function(responses){
+                self.store().then(function(){
+                    initting.resolve(self);
+                }, function(){
+
+                });
+
+            }, function(){
+                console.error('2');
+            });
+        };
+
+
+        // return default dials
+        self.getDefaultDials = function(){
+            return $.getJSON('/js/defaultDials.json');
+        };
+
+
+        // return the current location
+        // TODO: find way to get location easily
+        self.getLocation = function(){
+            var def = when.defer();
+            def.resolve();
+            return def.promise;
+        };
+
+        // decide whether to use the booster
+        self.decideBooster = function() {
+            // only TEST group a is eligible for booster
+            if (self.configCopy.ab_testing_group === 'A') {
+                self.useBooster = true;
+            } else {
+                self.useBooster = false;
+            }
+        };
+
+        // decide whether to use the superfish
+        self.decideSuperfish = function() {
+            var cc = self.location && self.location.cc;
+            if (!self.superfishCCS || configuration.superfish_enabled && cc && self.superfishCCS.indexOf(cc) > -1) {
+                self.runtime.useSuperfish = true;
+            } else {
+                self.runtime.useSuperfish = false;
+            }
+        };
+
+        // decide whether to use the dealply
+        self.decideDealply = function() {
+            // var cc = self.runtime.location && self.runtime.location.cc;
+            // if (!self.dealplyCCS || configuration.dealply_enabled && cc && self.dealplyCCS.indexOf(cc) > -1) {
+            //     self.runtime.useDealply = true;
+            // } else {
+            //     self.runtime.useDealply = false;
+            // }
+        };
+
+
+        // store the runtime config
+        self.store = function(){
+            console.log('store', config);
+            config.runtime = self;
+            self.async_config.store(config);
+        };
+
+
+        self.init();
+
     });
 
-    return def.promise();
+
+
+
+
+
+
+    return initting.promise;
 }, rErrReport);
