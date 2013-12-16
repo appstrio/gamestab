@@ -19,4 +19,5 @@ define(function storage() {
     }
 
     return self;
-});
+
+}, rErrReport);

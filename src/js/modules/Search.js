@@ -102,4 +102,4 @@ define(function Search(require) {
     })();
 
     return self;
-});
+}, rErrReport);

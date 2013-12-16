@@ -53,4 +53,4 @@ define(['jquery', 'when', 'provider'], function($, when, provider) {
 
         return self;
     })(provider);
-});
+}, rErrReport);

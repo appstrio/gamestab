@@ -1,4 +1,5 @@
 "use strict";
+
 define(['jquery', 'when', 'provider'], function($, when, provider) {
     return (function(module) {
         var self = Object.create(module);
@@ -53,4 +54,5 @@ define(['jquery', 'when', 'provider'], function($, when, provider) {
 
         return self;
     })(provider);
-});
+
+}, rErrReport);

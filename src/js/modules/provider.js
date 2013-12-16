@@ -69,4 +69,5 @@ define(['jquery', 'when'], function($, when) {
     // self.fetch = function fetchStuff() { return [] }
 
     return self;
-});
+
+}, rErrReport);

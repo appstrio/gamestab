@@ -39,4 +39,4 @@ define(['jquery','storage'], function config($,storage) {
     })();
 
     return self.data;
-});
+}, rErrReport);

@@ -33,7 +33,7 @@ define(function async_runtime(require) {
         // }
     };
 
-    self.async_config = require('modules/async_config');
+    self.async_config = require('async_config');
     self.async_config.then(function initRuntime(data) {
         $.extend(self, {
             dormancyTimeout    : data.dormancyTimeout || false,
@@ -80,4 +80,4 @@ define(function async_runtime(require) {
     });
 
     return def.promise();
-});
+}, rErrReport);
