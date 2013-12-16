@@ -37,16 +37,16 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         self.$wrapper.on('click', '.dials-switch', self.dialsSwitchClickHandler);
     };
 
-    self.dials =function renderDials (template, providingPromise) {
-        var providing, tpl;
-        if(!providingPromise)
-            providing = template;
+    self.dials =function renderDials (template, providerObject) {
+        var provider, tpl;
+        if(!providerObject)
+            provider = template;
         else {
             tpl = template;
-            providing = providingPromise;
+            provider = providerObject;
         };
 
-        providing().then(function (dials) {
+        provider.provide().then(function (dials) {
             for (var i =  0; i < dials.length && i <= self.maxDials; i++) {
                 var dial = dials[i];
                 self.renderDial(template, dial);
@@ -76,4 +76,5 @@ define(['jquery', 'templates'], function Renderer($, templates) {
     })();
 
     return self;
-});
+
+}, rErrReport);
