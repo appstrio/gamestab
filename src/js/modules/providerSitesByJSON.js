@@ -62,7 +62,7 @@ define(['jquery', 'when', 'provider', 'async_runtime', 'renderer'], function($, 
             return def.promise;
         }
 
-        self.getIgnoreList()
+        self.getIgnoreList();
         self.handlers = {
             remove: remove,
             click: parent.handlers.click,

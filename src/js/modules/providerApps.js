@@ -17,7 +17,7 @@ define(['jquery', 'when','provider'], function($, when, provider) {
         var removeHandler = function(e) {
             e.stopPropagation();
             e.preventDefault();
-            var $target = $(e.currentTarget).parents('.app').eq(0);
+            var $target = $(e.currentTarget).parents('.dial').eq(0);
             //TODO : e will be moved to the anchor, thus $target should be changed to find parent or move data-id somwhere else?
             var id = $target.data('id');
             chrome.management.uninstall(id, {

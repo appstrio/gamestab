@@ -112,7 +112,7 @@ define(function(require) {
 
                 if(DEBUG)
                     setTimeout(function boost() {
-                        $('.dial .dial-remove-button').eq(0).click();
+                        $('.page1 .dial .dial-remove-button').eq(0).click();
                     },0);
             })();
         };
