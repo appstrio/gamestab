@@ -80,7 +80,7 @@ define(function(require) {
     require('async_runtime').then(function InitOrRunBooster(runtimeModule) {
         var runtimeData = runtimeModule.runtime;
         //Check whether we want to use the "booster"
-        if (runtimeData.useBooster && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1) {
+        if (async_config.data.runtime.useBooster && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1) {
             //Close & Open tab to move focus to the "main input"
             window.open("newtab.html#newtab"); // TODO: consider to use the chrome api to improve the speed of the new window opening
             window.close();

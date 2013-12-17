@@ -42,18 +42,19 @@ define(['jquery', 'when', 'renderer', 'underscore', 'storage'], function($, when
 
 
     self.provide = function(type) {
-        var def = new when.defer(),
-            fetching = this.fetch().then(function(fullList) {
-                var diffArr = _.reject(_topsites, function(site) {
-                    if (_.findWhere(self.topsites, {
-                        url: site.url
-                    })) return true;
-                    if (self.ignoreList.indexOf(site.url) > -1) return true;
-                    return false;
-                });
-                def.resolve(fullList);
-            }).
-            catch (def.reject);
+        var def = new when.defer();
+        var fetching = this.fetch();
+        fetching.then(function(fullList) {
+            // var diffArr = _.reject(_topsites, function(site) {
+            //     if (_.findWhere(self.topsites, {
+            //         url: site.url
+            //     })) return true;
+            //     if (self.ignoreList.indexOf(site.url) > -1) return true;
+            //     return false;
+            // });
+            def.resolve(fullList);
+        }).
+        catch (def.reject);
         return def.promise;
     };
 
@@ -71,8 +72,12 @@ define(['jquery', 'when', 'renderer', 'underscore', 'storage'], function($, when
             }
         });
     }
-    self.getIgnoreList = function(){ this.ignoreList = storage.get(this.name); };
-    self.setIgnoreList = function(){ storage.set(this.name, this.ignoreList); };
+    self.getIgnoreList = function() {
+        this.ignoreList = storage.get(this.name);
+    };
+    self.setIgnoreList = function() {
+        storage.set(this.name, this.ignoreList);
+    };
 
     //Some init method {
     // if (DEBUG && this.name === "providerBASE") throw "Must give child-provider.js a name!";
