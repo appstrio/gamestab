@@ -46,7 +46,7 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         if(!providerObject)
             provider = template;
         else {
-            tpl = template;
+            tpl      = template;
             provider = providerObject;
         };
 
@@ -59,25 +59,23 @@ define(['jquery', 'templates'], function Renderer($, templates) {
         return self;
     }
 
-    self.render = (function initRenderer () {
 
-        self.$wrapper = $('#wrapper');
-        self.$layout  = $(templates['classic']());
 
-        self.$wrapper.html(self.$layout);
+    self.$wrapper = $('#wrapper');
+    self.$layout  = $(templates['classic']());
+    self.$wrapper.html(self.$layout);
 
-        $.extend(self, {
-            $searchWrapper : self.$layout.find('.search-wrapper').eq(0),
-            $dialsPage     : self.$wrapper.find('.page0').eq(0),
-            $appsPage      : self.$wrapper.find('.page1').eq(0),
-            $appsSwitch    : self.$wrapper.find('.apps-switch').eq(0),
-            $dialsSwitch   : self.$wrapper.find('.dials-switch').eq(0),
-        });
-        // setup generel layout
-        // setup search layout
-        self.$searchWrapper.html($(templates['search-wrapper']())); // WAS {}
-        self.setEventHandlers();
-    })();
+    $.extend(self, {
+        $searchWrapper : self.$layout.find('.search-wrapper').eq(0),
+        $dialsPage     : self.$wrapper.find('.page0').eq(0),
+        $appsPage      : self.$wrapper.find('.page1').eq(0),
+        $appsSwitch    : self.$wrapper.find('.apps-switch').eq(0),
+        $dialsSwitch   : self.$wrapper.find('.dials-switch').eq(0),
+    });
+    // setup generel layout
+    // setup search layout
+    self.$searchWrapper.html($(templates['search-wrapper']())); // WAS {}
+    self.setEventHandlers();
 
     return self;
 

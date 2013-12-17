@@ -3,17 +3,11 @@
 define(['jquery', 'when', 'provider'], function($, when, provider) {
     return (function(module) {
         var self = Object.create(module);
-        $.extend(self, {
-            inventory: [],
-            filteredList: [],
-            ignored: []
-        });
 
         self.fetch = function fetchTopsites() {
             var def = when.defer(),
                 inventory = [];
             chrome.topSites.get(function(stuff) {
-                console.log("hello");
                 for (var i = stuff.length - 1; i >= 0; i--) {
                     var stuffObject = stuff[i];
                     inventory.unshift({
@@ -51,6 +45,12 @@ define(['jquery', 'when', 'provider'], function($, when, provider) {
                 }).catch(def.reject);
             return def.promise;
         };
+
+        $.extend(self, {
+            inventory: [],
+            filteredList: [],
+            ignored: []
+        });
 
         return self;
     })(provider);
