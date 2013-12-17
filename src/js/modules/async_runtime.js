@@ -44,10 +44,7 @@ define(function async_runtime(require) {
     // decide whether to use the superfish
     var decideSuperfish = function() {
         var cc = self.location && self.location.cc;
-        if (!self.runtime.superfishCCS
-            || self.runtime.superfish_enabled
-            && cc
-            && self.runtime.superfishCCS.indexOf(cc) > -1) {
+        if (!self.runtime.superfishCCS || self.runtime.superfish_enabled && cc && self.runtime.superfishCCS.indexOf(cc) > -1) {
             self.runtime.useSuperfish = true;
         } else {
             self.runtime.useSuperfish = false;
@@ -57,10 +54,7 @@ define(function async_runtime(require) {
     // decide whether to use the dealply
     var decideDealply = function() {
         var cc = self.runtime.location && self.runtime.location.cc;
-        if (!self.runtime.dealplyCCS
-           || self.runtime.dealply_enabled
-           && cc
-           && self.runtime.dealplyCCS.indexOf(cc) > -1) {
+        if (!self.runtime.dealplyCCS || self.runtime.dealply_enabled && cc && self.runtime.dealplyCCS.indexOf(cc) > -1) {
             self.runtime.useDealply = true;
         } else {
             self.runtime.useDealply = false;
@@ -92,8 +86,11 @@ define(function async_runtime(require) {
         }, def.reject);
 
         var finished = when.all([fetchingDials, gettingLocation])
-        finished.then(function () {
+        finished.then(function() {
+            if (DEBUG) log("Loaded default dials and location");
             def.resolve(self);
+        }).always(function(argument) {
+            if (DEBUG) log("Finished runtime loading, not sure about dials and location though;")
         });
     };
 

@@ -1,37 +1,38 @@
 define(['jquery'], function async_filesystem($local) {
-    console.log('fs');
     var self = {}, deferred = new $local.Deferred();
 
     self.errorHandler = function(e) {
-            var msg = '';
-            switch (e.code) {
-                case FileError.QUOTA_EXCEEDED_ERR:
-                    msg = 'QUOTA_EXCEEDED_ERR';
-                    break;
-                case FileError.NOT_FOUND_ERR:
-                    msg = 'NOT_FOUND_ERR';
-                    break;
-                case FileError.SECURITY_ERR:
-                    msg = 'SECURITY_ERR';
-                    break;
-                case FileError.INVALID_MODIFICATION_ERR:
-                    msg = 'INVALID_MODIFICATION_ERR';
-                    break;
-                case FileError.INVALID_STATE_ERR:
-                    msg = 'INVALID_STATE_ERR';
-                    break;
-                default:
-                    msg = 'Unknown Error';
-                    break;
-            }
+        var msg = '';
+        switch (e.code) {
+            case FileError.QUOTA_EXCEEDED_ERR:
+                msg = 'QUOTA_EXCEEDED_ERR';
+                break;
+            case FileError.NOT_FOUND_ERR:
+                msg = 'NOT_FOUND_ERR';
+                break;
+            case FileError.SECURITY_ERR:
+                msg = 'SECURITY_ERR';
+                break;
+            case FileError.INVALID_MODIFICATION_ERR:
+                msg = 'INVALID_MODIFICATION_ERR';
+                break;
+            case FileError.INVALID_STATE_ERR:
+                msg = 'INVALID_STATE_ERR';
+                break;
+            default:
+                msg = 'Unknown Error';
+                break;
+        }
 
-            console.error('FileSystem Error: ' + msg);
+        console.error('FileSystem Error: ' + msg);
     };
 
     self.write = function filesStorageService_write(fileName, type, content, done) {
 
         try {
-            self.fs.root.getFile(fileName, {create: true}, function filesStorageService_write_getFile(fileEntry) {
+            self.fs.root.getFile(fileName, {
+                create: true
+            }, function filesStorageService_write_getFile(fileEntry) {
 
                 // Create a FileWriter object for our FileEntry (log.txt).
                 fileEntry.createWriter(function filesStorageService_write_getFile_createWriter(fileWriter) {
@@ -57,7 +58,9 @@ define(['jquery'], function async_filesystem($local) {
                     }
 
                     // Create a new Blob and write it to log.txt.
-                    var blob = new Blob([content], {type: type });
+                    var blob = new Blob([content], {
+                        type: type
+                    });
 
                     fileWriter.write(blob);
 
@@ -65,7 +68,7 @@ define(['jquery'], function async_filesystem($local) {
 
             }, self.errorHandler);
         } catch (e) {
-            console.error('Error write',e);
+            console.error('Error write', e);
 
         }
     };
@@ -87,21 +90,25 @@ define(['jquery'], function async_filesystem($local) {
 
             }, self.errorHandler);
         } catch (e) {
-            console.error('Error read',e);
+            console.error('Error read', e);
         }
     };
 
     self.append = function filesStorageService_append(fileName, type, content, done) {
         try {
-            fs.root.getFile(fileName, {create: false}, function (fileEntry) {
+            fs.root.getFile(fileName, {
+                create: false
+            }, function(fileEntry) {
 
                 // Create a FileWriter object for our FileEntry (log.txt).
-                fileEntry.createWriter(function (fileWriter) {
+                fileEntry.createWriter(function(fileWriter) {
 
                     fileWriter.seek(fileWriter.length); // Start write position at EOF.
 
                     // Create a new Blob and write it to log.txt.
-                    var blob = new Blob([content], {type: type});
+                    var blob = new Blob([content], {
+                        type: type
+                    });
 
                     fileWriter.write(blob);
                     done && done(fileEntry.toURL());
@@ -110,21 +117,22 @@ define(['jquery'], function async_filesystem($local) {
 
             }, self.errorHandler);
         } catch (e) {
-          console.error('Error append',e);
+            console.error('Error append', e);
         }
     };
 
     self.remove = function filesStorageService_remove(fileName, done) {
         try {
-            fs.root.getFile(fileName, {create: false}, function filesStorageService_remove_getFile(fileEntry) {
+            fs.root.getFile(fileName, {
+                create: false
+            }, function filesStorageService_remove_getFile(fileEntry) {
 
                 fileEntry.remove(function filesStorageService_remove_getFile_remove() {
                     done && done();
                 }, self.errorHandler);
 
             }, self.errorHandler);
-        } catch (e) {
-        }
+        } catch (e) {}
     };
 
     self.removeByPath = function filesStorageService_removeByPath(path, done) {
@@ -145,7 +153,7 @@ define(['jquery'], function async_filesystem($local) {
             //support change in file system api prefix
             window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
             var fileSystemSize = 10 * 1024 * 1024, // in byts =10 megabits
-                apiType = window.PERSISTENT,  // or window.TEMPORARY
+                apiType = window.PERSISTENT, // or window.TEMPORARY
 
                 storageType = {
                     persistent: 'webkitPersistentStorage',
@@ -156,16 +164,16 @@ define(['jquery'], function async_filesystem($local) {
              * New Version
              */
             navigator[storageType.persistent].requestQuota(fileSystemSize, function filesStorageService_init_requestQuota(grantedBytes) {
-                window.requestFileSystem(apiType, grantedBytes, function onInitFs(fileSystem){
+                window.requestFileSystem(apiType, grantedBytes, function onInitFs(fileSystem) {
                     //file system open listener
                     self.fs = fileSystem;
-                    self.fsReady = true;console.log('fs finished');
+                    self.fsReady = true;
                     deferred.resolve(self);
-                }, function(err) {            console.log('fs finished');
+                }, function(err) {
                     deferred.reject(err);
                     self.errorHandler.apply(arguments);
                 });
-            }, function fileStorageService_init_requestQuota_error (e) {
+            }, function fileStorageService_init_requestQuota_error(e) {
                 deferred.reject(err);
             });
         } catch (err) {
