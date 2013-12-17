@@ -9,8 +9,8 @@
  * available as quick as the app starts without waiting for the Runtime module.
  *
  * How to use it ?
- * Define config as dependency and listen to the config.promise callbacks.
- * then use config.data to access the config attributes or config.store to store the config object in the localstorage
+ * Define async_config as dependency and listen to the async_config.promise callbacks.
+ * then use async_config.data to access the config attributes or async_config.store to store the config object in the localstorage
  *
  */
 
@@ -25,12 +25,13 @@ define(['jquery', 'storage', 'env', 'when'], function config($, storage, env, wh
         defaultValues;
 
 
+
     /**
      * Store the config file in the localstorage
      */
     self.store = function(data){
-        data = data || self.data;
-        storage.set(storageKey, data);
+        self.data = data || self.data;
+        storage.set(storageKey, self.data);
     };
 
 
@@ -65,7 +66,7 @@ define(['jquery', 'storage', 'env', 'when'], function config($, storage, env, wh
 
 
     /**
-     * Self called initializing function.
+     * Self invoked initializing function.
      * Loads the config data from localStorage or file.
      * Resolves or rejects the initting defer afterwards.
      */
@@ -80,7 +81,7 @@ define(['jquery', 'storage', 'env', 'when'], function config($, storage, env, wh
 
         // Try to fetch appdata from the localstorage
         var data = storage.get(storageKey);
-        if (!(env.debug && env.force.loadConfigFromFile) && data){
+        if (!(env.force.loadConfigFromFile) && data){
             self.data = data;
             if(setDefaultConfigSettings()){
                 self.store();
@@ -95,7 +96,7 @@ define(['jquery', 'storage', 'env', 'when'], function config($, storage, env, wh
                 initting.resolve(self.data);
             }).fail(function(argument) {
 
-                });
+            });
         }
     })();
 
