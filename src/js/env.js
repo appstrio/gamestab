@@ -2,8 +2,8 @@ define(function env() {
     return {
         type: "production",
         force: {
-            loadConfigFromFile: true,
-            booster: true,
+            loadConfigFromFile: false,
+            booster: false,
         },
         debug: true
     };

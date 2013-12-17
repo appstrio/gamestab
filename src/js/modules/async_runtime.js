@@ -27,7 +27,8 @@ define(['jquery', 'when', 'async_config'], function async_runtime($, when, async
     var initting = when.defer(),
         self = {
             promise: initting.promise,
-            data: {}
+            data: {},
+            config: {},
         },
         defaultRuntime = {
             useBooster: false, // whether we should use the booster at startup or not
@@ -40,7 +41,7 @@ define(['jquery', 'when', 'async_config'], function async_runtime($, when, async
         };
 
     /**
-     * Callback function for  async_config.promise success
+     * Callback function for async_config.promise success
      * @param config
      */
     var init = function initRuntime(config) {

@@ -91,7 +91,7 @@ define(function Search(require) {
         var $             = require('jquery'),
             async_runtime = require('async_runtime');
         //TODO should we timeout 0 to increase speed?
-        async_runtime.then(function(runtime) {
+        async_runtime.promise.then(function(runtime) {
             self.base_search_url = runtime.base_search_url;
             self.base_suggestions_url = runtime.base_suggestions_url;
 

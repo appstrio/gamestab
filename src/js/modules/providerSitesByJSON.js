@@ -7,7 +7,7 @@ define(['jquery', 'when', 'provider', 'async_runtime'], function($, when, provid
         self.fetch = function fetchApps() {
             var def = when.defer();
             runtime.promise.then(function(runtime) {
-                def.resolve(runtime.data.dials);
+                def.resolve(runtime.data.dials.dials);
             })
             return def.promise;
         }
