@@ -40,7 +40,7 @@ define(['underscore', 'jquery', 'templates', 'when'], function Renderer(_, $, te
                     $("#fadescreen").toggle();
                 }
                 //Remove highlighting from all switches and highlight the selected one
-                _.each(self.$switches, function($swi) {$swi.removeClass('selected');}); // $("#fadescreen").hide(); // Needed?
+                _.each(self.$switches, function($swi) {$swi.removeClass('selected');});
                 self.$switches[name].addClass('selected');
                 //Show only the selected page
                 _.each(self.$pages, function($page) {$page.hide() });
@@ -76,8 +76,8 @@ define(['underscore', 'jquery', 'templates', 'when'], function Renderer(_, $, te
     self.$wrapper.html(self.$layout);
 
     self.$switches = {
-        dials: $('.apps-switch'),
-        apps: $('.dials-switch'),
+        dials: $('.dials-switch'),
+        apps: $('.apps-switch'),
         plus: $('#plus.switch'),
     }
     self.$pages = {
