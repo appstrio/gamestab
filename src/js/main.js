@@ -69,7 +69,12 @@ window.rErrReport = function requireJSErrorReport (err) { log(err); };
     //log(dynamicPaths);
     require.config({
         baseUrl: 'js/',
-        paths: dynamicPaths
+        paths: dynamicPaths,
+        shim: {
+            underscore: {
+                exports: '_'
+            },
+        }
     });
 })();
 
@@ -112,7 +117,7 @@ define(function(require) {
 
                 if(DEBUG)
                     setTimeout(function boost() {
-                        $('.page1 .dial .dial-remove-button').eq(0).click();
+                        // $('.page1 .dial .dial-remove-button').eq(0).click();
                     },0);
             })();
         };

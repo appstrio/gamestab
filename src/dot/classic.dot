@@ -3,12 +3,17 @@
     <div class="top-wrapper">
         <div class="viewport">
            <div class="dials-wrapper page0"></div>
-            <div class="dials-wrapper page1"></div>
+           <div class="dials-wrapper page1"></div>
+        </div>
+        <div class="popups">
+           <div id="plus"></div>
+           <div id="fadescreen">hello</div>
         </div>
     </div>
     <div class="bottom-wrapper">
         <div class="bottom-logo"><img src="/img/lovedgames.logo.93x40.png" /></div>
         <div class="buttons">
+            <a href="#" id="plus" class="switch"> + </a>
             <a href="#" class="dials-switch selected"> Home </a>
             <a href="#" class="apps-switch"> Apps </a>
         </div>
