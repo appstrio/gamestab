@@ -1,6 +1,7 @@
-define(['jquery', 'templates'], function Renderer($, templates) {
+define(['jquery', 'templates', 'when'], function Renderer($, templates, when) {
     var self = {
-        maxDials:18
+        maxDials:18,
+        fadeOutSpeed: 400, // jQuery's default,
     };
 
     self.renderDial = function (location, dial) {
@@ -8,11 +9,28 @@ define(['jquery', 'templates'], function Renderer($, templates) {
             .on('click', dial.click)
             .on('click', '.dial-remove-button', dial.remove);
 
+        // Should be like this after
+        // var $dial = $(templates['classic-dial'](dial))
+        //     .on('click', dial.click)
+        //     .on('remove', dial.remove);
+        // $dial.on('click', '.dial-remove-button', $dial.remove);
+
         if(dial.id)
             $dial.data('id',dial.id);
 
         return self.$wrapper.find(location).append($dial);
     };
+
+    self.removeDial = function ($ele) {
+        var removing = when.defer();
+        $ele.fadeOut(self.fadeOutSpeed, removing.resolve);
+        // removing.then(function (ele) {
+            //One of those lines should work (not sure what .fadeOut returns)
+            // ele.remove();
+            // $ele.remove();
+        // })
+        return removing.promise;
+    }
 
     self.appsSwitchClickHandler = function (e) {
         e.stopPropagation();
@@ -49,6 +67,9 @@ define(['jquery', 'templates'], function Renderer($, templates) {
             tpl      = template;
             provider = providerObject;
         };
+
+        //Clean dial zone
+        $(template).html('');
 
         provider.provide().then(function (dials) {
             for (var i =  0; i < dials.length && i < self.maxDials; i++) {

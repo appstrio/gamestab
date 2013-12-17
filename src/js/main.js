@@ -102,13 +102,18 @@ define(function(require) {
             (function renderNewTab() {
                 var renderer = require('renderer'),
                     sites = require('providerSitesByJSON'),
-                    apps = require('providerApps')
+                    apps = require('providerApps');
 
                 require('search');
 
                 renderer
                     .dials('.page0', sites)
                     .dials('.page1', apps)
+
+                if(DEBUG)
+                    setTimeout(function boost() {
+                        $('.dial .dial-remove-button').eq(0).click();
+                    },0);
             })();
         };
     });
