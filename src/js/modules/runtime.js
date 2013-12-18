@@ -19,11 +19,14 @@
  * ** referral - chrome_webstore | appstrio(*let's find better naming) | other
  *
  * How to use it ?
- * Define async_runtime as a dependency and listen to the async_runtime.promise callbacks
+ * Define runtime
+ as a dependency and listen to the runtime
+.promise callbacks
  *
  */
 
-define(['jquery', 'when', 'async_config'], function async_runtime($, when, async_config) {
+define(['jquery', 'when', 'config'], function runtime
+($, when, config) {
     var initting = when.defer(),
         self = {
             promise: initting.promise,
@@ -41,11 +44,10 @@ define(['jquery', 'when', 'async_config'], function async_runtime($, when, async
         };
 
     /**
-     * Callback function for async_config.promise success
+     * Callback function for config.promise success
      * @param config
      */
     var init = function initRuntime(config) {
-        log(config.runtime);
         self.config = config; // store the config data object in the Runtime object for further usage
 
         // we need to check if we ran the runtime in the past
@@ -62,7 +64,7 @@ define(['jquery', 'when', 'async_config'], function async_runtime($, when, async
     };
 
     /**
-     * Callback function for  async_config.promise failure
+     * Callback function for  config.promise failure
      * @param err
      */
     var errorLoading = function(err) {
@@ -166,14 +168,14 @@ define(['jquery', 'when', 'async_config'], function async_runtime($, when, async
     self.store = function() {
         var def = when.defer();
         self.config.runtime = self.data;
-        async_config.store(self.config);
+        config.store(self.config);
         def.resolve();
         return def.promise;
     };
 
     // init the runtime module :
     // config_async is a dependency, so we can start only after having the config loaded
-    async_config.promise.then(init, errorLoading);
+    config.promise.then(init, errorLoading);
 
     return self;
 }, rErrReport);

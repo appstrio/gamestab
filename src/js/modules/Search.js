@@ -3,7 +3,7 @@ define(function Search(require) {
     var self = {
         base_search_url: '',
         base_suggestions_url: ''
-    }, renderer = require('renderer');
+    }, renderer = require('rendererSearch');
 
     self.setEventHandlers = function() {
         renderer.$searchWrapper.on('click', '.submit-button', function(e) {
@@ -89,9 +89,12 @@ define(function Search(require) {
 
     self.init = (function() {
         var $             = require('jquery'),
-            async_runtime = require('async_runtime');
+            runtime
+ = require('runtime
+');
         //TODO should we timeout 0 to increase speed?
-        async_runtime.promise.then(function(runtime) {
+        runtime
+.promise.then(function(runtime) {
             self.base_search_url = runtime.base_search_url;
             self.base_suggestions_url = runtime.base_suggestions_url;
 

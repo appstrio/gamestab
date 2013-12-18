@@ -1,5 +1,6 @@
 "use strict";
-define(['jquery', 'when', 'renderer', 'underscore', 'storage'], function($, when, renderer, _, storage) {
+
+define(['jquery', 'when', 'renderer', 'underscore', 'storage'], function providerBASE($, when, renderer, _, storage) {
 
     var self = {
         name: "providerBASE", // Must be overriden in child objects - Used to throw an error if not overriden.
@@ -38,7 +39,12 @@ define(['jquery', 'when', 'renderer', 'underscore', 'storage'], function($, when
     self.provide = function(type) { return this.fetch(); };
 
     self.fetch = function fetchStuff() {throw "Must be overriden."; }
-    self.getDialList = function() { this.dials = storage.get(this.name); };
+    self.getDialList = function() {
+        var def = when.defer(),
+            tmp = storage.get(this.name);
+        if(tmp) def.resolve(this.dials = tmp)
+        else def.reject(null);
+    };
     self.setDialList = function() {storage.set(this.name, this.dials); };
 
     return self;

@@ -4,7 +4,6 @@ define(function env() {
         force: {
             loadConfigFromFile: false,
             booster: false,
-        },
-        debug: true
+        }
     };
 });

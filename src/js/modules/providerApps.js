@@ -2,7 +2,22 @@
 
 define(['jquery', 'when','provider'], function($, when, provider) {
     return (function(module) {
-        var self = Object.create(module);
+        var initting = when.defer(),
+            self = Object.create(module);
+
+        var init = function initModule () {
+
+            $.extend(self, {
+                promise: initting.promise,
+                handlers:{
+                    click:clickHandler,
+                    remove:removeHandler,
+                },
+            });
+
+            var fetching = self.fetch();
+            fetching.then(initting.resolve);
+        }
 
         var isApp = function isApp(ExtensionInfo) {
             return ExtensionInfo.type === 'hosted_app' || ExtensionInfo.type === 'packaged_app' || ExtensionInfo.type === 'legacy_packaged_app';
@@ -59,13 +74,14 @@ define(['jquery', 'when','provider'], function($, when, provider) {
             return def.promise;
         }
 
-        // Init is simpler like this (no closure)
-        $.extend(self, {
-            handlers:{
-                click:clickHandler,
-                remove:removeHandler,
-            }
-        });
+        var errorLoading = function(err) {
+            // alert('Error loading, try to refersh or re-install the app.');
+            console.log('Error loading, try to refersh or re-install the app.');
+        };
+        initting.promise.catch (errorLoading);
+
+        //Init after dependencies have loaded;
+        init();
 
         return self;
     })(provider);

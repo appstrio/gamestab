@@ -1,34 +1,34 @@
 "use strict";
 
-define(['jquery', 'when', 'provider', 'async_runtime', 'renderer', 'env'], function($, when, provider, runtime, renderer, env) {
+define(['jquery', 'when', 'provider', 'runtime', 'renderer', 'env'], function($, when, provider, runtime, renderer, env) {
     return (function(module) {
         var initting = when.defer(),
-            self = Object.create(module, {
-                name       : "webApps"
-                promise    : initting.promise,
-                dials      : [],
-                settings   : {},
-            }),
+            self = Object.create(module),
             defaultSettings = {
-                pathToJSON : '/predefinedDials.json'
+                pathToJSON : '/js/predefinedDials.json'
             },
-            rawDials: [], // dials without handlers, hot from the JSONFile oven :) TODO: Better name?
+            rawDials = []; // dials without handlers, hot from the JSONFile oven :) TODO: Better name?
+
         parent = self.__proto__;
 
         /**
          * Callback function for self.promise success
-         * @param config
+         * @param options Custom settings to override self.settings
          */
-        var init = function initModule(options) {
+        var init = function initModule(runtimeData, options) { // Passed in from runtime
             //Create a settings object by overriding defaultSettings with any custom settings
-            self.settings = $.extend(defaultSettings, options);
+            $.extend(self,{
+                promise    : initting.promise,
+                dials      : [],
+                settings   : $.extend(defaultSettings, options),
+            });
 
             //Fetch list of dials
-            getDialList();
+            var listFetching = self.getDialList(); // Into a vaWe don't care about what it returns... for now.
             //If no dials in localstorage, we need to fetch them and set them there.
-            if (!this.dials || this.dials.length == 0) {
+            if (!self.dials || self.dials.length == 0) {
                 //Get them from a JSON file and put them in storage
-                var fetchingJSON = $.getJSON(settings.pathToJSON);
+                var fetchingJSON = $.getJSON(self.settings.pathToJSON);
                 fetchingJSON.then(function(dialArray) {
                     rawDials = dialArray;
 
@@ -36,10 +36,13 @@ define(['jquery', 'when', 'provider', 'async_runtime', 'renderer', 'env'], funct
 
                     self.setDialList();
 
+                    initting.resolve(self.dials);
+
                 }, initting.reject);
+            } else {
+                initting.resolve(self.dials);
             }
 
-            initting.resolve();
         };
 
         var prepareDials = function prepaireDials() {
@@ -49,8 +52,8 @@ define(['jquery', 'when', 'provider', 'async_runtime', 'renderer', 'env'], funct
                     click: self.handlers.click,
                     id: '', // So we won't have an undefined in the template's data-id
                 }));
-            };
-        }
+            });
+        };
 
         // Main provider.js
 
@@ -100,10 +103,12 @@ define(['jquery', 'when', 'provider', 'async_runtime', 'renderer', 'env'], funct
         };
 
         //Init after dependencies have loaded;
-        async_config.promise.then(init, initting.reject);
+        runtime.promise.then(init, initting.reject);
 
         //If init fails handlers
-        initting.catch(errorLoading);
+        initting.promise.catch(errorLoading);
+
+        init();
 
         return self;
     })(provider);

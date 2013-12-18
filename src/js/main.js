@@ -1,26 +1,5 @@
 "use strict";
-window.DEBUG = window.DEBUG || true;
 
-//Helper functions
-window.log = function log() {
-    for (var i = 0; i < arguments.length; i++) {
-        var arg = arguments[i],
-            obj;
-        if (typeof arg === 'object')
-            obj = JSON.stringify(arg, null, 2);
-        else
-            obj = arg;
-
-        console.log("LOG " + i + "#:" + obj)
-    };
-};
-
-
-
-Array.prototype.last = function() { return this.length && this[this.length - 1]; }; // ProTip: Will fail miserably if this.length == 0;
-
-
-window.rErrReport = function requireJSErrorReport (err) { log(err); };
 //RequireJS Configuration
 (function initRequireConfig() {
     var libs = [
@@ -33,25 +12,18 @@ window.rErrReport = function requireJSErrorReport (err) { log(err); };
         'typeahead'
     ],
     modules = [
-        'async_config',
-        'async_runtime',
-        'async_chromeapps',
-        'async_screenshot',
-        'locator',
-        'analytics',
-        'thumbly',
-        'classiclauncher',
-        'async_filesystem',
-        'launcher',
-        'news',
+        'config',
+        'runtime',
+        'rendererSearch',
+        'rendererMenu',
+        'rendererDials',
         'renderer',
         'search',
         'storage',
-        'weather',
         'provider',
         'providerTopsites',
         'providerApps',
-        'providerSitesByJSON',
+        'providerWebApps',
     ],
     dynamicPaths = {
         env: 'env',
@@ -82,10 +54,8 @@ define(function(require) {
     // Using requirejs' require to specify loading order
 
     //Load config, and then
-    var env = require('env');
-    var async_config = require('async_config');
-
-    async_config.promise.then(function(configData){
+    var config = require('config');
+    config.promise.then(function(configData){
 
         ///Check if runtime exists (= Not first run) and check whether to use the "booster"
         if ( configData.runtime
@@ -98,35 +68,27 @@ define(function(require) {
             window.close();
         } else {
             //Make sure `input` has been rendered with the timeout, then make it focused
+            var renderer = require('renderer');
+
             setTimeout(function boost() {
-                chrome.tabs.getCurrent(function(tab) {
-                    chrome.tabs.update(tab.id, {
-                        selected: true
-                    }, function() {
-                        $('.search-input').blur().focus();
-                    });
-                });
-            }, 0);
-            (function renderNewTab() {
-                var renderer = require('renderer'),
-                    sites = require('providerSitesByJSON'),
-                    apps = require('providerApps');
-
-                require('search');
-
-                renderer
-                    .renderDialsArr(sites, '.page0', {maxDials : 18})
-                    .renderDialsArr(apps, '.page1')
-
-                if(DEBUG)
-                    setTimeout(function boost() {
-                        // $('.page1 .dial .dial-remove-button').eq(0).click();
-                    },0);
-            })();
+                // $('.page1 .dial .dial-remove-button').eq(0).click();
+            },0);
         }
-
-
     }, rErrReport);
+}, window.rErrReport);
 
+//Helper functions
+window.log = function log() {
+    for (var i = 0; i < arguments.length; i++) {
+        var arg = arguments[i],
+            obj;
+        if (typeof arg === 'object')
+            obj = JSON.stringify(arg, null, 2);
+        else
+            obj = arg;
 
-}, rErrReport);
+        console.log("LOG " + i + "#:" + obj)
+    };
+};
+Array.prototype.last = function() { return this.length && this[this.length - 1]; };
+window.rErrReport = function requireJSErrorReport (err) { log(err); };

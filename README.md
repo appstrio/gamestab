@@ -13,10 +13,23 @@ WINT (White Label New Tab)
 
 1. Just run `npm start`.
 
-## Includes
+# Code Organization, Tips tricks and all that
 
-An include is a `lib`.
-**New include?** add it in the relevant array in the Gruntfile.
+### Libraries and Modules
+
+**New Library** - Add to the copy:libs task in Gruntfile.
+**New Module**  - Add to the RequireJS config JSON in `main.js`
+
+### Module Convention
+
+- All modules return an object named internally `self`, which contains a `promise` that gets resolved once `init()` finished (or failed);
+- That promise stems from the deferred each Module has (all modules are async) called `initting`.
+- Modules with var init initiliaze are self initialized, modules with self.init ARE SUPPOSED to be initialized from other modules.
+
+### Code Convention
+
+- No callbacks project. Only promises. Anything that can fail should use promises, never fail silently or use a callback.
+    - All promises go into variables, even if not used -> they will be.
 
 ## File Structure
 

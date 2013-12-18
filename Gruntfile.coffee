@@ -93,6 +93,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask "build", ['preinit','copy','jade','less','compile-templates']
   grunt.registerTask "default", ["watch"]
+  grunt.registerTask "go", ["build","watch"]
   grunt.registerTask "publish", []
 
 log = -> console.log JSON.stringify arg, undefined, 2 for arg in arguments

@@ -1,6 +1,7 @@
 window._gaq = window._gaq || [];
 
-define(['promise!async_runtime', 'promise!async_config'], function Analytics(runtime, config) {
+define(['promise!runtime
+', 'promise!config'], function Analytics(runtime, config) {
     /**
      * GOOGLE ANALYTICS EVENTS AND CUSTOM VARS
      *

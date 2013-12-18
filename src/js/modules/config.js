@@ -9,15 +9,15 @@
  * available as quick as the app starts without waiting for the Runtime module.
  *
  * How to use it ?
- * Define async_config as dependency and listen to the async_config.promise callbacks.
- * then use async_config.data to access the config attributes or async_config.store to store the config object in the localstorage
+ * Define config as dependency and listen to the config.promise callbacks.
+ * then use config.data to access the config attributes or config.store to store the config object in the localstorage
  *
  */
 
 define(['jquery', 'storage', 'env', 'when'], function config($, storage, env, when) {
 
-    var storageKey = "config", // how we store the config object in the localstorage
-        initting = when.defer(), // initting defer (this is out convention for initialization defer
+var storageKey = "config",
+        initting = when.defer(),
         self = {
             promise: initting.promise,
             data: {}
