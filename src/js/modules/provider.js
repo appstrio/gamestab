@@ -4,6 +4,7 @@ define(['jquery', 'when', 'renderer', 'underscore', 'storage'], function($, when
     var self = {
         name: "providerBASE", // Must be overriden in child objects - Used to throw an error if not overriden.
         handlers: {},
+        dials: [],
     };
 
     // TODO: Rewrite into custom "remove" event?
@@ -37,12 +38,8 @@ define(['jquery', 'when', 'renderer', 'underscore', 'storage'], function($, when
     self.provide = function(type) { return this.fetch(); };
 
     self.fetch = function fetchStuff() {throw "Must be overriden."; }
-    self.getIgnoreList = function() {this.ignoreList = storage.get(this.name); };
-    self.setIgnoreList = function() {storage.set(this.name, this.ignoreList); };
-
-    //Some init method {
-    // if (DEBUG && this.name === "providerBASE") throw "Must give child-provider.js a name!";
-    // }
+    self.getDialList = function() { this.dials = storage.get(this.name); };
+    self.setDialList = function() {storage.set(this.name, this.dials); };
 
     return self;
 
