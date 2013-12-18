@@ -1,5 +1,10 @@
 "use strict";
 
+window.DEBUG = {
+    noBooster: true,
+    loadConfigFromFile: false
+};
+
 //RequireJS Configuration
 (function initRequireConfig() {
     var libs = [
@@ -58,8 +63,8 @@ define(function(require) {
     config.promise.then(function(configData){
 
         ///Check if runtime exists (= Not first run) and check whether to use the "booster"
-        if ( configData.runtime
-             && configData.runtime.useBooster
+        if ( (DEBUG && !(DEBUG.noBooster))
+             && configData.runtime && configData.runtime.useBooster
              && document.URL.indexOf('#newtab') === -1
              && document.URL.indexOf('background') === -1) {
 
@@ -68,13 +73,14 @@ define(function(require) {
             window.close();
         } else {
             //Make sure `input` has been rendered with the timeout, then make it focused
-            var runtime = require('runtime'),
+            var runtime = require('runtime'), // manually requiredhere is part of the schematic TODO: Do we need to set it as dep in renderers (they don't use the runtime).
                 Renderer = require('renderer'),
                 renderInitting = Renderer.init();
             renderInitting.then(function () {
                 var SearchRenderer = require('rendererSearch'),
                     MenuRenderer = require('rendererMenu'),
                     DialsRenderer = require('rendererDials'),
+                    //TODO if we want this run after runtime, we can just set runtime as an async_dep (runtime.promise.then(initModule))
                     SearchRendererInitting = SearchRenderer.init(),
                     MenuRendererInitting = MenuRenderer.init(),
                     DialsRendererInitting = DialsRenderer.init();

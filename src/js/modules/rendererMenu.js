@@ -14,8 +14,11 @@ define(['underscore', 'jquery', 'templates', 'when', 'renderer'], function menuR
      */
     self.init = function initModule(options) {
         //TODO change into a general ".switch".on click
-        $('#dialsSwitch').on ('click', switchHandler('apps'));
-        $('#appsSwitch').on('click', switchHandler('dials'));
+        $('#dials-switch').on ('click', switchHandler('dials'));
+        $('#apps-switch').on('click', switchHandler('apps'));
+
+        //TODO: Default switch is hardcoded
+        $('#dials-switch').addClass('selected');
 
         return initting.resolve();
     };
@@ -25,10 +28,10 @@ define(['underscore', 'jquery', 'templates', 'when', 'renderer'], function menuR
         return function() {
             //Remove highlighting from all switches and highlight the selected one
             $('.switch').removeClass('selected');
-            $("#" + name + "Switch").addClass('selected');
+            renderer["$" + name + "Switch"].addClass('selected');
             //Show only the selected page
             $(".dials-wrapper").hide()
-            $("#" + name + "Wrapper").show();
+            renderer["$" + name + "Wrapper"].show();
         }
     };
 

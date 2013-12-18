@@ -77,7 +77,9 @@ var storageKey = "config",
 
         // Try to fetch appdata from the localstorage
         var data = storage.get(storageKey);
-        if (!(env.force.loadConfigFromFile) && data) {
+        if ( (DEBUG && !(DEBUG.loadConfigFromFile))
+            && data
+            ) {
             self.data = data;
             if (setDefaultConfigSettings()) {
                 self.store();

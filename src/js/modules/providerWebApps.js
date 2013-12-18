@@ -102,12 +102,10 @@ define(['jquery', 'when', 'provider', 'runtime', 'renderer', 'env'], function($,
         };
 
         //Init after dependencies have loaded;
-        runtime.promise.then(init, initting.reject);
+        init();
 
         //If init fails handlers
         initting.promise.catch(errorLoading);
-
-        init();
 
         return self;
     })(provider);

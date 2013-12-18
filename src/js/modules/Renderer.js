@@ -28,6 +28,12 @@ define(function Renderer(require) {
         // setup general layout
         self.$wrapper.html(self.$layout);
 
+        self.$dialsSwitch = $('#dials-switch');
+        self.$appsSwitch = $('#apps-switch');
+
+        self.$dialsWrapper = $('#dials-wrapper');
+        self.$appsWrapper = $('#apps-wrapper');
+
         return initting.resolve();
     };
     var errorLoading = function(err) {

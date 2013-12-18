@@ -2,20 +2,19 @@
     <div class="search-wrapper"></div>
     <div class="top-wrapper">
         <div class="viewport">
-           <div id="dialsWrapper" class="dials-wrapper page0"></div>
-           <div id="appsWrapper" class="dials-wrapper page1"></div>
+           <div id="dials-wrapper" class="dials-wrapper"></div>
+           <div id="apps-wrapper" class="dials-wrapper"></div>
         </div>
     </div>
     <div class="bottom-wrapper">
         <div class="bottom-logo"><img src="/img/lovedgames.logo.93x40.png" /></div>
         <div class="buttons">
-            <a id="" href="#" class="web-apps-overlay-btn"> + </a>
-            <a id="dialsSwitch" href="#" class="switch dials-switch selected"> Home </a>
-            <a id="appsSwitch" href="#" class="switch apps-switch"> Apps </a>
+            <a id="webapps-overlay-btn" href="#" class="btn"> + </a>
+            <a id="dials-switch" href="#" class="switch"> Home </a>
+            <a id="apps-switch" href="#" class="switch"> Apps </a>
         </div>
     </div>
 </div>
 <div id="fadescreen" class="hide">
    <div class="overlay web-apps-overlay"></div>
 </div>
-

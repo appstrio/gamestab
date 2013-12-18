@@ -13,6 +13,7 @@ define(function dialsRenderer(require) {
         // Dependencies using require() method because we might want to require different providers at runtime in initModule
         _         = require('underscore'),
         $         = require('jquery'),
+        renderer  = require('renderer'),
         templates = require('templates');
     /**
      * Callback function for self.promise success
@@ -28,22 +29,26 @@ define(function dialsRenderer(require) {
         var webApps = require('providerWebApps'),
             apps = require('providerApps');
 
-        // self.providers = {
-        //     dials:webApps,
-        //     apps:apps,
-        // };
+        webApps.promise.then(function (dials) {
+            self.renderDialsArr(dials, renderer.$dialsWrapper, {maxDials : 18});
+        });
+            apps.promise.then(function (apps) {
+            self.renderDialsArr(apps, renderer.$appsWrapper);
+        });
 
-        webApps.promise.then(function (dials) { self.renderDialsArr(dials, '#dialsWrapper', {maxDials : 18}); });
-        apps.promise.then(function (apps) { self.renderDialsArr(apps, '.dialsWrapper'); });
+
+        //TODO hardcoded
+        $("#dials-wrapper").show();
 
         setEventHandlers();
+
         return when.all([webApps.promise,apps.promise], initting.resolve , initting.reject);
     };
     /**
      * @param options {maxDials: number}
      */
-    self.renderDialsArr = function renderDials(dials, parentSelector, options) {
-        var $parent = $(parentSelector), options = options || {};
+    self.renderDialsArr = function renderDials(dials, $parent, options) {
+        var options = options || {};
         //Clean dials zone
         $parent.html('');
 

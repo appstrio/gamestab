@@ -83,6 +83,7 @@ define(['jquery', 'when', 'config'], function runtime
     self.setup = function(def) {
         $.extend(self.data, defaultRuntime);
 
+
         var fetchingDials = self.getDefaultDials().then(function(dials) {
             self.data.dials = dials;
         }, function() {
