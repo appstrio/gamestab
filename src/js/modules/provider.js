@@ -11,7 +11,7 @@ define(['jquery', 'when', 'renderer', 'underscore', 'storage'], function($, when
         e.stopPropagation();
         e.preventDefault();
         var $target = $(e.currentTarget).parents('.dial').eq(0),
-            removingDial = renderer.removeDial($target);
+            removingDial = renderer.removeDialElement($target);
 
         return removingDial;
     };

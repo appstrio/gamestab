@@ -1,0 +1,26 @@
+#fadescreen {
+  position: absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height: 100% ;
+  display: -webkit-box;
+  -webkit-box-pack : center;
+  -webkit-box-align:center;
+  background: rgba(0,0,0,0.7);
+  &.hide{
+    display :  none !important;
+  }
+
+  .overlay {
+    display:none;
+  }
+
+  .web-apps-overlay {
+    width: 400px;
+    height: 400px;
+    z-index: 2;
+    background: brown;
+    border:1px;
+  }
+}

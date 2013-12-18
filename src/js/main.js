@@ -83,18 +83,21 @@ define(function(require) {
 
     //Load config, and then
     var env = require('env');
-    require('async_runtime').promise.then(function InitOrRunBooster(runtimeModule) {
-        var runtimeData = runtimeModule.runtime,
-            config = runtimeModule.config;
-        //Check whether we want to use the "booster"
-        if (
-            ((DEBUG && env.force.booster) ||
-            config.runtime.useBooster)
-        && document.URL.indexOf('#newtab') === -1 && document.URL.indexOf('background') === -1) {
+    var async_config = require('async_config');
+
+    async_config.promise.then(function(configData){
+
+        ///Check if runtime exists (= Not first run) and check whether to use the "booster"
+        if ( configData.runtime
+             && configData.runtime.useBooster
+             && document.URL.indexOf('#newtab') === -1
+             && document.URL.indexOf('background') === -1) {
+
             //Close & Open tab to move focus to the "main input"
             window.open("newtab.html#newtab"); // TODO: consider to use the chrome api to improve the speed of the new window opening
             window.close();
         } else {
+            //Make sure `input` has been rendered with the timeout, then make it focused
             setTimeout(function boost() {
                 chrome.tabs.getCurrent(function(tab) {
                     chrome.tabs.update(tab.id, {
@@ -112,14 +115,18 @@ define(function(require) {
                 require('search');
 
                 renderer
-                    .dials('.page0', sites)
-                    .dials('.page1', apps)
+                    .renderDialsArr(sites, '.page0', {maxDials : 18})
+                    .renderDialsArr(apps, '.page1')
 
                 if(DEBUG)
                     setTimeout(function boost() {
                         // $('.page1 .dial .dial-remove-button').eq(0).click();
                     },0);
             })();
-        };
-    });
+        }
+
+
+    }, rErrReport);
+
+
 }, rErrReport);

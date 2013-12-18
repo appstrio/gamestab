@@ -5,17 +5,19 @@
            <div class="dials-wrapper page0"></div>
            <div class="dials-wrapper page1"></div>
         </div>
-        <div class="popups">
-           <div id="plus"></div>
-           <div id="fadescreen">hello</div>
-        </div>
     </div>
     <div class="bottom-wrapper">
         <div class="bottom-logo"><img src="/img/lovedgames.logo.93x40.png" /></div>
         <div class="buttons">
-            <a href="#" id="plus" class="switch"> + </a>
-            <a href="#" class="dials-switch selected"> Home </a>
-            <a href="#" class="apps-switch"> Apps </a>
+            <a href="#" class="web-apps-overlay-btn"> + </a>
+            <a href="#" class="switch dials-switch selected"> Home </a>
+            <a href="#" class="switch apps-switch"> Apps </a>
         </div>
     </div>
 </div>
+
+
+<div id="fadescreen" class="hide">
+   <div class="overlay web-apps-overlay"></div>
+</div>
+

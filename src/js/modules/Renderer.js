@@ -1,10 +1,73 @@
 define(['underscore', 'jquery', 'templates', 'when'], function Renderer(_, $, templates, when) {
-    var self = {
-        maxDials: 18,
-        fadeOutSpeed: 400, // jQuery's default,
+
+    // (0) general settings
+    var self = {};
+
+
+    // (1) setup the general layout
+    self.$wrapper = $('#wrapper');
+    self.$layout = $(templates['classic']());
+    // setup general layout
+    self.$wrapper.html(self.$layout);
+
+
+    //  (2) widely used dom selectors
+    self.$searchWrapper = self.$layout.find('.search-wrapper').eq(0);
+
+    //self.$pages = {
+    self.pages = {
+        $dials: self.$wrapper.find('.page0').eq(0),
+        $apps: self.$wrapper.find('.page1').eq(0)
     };
 
-    self.renderDial = function(location, dial) {
+    self.switches = {
+        $dials: $('.dials-switch'),
+        $apps: $('.apps-switch')
+    };
+
+    self.overlays = {
+        $webAppsOverlay : $('.web-apps-overlay')
+    };
+
+    self.$webAppsOverlayBtn = $('.web-apps-overlay-btn');
+    self.$fadescreen = $('#overlays');
+
+
+
+
+
+
+    // (3) rendering functions
+    /**
+     *
+     * @param template
+     * @param providerObject
+     * @returns {{maxDials: number, fadeOutSpeed: number}}
+     */
+    self.renderDialsArr = function renderDials(providerObject, parentSelector, options) {
+        var $parent = $(parentSelector), options = options || {};
+        //Clean dials zone
+        $parent.html('');
+
+        providerObject.provide().then(function(dials) {
+            var maxDials = options.maxDials || dials.length;
+            for (var i = 0; i < dials.length && i < maxDials; i++) {
+                var dial = dials[i];
+                self.renderDial($parent, dial);
+            };
+        });
+        return self;
+    }
+
+
+    /**
+     *
+     * @param $parent
+     * @param dial
+     * @returns {void|*}
+     */
+
+    self.renderDial = function($parent, dial) {
         var $dial = $(templates['classic-dial'](dial))
             .on('click', dial.click)
             .on('click', '.dial-remove-button', dial.remove);
@@ -18,10 +81,12 @@ define(['underscore', 'jquery', 'templates', 'when'], function Renderer(_, $, te
         if (dial.id)
             $dial.data('id', dial.id);
 
-        return self.$wrapper.find(location).append($dial);
+        return $parent.append($dial);
     };
 
-    self.removeDial = function($ele) {
+
+
+    self.removeDialElement = function($ele) {
         var removing = when.defer();
         $ele.fadeOut(self.fadeOutSpeed, removing.resolve);
         // removing.then(function (ele) {
@@ -32,71 +97,61 @@ define(['underscore', 'jquery', 'templates', 'when'], function Renderer(_, $, te
         // })
         return removing.promise;
     }
-    var regular = ['apps', 'dials'],
-        popups = ['plus'],
-        makeSwitch = function function_name(name) {
+
+
+
+
+
+
+    // (4) event handlers
+        var switchHandler = function function_name(name) {
             return function() {
-                if (_.contains(popups, name)) {
-                    $("#fadescreen").toggle();
-                }
                 //Remove highlighting from all switches and highlight the selected one
-                _.each(self.$switches, function($swi) {$swi.removeClass('selected');});
-                self.$switches[name].addClass('selected');
+                _.each(self.switches, function($swi) {$swi.removeClass('selected');});
+                $('.switch').removeClass();
+                self.switches[name].addClass('selected');
                 //Show only the selected page
-                _.each(self.$pages, function($page) {$page.hide() });
-                self.$pages[name].show();
+                _.each(self.pages, function($page) {$page.hide() });
+                self.pages[name].show();
             }
-        }
-
-
-    self.dials = function renderDials(template, providerObject) {
-        var provider, tpl;
-        if (!providerObject)
-            provider = template;
-        else {
-            tpl = template;
-            provider = providerObject;
         };
 
-        //Clean dial zone
-        $(template).html('');
 
-        provider.provide().then(function(dials) {
-            for (var i = 0; i < dials.length && i < self.maxDials; i++) {
-                var dial = dials[i];
-                self.renderDial(template, dial);
-            };
+
+
+
+    var openOverlayHandler = function function_name(name) {
+            return function() {
+                //Show only the selected page
+                _.each(self.overlays, function($ol) {$ol.hide()});
+                self.$fadescreen.removeClass('hide');
+                self.$fadescreen.fadeIn();
+                console.log('self.overlays[name]',self.overlays[name]);
+                self.overlays[name].show();
+            }
+    };
+
+
+
+    var closeOverlayHandler = function function_name() {
+        _.each(self.overlays, function($ol) {$ol.hide()});
+        self.$fadescreen.fadeOut(function(){
+            self.$fadescreen.addClass('hide');
         });
-        return self;
     }
 
-    self.$wrapper = $('#wrapper');
-    // setup generel layout
-    self.$layout = $(templates['classic']());
-    self.$wrapper.html(self.$layout);
 
-    self.$switches = {
-        dials: $('.dials-switch'),
-        apps: $('.apps-switch'),
-        plus: $('#plus.switch'),
-    }
-    self.$pages = {
-        dials: self.$wrapper.find('.page0').eq(0),
-        apps: self.$wrapper.find('.page1').eq(0),
-        plus: $(".popups #plus").eq(0),
-    }
 
-    $.extend(self, {
-        $searchWrapper: self.$layout.find('.search-wrapper').eq(0),
-        $appsSwitch: self.$wrapper.find('.apps-switch').eq(0),
-        $dialsSwitch: self.$wrapper.find('.dials-switch').eq(0),
-    });
+
+
+    // (5) Build the DOM and assign event hadnlers
     // setup search layout
-    self.$searchWrapper.html($(templates['search-wrapper']())); // WAS {}
+    self.$searchWrapper.html($(templates['search-wrapper']()));
     //Event handlers
-    self.$switches.apps.on ('click', makeSwitch('apps'));
-    self.$switches.dials.on('click', makeSwitch('dials'));
-    self.$switches.plus.on ('click', makeSwitch('plus'));
+    self.switches.$apps.on ('click', switchHandler('$apps'));
+    self.switches.$dials.on('click', switchHandler('$dials'));
+    self.$webAppsOverlayBtn.on ('click', openOverlayHandler('$webAppsOverlay'));
+    self.$fadescreen.on ('click', closeOverlayHandler);
 
     return self;
 
