@@ -1,9 +1,9 @@
 "use strict";
 
-define(['underscore', 'jquery', 'templates', 'when'], function menuRenderer(_, $, templates, when) {
+define(['underscore', 'jquery', 'templates', 'when', 'renderer'], function menuRenderer(_, $, templates, when, renderer) {
     var initting = when.defer(),
         self = {
-            // name: "search"
+            // name: "menu"
             promise: initting.promise,
             // settings: {},
         };
@@ -14,10 +14,10 @@ define(['underscore', 'jquery', 'templates', 'when'], function menuRenderer(_, $
      */
     self.init = function initModule(options) {
         //TODO change into a general ".switch".on click
-        $('#dialsSwitch').on ('click', switchHandler('$apps'));
-        $('#appsSwitch').on('click', switchHandler('$dials'));
+        $('#dialsSwitch').on ('click', switchHandler('apps'));
+        $('#appsSwitch').on('click', switchHandler('dials'));
 
-        initting.resolve();
+        return initting.resolve();
     };
 
     //TODO do we need references to the objects if we only use them here?
@@ -37,11 +37,6 @@ define(['underscore', 'jquery', 'templates', 'when'], function menuRenderer(_, $
         console.log('Error loading, try to refersh or re-install the app.');
     };
 
-
-    //Init after dependencies have loaded;
-    // Letting main.js init renderer
-    // init();
-    //If init fails handlers
     initting.promise.catch (errorLoading);
 
     return self;

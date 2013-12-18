@@ -1,4 +1,4 @@
-define(['underscore', 'jquery', 'templates', 'when'], function Renderer(_, $, templates, when) {
+define(['underscore', 'jquery', 'templates', 'when', 'renderer'], function Renderer(_, $, templates, when, renderer) {
     var initting = when.defer(),
         self = {
             // name: "search"
@@ -11,13 +11,12 @@ define(['underscore', 'jquery', 'templates', 'when'], function Renderer(_, $, te
      * @param options Custom settings to override self.settings
      */
     self.init = function initModule(options) {
-        self.$layout = $('.new-layout');
         // widely used dom selectors
-        self.$searchWrapper = self.$layout.find('.search-wrapper').eq(0);
+        self.$searchWrapper = renderer.$layout.find('.search-wrapper').eq(0);
         // setup search layout
         self.$searchWrapper.html($(templates['search-wrapper']()));
 
-        initting.resolve();
+        return initting.resolve();
     };
     var errorLoading = function(err) {
         // alert('Error loading, try to refersh or re-install the app.');

@@ -7,9 +7,8 @@ define(['jquery', 'when', 'provider', 'runtime', 'renderer', 'env'], function($,
             defaultSettings = {
                 pathToJSON : '/js/predefinedDials.json'
             },
-            rawDials = []; // dials without handlers, hot from the JSONFile oven :) TODO: Better name?
-
-        parent = self.__proto__;
+            rawDials = [], // dials without handlers, hot from the JSONFile oven :) TODO: Better name?
+            parent = self.__proto__;
 
         /**
          * Callback function for self.promise success

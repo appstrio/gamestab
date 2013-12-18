@@ -68,8 +68,19 @@ define(function(require) {
             window.close();
         } else {
             //Make sure `input` has been rendered with the timeout, then make it focused
-            var renderer = require('renderer');
+            var runtime = require('runtime'),
+                Renderer = require('renderer'),
+                renderInitting = Renderer.init();
+            renderInitting.then(function () {
+                var SearchRenderer = require('rendererSearch'),
+                    MenuRenderer = require('rendererMenu'),
+                    DialsRenderer = require('rendererDials'),
+                    SearchRendererInitting = SearchRenderer.init(),
+                    MenuRendererInitting = MenuRenderer.init(),
+                    DialsRendererInitting = DialsRenderer.init();
 
+                SearchRendererInitting.then(SearchRenderer.focusOnSearch);
+            })
             setTimeout(function boost() {
                 // $('.page1 .dial .dial-remove-button').eq(0).click();
             },0);

@@ -37,7 +37,7 @@ define(function dialsRenderer(require) {
         apps.promise.then(function (apps) { self.renderDialsArr(apps, '.dialsWrapper'); });
 
         setEventHandlers();
-        when.all([webApps.promise,apps.promise], initting.resolve , initting.reject)
+        return when.all([webApps.promise,apps.promise], initting.resolve , initting.reject);
     };
     /**
      * @param options {maxDials: number}
@@ -76,16 +76,16 @@ define(function dialsRenderer(require) {
     var openOverlayHandler = function function_name(name) {
             return function() {
                 //Show only the selected page
-                _.each(self.overlays, function($ol) {$ol.hide()});
+                $('.overlay').hide();
                 self.$fadescreen.removeClass('hide');
                 self.$fadescreen.fadeIn();
-                console.log('self.overlays[name]',self.overlays[name]);
+                // console.log('self.overlays[name]',self.overlays[name]);
                 self.overlays[name].show();
             }
     };
 
     var closeOverlayHandler = function function_name() {
-        _.each(self.overlays, function($ol) {$ol.hide()});
+        $('.overlay').hide();
         self.$fadescreen.fadeOut(function(){
             self.$fadescreen.addClass('hide');
         });
@@ -101,10 +101,6 @@ define(function dialsRenderer(require) {
         console.log('Error loading, try to refersh or re-install the app.');
     };
 
-    //Init after dependencies have loaded;
-    // Letting main.js init renderer
-    // init();
-    //If init fails handlers
     initting.promise.catch (errorLoading);
 
     return self;
