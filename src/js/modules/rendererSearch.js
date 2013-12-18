@@ -25,7 +25,7 @@ define(['underscore', 'jquery', 'templates', 'when', 'renderer'], function Rende
 
     //MISC
 
-    var focusOnSearch = function () {
+    self.focusOnSearch = function () {
         chrome.tabs.getCurrent(function(tab) {
             chrome.tabs.update(tab.id, {
                 selected: true
