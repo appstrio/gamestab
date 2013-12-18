@@ -7,6 +7,7 @@ define(['underscore', 'jquery', 'templates', 'when'], function Renderer(_, $, te
     // (1) setup the general layout
     self.$wrapper = $('#wrapper');
     self.$layout = $(templates['classic']());
+
     // setup general layout
     self.$wrapper.html(self.$layout);
 

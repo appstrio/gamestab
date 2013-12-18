@@ -4,7 +4,6 @@ define(['jquery', 'when', 'provider', 'async_runtime', 'renderer'], function($, 
     return (function(module) {
         var self = Object.create(module),
             parent = self.__proto__;
-
         $.extend(self, {
             name: "byJSON", // Used by the setIgnoreList mechanism to store the ignorelist at this self.name as key
             inventory: [],
