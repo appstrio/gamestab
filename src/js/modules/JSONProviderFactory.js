@@ -31,31 +31,33 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
                 this.removeDialFromList = null;
 
             //Fetch list of dials
-            if(self.settings.forceLoadFromJSON)
+            if (self.settings.forceLoadFromJSON)
                 listFetching = when.reject();
             else
-                listFetching = self.getDialList(this.name);
+                listFetching = self.getDialList(self.name);
 
-            listFetching.then(initting.resolve)
-                        .otherwise(function NoDialsInLocalStorage () {
-                //If no dials in localstorage, we need to fetch them and set them there.
-                //Get them from a JSON file and put them in storage
-                var fetchingJSON = $.getJSON(options.pathToJSON);
-                fetchingJSON.then(function(dialArray) {
-                    if (self.settings.wrapDial) {
-                        self.dials = _.map(dialArray, wrapDial);
-                    } else {
-                        self.dials = dialArray;
-                    };
-
-                    initting.resolve(self.dials);
-
-                    self.storeDialList(this.name, this.dials);
-                }, initting.reject);
-            });
+            listFetching.then(self.resolveAndSave)
+                .otherwise(function NoDialsInLocalStorage() {
+                    //If no dials in localstorage, we need to fetch them and set them there.
+                    //Get them from a JSON file and put them in storage
+                    var fetchingJSON = $.getJSON(options.pathToJSON);
+                    fetchingJSON.then(self.resolveAndSave, initting.reject);
+                });
 
             return initting.promise;
         };
+
+        self.resolveAndSave = function(dials) {
+            if (self.settings.wrapDial) {
+                self.dials = _.map(dials, wrapDial);
+            } else {
+                self.dials = dials;
+            };
+            if (!self.dials)
+                self.storeDialList(self.name, self.dials);
+
+            initting.resolve(self.dials);
+        }
 
         if (self.settings.preLoad)
             self.init();

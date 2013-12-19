@@ -12,32 +12,30 @@ define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function 
         };
         self.fetch = function fetchStuff() {
             throw "Must be overriden.";
-        }
+        };
 
         self.getDialList = function(name) {
             var dials = storage.get(name);
             if (dials) return when.resolve(dials);
             else return when.reject();
         };
-        self.storeDialList = function(name,dials) {
+        self.storeDialList = function(name, dials) {
             var rawDials = _.map(dials, function (dial) {
                 return dial.toObject();
-            })
+            });
             storage.set(name, rawDials);
         };
 
         self.removeDialFromList = function (dial) {
-            return function(e) {
-                var removing = when.defer();
+            var removing = when.defer();
 
-                var index = arr.indexOf(dial);
-                arr.splice(index,1);
+            var index = this.dials.indexOf(dial);
+            this.dials.splice(index,1);
 
-                self.storeDialList();
+            self.storeDialList();
 
-                return removing.resolve();
-            }
-        }
+            return removing.resolve();
+        };
 
         return self;
     };

@@ -5,6 +5,7 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
     return (function() {
         var initting = when.defer(),
             parent = JSONProviderFactory({
+                name: "WebAppsListProvider",
                 preLoad: false,
                 mutableList: false,
                 pathToJSON: '/js/data/webapps.json'

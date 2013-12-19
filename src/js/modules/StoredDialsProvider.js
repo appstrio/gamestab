@@ -6,6 +6,7 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
     return (function StoredDialsProvider(options) {
         var initting = when.defer(),
             parent = JSONProviderFactory({
+                name: "StoredDialsProvider",
                 preLoad: false,
                 pathToJSON: '/js/data/defaultDials.json'
             }),

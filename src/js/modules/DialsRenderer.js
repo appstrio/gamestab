@@ -90,7 +90,6 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
                     var $ele = $(e.currentTarget).parents('.dial').eq(0);
                     $ele.fadeOut(function() {
                         $ele.off().remove();
-                        provider.removeDialFromList && provider.removeDialFromList(dial);
                     });
                 });
             }
