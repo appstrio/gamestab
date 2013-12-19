@@ -29,6 +29,8 @@ window.DEBUG = {
         'providerTopsites',
         'providerApps',
         'providerWebApps',
+        'Dial',
+        'AppDial',
     ],
     dynamicPaths = {
         env: 'env',
@@ -63,7 +65,7 @@ define(function(require) {
     config.promise.then(function(configData){
 
         ///Check if runtime exists (= Not first run) and check whether to use the "booster"
-        if ( (DEBUG && !(DEBUG.noBooster))
+        if ( (window.DEBUG && !(window.DEBUG.noBooster))
              && configData.runtime && configData.runtime.useBooster
              && document.URL.indexOf('#newtab') === -1
              && document.URL.indexOf('background') === -1) {

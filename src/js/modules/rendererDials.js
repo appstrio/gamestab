@@ -63,7 +63,7 @@ define(function dialsRenderer(require) {
 
     self.renderDial = function($parent, dial) {
         var $dial = $(templates['classic-dial'](dial))
-            .on('click', dial.click)
+            .on('click', dial.launch)
             .on('click', '.dial-remove-button', dial.remove);
 
         if (dial.id)

@@ -1,14 +1,13 @@
 "use strict";
 
-define(['jquery', 'when', 'provider', 'runtime', 'renderer', 'env'], function($, when, provider, runtime, renderer, env) {
-    return (function(module) {
+define(['jquery', 'when', 'provider', 'runtime', 'renderer', 'Dial'], function($, when, baseprovider, runtime, renderer, Dial) {
+    return (function() {
         var initting = when.defer(),
-            self = Object.create(module),
+            parent = baseprovider(),
+            self = Object.create(parent),
             defaultSettings = {
-                pathToJSON : '/js/predefinedDials.json'
-            },
-            rawDials = [], // dials without handlers, hot from the JSONFile oven :) TODO: Better name?
-            parent = self.__proto__;
+                pathToJSON : '/js/predefinedDials.json',
+            };
 
         /**
          * Callback function for self.promise success
@@ -17,40 +16,43 @@ define(['jquery', 'when', 'provider', 'runtime', 'renderer', 'env'], function($,
         var init = function initModule(runtimeData, options) { // Passed in from runtime
             //Create a settings object by overriding defaultSettings with any custom settings
             $.extend(self,{
-                promise    : initting.promise,
-                dials      : [],
-                settings   : $.extend(defaultSettings, options),
+                name     : "WebAppsProvider", //required for getting and storing dial list
+                promise  : initting.promise,
+                dials: [],
+                settings : $.extend(defaultSettings, options),
             });
 
             //Fetch list of dials
-            var listFetching = self.getDialList(); // Into a vaWe don't care about what it returns... for now.
+            var listFetching = self.getDialList(self.name); // We don't care about what it returns... for now.
             //If no dials in localstorage, we need to fetch them and set them there.
             if (!self.dials || self.dials.length == 0) {
                 //Get them from a JSON file and put them in storage
                 var fetchingJSON = $.getJSON(self.settings.pathToJSON);
                 fetchingJSON.then(function(dialArray) {
-                    rawDials = dialArray;
+                    self.dials = prepareDials(dialArray);
 
-                    prepareDials();
-
-                    self.setDialList();
+                    self.setDialList(self.name, self.dials);
 
                     initting.resolve(self.dials);
 
                 }, initting.reject);
             } else {
+                //TODO : mechanism to force reload the JSON;
+
+                self.dials = prepareDials(listFetching);
+
                 initting.resolve(self.dials);
             }
 
         };
 
-        var prepareDials = function prepaireDials() {
-            _.each(rawDials, function(dial) {
-                self.dials.push($.extend(dial, {
-                    remove: self.handlers.remove,
-                    click: self.handlers.click,
-                    id: '', // So we won't have an undefined in the template's data-id
-                }));
+        var prepareDials = function prepaireDials(dialarray) {
+            return _.map(dialarray, function(dial) {
+                var dial = Dial(dial);
+
+                self.setEventHandlers(dial);
+
+                return dial;
             });
         };
 
@@ -60,53 +62,26 @@ define(['jquery', 'when', 'provider', 'runtime', 'renderer', 'env'], function($,
             return when.resolve(self.dials);
         }
 
-        // Event Handlers
-        // NOTE: all events are triggered by DOM elements
-
-        var setEventHandlers = function () {
-            var handlers = {
-                remove: remove,
-                click: parent.handlers.click,
-            };
-
-            self.handlers = handlers;
-        }
-
-        var remove = function removeDial (e) {
-            var parentHandling = parent.handlers.remove(e),
-                removing = when.defer();
-
-            parentHandling.then(function() {
-                var $targetDiv = $(e.currentTarget).parents('.dial').eq(0),
-                    identifierKey = 'url'
-                    identifierVal = $target.find('a').attr('href');
-
-                self.dials = _.reject(self.dials, function removeIfOffendingDial (dial) {
-                    return dial[identifierKey] == identifierVal;
-                });
-
-                self.setDialList();
-
-                removing.resolve();
+        self.setEventHandlers = function (dial) {
+            dial.removing.then(function removeHandler() {
+                self.removeDialFromList(dial);
             });
-
-            return removing.promise;
         }
 
-        //HELPERS
+        // Template:
+        // self.removeDialFromList = function removeDialFromList (e) {
+        //     var parentHandling = parent.removeDialFromList(e),
+        //         // removing = when.defer();
 
-        /** could be refactored to a center module everybody inherit from (also appears in runtime) **/
-        var errorLoading = function(err) {
-            // alert('Error loading, try to refersh or re-install the app.');
-            console.log('Error loading, try to refersh or re-install the app.');
-        };
+        //     return parentHandling;
+        // }
 
         //Init after dependencies have loaded;
         init();
 
         //If init fails handlers
-        initting.promise.catch(errorLoading);
+        initting.promise.catch(self.errorLoading);
 
         return self;
-    })(provider);
+    })(baseprovider);
 }, rErrReport);

@@ -77,7 +77,7 @@ var storageKey = "config",
 
         // Try to fetch appdata from the localstorage
         var data = storage.get(storageKey);
-        if ( (DEBUG && !(DEBUG.loadConfigFromFile))
+        if ( (window.DEBUG && !(window.DEBUG.loadConfigFromFile))
             && data
             ) {
             self.data = data;
