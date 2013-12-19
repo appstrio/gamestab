@@ -137,10 +137,6 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
         });
     };
 
-    // return default dials
-    self.getDefaultDials = function() {
-        return $.getJSON('/js/defaultDials.json');
-    };
 
     // return the current location
     // TODO: find way to get location easily

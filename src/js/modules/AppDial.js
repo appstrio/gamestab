@@ -1,7 +1,7 @@
 'use strict';
 
-define(['jquery', 'Renderer', 'Dial', 'when'], function($, renderer, Dial, when) {
-    if(DEBUG || DEBUG.logLoadOrder) console.log("Loading Module : AppDial");
+define(['env', 'jquery', 'Renderer', 'Dial', 'when'], function(env, $, renderer, Dial, when) {
+    if(env.DEBUG || env.logLoadOrder) console.log("Loading Module : AppDial");
     return function newAppDial(id, title, icon, description, options) {
         var parent = Dial('', title, icon, {
             setEventHandlers: false
