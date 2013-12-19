@@ -10,7 +10,7 @@
         'Renderer', 'SearchRenderer', 'MenuRenderer', 'DialsRenderer',
         'Search',
         'Storage',
-        'Provider', 'TopsitesProvider', 'AppsProvider', 'WebappsProvider',
+        'Provider', 'TopsitesProvider', 'AppsProvider', 'WebAppsListProvider',
         'Dial', 'AppDial'
     ],
     dynamicPaths = {

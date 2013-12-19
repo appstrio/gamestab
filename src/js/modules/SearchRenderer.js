@@ -5,7 +5,7 @@ define(['env', 'underscore', 'jquery', 'templates', 'when', 'Renderer'], functio
     var initting = when.defer(),
         self = {
             // name: "search"
-            promise: initting.promise,
+            promise: initting.promise
             // settings: {},
         };
         // defaultSettings = {},
@@ -14,6 +14,8 @@ define(['env', 'underscore', 'jquery', 'templates', 'when', 'Renderer'], functio
      * @param options Custom settings to override self.settings
      */
     var init = function initModule(options) {
+        //Make sure `input` has been rendered with the timeout, then make it focused
+        self.focusOnSearch();
         // widely used dom selectors
         self.$searchWrapper = renderer.$layout.find('.search-wrapper').eq(0);
         // setup search layout

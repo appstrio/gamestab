@@ -2,15 +2,11 @@
 
 define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(env, _, $, templates, when) {
     if (env.DEBUG && env.logLoadOrder) console.log('Loading Module : Renderer');
-    var when      = require('when');
     var initting = when.defer(),
         self = {
-            // name: "renderer" TODO needed?
-            promise: initting.promise,
-            settings: {},
-            // subs: {} // TODO uncomment if need to use submodules beyond renderer;
-        },
-        defaultSettings = {};
+            promise: initting.promise
+        };
+
     /**
      * Callback function for self.promise success
      * @param options Custom settings to override self.settings
@@ -30,7 +26,9 @@ define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(e
         self.$dialsWrapper = $('#dials-wrapper');
         self.$appsWrapper = $('#apps-wrapper');
 
-        return initting.resolve();
+        setTimeout(function(){
+            return initting.resolve();
+        }, 0);
     };
     var errorLoading = function(err) {
         // alert('Error loading, try to refersh or re-install the app.');

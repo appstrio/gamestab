@@ -20,9 +20,9 @@ define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function 
             if (dials) def.resolve(dials);
             else def.reject(null);
         };
-        self.setDialList = function(name,dials) {
+        self.storeDialList = function(name,dials) {
             var rawDials = _.map(dials, function (dial) {
-                return dial.getRaw();
+                return dial.toObject();
             })
             storage.set(name, rawDials);
         };
@@ -33,17 +33,16 @@ define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function 
         };
 
         self.removeDialFromList = function (dial) {
-            var removing = when.defer(),
-                tmpIdentity = dial.identifier(),
-                identifierKey = tmpIdentity.key,
-                identifierVal = tmpIdentity.val,
-                oldDial = _.reject(self.dials, function isThisDial (dial) {
-                    return dial[identifierKey] == identifierVal;
-                })
+            return function(){
+                var removing = when.defer();
 
-            self.setDialList();
+                var index = arr.indexOf(dial);
+                arr.splice(index,1);
 
-            return removing.resolve();
+                self.storeDialList();
+
+                return removing.resolve();
+            }
         }
 
         return self;

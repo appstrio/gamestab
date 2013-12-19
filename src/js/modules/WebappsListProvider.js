@@ -3,11 +3,12 @@
 define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], function WebAppsProvider(env, $, when, baseprovider, runtime, renderer, Dial) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : WebAppsProvider");
     return (function() {
+
         var initting = when.defer(),
             parent = baseprovider(),
             self = Object.create(parent),
             defaultSettings = {
-                pathToJSON : '/js/predefinedDials.json',
+                pathToJSON : '/js/data/predefinedDials.json'
             };
 
         /**
@@ -17,10 +18,10 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
         var init = function initModule(runtimeData, options) { // Passed in from runtime
             //Create a settings object by overriding defaultSettings with any custom settings
             $.extend(self,{
-                name     : "WebAppsProvider", //required for getting and storing dial list
+                name     : "WebAppsListProvider", //required for getting and storing dial list
                 promise  : initting.promise,
                 dials: [],
-                settings : $.extend(defaultSettings, options),
+                settings : $.extend(defaultSettings, options)
             });
 
             //Fetch list of dials
@@ -32,7 +33,7 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
                 fetchingJSON.then(function(dialArray) {
                     self.dials = prepareDials(dialArray);
 
-                    self.setDialList(self.name, self.dials);
+                    self.storeDialList(self.name, self.dials);
 
                     initting.resolve(self.dials);
 

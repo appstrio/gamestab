@@ -1,17 +1,17 @@
 "use strict";
 
-
-define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'WebappsProvider', 'AppsProvider', 'runtime'], function DialsRenderer(env, _, $, renderer, templates, Webapps, apps, runtime) {
+define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'WebAppsListProvider', 'AppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when, WebAppsList, apps, runtime) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialsRenderer");
-    var when = require('when');
+
     var initting = when.defer(),
         self = {
             // name: "dials"
             promise: initting.promise,
             // settings: {},
-            providers: {},
+            providers: {}
         };
-    // defaultSettings = {},
+
+
     /**
      * Callback function for self.promise success
      * @param options Custom settings to override self.settings
@@ -27,8 +27,8 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'WebappsProvider
         self.renderDialsArr(runtime.data.dials, renderer.$dialsWrapper, {
             maxDials: 18
         });
-        Webapps.promise.then(function(dials) {
-            self.renderDialsArr(dials, renderer.$dialsWrapper);
+        WebAppsList.promise.then(function(dials) {
+            self.renderDialsArr(dials, renderer.$webAppsOverlay);
         });
 
         apps.promise.then(function(apps) {
@@ -40,7 +40,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'WebappsProvider
 
         setEventHandlers();
 
-        return when.all([Webapps.promise, apps.promise], initting.resolve, initting.reject);
+        return when.all([WebAppsList.promise, apps.promise], initting.resolve, initting.reject);
     };
     /**
      * @param options {maxDials: number}
@@ -62,7 +62,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'WebappsProvider
     self.renderDial = function($parent, dial) {
         var $dial = $(templates['classic-dial'](dial))
             .on('click', dial.launch)
-            .on('click', '.dial-remove-button', dial.remove);
+            .on('click', '.dial-remove-button',provider.removeDialFromList(dial));
 
         self.setDialEventHandlers(dial);
 
@@ -123,7 +123,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'WebappsProvider
                 return dial[identifierKey] == identifierVal;
             })
 
-        self.setDialList();
+        self.storeDialList();
 
         return removing.resolve();
     }

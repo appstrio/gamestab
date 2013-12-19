@@ -2,8 +2,6 @@
 
 define(['env', 'Runtime', 'Renderer', 'SearchRenderer', 'MenuRenderer', 'DialsRenderer', 'Search'], function Main(env, Runtime, Renderer, SearchRenderer, MenuRenderer, DialsRenderer, Search) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Main");
-    //Make sure `input` has been rendered with the timeout, then make it focused
-    SearchRenderer.promise.then(SearchRenderer.focusOnSearch);
 
 }, window.rErrReport);
 
