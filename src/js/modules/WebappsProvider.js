@@ -53,25 +53,9 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
             });
         };
 
-        // Main provider.js
-
         self.fetch = function fetchDials () {
             return when.resolve(self.dials);
         }
-
-        // self.setEventHandlers = function (overlayMediatorDial) {
-        //     overlayMediatorDial.removing.then(function removeHandler() {
-        //         self.removeDialFromList(dial);
-        //     });
-        // }
-
-        // Template:
-        // self.removeDialFromList = function removeDialFromList (e) {
-        //     var parentHandling = parent.removeDialFromList(e),
-        //         // removing = when.defer();
-
-        //     return parentHandling;
-        // }
 
         //Init after dependencies have loaded;
         init();

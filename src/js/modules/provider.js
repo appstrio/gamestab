@@ -1,8 +1,7 @@
 "use strict";
 
 define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function providerBASE(env, $, when, renderer, _, storage) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Provider");
-    return function newProvider () {
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Provider"); return function newProvider () {
         var self = {
             name: "providerBASE", // Must be overriden in child objects - Used to throw an error if not overriden.
             dials: [],
@@ -14,6 +13,7 @@ define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function 
         self.fetch = function fetchStuff() {
             throw "Must be overriden.";
         }
+
         self.getDialList = function(name) {
             var def = when.defer(),
                 dials = storage.get(name);
@@ -27,13 +27,8 @@ define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function 
             storage.set(name, rawDials);
         };
 
-        self.errorLoading = function(err) {
-            // alert('Error loading, try to refersh or re-install the app.');
-            console.log('Error loading, try to refersh or re-install the app.');
-        };
-
         self.removeDialFromList = function (dial) {
-            return function(){
+            return function(e) {
                 var removing = when.defer();
 
                 var index = arr.indexOf(dial);

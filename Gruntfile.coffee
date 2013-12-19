@@ -63,6 +63,12 @@ module.exports = (grunt) ->
         cwd: 'src/js/modules'
         src: '*.js*'
         dest: '<%= path.build %>/js/modules'
+      data:
+        flatten: true
+        expand: true
+        cwd: 'src/js/data'
+        src: '*.js*'
+        dest: '<%= path.build %>/js/data'
 
   # Dynamic watchers building
   watchSingleExclude = ['compile-templates','less']
