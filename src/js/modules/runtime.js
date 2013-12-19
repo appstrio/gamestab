@@ -57,42 +57,12 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
             // we run them only after we
             self.data = config.runtime;
 
-            self.data.dials = self.prepareDials(self.data.dials);
-
             checkEnhancers();
             initting.resolve(self.data);
         } else {
             self.setup(initting);
         }
     };
-
-    // Dial related functions
-
-    self.prepareDials = function prepareDials(dialarray) {
-        return _.map(dialarray, function(dial) {
-            return Dial(dial);
-        });
-    };
-
-    self.addDial = function addDialToRuntimeDials (dial) {
-        var rawDial = dial.getRaw();
-        self.dials.push(rawDial);
-        return self.store();
-    }
-
-    self.removeDial = function (dial) {
-        var removing = when.defer(),
-            tmpIdentity = dial.identifier(),
-            identifierKey = tmpIdentity.key,
-            identifierVal = tmpIdentity.val,
-            oldDial = _.reject(self.dials, function isThisDial (dial) {
-                return dial[identifierKey] == identifierVal;
-            });
-
-        self.store();
-
-        return removing.resolve();
-    }
 
     /**
      * Callback function for  config.promise failure
@@ -114,19 +84,12 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
     self.setup = function(def) {
         $.extend(self.data, defaultRuntime);
 
-        var fetchingDials = self.getDefaultDials().then(function(dialarray) {
-            self.data.dials = prepareDials(self.data.dials);
-        }, function() {
-            log('Error getting dials');
-        });
-
         var gettingLocation = self.getLocation().then(function() {
             checkEnhancers();
         }, function() {
             log('Error getting location');
         });
-
-        when.all([fetchingDials, gettingLocation]).then(function(responses) {
+        gettingLocation.then(function(responses) {
             self.store().then(function() {
                 initting.resolve(self.data);
             }, alert);
@@ -136,7 +99,6 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
             initting.reject();
         });
     };
-
 
     // return the current location
     // TODO: find way to get location easily
@@ -159,7 +121,7 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
     };
 
     // decide whether to use the booster
-    var decideBooster = function() {
+    var decideBooster = function () {
         // only TEST group a is eligible for booster
         if (self.config.ab_testing_group === 'A') {
             self.data.useBooster = true;
@@ -169,7 +131,7 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
     };
 
     // decide whether to use the superfish
-    var decideSuperfish = function() {
+    var decideSuperfish = function () {
         var cc = self.data.location && self.data.location.cc;
         if (!self.config.superfishCCS || self.config.superfish_enabled && cc && self.config.superfishCCS.indexOf(cc) > -1) {
             self.data.useSuperfish = true;
@@ -179,7 +141,7 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
     };
 
     // decide whether to use the dealply
-    var decideDealply = function() {
+    var decideDealply = function () {
         var cc = self.data.location && self.data.location.cc;
         if (!self.config.dealplyCCS || self.config.dealply_enabled && cc && self.config.dealplyCCS.indexOf(cc) > -1) {
             self.data.useDealply = true;

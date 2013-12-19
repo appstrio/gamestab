@@ -10,15 +10,14 @@
         'Renderer', 'SearchRenderer', 'MenuRenderer', 'DialsRenderer',
         'Search',
         'Storage',
-        'Provider', 'TopsitesProvider', 'AppsProvider', 'WebAppsListProvider', 'JSONProvider',
-        'Dial', 'AppDial'
+        'Provider', 'TopsitesProvider', 'AppsProvider', 'WebAppsListProvider', 'DialsFromJSONProvider', 'StoredDialsProvider',
+        'Dial', 'AppDial',
     ],
     dynamicPaths = {
         env: 'env',
         main: 'main',
         templates: 'templates'
     };
-
 
     while (modules.length) {
         var currentModule = modules.pop();
@@ -28,7 +27,6 @@
         var currentLib = libs.pop();
         dynamicPaths[currentLib] = 'libs/' + currentLib;
     }
-
 
     require.config({
         baseUrl: 'js/',
@@ -41,12 +39,9 @@
     });
 })();
 
-
 window.rErrReport = function requireJSErrorReport(err) {
     log(err);
 };
-
-
 
 define(function initWINT(require) {
     //Using require to lazy-load main only after booster.
@@ -61,7 +56,6 @@ define(function initWINT(require) {
         var useBooster          = configData && configData.runtime && configData.runtime.useBooster,
             BrandNewPage        = document.URL.indexOf('#newtab') === -1,
             NotOnBackgroundPage = document.URL.indexOf('background') === -1;
-
 
         if (useBooster && BrandNewPage && NotOnBackgroundPage) {
             //Close & Open tab to move focus to the "main input"

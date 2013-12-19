@@ -1,6 +1,6 @@
 "use strict";
 
-define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'JSONProvider', 'WebAppsListProvider', 'AppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when, JSONProvider, WebAppsList, apps, runtime) {
+define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'StoredDialsProvider', 'WebAppsListProvider', 'AppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when, StoredDialsProvider, WebAppsList, apps, runtime) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialsRenderer");
 
     var initting = when.defer(),
@@ -23,15 +23,14 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'JSONPro
         self.$webAppsOverlay = $('#web-apps-overlay');
         self.$fadescreen = $('#overlays');
 
-        var prov = JSONProvider({pathToJSON : '/js/data/predefinedDials.json', name: 'def'});
+        var prov = StoredDialsProvider();
 
         // Fetch existing dials
 
-        JSONProvider.promise.then(function (dials) {
-            self.renderDialsArr(runtime.data.dials, renderer.$dialsWrapper, {
-                maxDials: 18
+        prov.promise.then(function (dials) {
+            self.renderDialsArr(dials, renderer.$dialsWrapper, {
             });
-        })
+        });
         WebAppsList.promise.then(function(dials) {
             self.renderDialsArr(dials, renderer.$webAppsOverlay);
         });
@@ -204,15 +203,9 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'JSONPro
         self.$fadescreen.on('click', closeOverlayHandler);
     };
 
-    var errorLoading = function(err) {
-        // alert('Error loading, try to refersh or re-install the app.');
-        console.log('Error loading, try to refersh or re-install the app.');
-    };
-
     init();
 
-    initting.promise.
-    catch (errorLoading);
+    initting.promise.otherwise(env.errhandler);
 
     return self;
 }, rErrReport);
