@@ -1,6 +1,7 @@
 "use strict";
 
-define(['jquery', 'when', 'renderer', 'underscore', 'storage'], function providerBASE($, when, renderer, _, storage) {
+define(['env', 'jquery', 'when', 'renderer', 'underscore', 'storage'], function providerBASE(env, $, when, renderer, _, storage) {
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Provider");
     return function newProvider () {
         var self = {
             name: "providerBASE", // Must be overriden in child objects - Used to throw an error if not overriden.

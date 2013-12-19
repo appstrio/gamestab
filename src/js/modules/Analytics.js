@@ -1,7 +1,8 @@
 window._gaq = window._gaq || [];
 
-define(['promise!runtime
-', 'promise!config'], function Analytics(runtime, config) {
+define(['Runtime', 'Config'], function Analytics(runtime, config) {
+
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Analytics");
     /**
      * GOOGLE ANALYTICS EVENTS AND CUSTOM VARS
      *
@@ -83,7 +84,7 @@ define(['promise!runtime
         return self.sEventValue[t];
     };
 
-    self.init = (function () {
+    self.init = (function() {
         if (typeof self.runtime.runtime.location.country.short_name !== 'undefined')
             self.cc = runtime.runtime.location.country.short_name;
         self.t1 = ['us', 'ca', 'uk', 'gb'];

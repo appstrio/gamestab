@@ -1,20 +1,21 @@
 "use strict";
 
-define(['underscore', 'jquery', 'templates', 'when', 'renderer'], function menuRenderer(_, $, templates, when, renderer) {
+define(['env', 'underscore', 'jquery', 'templates', 'when', 'renderer'], function MenuRenderer(env, _, $, templates, when, renderer) {
+    if (env.DEBUG && env.logLoadOrdervar) console.log("Loading Module : MenuRenderer");
     var initting = when.defer(),
         self = {
             // name: "menu"
             promise: initting.promise,
             // settings: {},
         };
-        // defaultSettings = {},
+    // defaultSettings = {},
     /**
      * Callback function for self.promise success
      * @param options Custom settings to override self.settings
      */
     self.init = function initModule(options) {
         //TODO change into a general ".switch".on click
-        $('#dials-switch').on ('click', switchHandler('dials'));
+        $('#dials-switch').on('click', switchHandler('dials'));
         $('#apps-switch').on('click', switchHandler('apps'));
 
         //TODO: Default switch is hardcoded
@@ -24,7 +25,7 @@ define(['underscore', 'jquery', 'templates', 'when', 'renderer'], function menuR
     };
 
     //TODO do we need references to the objects if we only use them here?
-    var switchHandler = function (name) {
+    var switchHandler = function(name) {
         return function() {
             //Remove highlighting from all switches and highlight the selected one
             $('.switch').removeClass('selected');
@@ -40,7 +41,8 @@ define(['underscore', 'jquery', 'templates', 'when', 'renderer'], function menuR
         console.log('Error loading, try to refersh or re-install the app.');
     };
 
-    initting.promise.catch (errorLoading);
+    initting.promise.
+    catch (errorLoading);
 
     return self;
 }, rErrReport);

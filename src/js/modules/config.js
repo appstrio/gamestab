@@ -14,9 +14,10 @@
  *
  */
 
-define(['jquery', 'storage', 'env', 'when'], function config($, storage, env, when) {
+define(['env', 'jquery', 'storage', 'when'], function Config(env, $, storage, when) {
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Config");
 
-var storageKey = "config",
+    var storageKey = "config",
         initting = when.defer(),
         self = {
             promise: initting.promise,
@@ -77,9 +78,7 @@ var storageKey = "config",
 
         // Try to fetch appdata from the localstorage
         var data = storage.get(storageKey);
-        if ( (window.DEBUG && !(window.DEBUG.loadConfigFromFile))
-            && data
-            ) {
+        if ((env.DEBUG && !(env.loadConfigFromFile)) && data) {
             self.data = data;
             if (setDefaultConfigSettings()) {
                 self.store();
@@ -87,7 +86,7 @@ var storageKey = "config",
             initting.resolve(self.data);
         } else {
             // Or try to load it from the JSON that's included with the extension
-            $.getJSON('/js/' + env.type + '.json').then(function(fetchedConfig) {
+            $.getJSON('/js/build.json').then(function(fetchedConfig) {
                 self.data = fetchedConfig;
                 setDefaultConfigSettings();
                 self.store();

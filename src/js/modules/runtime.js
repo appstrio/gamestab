@@ -25,8 +25,8 @@
  *
  */
 
-define(['jquery', 'when', 'config'], function runtime
-($, when, config) {
+define(['env','jquery', 'when', 'config'], function Runtime (env, $, when, config) {
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Runtime");
     var initting = when.defer(),
         self = {
             promise: initting.promise,
@@ -98,11 +98,8 @@ define(['jquery', 'when', 'config'], function runtime
 
         when.all([fetchingDials, gettingLocation]).then(function(responses) {
             self.store().then(function() {
-                initting.resolve(self);
-            }, function() {
-
-            });
-
+                initting.resolve(self.data);
+            }, alert);
         }, function(err) {
             // TODO : add error handler
             console.error('Error setup', err);

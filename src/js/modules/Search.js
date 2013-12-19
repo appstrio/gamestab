@@ -1,9 +1,10 @@
-define(function Search(require) {
+define(['env', 'rendererSearch'], function Search(env, renderer) {
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Search");
 
     var self = {
         base_search_url: '',
         base_suggestions_url: ''
-    }, renderer = require('rendererSearch');
+    }, renderer = require();
 
     self.setEventHandlers = function() {
         renderer.$searchWrapper.on('click', '.submit-button', function(e) {

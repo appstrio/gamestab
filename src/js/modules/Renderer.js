@@ -1,6 +1,7 @@
 "use strict";
 
-define(function Renderer(require) {
+define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(env, _, $, templates, when) {
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Renderer");
     var when      = require('when');
     var initting = when.defer(),
         self = {
@@ -9,12 +10,7 @@ define(function Renderer(require) {
             settings: {},
             // subs: {} // TODO uncomment if need to use submodules beyond renderer;
         },
-        defaultSettings = {},
-        // TODO do it like this, or at the top of the file?
-        _         = require('underscore'),
-        $         = require('jquery'),
-        templates = require('templates'),
-        when      = require('when');
+        defaultSettings = {};
     /**
      * Callback function for self.promise success
      * @param options Custom settings to override self.settings

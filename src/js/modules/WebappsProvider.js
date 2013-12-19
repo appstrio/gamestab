@@ -1,6 +1,9 @@
 "use strict";
 
-define(['jquery', 'when', 'provider', 'runtime', 'renderer', 'Dial'], function($, when, baseprovider, runtime, renderer, Dial) {
+
+
+define(['env', 'jquery', 'when', 'provider', 'runtime', 'renderer', 'Dial'], function WebAppsProvider(env, $, when, baseprovider, runtime, renderer, Dial) {
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : WebAppsProvider");
     return (function() {
         var initting = when.defer(),
             parent = baseprovider(),

@@ -1,4 +1,5 @@
-define(function storage() {
+define(['env'], function Storage(env) {
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Storage");
     var self = {};
 
     self.set = function(key, obj) {
