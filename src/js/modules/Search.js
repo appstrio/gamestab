@@ -23,10 +23,25 @@ define(['env', 'SearchRenderer', 'jquery', 'Runtime', 'when', 'typeahead'], func
     };
 
     self.setEventHandlers = function() {
-        renderer.$searchWrapper.on('click', '.submit-button', function(e) {
+        var searchHandler = function searchHandler(e) {
             var query = renderer.$searchWrapper.find('input').eq(0).val();
             self.doSearch(query);
-        });
+        };
+
+        $.fn.onEnterKey = function(callback) {
+           return $(this).keyup(function(e) {
+                if (e.keyCode == 13) {
+                    callback(e);
+                }
+            });
+        }
+
+        renderer.$searchWrapper
+            .on('click', '.submit-button', searchHandler)
+            .onEnterKey(searchHandler);
+
+
+
     }
     self.setupTypeahead = function() {
         var input = renderer.$searchWrapper.find('.search-input').eq(0);
