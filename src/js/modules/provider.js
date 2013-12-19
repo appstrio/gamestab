@@ -32,7 +32,7 @@ define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function 
             var index = this.dials.indexOf(dial);
             this.dials.splice(index,1);
 
-            self.storeDialList();
+            self.storeDialList(this.name, this.dials);
 
             return removing.resolve();
         };

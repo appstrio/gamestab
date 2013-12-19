@@ -12,6 +12,7 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
             preLoad: typeof options.preLoad !== 'undefined' ? options.preLoad : true,
             forceLoadFromJSON: typeof options.forceLoadFromJSON !== 'undefined' ? options.forceLoadFromJSON : false,
             mutableList: typeof options.mutableList !== 'undefined' ? options.mutableList : true,
+            wrapDial: typeof options.wrapDial !== 'undefined' ? options.wrapDial : null,
         };
 
         /**
@@ -49,7 +50,10 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
 
         self.resolveAndSave = function(dials) {
             if (self.settings.wrapDial) {
-                self.dials = _.map(dials, wrapDial);
+                self.dials = _.map(dials, function (dial) {
+                    // HERE IS PROBLEM
+                    return self.settings.wrapDial(dial);
+                });
             } else {
                 self.dials = dials;
             };
