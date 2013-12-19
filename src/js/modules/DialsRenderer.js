@@ -1,183 +1,103 @@
 "use strict";
 
-define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'WebAppsListProvider', 'AppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when, WebAppsList, apps, runtime) {
+define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' ,'StoredDialsProvider', 'WebAppsListProvider', 'AppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when,StoredDialsProvider, WebAppsListProvider, AppsProvider, runtime) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialsRenderer");
 
     var initting = when.defer(),
         self = {
-            // name: "dials"
             promise: initting.promise,
-            // settings: {},
             providers: {}
         };
 
 
     /**
+     *  starts the module :
+     *  * save reference to important DOM elements
+     *  * render dials into dials-wrapper, apps-wrapper and overlay-wrapper
      *  @param options Custom settings to override self.settings
      */
-    var init = function initModule(options) {
-
+    var init = function initModule() {
+        var promises = [];
         // widely used dom selectors
         self.$webAppsOverlayBtn = $('#web-apps-overlay-btn');
         self.$webAppsOverlay = $('#web-apps-overlay');
         self.$fadescreen = $('#overlays');
 
         // Fetch existing dials
-        self.renderDialsArr(runtime.data.dials, renderer.$dialsWrapper, {
-            maxDials: 18
-        });
-        WebAppsList.promise.then(function(dials) {
-            self.renderDialsArr(dials, renderer.$webAppsOverlay);
-        });
-
-        apps.promise.then(function(apps) {
-            self.renderDialsArr(apps, renderer.$appsWrapper);
-        });
+        promises.push(self.renderProvider(StoredDialsProvider, renderer.$dialsWrapper, {maxDials : 18}))
+        promises.push(self.renderProvider(WebAppsListProvider, renderer.$webAppsOverlay));
+        promises.push(self.renderProvider(AppsProvider, renderer.$appsWrapper));
 
         //TODO hardcoded
         $("#dials-wrapper").show();
 
         setEventHandlers();
 
-        return when.all([WebAppsList.promise, apps.promise], initting.resolve, initting.reject);
+        return when.all(promises, initting.resolve, initting.reject);
     };
 
+
+    /**
+     *
+     */
+
+    self.renderProvider = function(provider, $container, options){
+        var rendering = when.defer();
+
+        provider.promise.then(function(dials){
+            self.renderDialsArr(provider, $container, dials, options);
+            setTimeout(function(){
+                rendering.resolve();
+            }, 0);
+        });
+
+        return rendering.promise;
+    };
 
 
     /**
      * @param options {maxDials: number}
      */
-    self.renderDialsArr = function renderDials(dials, $parent, options) {
-        var options = options || {};
+    self.renderDialsArr = function renderDials(provider, $container, dials, options) {
+        options = options || {};
         //Clean dials zone
-        $parent.html('');
+        $container.html('');
 
         var maxDials = options.maxDials || dials.length;
         for (var i = 0; i < dials.length && i < maxDials; i++) {
             var dial = dials[i];
-            self.renderDial($parent, dial);
+            self.renderDial(provider, $container, dial, options);
         };
 
         return self;
-    }
+    };
 
-    self.renderDial = function($parent, dial) {
-        var $dial = $(templates['classic-dial'](dial))
-            .on('click', dial.launch)
-            .on('click', '.dial-remove-button',provider.removeDialFromList(dial));
+    self.renderDial = function(provider, $container, dial, options) {
+        var $dial = $(templates['classic-dial'](dial));
 
-        self.setDialEventHandlers(dial);
+        $dial.on('click', dial.launch);
+        provider.removeDialFromList && $dial.on('click', '.dial-remove-button', self.renderDialRemoval(provider, dial));
 
-        if (dial.id)
-            $dial.data('id', dial.id);
+        if (dial.id) $dial.data('id', dial.id);
 
         return $parent.append($dial);
     };
 
-    self.setDialEventHandlers = function(dial) {
-        return dial.removing.then(self.renderDialRemoval);
-    }
 
-    self.renderDialRemoval = function(e) {
-        e.stopPropagation();
-        e.preventDefault();
 
-        var removing = when.defer(),
-            $ele = $(e.currentTarget).parents('.dial').eq(0);
-        $ele.fadeOut(removing.resolve);
+    self.renderDialRemoval = function(provider, dial){
+        return function(e) {
+            e.stopPropagation();
+            e.preventDefault();
 
-        return false;
-    }
-
-    self.addDial = function() {
-        // render new dial
-        // add dial to runtime.dials and save that
-        //
-    }
-
-    self.launchDial = function launchHandler(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        var url = $(e.currentTarget).find('a').attr('href');
-
-        if (window.analytics) {
-            window.analytics.sendEvent({
-                category: 'Dials',
-                action: 'Click',
-                label: url
-            }, function() {
-                window.location.href = url;
+            var $ele = $(e.currentTarget).parents('.dial').eq(0);
+            $ele.fadeOut(function(){
+                $ele.off().remove();
+                provider.removeDialFromList && provider.removeDialFromList(dial);
             });
         }
-
-        setTimeout(function() {
-            window.location.href = url;
-        }, 500);
     };
 
-    self.removeDial = function (e) {
-         var removing = when.defer(),
-            tmpIdentity = getDialIdentifiersFromDOMElement(e),
-            identifierKey = tmpIdentity.key,
-            identifierVal = tmpIdentity.val,
-            oldDial = _.filter(self.dials, function isThisDial (dial) {
-                return dial[identifierKey] == identifierVal;
-            })
-
-        self.storeDialList();
-
-        return removing.resolve();
-    }
-
-
-    self.launchAndroidDial = function (e) {};
-    self.removeAndroidDial = function (e) {};
-
-    self.removeAppDial = function removeHandler(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        var $target = $(e.currentTarget).parents('.dial').eq(0);
-        var id = $target.data('id');
-
-        chrome.management.uninstall(id, {
-            showConfirmDialog: true
-        }, function() {
-            chrome.management.getAll(function(apps) {
-                apps = apps || [];
-                var found = _.findWhere(apps, {
-                    id: id
-                });
-                if (!found) {
-                    $target.fadeOut();
-                }
-            });
-        });
-    };
-
-    self.launchAppDial = function launchHandler(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        chrome.management.launchApp(e.currentTarget.dataset.id, function() {});
-    };
-
-    self.removeOverlayDial = function removeFromProvider() {
-        e.stopPropagation();
-        e.preventDefault();
-
-        webapps.removeDialFromList(self.originalDial);
-        DialsRenderer.removeDial(self.originalDial);
-    };
-
-    self.launchOverlayDial = function addDialToRuntime(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        runtime.addDial(self.originalDial);
-        DialsRenderer.addDial(self.originalDial);
-    };
 
     var openOverlayHandler = function function_name(name) {
         return function() {
@@ -209,8 +129,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'WebApps
 
     init();
 
-    initting.promise.
-    catch (errorLoading);
+    initting.promise.catch (errorLoading);
 
     return self;
 }, rErrReport);
