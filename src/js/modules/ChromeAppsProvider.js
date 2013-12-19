@@ -1,13 +1,13 @@
 "use strict";
 
-define(['env', 'jquery', 'when','Provider', 'AppDial'], function ChromeAppsProvider(env, $, when, provider, AppDial) {
+define(['env', 'jquery', 'when', 'Provider', 'AppDial'], function ChromeAppsProvider(env, $, when, provider, AppDial) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : ChromeAppsProvider");
     return (function(parent) {
         var initting = when.defer(),
             self = Object.create(parent);
-            // defaultSettings = {};
+        // defaultSettings = {};
 
-        var init = function initModule () {
+        var init = function initModule() {
             $.extend(self, {
                 promise: initting.promise,
                 dials: [],
@@ -35,8 +35,32 @@ define(['env', 'jquery', 'when','Provider', 'AppDial'], function ChromeAppsProvi
 
             return def.promise;
         };
+        self.removeDialFromList = function(dial) {
+            var removing = when.defer();
 
-        initting.promise.catch (self.errorLoading);
+            chrome.management.uninstall(dial.chromeId, {
+                showConfirmDialog: true
+            }, function() {
+                findApp(dial.chromeId).then(removing.reject).otherwise(removing.resolve);
+            });
+            return removing.promise;
+        }
+
+        var findApp = function(id) {
+            var finding = when.defer();
+            chrome.management.getAll(function(apps) {
+                apps = apps || [];
+                var found = _.findWhere(apps, {
+                    id: id
+                });
+                if (!found) finding.reject();
+                else finding.resolve();
+            });
+            return finding.promise;
+        }
+
+        initting.promise.
+        catch (self.errorLoading);
 
         //Init after dependencies have loaded;
         init();

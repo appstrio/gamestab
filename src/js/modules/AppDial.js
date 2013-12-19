@@ -38,26 +38,6 @@ define(['env', 'jquery', 'Renderer', 'Dial', 'when'], function(env, $, renderer,
             chrome.management.launchApp(self.chromeId);
         };
 
-        self.remove = function removeHandler(e) {
-            e.stopPropagation();
-            e.preventDefault();
-
-            var $target = $(e.currentTarget).parents('.dial').eq(0);
-
-            chrome.management.uninstall(self.chromeId, {
-                showConfirmDialog: true
-            }, function() {
-                chrome.management.getAll(function(apps) {
-                    apps = apps || [];
-                    var found = _.findWhere(apps, {
-                        id: self.chromeId
-                    });
-                    if (!found) {
-                        $target.fadeOut();
-                    }
-                });
-            });
-        };
         init();
 
         return self;

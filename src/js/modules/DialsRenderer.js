@@ -1,6 +1,6 @@
 "use strict";
 
-define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' ,'StoredDialsProvider', 'WebAppsListProvider', 'ChromeAppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when,StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, runtime) {
+define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredDialsProvider', 'WebAppsListProvider', 'ChromeAppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, runtime) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialsRenderer");
 
     var initting = when.defer(),
@@ -23,7 +23,9 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' ,'StoredDi
         self.$fadescreen = $('#overlays');
 
         // Fetch existing dials
-        promises.push(self.renderProvider(StoredDialsProvider, renderer.$dialsWrapper, {maxDials : 18}))
+        promises.push(self.renderProvider(StoredDialsProvider, renderer.$dialsWrapper, {
+            maxDials: 18
+        }))
         promises.push(self.renderProvider(WebAppsListProvider, renderer.$webAppsOverlay));
         promises.push(self.renderProvider(ChromeAppsProvider, renderer.$appsWrapper));
 
@@ -35,12 +37,12 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' ,'StoredDi
         return when.all(promises, initting.resolve, initting.reject);
     };
 
-    self.renderProvider = function(provider, $container, options){
+    self.renderProvider = function(provider, $container, options) {
         var rendering = when.defer();
 
-        provider.promise.then(function(dials){
+        provider.promise.then(function(dials) {
             self.renderDialsArr(provider, $container, dials, options);
-            setTimeout(function(){
+            setTimeout(function() {
                 rendering.resolve();
             }, 0);
         });
@@ -66,30 +68,32 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' ,'StoredDi
     };
 
     self.renderDial = function(provider, $container, dial, options) {
-        var $dial = $(templates['classic-dial'](dial)), removeHandler;
+        var $dial = $(templates['classic-dial'](dial)),
+            removeHandler;
 
         $dial.on('click', dial.launch);
-        if(provider.removeDialFromList)
-            removeHandler = self.renderDialRemoval(provider, dial);
-        else
-            removeHandler = self.remove;
-        $dial.on('click', '.dial-remove-button', removeHandler);
+        $dial.on('click', '.dial-remove-button', self.renderDialRemovalMaker(provider, dial));
 
         if (dial.id) $dial.data('id', dial.id);
 
         return $container.append($dial);
     };
 
-    self.renderDialRemoval = function(provider, dial){
+    self.renderDialRemovalMaker = function(provider, dial) {
         return function(e) {
             e.stopPropagation();
             e.preventDefault();
 
-            var $ele = $(e.currentTarget).parents('.dial').eq(0);
-            $ele.fadeOut(function(){
-                $ele.off().remove();
-                provider.removeDialFromList && provider.removeDialFromList(dial);
-            });
+            if (provider.removeDialFromList) {
+                var removing = provider.removeDialFromList(dial);
+                removing.then(function() {
+                    var $ele = $(e.currentTarget).parents('.dial').eq(0);
+                    $ele.fadeOut(function() {
+                        $ele.off().remove();
+                        provider.removeDialFromList && provider.removeDialFromList(dial);
+                    });
+                });
+            }
         }
     };
 
