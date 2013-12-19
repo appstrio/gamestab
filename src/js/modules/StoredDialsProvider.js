@@ -3,7 +3,7 @@
 define(['env', 'jquery', 'when', 'DialsFromJSONProvider', 'Runtime', 'Renderer', 'Dial'], function StoredDialsProvider(env, $, when, DialsFromJSONProvider, runtime, renderer, Dial) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : StoredDialsProvider");
     //TODO:
-    return function StoredDialsProvider(options) {
+    return (function StoredDialsProvider(options) {
         var initting = when.defer(),
             parent = DialsFromJSONProvider({
                 preLoad: false,
@@ -37,5 +37,5 @@ define(['env', 'jquery', 'when', 'DialsFromJSONProvider', 'Runtime', 'Renderer',
         initting.promise.otherwise(self.errorLoading);
 
         return self;
-    };
+    })();
 }, rErrReport);

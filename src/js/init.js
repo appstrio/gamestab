@@ -11,7 +11,7 @@
         'Search',
         'Storage',
         'Provider', 'TopsitesProvider', 'AppsProvider', 'WebAppsListProvider', 'DialsFromJSONProvider', 'StoredDialsProvider',
-        'Dial', 'AppDial',
+        'Dial', 'AppDial'
     ],
     dynamicPaths = {
         env: 'env',

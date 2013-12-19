@@ -1,6 +1,6 @@
 "use strict";
 
-define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' ,'StoredDialsProvider', 'WebAppsListProvider', 'AppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when,StoredDialsProvider, WebAppsListProvider, AppsProvider, runtime) {
+define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' ,'StoredDialsProvider', 'WebAppsProvider', 'ChromeAppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when,StoredDialsProvider, WebAppsProvider, ChromeAppsProvider, runtime) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialsRenderer");
 
     var initting = when.defer(),
@@ -24,9 +24,9 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' ,'StoredDi
         self.$fadescreen = $('#overlays');
 
         // Fetch existing dials
-        promises.push(self.renderProvider(StoredDialsProvider, renderer.$dialsWrapper, {maxDials : 18}))
+        promises.push(self.renderProvider(StoredDialsProvider, renderer.$dialsWrapper, {maxDials : 18}));
         promises.push(self.renderProvider(WebAppsListProvider, renderer.$webAppsOverlay));
-        promises.push(self.renderProvider(AppsProvider, renderer.$appsWrapper));
+        promises.push(self.renderProvider(ChromeAppsProvider, renderer.$appsWrapper));
 
         //TODO hardcoded
         $("#dials-wrapper").show();
@@ -43,7 +43,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' ,'StoredDi
 
     self.renderProvider = function(provider, $container, options){
         var rendering = when.defer();
-
+        console.log(provider);
         provider.promise.then(function(dials){
             self.renderDialsArr(provider, $container, dials, options);
             setTimeout(function(){
