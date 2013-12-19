@@ -19,9 +19,6 @@ define(['env', 'jquery', 'Renderer', 'Dial', 'when'], function(env, $, renderer,
                     id: id,
                     url: '',
                     description: description
-                    // No need for those, they get filled-in the prototype
-                    // title : title,
-                    // icon  : icon,
                 });
         };
 

@@ -34,7 +34,7 @@ define(['env', 'jquery', 'when', 'DialsFromJSONProvider', 'Runtime', 'Renderer',
         if (self.settings.preLoad)
             init();
 
-        initting.promise.otherwise(self.errorLoading);
+        initting.promise.otherwise(env.errhandler);
 
         return self;
     };

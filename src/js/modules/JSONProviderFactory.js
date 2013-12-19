@@ -1,8 +1,8 @@
 "use strict";
 
-define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], function DialsFromJSONProvider(env, $, when, BaseProvider, runtime, renderer, Dial) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialsFromJSONProvider");
-    return function newJSONProvider(options) {
+define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], function JSONProviderFactory(env, $, when, BaseProvider, runtime, renderer, Dial) {
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : JSONProviderFactory");
+    return function JSONProviderFactory(options) {
         var initting = when.defer(),
             parent = BaseProvider(),
             self = Object.create(parent),
@@ -50,7 +50,7 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
                 initting.resolve(self.dials);
             };
             return initting.promise;
-        };כ
+        };
 
         if (self.settings.preLoad)
             self.init();

@@ -47,8 +47,6 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'StoredD
         return when.all([WebAppsList.promise, apps.promise], initting.resolve, initting.reject);
     };
 
-
-
     /**
      * @param options {maxDials: number}
      */
