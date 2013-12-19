@@ -1,3 +1,5 @@
+'use strict';
+
 define(['env'], function Storage(env) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Storage");
     var self = {};

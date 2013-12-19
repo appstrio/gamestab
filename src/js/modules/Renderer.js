@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
 define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(env, _, $, templates, when) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Renderer");
+    if (env.DEBUG && env.logLoadOrder) console.log('Loading Module : Renderer');
     var when      = require('when');
     var initting = when.defer(),
         self = {

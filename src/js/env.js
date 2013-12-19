@@ -1,7 +1,7 @@
 define(function env() {
     var settings = {
         type               : "development",
-        noBooster          : false,
+        booster            : true,
         loadConfigFromFile : false,
         logLoadOrder       : true,
     };

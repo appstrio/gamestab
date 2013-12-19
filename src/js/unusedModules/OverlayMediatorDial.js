@@ -1,4 +1,5 @@
 "use strict";
+
 define(['env','jquery', 'when', 'Runtime'], function OverlayMediator(env,$, when, runtime) {
     if(env.DEBUG && env.logLoadOrder) console.log("Loading Module : OverlayMediator");
     return function newOverlayMediator(originalDial, provider) {
@@ -19,20 +20,6 @@ define(['env','jquery', 'when', 'Runtime'], function OverlayMediator(env,$, when
         };
 
         //NOTE: event handlers are called via DOM events (e = dom element).
-        self.remove = function removeFromProvider() {
-            e.stopPropagation();
-            e.preventDefault();
-
-            provider.removeDialFromList(self.originalDial);
-            DialsRenderer.removeDial(self.originalDial);
-        }
-        self.launch = function addDialToRuntime(e) {
-            e.stopPropagation();
-            e.preventDefault();
-
-            runtime.addDial(self.originalDial);
-            DialsRenderer.addDial(self.originalDial);
-        });
 
         init();
 

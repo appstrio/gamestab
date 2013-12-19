@@ -30,6 +30,7 @@ WINT (White Label New Tab)
 
 - No callbacks project. Only promises. Anything that can fail should use promises, never fail silently or use a callback.
     - All promises go into variables, even if not used -> they will be.
+- All methods that begin with `setX` change the object they're given.
 
 ## File Structure
 

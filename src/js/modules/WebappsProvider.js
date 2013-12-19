@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], function WebAppsProvider(env, $, when, baseprovider, runtime, renderer, Dial) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : WebAppsProvider");
     return (function() {
@@ -49,13 +47,9 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
 
         };
 
-        var prepareDials = function prepaireDials(dialarray) {
+        var prepareDials = function prepareDials(dialarray) {
             return _.map(dialarray, function(dial) {
-                var dial = Dial(dial);
-
-                self.setEventHandlers(dial);
-
-                return dial;
+                return Dial(dial);
             });
         };
 
@@ -65,11 +59,11 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
             return when.resolve(self.dials);
         }
 
-        self.setEventHandlers = function (dial) {
-            dial.removing.then(function removeHandler() {
-                self.removeDialFromList(dial);
-            });
-        }
+        // self.setEventHandlers = function (overlayMediatorDial) {
+        //     overlayMediatorDial.removing.then(function removeHandler() {
+        //         self.removeDialFromList(dial);
+        //     });
+        // }
 
         // Template:
         // self.removeDialFromList = function removeDialFromList (e) {

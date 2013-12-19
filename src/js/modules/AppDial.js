@@ -1,6 +1,7 @@
 'use strict';
 
 define(['jquery', 'Renderer', 'Dial', 'when'], function($, renderer, Dial, when) {
+    if(DEBUG || DEBUG.logLoadOrder) console.log("Loading Module : AppDial");
     return function newAppDial(id, title, icon, description, options) {
         var parent = Dial('', title, icon, {
             setEventHandlers: false
@@ -22,40 +23,6 @@ define(['jquery', 'Renderer', 'Dial', 'when'], function($, renderer, Dial, when)
                     // title : title,
                     // icon  : icon,
                 });
-
-
-            if (setEventHandlers)
-                self.setEventHandlers();
-        };
-
-        self.setEventHandlers = function() {
-            self.removing.then(function removeHandler(e) {
-                e.stopPropagation();
-                e.preventDefault();
-
-                var $target = $(e.currentTarget).parents('.dial').eq(0);
-                var id = $target.data('id');
-
-                chrome.management.uninstall(id, {
-                    showConfirmDialog: true
-                }, function() {
-                    chrome.management.getAll(function(apps) {
-                        apps = apps || [];
-                        var found = _.findWhere(apps, {
-                            id: id
-                        });
-                        if (!found) {
-                            $target.fadeOut();
-                        }
-                    });
-                });
-            });
-
-            self.launching.then(function launchHandler(e) {
-                e.stopPropagation();
-                e.preventDefault();
-                chrome.management.launchApp(e.currentTarget.dataset.id, function() {});
-            });
         };
 
         init();

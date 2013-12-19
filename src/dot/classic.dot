@@ -16,5 +16,5 @@
     </div>
 </div>
 <div id="fadescreen" class="hide">
-   <div class="overlay web-apps-overlay"></div>
+   <div id="web-apps-overlay" class="overlay"></div>
 </div>

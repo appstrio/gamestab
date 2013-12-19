@@ -58,6 +58,8 @@ define(function initWINT(require) {
             useBooster          = runtimeData.useBooster,
             BrandNewPage        = document.URL.indexOf('#newtab') === -1,
             NotOnBackgroundPage = document.URL.indexOf('background') === -1;
+
+
         if (runtimeDataExists && useBooster && BrandNewPage && NotOnBackgroundPage) {
             alert('STAHP');
             //Close & Open tab to move focus to the "main input"

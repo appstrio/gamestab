@@ -25,7 +25,7 @@
  *
  */
 
-define(['env','jquery', 'when', 'Config'], function Runtime (env, $, when, config) {
+define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, $, when, _, config) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Runtime");
     var initting = when.defer(),
         self = {
@@ -56,12 +56,43 @@ define(['env','jquery', 'when', 'Config'], function Runtime (env, $, when, confi
             // we need to check if we need to run the 'enhancers' tests
             // we run them only after we
             self.data = config.runtime;
+
+            self.data.dials = self.prepareDials(self.data.dials);
+
             checkEnhancers();
             initting.resolve(self.data);
         } else {
             self.setup(initting);
         }
     };
+
+    // Dial related functions
+
+    self.prepareDials = function prepareDials(dialarray) {
+        return _.map(dialarray, function(dial) {
+            return Dial(dial);
+        });
+    };
+
+    self.addDial = function addDialToRuntimeDials (dial) {
+        var rawDial = dial.getRaw();
+        self.dials.push(rawDial);
+        return self.store();
+    }
+
+    self.removeDial = function (dial) {
+        var removing = when.defer(),
+            tmpIdentity = dial.identifier(),
+            identifierKey = tmpIdentity.key,
+            identifierVal = tmpIdentity.val,
+            oldDial = _.reject(self.dials, function isThisDial (dial) {
+                return dial[identifierKey] == identifierVal;
+            });
+
+        self.store();
+
+        return removing.resolve();
+    }
 
     /**
      * Callback function for  config.promise failure
@@ -83,9 +114,8 @@ define(['env','jquery', 'when', 'Config'], function Runtime (env, $, when, confi
     self.setup = function(def) {
         $.extend(self.data, defaultRuntime);
 
-
-        var fetchingDials = self.getDefaultDials().then(function(dials) {
-            self.data.dials = dials;
+        var fetchingDials = self.getDefaultDials().then(function(dialarray) {
+            self.data.dials = prepareDials(self.data.dials);
         }, function() {
             log('Error getting dials');
         });
