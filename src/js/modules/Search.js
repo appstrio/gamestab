@@ -16,16 +16,17 @@ define(['env', 'SearchRenderer', 'jquery', 'Runtime', 'when', 'typeahead'], func
 
             // self.cc = self.runtimeConfig.location.country.short_name;
 
-            self.setEventHandlers();
-            self.setupTypeahead();
+            setEventHandlers();
+            setupTypeahead();
             return initting.resolve();
-        }).catch (initting.reject);
+        }).catch(initting.reject);
     };
 
-    self.setEventHandlers = function() {
+    var setEventHandlers = function() {
         var searchHandler = function searchHandler(e) {
-            var query = renderer.$searchWrapper.find('input').eq(0).val();
-            self.doSearch(query);
+            // First one is twitter typeahead
+            var query = renderer.$searchWrapper.find('input').eq(1).val();
+            doSearch(query);
         };
 
         $.fn.onEnterKey = function(callback) {
@@ -40,20 +41,18 @@ define(['env', 'SearchRenderer', 'jquery', 'Runtime', 'when', 'typeahead'], func
             .on('click', '.submit-button', searchHandler)
             .onEnterKey(searchHandler);
 
-
-
     }
-    self.setupTypeahead = function() {
+    var setupTypeahead = function() {
         var input = renderer.$searchWrapper.find('.search-input').eq(0);
         input.typeahead({
-            source: self.getSuggestions,
+            source: getSuggestions,
             updater: function(item) {
-                self.doSearch(item);
+                doSearch(item);
             }
         });
     };
 
-    self.getSuggestions = function(query, process) {
+    var getSuggestions = function(query, process) {
         var url = self.base_suggestions_url + query;
 
         $.ajax({
@@ -75,44 +74,48 @@ define(['env', 'SearchRenderer', 'jquery', 'Runtime', 'when', 'typeahead'], func
         });
     };
 
-    self.doSearch = function(query) {
-        // if (common.isUrl(query)) {
-        //     self.redirectToUrl(query);
-        // } else {
-        self.redirectToSearch(query);
-        // }
+    var doSearch = function(query) {
+        if (isURL(query)) {
+            redirectToUrl(query);
+        } else {
+            redirectToSearch(query);
+        }
     };
 
-    self.redirectToUrl = function(url) {
+    var isURL = function COMMON_isUrl (url){
+        return (url.indexOf('http://') == 0 || url.indexOf('https://') == 0 || url.indexOf('www.') == 0);
+    }
+
+    var redirectToUrl = function(url) {
         if (url.indexOf('http://') !== 0) url = 'http://' + url;
 
-        // if (window.analytics) window.analytics.sendEvent({
-        //     category: 'Search',
-        //     action: 'Url',
-        //     label: url,
-        //     value: 0
-        // }, function() {
-        //     window.location.href = url;
-        // });
+        if (window.analytics) window.analytics.sendEvent({
+            category: 'Search',
+            action: 'Url',
+            label: url,
+            value: 0
+        }, function() {
+            window.location.href = url;
+        });
 
         setTimeout(function() {
             window.location.href = url;
         }, 500);
     };
 
-    self.redirectToSearch = function(query) {
-        // if (window.analytics) {
-        //     var val = window.analytics.getEventValue(self.cc);
+    var redirectToSearch = function(query) {
+        if (window.analytics) {
+            var val = window.analytics.getEventValue(self.cc);
 
-        //     if (window.analytics) window.analytics.sendEvent({
-        //         category: 'Search',
-        //         action: 'Search',
-        //         label: query,
-        //         value: val
-        //     }, function() {
-        //         window.location.href = self.base_search_url + query;
-        //     });
-        // }
+            if (window.analytics) window.analytics.sendEvent({
+                category: 'Search',
+                action: 'Search',
+                label: query,
+                value: val
+            }, function() {
+                window.location.href = self.base_search_url + query;
+            });
+        }
         setTimeout(function() {
             window.location.href = self.base_search_url + query;
         }, 500);
