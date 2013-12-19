@@ -1,4 +1,4 @@
-<div class="app" data-id="{{=it.id}}">
+<div class="app" data-id="{{=it.chromeId}}">
     <a class="inner" href="#">
         <div class="thumbnail-wrapper" style="background-image:url({{=it.icon}})" title="{{=it.description}}">
             <div class="app-remove-button">x</div>

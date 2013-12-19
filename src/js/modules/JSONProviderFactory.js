@@ -9,15 +9,16 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
             options = options || {};
 
         self.settings = {
-            preLoad: options.preLoad || true,
-            forceLoadFromJSON: options.forceLoadFromJSON || false,
-            mutableList: options.mutableList || true,
+            preLoad: typeof options.preLoad !== 'undefined' ? options.preLoad : true,
+            forceLoadFromJSON: typeof options.forceLoadFromJSON !== 'undefined' ? options.forceLoadFromJSON : false,
+            mutableList: typeof options.mutableList !== 'undefined' ? options.mutableList : true,
         };
 
         /**
          * @param options {name:string, pathToJSON: string, preLoad:true,forceLoadFromJSON:false,wrapDial:function || rawDials};
          */
         self.init = function initModule() {
+            var listFetching;
             //Create a settings object by overriding defaultSettings with any custom settings
             $.extend(self, {
                 name: options.name, //required for getting and storing dial list
@@ -30,9 +31,14 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
                 this.removeDialFromList = null;
 
             //Fetch list of dials
-            var listFetching = self.getDialList(this.name); // We don't care about what it returns... for now.
-            //If no dials in localstorage, we need to fetch them and set them there.
-            if (self.settings.forceLoadFromJSON || !self.dials || self.dials.length == 0) {
+            if(self.settings.forceLoadFromJSON)
+                listFetching = when.reject();
+            else
+                listFetching = self.getDialList(this.name);
+
+            listFetching.then(initting.resolve)
+                        .otherwise(function NoDialsInLocalStorage () {
+                //If no dials in localstorage, we need to fetch them and set them there.
                 //Get them from a JSON file and put them in storage
                 var fetchingJSON = $.getJSON(options.pathToJSON);
                 fetchingJSON.then(function(dialArray) {
@@ -46,9 +52,8 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
 
                     self.storeDialList(this.name, this.dials);
                 }, initting.reject);
-            } else {
-                initting.resolve(self.dials);
-            };
+            });
+
             return initting.promise;
         };
 

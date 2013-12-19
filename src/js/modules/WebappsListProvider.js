@@ -4,7 +4,7 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : WebAppsProvider");
     return (function() {
         var initting = when.defer(),
-            parent = DialsFromJSONProvider({
+            parent = JSONProviderFactory({
                 preLoad: false,
                 mutableList: false,
                 pathToJSON: '/js/data/webapps.json'

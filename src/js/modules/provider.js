@@ -15,10 +15,9 @@ define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function 
         }
 
         self.getDialList = function(name) {
-            var def = when.defer(),
-                dials = storage.get(name);
-            if (dials) def.resolve(dials);
-            else def.reject(null);
+            var dials = storage.get(name);
+            if (dials) return when.resolve(dials);
+            else return when.reject();
         };
         self.storeDialList = function(name,dials) {
             var rawDials = _.map(dials, function (dial) {

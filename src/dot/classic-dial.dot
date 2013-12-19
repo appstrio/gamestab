@@ -1,4 +1,4 @@
-<div class="dial" data-id="{{=it.id}}" data-url="{{=it.url}}">
+<div class="dial" data-id="{{=it.chromeId}}" data-url="{{=it.url}}">
     <a class="inner" href="{{=it.url}}">
         {{? it.icon }}
             <div class="thumbnail-wrapper" style="background-image:url({{=it.icon}})">
