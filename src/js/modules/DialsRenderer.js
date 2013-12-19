@@ -13,8 +13,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'StoredD
 
 
     /**
-     * Callback function for self.promise success
-     * @param options Custom settings to override self.settings
+     *  @param options Custom settings to override self.settings
      */
     var init = function initModule(options) {
 
@@ -31,6 +30,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'StoredD
             self.renderDialsArr(dials, renderer.$dialsWrapper, {
             });
         });
+
         WebAppsList.promise.then(function(dials) {
             self.renderDialsArr(dials, renderer.$webAppsOverlay);
         });
@@ -46,6 +46,9 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'StoredD
 
         return when.all([WebAppsList.promise, apps.promise], initting.resolve, initting.reject);
     };
+
+
+
     /**
      * @param options {maxDials: number}
      */
@@ -131,6 +134,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'StoredD
 
         return removing.resolve();
     }
+
 
     self.launchAndroidDial = function (e) {};
     self.removeAndroidDial = function (e) {};
