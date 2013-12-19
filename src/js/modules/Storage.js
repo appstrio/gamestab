@@ -22,7 +22,7 @@ define(['env'], function Storage(env) {
     self.remove = function STORAGE_remove_from_localstorage(key) {
         self[key] = undefined;
         localStorage.removeItem(key);
-    }
+    };
 
     return self;
 

@@ -1,5 +1,4 @@
-define(['promise!config','promise!runtime
-','renderer','storage'], function Weather(storage,config,runtime,renderer) {
+define(['promise!config','promise!runtime ','Renderer','Storage'], function Weather(storage,config,runtime,renderer) {
     var self = {};
     self.renderer = renderer;
     self.storage = storage;

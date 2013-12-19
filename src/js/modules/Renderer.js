@@ -15,7 +15,7 @@ define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(e
      * Callback function for self.promise success
      * @param options Custom settings to override self.settings
      */
-    self.init = function initModule(options) {
+    var init = function initModule(options) {
 
         // setup the general layout
         self.$wrapper = $('#wrapper');
@@ -36,6 +36,8 @@ define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(e
         // alert('Error loading, try to refersh or re-install the app.');
         console.log('Error loading, try to refersh or re-install the app.');
     };
+
+    init();
 
     //If init fails handlers
     initting.promise.catch (errorLoading);

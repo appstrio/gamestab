@@ -1,6 +1,6 @@
 "use strict";
 
-define(['jquery', 'when','provider', 'AppDial'], function AppsProvider($, when, provider, AppDial) {
+define(['env', 'jquery', 'when','Provider', 'AppDial'], function AppsProvider(env, $, when, provider, AppDial) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : AppsProvider");
     return (function(parent) {
         var initting = when.defer(),

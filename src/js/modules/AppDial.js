@@ -1,6 +1,6 @@
 'use strict';
 
-define(['jquery', 'renderer', 'Dial', 'when'], function($, renderer, Dial, when) {
+define(['jquery', 'Renderer', 'Dial', 'when'], function($, renderer, Dial, when) {
     return function newAppDial(id, title, icon, description, options) {
         var parent = Dial('', title, icon, {
             setEventHandlers: false

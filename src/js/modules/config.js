@@ -14,7 +14,7 @@
  *
  */
 
-define(['env', 'jquery', 'storage', 'when'], function Config(env, $, storage, when) {
+define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, when) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Config");
 
     var storageKey = "config",

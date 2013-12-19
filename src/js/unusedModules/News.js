@@ -1,5 +1,5 @@
-define(['underscore','promise!config','renderer','weather','promise!runtime
-','storage'], function News(underscore,config, renderer, weather, runtime,storage) {
+define(['underscore','promise!config','Renderer','weather','promise!runtime
+','Storage'], function News(underscore,config, renderer, weather, runtime,storage) {
     var self = {};
         self.renderer = renderer;
         self.weather = weather;

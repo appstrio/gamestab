@@ -25,13 +25,13 @@
  *
  */
 
-define(['env','jquery', 'when', 'config'], function Runtime (env, $, when, config) {
+define(['env','jquery', 'when', 'Config'], function Runtime (env, $, when, config) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Runtime");
     var initting = when.defer(),
         self = {
             promise: initting.promise,
             data: {},
-            config: {}
+            config: {},
         },
         defaultRuntime = {
             useBooster: false, // whether we should use the booster at startup or not
@@ -40,7 +40,7 @@ define(['env','jquery', 'when', 'config'], function Runtime (env, $, when, confi
             dials: [], // stores the dials array
             enhancersTimestamp: 0, // store the last time we checked the enhancers (booster, superfish, dealply)
             updatedAt: 0, // last update of the runtime object
-            dormancyTimeout: 1000
+            dormancyTimeout: 1000,
         };
 
     /**
@@ -57,7 +57,7 @@ define(['env','jquery', 'when', 'config'], function Runtime (env, $, when, confi
             // we run them only after we
             self.data = config.runtime;
             checkEnhancers();
-            initting.resolve(self);
+            initting.resolve(self.data);
         } else {
             self.setup(initting);
         }

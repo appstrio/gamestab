@@ -1,6 +1,6 @@
 "use strict";
 
-define(['env', 'jquery', 'renderer', 'when'], function DialContainer(env, $, renderer, when) {
+define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, renderer, when) {
       if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialContainer");
       return function newDial(url, title, icon, options) {
         var self = {},

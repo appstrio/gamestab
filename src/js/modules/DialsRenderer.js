@@ -1,7 +1,7 @@
 "use strict";
 
 
-define(['env', 'underscore', 'jquery', 'renderer', 'templates', 'providerWebApps', 'providerApps'], function DialsRenderer(env, _ , $ , renderer , templates, webApps, apps) {
+define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'WebappsProvider', 'AppsProvider'], function DialsRenderer(env, _ , $ , renderer , templates, webApps, apps) {
     if(env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialsRenderer");
     var when      = require('when');
     var initting = when.defer(),
@@ -16,7 +16,7 @@ define(['env', 'underscore', 'jquery', 'renderer', 'templates', 'providerWebApps
      * Callback function for self.promise success
      * @param options Custom settings to override self.settings
      */
-    self.init = function initModule(options) {
+    var init = function initModule(options) {
 
         // widely used dom selectors
         self.$webAppsOverlayBtn = $('.web-apps-overlay-btn');
@@ -115,6 +115,8 @@ define(['env', 'underscore', 'jquery', 'renderer', 'templates', 'providerWebApps
         // alert('Error loading, try to refersh or re-install the app.');
         console.log('Error loading, try to refersh or re-install the app.');
     };
+
+    init();
 
     initting.promise.catch (errorLoading);
 

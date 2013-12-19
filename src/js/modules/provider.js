@@ -1,6 +1,6 @@
 "use strict";
 
-define(['env', 'jquery', 'when', 'renderer', 'underscore', 'storage'], function providerBASE(env, $, when, renderer, _, storage) {
+define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function providerBASE(env, $, when, renderer, _, storage) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Provider");
     return function newProvider () {
         var self = {

@@ -1,16 +1,10 @@
 "use strict";
 
-define(['env', 'runtime', 'renderer', 'SearchRenderer', 'MenuRenderer', 'DialsRenderer'], function Main(env, Runtime, Renderer, SearchRenderer, MenuRenderer, DialsRenderer) {
+define(['env', 'Runtime', 'Renderer', 'SearchRenderer', 'MenuRenderer', 'DialsRenderer', 'Search'], function Main(env, Runtime, Renderer, SearchRenderer, MenuRenderer, DialsRenderer, Search) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Main");
     //Make sure `input` has been rendered with the timeout, then make it focused
-    var renderInitting = Renderer.init();
-    renderInitting.then(function() {
-        var SearchRendererInitting = SearchRenderer.init(),
-            MenuRendererInitting = MenuRenderer.init(),
-            DialsRendererInitting = DialsRenderer.init();
+    SearchRenderer.promise.then(SearchRenderer.focusOnSearch);
 
-        SearchRendererInitting.then(SearchRenderer.focusOnSearch);
-    })
     setTimeout(function boost() {
         // $('.dial-remove-button').eq(0).click();
     }, 0);

@@ -5,12 +5,12 @@
         'underscore', 'uri', 'typeahead'
     ],
         modules = [
-            'config',
-            'runtime',
-            'renderer', 'SearchRenderer', 'MenuRenderer', 'DialsRenderer',
-            'search',
-            'storage',
-            'provider', 'providerTopsites', 'providerApps', 'providerWebApps',
+            'Config',
+            'Runtime',
+            'Renderer', 'SearchRenderer', 'MenuRenderer', 'DialsRenderer',
+            'Search',
+            'Storage',
+            'Provider', 'TopsitesProvider', 'AppsProvider', 'WebappsProvider',
             'Dial', 'AppDial',
         ],
         dynamicPaths = {
@@ -47,16 +47,16 @@ define(function initWINT(require) {
     //Using require to lazy-load main only after booster.
 
     var env = require('env'),
-        config = require('config'),
-        runtime = require('runtime');
+        config = require('Config'),
+        runtime = require('Runtime');
 
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : initWINT");
 
     runtime.promise.then(function(runtimeData) {
         ///Check if runtime exists (= Not first run) and check whether to use the "booster"
-        var runtimeDataExists = runtimeData,
-            useBooster = runtimeData.useBooster,
-            BrandNewPage = document.URL.indexOf('#newtab') === -1,
+        var runtimeDataExists   = runtimeData,
+            useBooster          = runtimeData.useBooster,
+            BrandNewPage        = document.URL.indexOf('#newtab') === -1,
             NotOnBackgroundPage = document.URL.indexOf('background') === -1;
         if (runtimeDataExists && useBooster && BrandNewPage && NotOnBackgroundPage) {
             alert('STAHP');

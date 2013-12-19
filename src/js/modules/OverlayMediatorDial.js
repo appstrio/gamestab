@@ -1,5 +1,5 @@
 "use strict";
-define(['env','jquery', 'when', 'runtime'], function OverlayMediator(env,$, when, runtime) {
+define(['env','jquery', 'when', 'Runtime'], function OverlayMediator(env,$, when, runtime) {
     if(env.DEBUG && env.logLoadOrder) console.log("Loading Module : OverlayMediator");
     return function newOverlayMediator(originalDial, provider) {
         var self = {

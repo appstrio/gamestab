@@ -1,6 +1,6 @@
 "use strict";
 
-define(['env', 'underscore', 'jquery', 'templates', 'when', 'renderer'], function MenuRenderer(env, _, $, templates, when, renderer) {
+define(['env', 'underscore', 'jquery', 'templates', 'when', 'Renderer'], function MenuRenderer(env, _, $, templates, when, renderer) {
     if (env.DEBUG && env.logLoadOrdervar) console.log("Loading Module : MenuRenderer");
     var initting = when.defer(),
         self = {
@@ -13,7 +13,7 @@ define(['env', 'underscore', 'jquery', 'templates', 'when', 'renderer'], functio
      * Callback function for self.promise success
      * @param options Custom settings to override self.settings
      */
-    self.init = function initModule(options) {
+    var init = function initModule(options) {
         //TODO change into a general ".switch".on click
         $('#dials-switch').on('click', switchHandler('dials'));
         $('#apps-switch').on('click', switchHandler('apps'));
@@ -41,8 +41,9 @@ define(['env', 'underscore', 'jquery', 'templates', 'when', 'renderer'], functio
         console.log('Error loading, try to refersh or re-install the app.');
     };
 
-    initting.promise.
-    catch (errorLoading);
+    init();
+
+    initting.promise.catch (errorLoading);
 
     return self;
 }, rErrReport);

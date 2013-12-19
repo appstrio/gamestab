@@ -1,4 +1,4 @@
-define(['env', 'underscore', 'jquery', 'templates', 'when', 'renderer'], function SearchRenderer(env, _, $, templates, when, renderer) {
+define(['env', 'underscore', 'jquery', 'templates', 'when', 'Renderer'], function SearchRenderer(env, _, $, templates, when, renderer) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : SearchRenderer");
 
     var initting = when.defer(),
@@ -12,7 +12,7 @@ define(['env', 'underscore', 'jquery', 'templates', 'when', 'renderer'], functio
      * Callback function for self.promise success
      * @param options Custom settings to override self.settings
      */
-    self.init = function initModule(options) {
+    var init = function initModule(options) {
         // widely used dom selectors
         self.$searchWrapper = renderer.$layout.find('.search-wrapper').eq(0);
         // setup search layout
@@ -38,7 +38,7 @@ define(['env', 'underscore', 'jquery', 'templates', 'when', 'renderer'], functio
     };
 
     //Init after dependencies have loaded;
-    // init();
+    init();
 
     //If init fails handlers
     initting.promise.catch (errorLoading);

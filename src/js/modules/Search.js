@@ -1,10 +1,26 @@
-define(['env', 'rendererSearch'], function Search(env, renderer) {
+define(['env', 'SearchRenderer', 'jquery', 'Runtime', 'when', 'typeahead'], function Search(env, renderer, $, runtime, when, typeahead) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Search");
 
-    var self = {
-        base_search_url: '',
-        base_suggestions_url: ''
-    }, renderer = require();
+    var initting = when.defer(),
+        self = {
+            base_search_url: '',
+            base_suggestions_url: '',
+            promise: initting.promise,
+        };
+
+    var init = function initModule() {
+        runtime.promise.then(function(runtimeData) {
+            var runtimeConfig = runtime.config;
+            self.base_search_url = runtimeConfig.base_search_url;
+            self.base_suggestions_url = runtimeConfig.base_suggestions_url;
+
+            // self.cc = self.runtimeConfig.location.country.short_name;
+
+            self.setEventHandlers();
+            self.setupTypeahead();
+            return initting.resolve();
+        }).catch (initting.reject);
+    };
 
     self.setEventHandlers = function() {
         renderer.$searchWrapper.on('click', '.submit-button', function(e) {
@@ -13,7 +29,6 @@ define(['env', 'rendererSearch'], function Search(env, renderer) {
         });
     }
     self.setupTypeahead = function() {
-        require('typeahead');
         var input = renderer.$searchWrapper.find('.search-input').eq(0);
         input.typeahead({
             source: self.getSuggestions,
@@ -46,7 +61,7 @@ define(['env', 'rendererSearch'], function Search(env, renderer) {
     };
 
     self.doSearch = function(query) {
-        // if (common.isUrl(query)) { //TODO : Who would type a URL into a search box? (especially with our users) \ do we really want a whole lib for one fun?
+        // if (common.isUrl(query)) {
         //     self.redirectToUrl(query);
         // } else {
         self.redirectToSearch(query);
@@ -71,7 +86,7 @@ define(['env', 'rendererSearch'], function Search(env, renderer) {
     };
 
     self.redirectToSearch = function(query) {
-        // if(window.analytics) {
+        // if (window.analytics) {
         //     var val = window.analytics.getEventValue(self.cc);
 
         //     if (window.analytics) window.analytics.sendEvent({
@@ -88,22 +103,7 @@ define(['env', 'rendererSearch'], function Search(env, renderer) {
         }, 500);
     };
 
-    self.init = (function() {
-        var $             = require('jquery'),
-            runtime
- = require('runtime
-');
-        //TODO should we timeout 0 to increase speed?
-        runtime
-.promise.then(function(runtime) {
-            self.base_search_url = runtime.base_search_url;
-            self.base_suggestions_url = runtime.base_suggestions_url;
-
-            self.setEventHandlers()
-            self.setupTypeahead()
-        });
-        // self.cc = self.runtime.runtime.location.country.short_name;
-    })();
+    init();
 
     return self;
 }, rErrReport);
