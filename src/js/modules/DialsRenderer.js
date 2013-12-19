@@ -1,6 +1,6 @@
 "use strict";
 
-define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'WebAppsListProvider', 'AppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when, WebAppsList, apps, runtime) {
+define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'JSONProvider', 'WebAppsListProvider', 'AppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when, JSONProvider, WebAppsList, apps, runtime) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialsRenderer");
 
     var initting = when.defer(),
@@ -23,10 +23,15 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'WebApps
         self.$webAppsOverlay = $('#web-apps-overlay');
         self.$fadescreen = $('#overlays');
 
+        var prov = JSONProvider({pathToJSON : '/js/data/predefinedDials.json', name: 'def'});
+
         // Fetch existing dials
-        self.renderDialsArr(runtime.data.dials, renderer.$dialsWrapper, {
-            maxDials: 18
-        });
+
+        JSONProvider.promise.then(function (dials) {
+            self.renderDialsArr(runtime.data.dials, renderer.$dialsWrapper, {
+                maxDials: 18
+            });
+        })
         WebAppsList.promise.then(function(dials) {
             self.renderDialsArr(dials, renderer.$webAppsOverlay);
         });
@@ -126,22 +131,6 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'WebApps
         self.storeDialList();
 
         return removing.resolve();
-    }
-
-    self.getDialIdentifiersFromDOMElement = function ($ele) {
-        var $target = $(e.currentTarget).parents('.dial').eq(0),
-
-        if($target.data('id'))
-            return {
-                key: "id",
-                val: e.currentTarget.href,
-            };
-        else
-            return {
-                key: "url",
-                val: e.currentTarget.href,
-            };
-
     }
 
     self.launchAndroidDial = function (e) {};
