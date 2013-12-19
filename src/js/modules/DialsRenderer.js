@@ -13,8 +13,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'WebApps
 
 
     /**
-     * Callback function for self.promise success
-     * @param options Custom settings to override self.settings
+     *  @param options Custom settings to override self.settings
      */
     var init = function initModule(options) {
 
@@ -42,6 +41,9 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'WebApps
 
         return when.all([WebAppsList.promise, apps.promise], initting.resolve, initting.reject);
     };
+
+
+
     /**
      * @param options {maxDials: number}
      */
@@ -128,21 +130,6 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates','when' , 'WebApps
         return removing.resolve();
     }
 
-    self.getDialIdentifiersFromDOMElement = function ($ele) {
-        var $target = $(e.currentTarget).parents('.dial').eq(0),
-
-        if($target.data('id'))
-            return {
-                key: "id",
-                val: e.currentTarget.href,
-            };
-        else
-            return {
-                key: "url",
-                val: e.currentTarget.href,
-            };
-
-    }
 
     self.launchAndroidDial = function (e) {};
     self.removeAndroidDial = function (e) {};
