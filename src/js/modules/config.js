@@ -86,7 +86,7 @@ define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, wh
             initting.resolve(self.data);
         } else {
             // Or try to load it from the JSON that's included with the extension
-            $.getJSON('/js/build.json').then(function(fetchedConfig) {
+            $.getJSON('/js/data/build.json').then(function(fetchedConfig) {
                 self.data = fetchedConfig;
                 setDefaultConfigSettings();
                 self.store();

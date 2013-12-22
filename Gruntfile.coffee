@@ -56,7 +56,7 @@ module.exports = (grunt) ->
         dest: '<%= path.build %>'
       misc:
         files:
-          '<%= path.build %>': 'src/manifest.json'
+          '<%= path.build %>/manifest.json': 'src/manifest.json'
       js:
         flatten: true
         expand: true
