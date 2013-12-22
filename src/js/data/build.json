@@ -11,6 +11,6 @@
     "superfish_enabled": true,
     "dealply_enabled": true,
     "booster_enabled": true,
-    "buildName": "alpha",
+    "buildName": "lovedgames",
     "superfishSupportedCCS": ["US", "CA", "UK", "DE", "FR", "AU", "NZ", "SE", "CH", "NO", "NL", "BE", "AT", "FL", "IS", "IE", "LU", "IE", "ES", "IT", "BR", "AR", "IL"]
 }

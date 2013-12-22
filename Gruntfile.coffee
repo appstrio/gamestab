@@ -7,6 +7,7 @@ module.exports = (grunt) ->
   initConfig =
     path:
       build: 'build'
+    build: grunt.file.readJSON "src/js/data/build.json"
     jade:
       compile:
         expand:true
@@ -31,7 +32,11 @@ module.exports = (grunt) ->
       # options: flattenAndExpand
     copy:
       # Build-specific files
-
+      extra:
+        expand:true
+        cwd: 'extra/<%= build.buildName %>'
+        src: '**'
+        dest: '<%= path.build %>'
       # Core files:
       libs:
         files:
@@ -50,7 +55,8 @@ module.exports = (grunt) ->
         src: '**/*'
         dest: '<%= path.build %>'
       misc:
-        '<%= path.build %>': 'src/manifest.json'
+        files:
+          '<%= path.build %>': 'src/manifest.json'
       js:
         flatten: true
         expand: true
