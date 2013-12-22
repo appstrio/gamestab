@@ -36,16 +36,16 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
 
         self.addDial = function addDial(dial) {
             var def = when.defer()
-            if(self.dials.length >= maxDials) {
+            if(self.dials.length >= self.settings.maxDials) {
                 def.reject("No more room, delete something first!")
             } else {
                 self.dials.push(dial)
 
                 self.storeDialList(self.name, self.dials)
 
-                def.resolve()
+                def.resolve(dial)
             }
-            return def
+            return def.promise
         }
 
         self.removeDial = function removeDial(dial) {

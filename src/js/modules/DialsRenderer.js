@@ -47,7 +47,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
             setTimeout(function() {
                 rendering.resolve();
             }, 0);
-        });
+        }).otherwise(env.errhandler);
 
         return rendering.promise;
     };
@@ -72,12 +72,20 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
     self.renderDial = function(provider, $container, dial, options) {
         var $dial = $(templates['classic-dial'](dial));
 
+        if(provider.name == "WebAppsListProvider") {
+            dial.launch = overlayDialLaunchHandler(dial);
+        }
+
         $dial.on('click', dial.launch);
         $dial.on('click', '.dial-remove-button', self.renderDialRemovalMaker(provider, dial));
 
         if (dial.id) $dial.data('id', dial.id);
 
-        return $container.append($dial);
+        $dial.hide();
+        $container.append($dial);
+        $dial.fadeIn();
+
+        return $dial;
     };
 
     self.renderDialRemovalMaker = function(provider, dial) {
@@ -120,8 +128,16 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
         });
     };
 
-    var overlayDialLaunchHandler = function(e) {
-        StoredDialsProvider
+    var overlayDialLaunchHandler = function(dial) {
+        return function(e) {
+            var adding = StoredDialsProvider.addDial(dial)
+            adding.then(function callRenderDial(dial) {
+                self.renderDial(StoredDialsProvider, renderer.$dialsWrapper, dial)
+            }).otherwise(function callErrorDisplayer(msg) {
+                alert(msg)
+            })
+            return adding.promise
+        }
     }
 
     var setEventHandlers = function() {
