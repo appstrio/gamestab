@@ -1,0 +1,7 @@
+<div class="dial">
+    <a class="inner" href="#">
+        <div class="thumbnail-wrapper" style="background-image:url({{=it.icon}})">
+        </div>
+        <div class="title">{{=it.title}}</div>
+    </a>
+</div>

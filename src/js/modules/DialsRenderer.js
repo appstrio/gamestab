@@ -70,11 +70,14 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
     };
 
     self.renderDial = function(provider, $container, dial, options) {
-        var $dial = $(templates['classic-dial'](dial));
-
+        var $dial
         if(provider.name == "WebAppsListProvider") {
+            dial.oldLaunch = dial.launch;
             dial.launch = overlayDialLaunchHandler(dial);
-        }
+            $dial = $(templates['overlay-dial'](dial));
+        } else
+             $dial = $(templates['classic-dial'](dial));
+
 
         $dial.on('click', dial.launch);
         $dial.on('click', '.dial-remove-button', self.renderDialRemovalMaker(provider, dial));
@@ -132,6 +135,8 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
         return function(e) {
             var adding = StoredDialsProvider.addDial(dial)
             adding.then(function callRenderDial(dial) {
+                dial.launch = dial.oldLaunch
+                delete dial.oldLaunch
                 self.renderDial(StoredDialsProvider, renderer.$dialsWrapper, dial)
             }).otherwise(function callErrorDisplayer(msg) {
                 alert(msg)
