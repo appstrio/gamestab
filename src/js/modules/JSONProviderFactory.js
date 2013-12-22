@@ -49,18 +49,13 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
         };
 
         self.resolveAndSave = function(dials) {
-            if (self.settings.wrapDial) {
+            if (self.dials) {
                 self.dials = _.map(dials, function (dial) {
-                    // HERE IS PROBLEM
                     return self.settings.wrapDial(dial);
                 });
-            } else {
-                self.dials = dials;
-            };
-            if (self.dials)
                 self.storeDialList(self.name, self.dials);
-
-            initting.resolve(self.dials);
+                initting.resolve(self.dials);
+            } else initting.reject("NoDials")
         }
 
         if (self.settings.preLoad)
