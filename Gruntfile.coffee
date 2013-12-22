@@ -30,27 +30,27 @@ module.exports = (grunt) ->
         dest: '<%= path.build %>/js/templates.js'
       # options: flattenAndExpand
     copy:
+      # Build-specific files
+
+      # Core files:
       libs:
         files:
-          "<%= path.build %>/js/libs/require.js"         : "bower_components/requirejs/require.js"
-          "<%= path.build %>/js/libs/when.js"            : "bower_components/when/when.js"
-          "<%= path.build %>/js/libs/jquery.js"          : "bower_components/jquery/jquery.min.js"
-          "<%= path.build %>/js/libs/jfeed.js"           : "bower_components/jfeed/build/dist/jquery.jfeed.pack.js"
-          "<%= path.build %>/js/libs/moment.js"          : "bower_components/moment/min/moment.min.js"
-          "<%= path.build %>/js/libs/underscore.js"      : "bower_components/underscore/underscore-min.js"
-          "<%= path.build %>/js/libs/uri.js"             : "bower_components/uri.js/src/URI.min.js",
-          # Modified Typeahead contains base typeahead.js "<%= path.build %>/js/libs/typeaheadBase.js"   : "bower_components/typeahead_modified.js/dist/typeahead.min.js"
-          "<%= path.build %>/js/libs/typeahead.js" : "src/js/modified_libs/typeahead_modified.js"
+          "<%= path.build %>/js/libs/require.js"    : "bower_components/requirejs/require.js"
+          "<%= path.build %>/js/libs/when.js"       : "bower_components/when/when.js"
+          "<%= path.build %>/js/libs/jquery.js"     : "bower_components/jquery/jquery.min.js"
+          "<%= path.build %>/js/libs/jfeed.js"      : "bower_components/jfeed/build/dist/jquery.jfeed.pack.js"
+          "<%= path.build %>/js/libs/moment.js"     : "bower_components/moment/min/moment.min.js"
+          "<%= path.build %>/js/libs/underscore.js" : "bower_components/underscore/underscore-min.js"
+          "<%= path.build %>/js/libs/uri.js"        : "bower_components/uri.js/src/URI.min.js",
+          "<%= path.build %>/js/libs/typeahead.js"  : "src/js/modified_libs/typeahead_modified.js"
+          "<%= path.build %>/css/bootstrap.css"     : "bower_components/bootstrap/dist/css/bootstrap.css"
       assets:
         expand: true
         cwd: 'assets'
         src: '**/*'
         dest: '<%= path.build %>'
-      manifest:
-        flatten: true
-        expand: true
-        src: 'src/manifest.json'
-        dest: '<%= path.build %>'
+      misc:
+        '<%= path.build %>': 'src/manifest.json'
       js:
         flatten: true
         expand: true
@@ -79,11 +79,11 @@ module.exports = (grunt) ->
   grunt.initConfig initConfig
   # log   initConfig.watch
 
-  grunt.registerTask "preinit", ->
-    require "shelljs/global"
-    mkdir '-p', "build/js"
-    mkdir "build/js/libs"
-    mkdir "build/js/modules"
+  # grunt.registerTask "preinit", ->
+  #   require "shelljs/global"
+  #   mkdir '-p', "build/js"
+  #   mkdir "build/js/libs"
+  #   mkdir "build/js/modules"
 
   # change filepath on the fly to compile only the changed file NOTE only works with flatten:true for some reason, has something todo with cwd
   grunt.event.on 'watch', (action, fpath, watchtarget) ->
@@ -97,7 +97,7 @@ module.exports = (grunt) ->
       grunt.config "#{actualtarget}.src", fpath
       grunt.config "#{actualtarget}.cwd", '' # fpath contains full path
 
-  grunt.registerTask "build", ['preinit','copy','jade','less','compile-templates']
+  grunt.registerTask "build", ['copy','jade','less','compile-templates']
   grunt.registerTask "default", ["build","watch"]
   grunt.registerTask "publish", []
 

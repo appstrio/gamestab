@@ -6,7 +6,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
     var initting = when.defer(),
         self = {
             promise: initting.promise,
-            providers: {},
+            // providers: {}, // TODO what this is for?
         };
 
     /**
@@ -14,19 +14,21 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
      *  * save reference to important DOM elements
      *  * render dials into dials-wrapper, apps-wrapper and overlay-wrapper
      *  @param options Custom settings to override self.settings
-     */
+     **/
     var init = function initModule() {
         var promises = [];
         // widely used dom selectors
-        self.$webAppsOverlayBtn = $('#web-apps-overlay-btn');
-        self.$webAppsOverlay = $('#web-apps-overlay');
-        self.$fadescreen = $('#overlays');
+        $.extend(self, {
+            $webAppsOverlayBtn: $('#webapps-overlay-btn').eq(0),
+            $webAppsOverlay: $('#webapps-overlay').eq(0),
+            $fadescreen: $('#fadescreen').eq(0),
+        });
 
         // Fetch existing dials
         promises.push(self.renderProvider(StoredDialsProvider, renderer.$dialsWrapper, {
             maxDials: 18
-        }))
-        promises.push(self.renderProvider(WebAppsListProvider, renderer.$webAppsOverlay));
+        }));
+        promises.push(self.renderProvider(WebAppsListProvider, self.$webAppsOverlay));
         promises.push(self.renderProvider(ChromeAppsProvider, renderer.$appsWrapper));
 
         //TODO hardcoded
@@ -68,8 +70,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
     };
 
     self.renderDial = function(provider, $container, dial, options) {
-        var $dial = $(templates['classic-dial'](dial)),
-            removeHandler;
+        var $dial = $(templates['classic-dial'](dial));
 
         $dial.on('click', dial.launch);
         $dial.on('click', '.dial-remove-button', self.renderDialRemovalMaker(provider, dial));
@@ -96,15 +97,20 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
         }
     };
 
-    var openOverlayHandler = function function_name(name) {
-        return function() {
+    var openOverlayHandler = function function_name($element) {
+        return function(e) {
+            e.stopPropagation();
+            e.preventDefault();
             //Show only the selected page
             $('.overlay').hide();
             self.$fadescreen.removeClass('hide');
             self.$fadescreen.fadeIn();
-            // console.log('self.overlays[name]',self.overlays[name]);
-            self.overlays[name].show();
+            $element.show();
         };
+    };
+    var noopOverlayHandler = function function_name(e) {
+        e.stopPropagation();
+        e.preventDefault();
     };
 
     var closeOverlayHandler = function function_name() {
@@ -114,8 +120,13 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
         });
     };
 
+    var overlayDialLaunchHandler = function(e) {
+        StoredDialsProvider
+    }
+
     var setEventHandlers = function() {
-        self.$webAppsOverlayBtn.on('click', openOverlayHandler('$webAppsOverlay'));
+        self.$webAppsOverlayBtn.on('click', openOverlayHandler(self.$webAppsOverlay));
+        self.$webAppsOverlay.on('click', noopOverlayHandler); // HACK to not-close overlay if user clicked directly on the overlay (instead of on the fadescreen).
         self.$fadescreen.on('click', closeOverlayHandler);
     };
 

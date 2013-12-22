@@ -1,10 +1,14 @@
 'use strict';
 
-define(['env'], function Storage(env) {
+define(['env', 'when'], function Storage(env, when) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Storage");
     var self = {};
 
+    // TODO : localstorage is not async, but chrome.storage is http://developer.chrome.com/extensions/storage.html#type-StorageArea
+    // Should we switch to it?
+
     self.set = function(key, obj) {
+        var def = when.defer();
         self[key] = JSON.stringify(obj);
         localStorage.setItem(key, self[key]);
     };

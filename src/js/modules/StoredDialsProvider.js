@@ -17,6 +17,7 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
         self.settings = {
             preLoad           : options.preLoad           || true,
             forceLoadFromJSON : options.forceLoadFromJSON || false,
+            maxDials          : options.maxDials          || undefined,
         };
 
         /**
@@ -32,6 +33,24 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
             var parentInitting = parent.init();
             parentInitting.then(initting.resolve);
         };
+
+        self.addDial = function addDial(dial) {
+            var def = when.defer()
+            if(self.dials.length >= maxDials) {
+                def.reject("No more room, delete something first!")
+            } else {
+                self.dials.push(dial)
+
+                self.storeDialList(self.name, self.dials)
+
+                def.resolve()
+            }
+            return def
+        }
+
+        self.removeDial = function removeDial(dial) {
+
+        }
 
         if (self.settings.preLoad)
             init();

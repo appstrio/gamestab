@@ -7,13 +7,6 @@ define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function 
             dials: [],
         };
 
-        self.provide = function(type) {
-            return this.fetch();
-        };
-        self.fetch = function fetchStuff() {
-            throw "Must be overriden.";
-        };
-
         self.getDialList = function(name) {
             var dials = storage.get(name);
             if (dials) return when.resolve(dials);
