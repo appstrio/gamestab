@@ -12,7 +12,7 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
             preLoad: typeof options.preLoad !== 'undefined' ? options.preLoad : true,
             forceLoadFromJSON: typeof options.forceLoadFromJSON !== 'undefined' ? options.forceLoadFromJSON : false,
             mutableList: typeof options.mutableList !== 'undefined' ? options.mutableList : true,
-            wrapDial: typeof options.wrapDial !== 'undefined' ? options.wrapDial : null,
+            wrapDial: typeof options.wrapDial !== 'undefined' ? options.wrapDial : Dial,
         };
 
         /**
@@ -57,7 +57,7 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
             } else {
                 self.dials = dials;
             };
-            if (!self.dials)
+            if (self.dials)
                 self.storeDialList(self.name, self.dials);
 
             initting.resolve(self.dials);

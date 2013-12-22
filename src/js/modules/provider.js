@@ -21,7 +21,7 @@ define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function 
         };
         self.storeDialList = function(name, dials) {
             var rawDials = _.map(dials, function (dial) {
-                return dial.toObject();
+                return dial.toObject(); // TODO: It's called toObject, but actually it means "from Object, become raw JSON data". Change name?
             });
             storage.set(name, rawDials);
         };

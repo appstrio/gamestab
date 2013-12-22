@@ -8,8 +8,8 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
             parent = JSONProviderFactory({
                 name: "StoredDialsProvider",
                 preLoad: false,
+                // forceLoadFromJSON : true, // DEBUG
                 pathToJSON: '/js/data/defaultDials.json',
-                wrapDial: Dial,
             }),
             self = Object.create(parent),
             options = options || {};
