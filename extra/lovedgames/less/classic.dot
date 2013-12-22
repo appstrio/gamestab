@@ -1,0 +1,22 @@
+<div class="container new-layout">
+    <div class="search-wrapper"></div>
+    <div class="top-wrapper">
+        <div class="viewport">
+           <div id="dials-wrapper" class="dials-wrapper"></div>
+           <div id="apps-wrapper" class="dials-wrapper"></div>
+           <div id="android-wrapper" class="dials-wrapper"></div>
+        </div>
+    </div>
+    <div class="bottom-wrapper">
+        <div class="bottom-logo"><img src="/img/lovedgames.logo.93x40.png" /></div>
+        <div class="buttons">
+            <a id="webapps-overlay-btn" href="#" class="btn"> + </a>
+            <a id="dials-switch" href="#" class="switch"> Home </a>
+            <a id="apps-switch" href="#" class="switch"> Apps </a>
+            <a id="android-switch" href="#" class="switch"> android </a>
+        </div>
+    </div>
+</div>
+<div id="fadescreen" class="hide">
+   <div id="webapps-overlay" class="overlay"></div>
+</div>

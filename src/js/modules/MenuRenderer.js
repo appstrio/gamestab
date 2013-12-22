@@ -17,6 +17,7 @@ define(['env', 'underscore', 'jquery', 'templates', 'when', 'Renderer'], functio
         //TODO change into a general ".switch".on click
         $('#dials-switch').on('click', switchHandler('dials'));
         $('#apps-switch').on('click', switchHandler('apps'));
+        $('#android-switch').on('click', switchHandler('android'));
 
         //TODO: Default switch is hardcoded
         $('#dials-switch').addClass('selected');

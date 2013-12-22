@@ -22,9 +22,11 @@ define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(e
 
         self.$dialsSwitch = $('#dials-switch');
         self.$appsSwitch = $('#apps-switch');
+        self.$androidSwitch = $('#android-switch');
 
         self.$dialsWrapper = $('#dials-wrapper');
         self.$appsWrapper = $('#apps-wrapper');
+        self.$androidWrapper = $('#android-wrapper');
 
         setTimeout(function(){
             return initting.resolve();

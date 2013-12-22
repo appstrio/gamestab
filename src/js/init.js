@@ -10,8 +10,9 @@
         'Renderer', 'SearchRenderer', 'MenuRenderer', 'DialsRenderer',
         'Search',
         'Storage',
-        'Provider', 'TopsitesProvider', 'ChromeAppsProvider', 'WebAppsListProvider', 'JSONProviderFactory', 'StoredDialsProvider',
-        'Dial', 'AppDial',
+        'AndroIt',
+        'Provider', 'TopsitesProvider', 'ChromeAppsProvider', 'WebAppsListProvider', 'JSONProviderFactory', 'StoredDialsProvider', 'AndroidAppsListProvider',
+        'Dial', 'AppDial', 'AndroidDial',
     ],
     dynamicPaths = {
         env: 'env',
