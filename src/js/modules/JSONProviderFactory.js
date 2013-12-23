@@ -65,4 +65,4 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
 
         return self;
     };
-}, rErrReport);
+});

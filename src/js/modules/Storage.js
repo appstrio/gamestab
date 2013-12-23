@@ -31,5 +31,4 @@ define(['env', 'when'], function Storage(env, when) {
     };
 
     return self;
-
-}, rErrReport);
+});

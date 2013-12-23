@@ -161,4 +161,4 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
     initting.promise.otherwise(errorLoading);
 
     return self;
-}, rErrReport);
+});

@@ -41,4 +41,4 @@ define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(e
     initting.promise.catch (errorLoading);
 
     return self;
-}, rErrReport);
+});

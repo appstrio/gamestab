@@ -125,4 +125,4 @@ define(['env', 'SearchRenderer', 'jquery', 'Runtime', 'when', 'typeahead'], func
     init();
 
     return self;
-}, rErrReport);
+});

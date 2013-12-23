@@ -54,4 +54,4 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
 
         return self;
     })();
-}, rErrReport);
+});

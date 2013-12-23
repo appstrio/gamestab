@@ -68,4 +68,4 @@ define(['env', 'jquery', 'when', 'Provider', 'AppDial'], function ChromeAppsProv
         return self;
     })(provider);
 
-}, rErrReport);
+});

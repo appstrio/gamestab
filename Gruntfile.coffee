@@ -5,11 +5,20 @@ module.exports = (grunt) ->
   require("load-grunt-tasks") grunt
 
   initConfig =
+    # Core Properties
     path:
-      build: 'build'
+      build: "build"
+    # Production Only Tasks
     build: grunt.file.readJSON "src/js/data/build.json"
     clean:
-      build: ['<%= path.build %>']
+      build: ["<%= path.build %>"]
+    requirejs:
+      production:
+        options:
+          baseUrl: "./src/js"
+          mainConfigFile: "./src/js/init.js" # path to require.config call
+          out: "./<%= path.build %>/js/init.js"
+    # Core Tasks
     jade:
       compile:
         expand:true
@@ -22,23 +31,23 @@ module.exports = (grunt) ->
       compile:
         expand:true
         flatten: true
-        src: 'src/less/*.less'
-        dest: '<%= path.build %>/css/',
-        ext: '.css'
-    'compile-templates':
+        src: "src/less/*.less"
+        dest: "<%= path.build %>/css/",
+        ext: ".css"
+    "compile-templates":
       compile:
         options:
-          variable:'templates'
-        src : 'src/dot/**.dot'
-        dest: '<%= path.build %>/js/templates.js'
+          variable:"templates"
+        src : "src/dot/**.dot"
+        dest: "<%= path.build %>/js/templates.js"
       # options: flattenAndExpand
     copy:
       # Build-specific files
       extra:
         expand:true
-        cwd: 'extra/<%= build.buildName %>'
-        src: '**'
-        dest: '<%= path.build %>'
+        cwd: "extra/<%= build.buildName %>"
+        src: "**"
+        dest: "<%= path.build %>"
       # Core files:
       libs:
         files:
@@ -53,66 +62,63 @@ module.exports = (grunt) ->
           "<%= path.build %>/css/bootstrap.css"     : "bower_components/bootstrap/dist/css/bootstrap.css"
       assets:
         expand: true
-        cwd: 'assets'
-        src: '**/*'
-        dest: '<%= path.build %>'
+        cwd: "assets"
+        src: "**/*"
+        dest: "<%= path.build %>"
       misc:
         files:
-          '<%= path.build %>/manifest.json': 'src/manifest.json'
+          "<%= path.build %>/manifest.json": "src/manifest.json"
       js:
         flatten: true
         expand: true
-        cwd: 'src/js'
-        src: '*.js*'
-        dest: '<%= path.build %>/js'
+        cwd: "src/js"
+        src: "*.js*"
+        dest: "<%= path.build %>/js"
       modules:
         flatten: true
         expand: true
-        cwd: 'src/js/modules'
-        src: '*.js*'
-        dest: '<%= path.build %>/js/modules'
+        cwd: "src/js/modules"
+        src: "*.js*"
+        dest: "<%= path.build %>/js/modules"
       data:
         flatten: true
         expand: true
-        cwd: 'src/js/data'
-        src: '*.js*'
-        dest: '<%= path.build %>/js/data'
+        cwd: "src/js/data"
+        src: "*.js*"
+        dest: "<%= path.build %>/js/data"
 
   # Dynamic watchers building
-  watchSingleExclude = ['compile-templates','less']
-  initConfig.watch   = buildWatchers initConfig, ['path','copy:libs','copy:assets']
+  watchSingleExclude = ["compile-templates","less"]
+  initConfig.watch   = buildWatchers initConfig, ["path","copy:libs","copy:assets"]
   initConfig.watch.lessCompile =
-    files: ['src/less/**/*.less']
-    tasks: ['less:compile']
+    files: ["src/less/**/*.less"]
+    tasks: ["less:compile"]
   grunt.initConfig initConfig
-  # log   initConfig.watch
-
-  # grunt.registerTask "preinit", ->
-  #   require "shelljs/global"
-  #   mkdir '-p', "build/js"
-  #   mkdir "build/js/libs"
-  #   mkdir "build/js/modules"
 
   # change filepath on the fly to compile only the changed file NOTE only works with flatten:true for some reason, has something todo with cwd
-  grunt.event.on 'watch', (action, fpath, watchtarget) ->
+  grunt.event.on "watch", (action, fpath, watchtarget) ->
     preconfiguredPath = grunt.config "watch.#{watchtarget}.path"
     if preconfiguredPath?
       actualtarget = preconfiguredPath
     else
-      actualtarget = grunt.config("watch.#{watchtarget}.tasks")[0].replace(':','.') # Assuming only one task
+      actualtarget = grunt.config("watch.#{watchtarget}.tasks")[0].replace(":",".") # Assuming only one task
     # log actualtarget, watchSingleExclude, watchtarget
-    if actualtarget not in watchSingleExclude and actualtarget.split('.')[0] not in watchSingleExclude
+    if actualtarget not in watchSingleExclude and actualtarget.split(".")[0] not in watchSingleExclude
       grunt.config "#{actualtarget}.src", fpath
-      grunt.config "#{actualtarget}.cwd", '' # fpath contains full path
+      grunt.config "#{actualtarget}.cwd", "" # fpath contains full path
 
-  grunt.registerTask "build", ['clean','copy','jade','less','compile-templates']
+  grunt.registerTask "copy:production", ["copy:extra", "copy:libs", "copy:assets", "copy:misc", "copy:data"]
+  grunt.registerTask "build", ["clean","copy","jade","less","compile-templates"]
+  grunt.registerTask "package", ["prepackage","requirejs"] # ,"copy:production","jade","less","compile-templates"]
   grunt.registerTask "default", ["build","watch"]
-  grunt.registerTask "publish", []
+  grunt.registerTask "prepackage", ->
+    buildName = grunt.config("build").buildName
+    grunt.config "path.build", "tmp-build-#{buildName}"
 
 log = -> console.log JSON.stringify arg, undefined, 2 for arg in arguments
 String.prototype.capitalize = (string) -> this.charAt(0).toUpperCase() + this.slice(1)
 buildWatchers = (initConfig, excludeArray) ->
-  excludeArray = if typeof excludeArray is 'string' then [excludeArray] else excludeArray
+  excludeArray = if typeof excludeArray is "string" then [excludeArray] else excludeArray
   watch =
     options:
       spawn:false
@@ -120,7 +126,7 @@ buildWatchers = (initConfig, excludeArray) ->
   for own taskType, targets of initConfig
     for own targetName, targetContents of targets
       if "#{taskType}" not in excludeArray and "#{taskType}:#{targetName}" not in excludeArray
-        cwd = if targetContents.cwd? then targetContents.cwd else '.'
+        cwd = if targetContents.cwd? then targetContents.cwd else "."
         if Array.isArray targetContents.src
           files = "#{cwd}/#{src}" for src in targetContents.src
         else

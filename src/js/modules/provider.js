@@ -37,4 +37,4 @@ define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function 
 
         return self;
     };
-}, rErrReport);
+});

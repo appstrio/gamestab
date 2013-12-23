@@ -100,4 +100,4 @@ define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, wh
     init();
 
     return self;
-}, rErrReport);
+});
