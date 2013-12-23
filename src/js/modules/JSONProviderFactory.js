@@ -2,30 +2,30 @@
 
 define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], function JSONProviderFactory(env, $, when, BaseProvider, runtime, renderer, Dial) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : JSONProviderFactory");
-    return function JSONProviderFactory(options) {
+    return function JSONProviderFactory(preLoad) {
         var initting = when.defer(),
             parent = BaseProvider(),
-            self = Object.create(parent),
-            options = options || {};
-
+            self = Object.create(parent);
         self.settings = {
-            preLoad: typeof options.preLoad !== 'undefined' ? options.preLoad : true,
-            forceLoadFromJSON: typeof options.forceLoadFromJSON !== 'undefined' ? options.forceLoadFromJSON : false,
-            mutableList: typeof options.mutableList !== 'undefined' ? options.mutableList : true,
-            wrapDial: typeof options.wrapDial !== 'undefined' ? options.wrapDial : Dial,
+            preLoad: (typeof preLoad !== 'undefined') ? preLoad : false,
+            forceLoadFromJSON: false,
+            mutableList: true,
+            wrapDial: Dial,
         };
 
         /**
          * @param options {name:string, pathToJSON: string, preLoad:true,forceLoadFromJSON:false,wrapDial:function || rawDials};
          */
-        self.init = function initModule() {
+        self.init = function initModule(name, options) {
             var listFetching;
-            //Create a settings object by overriding defaultSettings with any custom settings
+            options = options || {};
             $.extend(self, {
-                name: options.name, //required for getting and storing dial list
+                name: name, //required for getting and storing dial list
                 promise: initting.promise,
                 dials: [],
             });
+            // Merge options with settings, thus overriding default settings with properties from options, but only if they exist
+            $.extend(self.settings, options);
 
             // if we don't want the dial list to ever change:
             if (!self.settings.mutableList)
@@ -50,7 +50,7 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
 
         self.resolveAndSave = function(dials) {
             if (self.dials) {
-                self.dials = _.map(dials, function (dial) {
+                self.dials = _.map(dials, function(dial) {
                     return self.settings.wrapDial(dial);
                 });
                 self.storeDialList(self.name, self.dials);

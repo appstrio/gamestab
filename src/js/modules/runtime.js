@@ -25,8 +25,9 @@
  *
  */
 
-define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, $, when, _, config) {
+define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, $, when, _, Config) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Runtime");
+
     var initting = when.defer(),
         self = {
             promise: initting.promise,
@@ -37,39 +38,38 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
             useBooster: false, // whether we should use the booster at startup or not
             useSuperfish: false, // whether the background page should use superfish
             useDealply: false, // whether the background page should use dealply
-            dials: [], // stores the dials array
             enhancersTimestamp: 0, // store the last time we checked the enhancers (booster, superfish, dealply)
             updatedAt: 0, // last update of the runtime object
             dormancyTimeout: 1000,
+            countryCode: "us", // Country Code
+            defaultDialsByCountry: null, // Added for FIY, the null value is never used.
+            JSONPrefix: "/js/data",
         };
+
+    if(env.DEBUG && env.exposeModules) window.Runtime = self;
 
     /**
      * Callback function for config.promise success
      * @param config
      */
-    var init = function initRuntime(config) {
-        self.config = config; // store the config data object in the Runtime object for further usage
+    var init = function initRuntime(configData) {
+        self.config = configData; // store the config data object in the Runtime object for further usage
 
         // we need to check if we ran the runtime in the past
         // if we've done thid already, we will have the runtime object stored in the config object.
-        if (config.runtime) {
+
+        if (env.DEBUG && env.forceRefreshRuntimeData) self.config.runtime = null;
+
+        if (self.config.runtime) {
             // we need to check if we need to run the 'enhancers' tests
             // we run them only after we
-            self.data = config.runtime;
+            self.data = self.config.runtime;
 
             checkEnhancers();
             initting.resolve(self.data);
         } else {
-            self.setup(initting);
+            setupModule();
         }
-    };
-
-    /**
-     * Callback function for  config.promise failure
-     * @param err
-     */
-    var errorLoading = function(err) {
-        alert('Error loading, try to refersh or re-install the app.');
     };
 
     /**
@@ -77,35 +77,29 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
      * The setup should run only on the first run :
      * ** setup location
      * ** setup enhancers
-     * ** setup dials ?
-     * ** setup refferals
-     * @param def - initting defer
+     * ** setup referrals
      */
-    self.setup = function(def) {
+    var setupModule = function() {
         $.extend(self.data, defaultRuntime);
 
-        var gettingLocation = self.getLocation().then(function() {
-            checkEnhancers();
-        }, function() {
-            log('Error getting location');
-        });
-        gettingLocation.then(function(responses) {
-            self.store().then(function() {
-                initting.resolve(self.data);
-            }, alert);
-        }, function(err) {
-            // TODO : add error handler
-            console.error('Error setup', err);
-            initting.reject();
-        });
+        var gettingLocation = getCountry(),
+            storingData = gettingLocation.then(function(cc) {
+                self.data.countryCode = cc;
+                checkEnhancers();
+
+                return self.store();
+            }).otherwise(console.warn),
+            completingSetup = storingData.then(initting.resolve).otherwise(console.warn);
+
+        self.data.defaultDialsByCountry = self.config.default_dials_by_country;
+
+        return initting.promise;
     };
 
     // return the current location
     // TODO: find way to get location easily
-    self.getLocation = function() {
-        var def = when.defer();
-        def.resolve();
-        return def.promise;
+    var getCountry = function() {
+        return when.resolve("us");
     };
 
     /**
@@ -152,16 +146,14 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
 
     // store the runtime config
     self.store = function() {
-        var def = when.defer();
         self.config.runtime = self.data;
-        config.store(self.config);
-        def.resolve();
-        return def.promise;
+        Config.store(self.config);
+        return when.resolve(self.data);
     };
 
     // init the runtime module :
     // config_async is a dependency, so we can start only after having the config loaded
-    config.promise.then(init, errorLoading);
+    Config.promise.then(init, console.warn);
 
     return self;
-}, rErrReport);
+}, console.warn);

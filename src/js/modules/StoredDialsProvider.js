@@ -3,40 +3,37 @@
 define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', 'Dial'], function StoredDialsProvider(env, $, when, JSONProviderFactory, runtime, renderer, Dial) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : StoredDialsProvider");
     //TODO:
-    return (function StoredDialsProvider(options) {
+    return (function StoredDialsProvider() {
         var initting = when.defer(),
-            parent = JSONProviderFactory({
-                name: "StoredDialsProvider",
-                preLoad: false,
-                // forceLoadFromJSON : true, // DEBUG
-                pathToJSON: '/js/data/defaultDials.json',
-            }),
+            parent = JSONProviderFactory(),
             self = Object.create(parent),
-            options = options || {};
-
-        self.settings = {
-            preLoad           : options.preLoad           || true,
-            forceLoadFromJSON : options.forceLoadFromJSON || false,
-            maxDials          : options.maxDials          || undefined,
-        };
+            settings = {
+                forceLoadFromJSON : true,
+                maxDials          : null,
+                pathToJSON        : null,
+            };
 
         /**
          * Callback function for self.promise success
-         * @param options Custom settings to override self.settings
          */
-        var init = function initModule() {
+        var init = function initModule(runtimeData) {
             $.extend(self, {
-                name: "StoredDialsProvider", //required for getting and storing dial list
                 promise: initting.promise,
             });
+            // Determine whether to load default-by-ccJSON or defaultJSON
+            if(runtimeData.defaultDialsByCountry) {
+                settings.pathToJSON = runtimeData.JSONPrefix + "/defaults_" + runtimeData.countryCode + ".json";
+            } else {
+                settings.pathToJSON = runtimeData.JSONPrefix + "/defaultDials.json";
+            }
 
-            var parentInitting = parent.init();
+            var parentInitting = parent.init("StoredDialsProvider", settings);
             parentInitting.then(initting.resolve);
         };
 
         self.addDial = function addDial(dial) {
             var def = when.defer()
-            if(self.dials.length >= self.settings.maxDials) {
+            if(self.dials.length >= settings.maxDials) {
                 def.reject("No more room, delete something first!")
             } else {
                 self.dials.push(dial)
@@ -48,12 +45,11 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
             return def.promise
         }
 
-        self.removeDial = function removeDial(dial) {
+        self.removeDial = function removeDial(dial) {}
 
-        }
-
-        if (self.settings.preLoad)
-            init();
+        Runtime.promise.then(function initCondition(runtimeData) {
+            init(runtimeData);
+        })
 
         initting.promise.otherwise(env.errhandler);
 

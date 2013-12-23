@@ -17,13 +17,49 @@
 define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, when) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Config");
 
-    var storageKey = "config",
-        initting = when.defer(),
+    var storageKey      = "config",
+        pathToBuildJSON = '/js/data/build.json',
+        initting        = when.defer(),
         self = {
             promise: initting.promise,
-            data: {}
+            data: {},
         },
         defaultValues;
+
+    if(env.DEBUG && env.exposeModules) window.Config = self;
+
+    /**
+     * Loads the config data from localStorage or file.
+     */
+    var init = function initModule() {
+
+        defaultValues = {
+            timestamp: Date.now(),
+            ab_testing_group: ((Math.random() > 0.5) ? "A" : "B"),
+            install_week_number: weekNumber(),
+            client_version: (chrome && chrome.app && chrome.app.getDetails()) ? chrome.app.getDetails().version : ''
+        };
+
+        // Try to fetch appdata from the localstorage
+        var data = storage.get(storageKey);
+        if(env.DEBUG && env.forceRefreshConfigData) data = null;
+
+        if (data) {
+            self.data = data;
+            if (setDefaultConfigSettings()) {
+                self.store();
+            }
+            initting.resolve(self.data);
+        } else {
+            // Or try to load it from the JSON that's included with the extension
+            $.getJSON(pathToBuildJSON).then(function(fetchedConfig) {
+                self.data = fetchedConfig;
+                setDefaultConfigSettings();
+                self.store();
+                initting.resolve(self.data);
+            }).fail(console.warn);
+        }
+    }
 
     /**
      * Store the config file in the localstorage
@@ -61,41 +97,7 @@ define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, wh
         return needToStore;
     };
 
-
-    /**
-     * Self invoked initializing function.
-     * Loads the config data from localStorage or file.
-     * Resolves or rejects the initting defer afterwards.
-     */
-    (function initConfigModule() {
-
-        defaultValues = {
-            timestamp: Date.now(),
-            ab_testing_group: ((Math.random() > 0.5) ? "A" : "B"),
-            install_week_number: weekNumber(),
-            client_version: (chrome && chrome.app && chrome.app.getDetails()) ? chrome.app.getDetails().version : ''
-        };
-
-        // Try to fetch appdata from the localstorage
-        var data = storage.get(storageKey);
-        if ((env.DEBUG && !(env.loadConfigFromFile)) && data) {
-            self.data = data;
-            if (setDefaultConfigSettings()) {
-                self.store();
-            }
-            initting.resolve(self.data);
-        } else {
-            // Or try to load it from the JSON that's included with the extension
-            $.getJSON('/js/data/build.json').then(function(fetchedConfig) {
-                self.data = fetchedConfig;
-                setDefaultConfigSettings();
-                self.store();
-                initting.resolve(self.data);
-            }).fail(function(argument) {
-
-            });
-        }
-    })();
+    init();
 
     return self;
 }, rErrReport);
