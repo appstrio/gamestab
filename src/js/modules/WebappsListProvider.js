@@ -1,37 +1,32 @@
 "use strict";
 
-define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', 'Dial'], function WebAppsProvider(env, $, when, JSONProviderFactory, runtime, renderer, Dial) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : WebAppsProvider");
+define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', 'Dial'], function WebAppsListProvider(env, $, when, JSONProviderFactory, Runtime, renderer, Dial) {
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : WebAppsListProvider");
     return (function() {
         var initting = when.defer(),
-            parent = JSONProviderFactory({
-                name: "WebAppsListProvider",
-                preLoad: false,
-                mutableList: false,
-                pathToJSON: '/js/data/webapps.json'
-            }),
+            parent = JSONProviderFactory(),
             self = Object.create(parent),
-            options = options || {};
+            settings = {
+                maxDials: null,
+                mutableList: false,
+                pathToJSON: null,
+            };
 
-        self.settings = {
-            preLoad           : options.preLoad           || true,
-            forceLoadFromJSON : options.forceLoadFromJSON || false,
-        };
+        if(env.DEBUG && env.exposeModules) window.WebAppsListProvider = self;
 
-        var init = function initModule(runtimeData, options) {
-            $.extend(self,{
-                name     : "WebAppsListProvider", //required for getting and storing dial list
-                promise  : initting.promise,
+        var init = function initModule(runtimeData) {
+            $.extend(self, {
+                promise: initting.promise,
             });
 
-            var parentInitting = parent.init();
-            parentInitting.then(initting.resolve);
+            settings.pathToJSON = runtimeData.JSONPrefix + '/webapps.json'
+
+            var parentInitting = parent.init("WebAppsListProvider", settings);
+            parentInitting.then(initting.resolve).otherwise(initting.reject);
         };
 
-        if (self.settings.preLoad)
-            init();
-
-        initting.promise.otherwise(env.errhandler);
+        Runtime.promise.then(init)
+        initting.promise.otherwise(console.warn);
 
         return self;
     })(JSONProviderFactory);

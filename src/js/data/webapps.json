@@ -236,7 +236,8 @@
     "title": "Paprika"
 }, {
     "url": "http://afterthedeadline.com/",
-    "title": "After the Deadline"
+    "title": "After the Deadline",
+    "icon": "http://dummy.png"
 }, {
     "url": "http://gmail.com/",
     "icon": "http://cdn.appstorm.net/web.appstorm.net/files/2011/05/gmail_logo.jpg",

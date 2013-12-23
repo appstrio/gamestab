@@ -19,9 +19,9 @@ define(['env', 'jquery', 'Renderer', 'Dial', 'when'], function(env, $, renderer,
                 });
 
             if (env.DEBUG && !options.isParent) {
-                if (!self.chromeId
-                    || !self.description
-                    ) console.warn("newAppDial ERROR");
+                if (!self.chromeId || !self.description ) {
+                    console.warn("newAppDial ERROR");
+                }
             }
         };
 

@@ -17,10 +17,9 @@ define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, ren
                 });
 
             if (env.DEBUG && !options.isParent) {
-                if (!self.url
-                    || !self.title
-                    || !self.icon
-                    ) console.warn("newDial ERROR");
+                if (!self.url || !self.title || !self.icon ) {
+                    console.warn("newDial ERROR");
+                }
             }
         }
 

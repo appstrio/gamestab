@@ -12,6 +12,8 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
                 pathToJSON        : null,
             };
 
+        if(env.DEBUG && env.exposeModules) window.StoredDialsProvider = self;
+
         /**
          * Callback function for self.promise success
          */
@@ -27,7 +29,7 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
             }
 
             var parentInitting = parent.init("StoredDialsProvider", settings);
-            parentInitting.then(initting.resolve);
+            parentInitting.then(initting.resolve).otherwise(initting.reject);
         };
 
         self.addDial = function addDial(dial) {
@@ -46,10 +48,7 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
 
         self.removeDial = function removeDial(dial) {}
 
-        Runtime.promise.then(function initCondition(runtimeData) {
-            init(runtimeData);
-        })
-
+        Runtime.promise.then(init)
         initting.promise.otherwise(env.errhandler);
 
         return self;

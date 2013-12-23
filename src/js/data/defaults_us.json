@@ -1,54 +1,54 @@
 [{
     "title": "Facebook",
-    "url": "www.facebook.com",
-    "icon": "int/www.facebook.com.gif",
+    "url": "http://www.facebook.com",
+    "icon": "img/facebook.gif",
     "color": "#3A5896"
 }, {
     "type": "google",
     "title": "Youtube",
-    "url": "www.youtube.com",
-    "icon": "int/www.youtube.com.png"
+    "url": "http://www.youtube.com",
+    "icon": "img/youtube.png"
 }, {
     "title": "Twitter",
-    "url": "www.twitter.com",
-    "icon": "int/www.twitter.com.blue.png",
+    "url": "http://www.twitter.com",
+    "icon": "img/twitter.blue.png",
     "color": "#00ACED"
 }, {
     "title": "Amazon",
-    "url": "www.amazon.com",
-    "icon": "int/www.amazon.com.gif"
+    "url": "http://www.amazon.com",
+    "icon": "img/amazon.gif"
 }, {
     "title": "eBay",
-    "url": "www.ebay.com",
-    "icon": "int/www.ebay.com.png"
+    "url": "http://www.ebay.com",
+    "icon": "img/ebay.png"
 }, {
     "type": "google",
     "title": "Google Maps",
-    "url": "maps.google.com",
-    "icon": "int/maps.google.com.cover.gif",
+    "url": "http://maps.google.com",
+    "icon": "img/maps.google.com.cover.gif",
     "mode": "cover"
 }, {
     "type": "google",
     "title": "Gmail",
     "url": "mail.google.com",
-    "icon": "int/mail.google.gif",
+    "icon": "img/mail.google.gif",
     "mode": "cover"
 }, {
     "title": "Outlook",
-    "url": "www.outlook.com",
-    "icon": "int/www.outlook.com.blue.png",
+    "url": "http://www.outlook.com",
+    "icon": "img/outlook.blue.png",
     "color": "#0072C6"
 }, {
     "title": "Linkedin",
-    "url": "www.linkedin.com",
-    "icon": "int/www.linkedin.com.gif"
+    "url": "http://www.linkedin.com",
+    "icon": "img/linkedin.gif"
 }, {
     "title": "Tumblr",
-    "url": "www.tumblr.com",
-    "icon": "int/www.tumblr.com.png",
+    "url": "http://www.tumblr.com",
+    "icon": "img/tumblr.png",
     "color": "#47566D"
 }, {
     "title": "Instagram",
-    "url": "instagram.com",
-    "icon": "int/www.instagram.com.gif"
+    "url": "http://instagram.com",
+    "icon": "img/instagram.gif"
 }]

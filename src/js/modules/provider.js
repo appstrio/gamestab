@@ -12,10 +12,15 @@ define(['env', 'jquery', 'when', 'Renderer', 'underscore', 'Storage'], function 
             if (dials) return when.resolve(dials);
             else return when.reject();
         };
-        self.storeDialList = function(name, dials) {
-            var rawDials = _.map(dials, function (dial) {
-                return dial.toObject(); // TODO: It's called toObject, but actually it means "from Object, become raw JSON data". Change name?
-            });
+        self.storeDialList = function(name, dials, optionNoWrap) {
+            var rawDials;
+            if(optionNoWrap) {
+                rawDials = dials;
+            } else {
+                rawDials = _.map(dials, function (dial) {
+                    return dial.toObject();
+                });
+            }
             storage.set(name, rawDials);
         };
 

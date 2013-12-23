@@ -42,7 +42,7 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
                     //If no dials in localstorage, we need to fetch them and set them there.
                     //Get them from a JSON file and put them in storage
                     var fetchingJSON = $.getJSON(options.pathToJSON);
-                    fetchingJSON.then(resolveAndSave, initting.reject);
+                    fetchingJSON.done(resolveAndSave).fail(initting.reject);
                 });
 
             return initting.promise;
@@ -50,7 +50,10 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
 
         var resolveAndSave = function(dials) {
             if (dials) {
-                self.storeDialList(self.name, self.dials);
+                self.storeDialList(self.name, dials, true);
+                self.dials = _.map(dials, function(dial) {
+                    return self.settings.wrapDial(dial);
+                });
                 initting.resolve(self.dials);
             } else initting.reject("NoDials")
         }
