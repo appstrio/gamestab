@@ -1,10 +1,28 @@
 "use strict";
-
+/**
+ *
+ * AndroIt Module - Remote installation of AndroidApps
+ *
+ * Use Cases:
+ *   - Checking if user has a playstore account / is logged in -- Use the AndroIt.promise property. .then() will only happen if all previous conditions were met, .otherwise() will be called on any failure.
+ *
+ * Limitations:
+ *   - Can't install payed apps (POST request returns {ger:11} which I (wie) interpret as a status code of somesort)
+ *
+**/
 define(['env', 'when', 'jquery', 'underscore'], function AndroIt(env, when, jquery, _) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Runtime");
 
     var initting = when.defer(),
-        self = {}
+        self = {
+            promise:initting.promise,
+            STATUS: {
+                FAILED_TO_START  : 0,
+                NO_TOKEN         : 100,
+                GET_REQUEST_ERR  : 101,
+                POST_REQUEST_ERR : 102,
+            },
+        };
 
     if(env.DEBUG) window.and = self;
 
@@ -14,11 +32,11 @@ define(['env', 'when', 'jquery', 'underscore'], function AndroIt(env, when, jque
                 self.userToken = response.userToken;
                 var gettingDevices = getDevices(response);
                 return gettingDevices;
-            }).otherwise(env.errhandler)
+            }).otherwise(errHandler(initting.reject), self.STATUS.FAILED_TO_START)
 
             getDevicesDetails.then(function(devicesList) {
                 return initting.resolve()
-            }).otherwise(env.errhandler)
+            }).otherwise(errHandler(initting.reject), self.STATUS.FAILED_TO_START)
 
             return initting.promise
     };
@@ -26,14 +44,14 @@ define(['env', 'when', 'jquery', 'underscore'], function AndroIt(env, when, jque
     var getUserToken = function getUserToken() {
         var def = when.defer(),
             fetchingHTML = $.get('https://play.google.com');
-        fetchingHTML.then(function(pageHTML) {
+        fetchingHTML.done(function(pageHTML) {
 
             var a = "window._uc='[\\42";
             var b = "\\42";
 
             var i = pageHTML.indexOf(a);
             if (i === -1) {
-                return def.reject('Token not found')
+                return def.reject(self.STATUS.NO_TOKEN)
             } else {
                 pageHTML = pageHTML.substr(i + a.length);
                 var j = pageHTML.indexOf(b);
@@ -126,6 +144,26 @@ define(['env', 'when', 'jquery', 'underscore'], function AndroIt(env, when, jque
         Device.prototype.toString = function () { return this.vendorAndModelNames; }
 
         return new Device(deviceDetails);
+    }
+
+    var errHandler = function AndroItErrorHandlerFactory(callback, errcode) {
+        return function AndroItErrorHandler(err) {
+            if(DEBUG) console.warn("AndroIt Module Error[" + getKeyByValue(self.STATUS, errcode) + "]: " + JSON.stringify(err));
+            callback();
+        }
+    }
+
+    //http://stackoverflow.com/questions/9907419/javascript-object-get-key-by-value
+    var getKeyByValue = function( ob, value ) {
+        if(value)
+            for( var prop in ob ) {
+                if( ob.hasOwnProperty( prop ) ) {
+                     if( ob[ prop ] === value )
+                         return prop;
+                }
+            }
+        else
+            return null
     }
 
     init()
