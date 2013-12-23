@@ -40,10 +40,11 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
             useDealply: false, // whether the background page should use dealply
             enhancersTimestamp: 0, // store the last time we checked the enhancers (booster, superfish, dealply)
             updatedAt: 0, // last update of the runtime object
-            dormancyTimeout: 1000,
-            countryCode: "us", // Country Code
-            defaultDialsByCountryEnabled: true,
+            countryCode: "us", // Default Country Code
             JSONPrefix: "/js/data",
+            // Default values for properties that can be overrided from config
+            dormancyTimeout: 1000,
+            defaultDialsByCountryEnabled: true,
             maxDials: 18,
         };
 
@@ -69,7 +70,7 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
             checkEnhancers();
             initting.resolve(self.data);
         } else {
-            setupModule();
+            setupModule(configData);
         }
     };
 
@@ -80,8 +81,8 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
      * ** setup enhancers
      * ** setup referrals
      */
-    var setupModule = function() {
-        $.extend(self.data, defaultRuntime);
+    var setupModule = function(configData) {
+        $.extend(self.data, defaultRuntime, configData.runtime_overriders);
 
         var gettingLocation = getCountry(),
             storingData = gettingLocation.then(function(cc) {
@@ -92,7 +93,6 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
             }).otherwise(console.warn),
             completingSetup = storingData.then(initting.resolve).otherwise(console.warn);
 
-        self.data.defaultDialsByCountryEnabled = self.config.default_dials_by_country_enabled;
 
         return initting.promise;
     };
