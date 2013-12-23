@@ -30,7 +30,7 @@
 }, {
     "type": "google",
     "title": "Gmail",
-    "url": "mail.google.com",
+    "url": "http://mail.google.com",
     "icon": "img/mail.google.gif",
     "mode": "cover"
 }, {
