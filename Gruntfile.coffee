@@ -8,6 +8,8 @@ module.exports = (grunt) ->
     path:
       build: 'build'
     build: grunt.file.readJSON "src/js/data/build.json"
+    clean:
+      build: ['<%= path.build %>']
     jade:
       compile:
         expand:true
@@ -103,7 +105,7 @@ module.exports = (grunt) ->
       grunt.config "#{actualtarget}.src", fpath
       grunt.config "#{actualtarget}.cwd", '' # fpath contains full path
 
-  grunt.registerTask "build", ['copy','jade','less','compile-templates']
+  grunt.registerTask "build", ['clean','copy','jade','less','compile-templates']
   grunt.registerTask "default", ["build","watch"]
   grunt.registerTask "publish", []
 

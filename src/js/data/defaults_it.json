@@ -1,0 +1,18 @@
+[
+	{"name":"Facebook","url":"www.facebook.com","img":"int/www.facebook.com.gif","color":"#3A5896"},
+	{"type":"google","name":"Youtube","url":"www.youtube.com","img":"int/www.youtube.com.png"},
+	{"name":"Amazon","url":"www.amazon.it","img":"it/www.amazon.it.png"},
+	{"name":"eBay","url":"www.ebay.it","img":"int/www.ebay.com.png"},
+	{"type":"google","name":"Google Maps","url":"maps.google.com","img":"int/maps.google.com.cover.gif","mode":"cover"},
+	
+	{"name":"LIBERO","url":"www.libero.it","img":"it/www.libero.it.gif"},
+	{"name":"La Repubblica","url":"www.repubblica.it","img":"it/www.repubblica.it.png"},
+	{"name":"virgilio","url":"www.virgilio.it","img":"it/www.virgilio.it.png","color":"#2F2F2F"},
+	{"name":"subito","url":"www.subito.it","img":"it/www.subito.it.gif"},
+	
+	{"type":"google","name":"Gmail","url":"mail.google.com","img":"int/mail.google.gif","mode":"cover"},
+	{"name":"Outlook","url":"www.outlook.com","img":"int/www.outlook.com.blue.png","color":"#0072C6"},
+	
+	{"name":"Linkedin","url":"www.linkedin.com","img":"int/www.linkedin.com.gif"},	
+	{"name":"Tumblr","url":"www.tumblr.com","img":"int/www.tumblr.com.png","color":"#47566D"}
+]

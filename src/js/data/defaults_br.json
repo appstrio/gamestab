@@ -1,0 +1,21 @@
+[
+	{"name":"Facebook","url":"www.facebook.com","img":"int/www.facebook.com.gif","color":"#3A5896"},
+	{"type":"google","name":"Youtube","url":"www.youtube.com","img":"int/www.youtube.com.png"},
+	{"type":"google","name":"Gmail","url":"mail.google.com","img":"int/mail.google.gif","mode":"cover"},
+	{"name":"Twitter","url":"www.twitter.com","img":"int/www.twitter.com.blue.png","color":"#00ACED"},
+	{"name":"Americanas","url":"www.americanas.com.br","img":"br/americanas.com.png","color":"#E60014"},
+	{"name":"Outlook","url":"www.outlook.com","img":"int/www.outlook.com.blue.png","color":"#0072C6"},
+	{"type":"google","name":"Google Maps","url":"maps.google.com","img":"int/maps.google.com.cover.gif","mode":"cover"},
+	{"name":"UOL","url":"www.uol.com.br","img":"br/www.uol.com.br.png"},
+	{"name":"Globo","url":"www.globo.com","img":"br/www.globo.com.br.jpg"},	
+
+	{"name":"Mercado Livre","url":"www.mercadolivre.com.br","img":"br/www.mercadolivre.com.br.png"},
+	{"name":"iG","url":"www.ig.com.br","img":"br/www.ig.com.br.png"},
+	
+	{"name":"Amazon","url":"www.amazon.com.br","img":"br/www.amazon.com.br.png"},
+	{"name":"Instagram","url":"instagram.com","img":"int/www.instagram.com.gif"},
+	
+	{"name":"terra","url":"www.terra.com.br","img":"br/www.terra.com.br.png","color":"#FF9900"},
+	{"name":"Abril","url":"www.abril.com.br","img":"br/www.abril.com.br.png"},
+	{"name":"globo.tv","url":"globotv.globo.com","img":"br/globotv.globo.com.png"}	
+]

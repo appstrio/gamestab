@@ -1,0 +1,18 @@
+[
+	{"name":"Facebook","url":"www.facebook.com","img":"int/www.facebook.com.gif","color":"#3A5896"},
+	{"type":"google","name":"Youtube","url":"www.youtube.com","img":"int/www.youtube.com.png"},
+	{"type":"google","name":"Gmail","url":"mail.google.com","img":"int/mail.google.gif","mode":"cover"},
+	{"name":"Outlook","url":"www.outlook.com","img":"int/www.outlook.com.blue.png","color":"#0072C6"},
+	{"type":"google","name":"Google Maps","url":"maps.google.com","img":"int/maps.google.com.cover.gif","mode":"cover"},
+	{"name":"Milliyet","url":"milliyet.com.tr","img":"tr/www.milliyet.com.tr.png"},
+	{"name":"Sahibinden","url":"www.sahibinden.com","img":"tr/www.sahibinden.com.png","color":"#FEE802"},
+	{"name":"Hurriyet","url":"hurriyet.com.tr","img":"tr/www.hurriyet.com.tr.gif"},
+	{"name":"Twitter","url":"www.twitter.com","img":"int/www.twitter.com.blue.png","color":"#00ACED"},
+	{"name":"Mynet","url":"www.mynet.com","img":"tr/www.mynet.com.png"},
+	{"name":"Sahadan","url":"www.sahadan.com","img":"tr/www.sahadan.com.png"},
+	{"name":"Mackolik","url":"www.mackolik.com","img":"tr/www.mackolik.com.png","color":"#0F4180"},
+	{"name":"Haber7","url":"haber7.com","img":"tr/www.haber7.com.gif"},
+	{"name":"Haberturk","url":"www.haberturk.com","img":"tr/www.haberturk.com.png"},
+	{"name":"En son haber","url":"www.ensonhaber.com","img":"tr/www.ensonhaber.com.png"},
+	{"name":"Sporx","url":"www2.sporx.com","img":"tr/www.sporx.com.png"}
+]
