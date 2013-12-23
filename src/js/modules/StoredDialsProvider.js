@@ -22,11 +22,12 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
                 promise: initting.promise,
             });
             // Determine whether to load default-by-ccJSON or defaultJSON
-            if(runtimeData.defaultDialsByCountry) {
+            if(runtimeData.defaultDialsByCountryEnabled) {
                 settings.pathToJSON = runtimeData.JSONPrefix + "/defaults_" + runtimeData.countryCode + ".json";
             } else {
                 settings.pathToJSON = runtimeData.JSONPrefix + "/defaultDials.json";
             }
+            settings.maxDials = runtimeData.maxDials
 
             var parentInitting = parent.init("StoredDialsProvider", settings);
             parentInitting.then(initting.resolve).otherwise(initting.reject);

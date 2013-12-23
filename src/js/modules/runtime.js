@@ -42,8 +42,9 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
             updatedAt: 0, // last update of the runtime object
             dormancyTimeout: 1000,
             countryCode: "us", // Country Code
-            defaultDialsByCountry: null, // Added for FIY, the null value is never used.
+            defaultDialsByCountryEnabled: true,
             JSONPrefix: "/js/data",
+            maxDials: 18,
         };
 
     if(env.DEBUG && env.exposeModules) window.Runtime = self;
@@ -91,7 +92,7 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
             }).otherwise(console.warn),
             completingSetup = storingData.then(initting.resolve).otherwise(console.warn);
 
-        self.data.defaultDialsByCountry = self.config.default_dials_by_country;
+        self.data.defaultDialsByCountryEnabled = self.config.default_dials_by_country_enabled;
 
         return initting.promise;
     };

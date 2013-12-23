@@ -8,6 +8,7 @@ define(function env() {
         forceRefreshRuntimeData       : false,
         forceRefreshConfigData        : false,
         JSONProviderForceLoadFromJSON : false,
+        wipeLocalStorageOnStart       : false,
         // Global Error handler
         errhandler: function defaultErrorHandler(err) {
             log(err);

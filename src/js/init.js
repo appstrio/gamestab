@@ -50,6 +50,7 @@ define(function initWINT(require) {
         config = require('Config');
 
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : initWINT");
+    if (env.DEBUG && env.wipeLocalStorageOnStart) localStorage.clear();
 
     config.promise.then(function(configData) {
         ///Check if runtime exists (= Not first run) and check whether to use the "booster"
