@@ -8,7 +8,7 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
             self = Object.create(parent);
         self.settings = {
             preLoad: (typeof preLoad !== 'undefined') ? preLoad : false,
-            forceLoadFromJSON: false,
+            forceLoadFromJSON: env.JSONProviderForceLoadFromJSON,
             mutableList: true,
             wrapDial: Dial,
         };
@@ -37,22 +37,19 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
             else
                 listFetching = self.getDialList(self.name);
 
-            listFetching.then(self.resolveAndSave)
+            listFetching.then(resolveAndSave)
                 .otherwise(function NoDialsInLocalStorage() {
                     //If no dials in localstorage, we need to fetch them and set them there.
                     //Get them from a JSON file and put them in storage
                     var fetchingJSON = $.getJSON(options.pathToJSON);
-                    fetchingJSON.then(self.resolveAndSave, initting.reject);
+                    fetchingJSON.then(resolveAndSave, initting.reject);
                 });
 
             return initting.promise;
         };
 
-        self.resolveAndSave = function(dials) {
-            if (self.dials) {
-                self.dials = _.map(dials, function(dial) {
-                    return self.settings.wrapDial(dial);
-                });
+        var resolveAndSave = function(dials) {
+            if (dials) {
                 self.storeDialList(self.name, self.dials);
                 initting.resolve(self.dials);
             } else initting.reject("NoDials")

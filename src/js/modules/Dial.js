@@ -6,17 +6,22 @@ define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, ren
         var self = {},
             options = options || {};
 
-        var init = function initDial() {;
-            // var setEventHandlers = options.setEventHandlers || true;
-
+        var init = function initDial() {
             // check if passing object as first argument
             if (url && !title && !icon) $.extend(self, url);
             else
                 $.extend(self, {
-                    url: '',
+                    url: url,
                     title: title,
                     icon: icon
                 });
+
+            if (env.DEBUG && !options.isParent) {
+                if (!self.url
+                    || !self.title
+                    || !self.icon
+                    ) console.warn("newDial ERROR");
+            }
         }
 
         self.toObject = function getDialInformation() {

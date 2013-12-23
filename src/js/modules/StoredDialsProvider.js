@@ -1,6 +1,6 @@
 "use strict";
 
-define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', 'Dial'], function StoredDialsProvider(env, $, when, JSONProviderFactory, runtime, renderer, Dial) {
+define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', 'Dial'], function StoredDialsProvider(env, $, when, JSONProviderFactory, Runtime, renderer, Dial) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : StoredDialsProvider");
     //TODO:
     return (function StoredDialsProvider() {
@@ -8,7 +8,6 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
             parent = JSONProviderFactory(),
             self = Object.create(parent),
             settings = {
-                forceLoadFromJSON : true,
                 maxDials          : null,
                 pathToJSON        : null,
             };

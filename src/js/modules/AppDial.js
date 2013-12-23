@@ -1,25 +1,28 @@
 'use strict';
 
 define(['env', 'jquery', 'Renderer', 'Dial', 'when'], function(env, $, renderer, Dial, when) {
-    if (env.DEBUG || env.logLoadOrder) console.log("Loading Module : AppDial");
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : AppDial");
     return function newAppDial(chromeId, title, icon, description, options) {
         var parent = Dial('', title, icon, {
-            setEventHandlers: false
+            isParent : true
         }),
-            options = options || {},
-            self = Object.create(parent);
+            self = Object.create(parent),
+            options = options || {};
 
         var init = function initDial() {
-            // var setEventHandlers = options.setEventHandlers || true;
-
             // check if passing object as first argument
             if (chromeId && !title && !icon) $.extend(self, url);
             else
                 $.extend(self, {
                     chromeId: chromeId,
-                    url: '',
                     description: description
                 });
+
+            if (env.DEBUG && !options.isParent) {
+                if (!self.chromeId
+                    || !self.description
+                    ) console.warn("newAppDial ERROR");
+            }
         };
 
         self.toObject = function getDialInformation() {
