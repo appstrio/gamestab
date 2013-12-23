@@ -3,7 +3,9 @@
 define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, renderer, when) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialContainer");
     return function newDial(url, title, icon, options) {
-        var self = {},
+        var self = {
+                    url: '',
+                    id: '',},
             options = options || {};
 
         var init = function initDial() {;
@@ -13,7 +15,8 @@ define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, ren
             if (url && !title && !icon) $.extend(self, url);
             else
                 $.extend(self, {
-                    url: '',
+                    url: url,
+                    id: '',
                     title: title,
                     icon: icon
                 });

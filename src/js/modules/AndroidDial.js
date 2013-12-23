@@ -31,13 +31,16 @@ define(['env', 'jquery', 'Renderer', 'when', 'AndroIt'], function DialContainer(
             e.stopPropagation();
             e.preventDefault();
 
-            var userConfirmedInstallation = confirm("Are you sure you want to install " + self.title + "?"), def = when.defer();
+            var def = when.defer(),
+                confirming = when.defer(),
+                userConfirmedInstallation = confirm("Are you sure you want to install " + self.title + "?");
 
-            if(userConfirmedInstallation) def.resolve(); else def.reject()
+            if(userConfirmedInstallation) confirming.resolve(); else confirming.reject()
 
-            def.then(function installSpecificApp() {
+            confirming.promise.then(function installSpecificApp() {
                 AndroIt.install(self.appID)
-            }).otherwise(null)
+                def.resolve()
+            }).otherwise(def.reject)
 
             return def.promise
         };
