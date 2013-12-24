@@ -41,13 +41,27 @@ module.exports = (grunt) ->
         src : "src/dot/**.dot"
         dest: "<%= path.build %>/js/templates.js"
       # options: flattenAndExpand
+    concat:
+      dev:
+        src: ["src/js/debugSettings.js","src/js/init.js"]
+        dest:"<%= path.build %>/js/init.js"
     copy:
+      # Development
+      setup_dev_env:
+        "src/js/debugSettings.js": "src/js/debugTemplate.js"
       # Build-specific files
       extra:
         expand:true
         cwd: "extra/<%= build.buildName %>"
         src: "**"
         dest: "<%= path.build %>"
+      dev:
+        files:
+          "<%= path.build %>/manifest.json": "src/manifest.json"
+      prod:
+        files:
+          "<%= path.build %>/manifest.json": "src/manifest.json"
+          "<%= path.build %>/js/init.js": "src/js/init.js"
       # Core files:
       libs:
         files:
@@ -65,14 +79,11 @@ module.exports = (grunt) ->
         cwd: "assets"
         src: "**/*"
         dest: "<%= path.build %>"
-      misc:
-        files:
-          "<%= path.build %>/manifest.json": "src/manifest.json"
       js:
         flatten: true
         expand: true
         cwd: "src/js"
-        src: "*.js*"
+        src: ["*.js","!init.js","!debug*.js"]
         dest: "<%= path.build %>/js"
       modules:
         flatten: true
@@ -107,10 +118,16 @@ module.exports = (grunt) ->
       grunt.config "#{actualtarget}.src", fpath
       grunt.config "#{actualtarget}.cwd", "" # fpath contains full path
 
-  grunt.registerTask "copy:production", ["copy:extra", "copy:libs", "copy:assets", "copy:misc", "copy:data"]
-  grunt.registerTask "build", ["clean","copy","jade","less","compile-templates"]
-  grunt.registerTask "package", ["prepackage","requirejs"] # ,"copy:production","jade","less","compile-templates"]
-  grunt.registerTask "default", ["build","watch"]
+  baseCopyTasks = ["copy:extra", "copy:libs", "copy:assets", "copy:data", "copy:js", "copy:modules"]
+  grunt.registerTask "copy:production", baseCopyTasks.concat ["copy:prod"]
+  grunt.registerTask "copy:development", baseCopyTasks.concat ["concat:dev", "copy:dev"]
+
+  grunt.registerTask "build", ["clean","copy:development","jade","less","compile-templates"]
+  grunt.registerTask "package", ["prepackage","requirejs","copy:production","jade","less","compile-templates"]
+
+  grunt.registerTask "testnow", ["prepackage","requirejs"]
+  grunt.registerTask "setup_dev_env", ["copy:setup_dev_env"]
+  grunt.registerTask "default", ["setup_dev_env","build","watch"]
   grunt.registerTask "prepackage", ->
     buildName = grunt.config("build").buildName
     grunt.config "path.build", "tmp-build-#{buildName}"

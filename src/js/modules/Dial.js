@@ -1,7 +1,7 @@
 "use strict";
 
 define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, renderer, when) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialContainer");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : DialContainer");
     return function newDial(url, title, icon, options) {
         var self = {},
             options = options || {};
@@ -16,7 +16,7 @@ define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, ren
                     icon: icon
                 });
 
-            if (env.DEBUG && !options.isParent) {
+            if (window.DEBUG && !options.isParent) {
                 if (!self.url || !self.title || !self.icon ) {
                     console.warn("newDial ERROR");
                 }

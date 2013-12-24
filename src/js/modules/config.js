@@ -15,7 +15,7 @@
  */
 
 define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, when) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Config");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : Config");
 
     var storageKey      = "config",
         pathToBuildJSON = '/js/data/build.json',
@@ -26,7 +26,7 @@ define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, wh
         },
         defaultValues;
 
-    if(env.DEBUG && env.exposeModules) window.Config = self;
+    if(window.DEBUG && window.DEBUG.exposeModules) window.Config = self;
 
     /**
      * Loads the config data from localStorage or file.
@@ -42,7 +42,7 @@ define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, wh
 
         // Try to fetch appdata from the localstorage
         var data = storage.get(storageKey);
-        if(env.DEBUG && env.forceRefreshConfigData) data = null;
+        if(window.DEBUG && window.DEBUG.forceRefreshConfigData) data = null;
 
         if (data) {
             self.data = data;
@@ -57,7 +57,7 @@ define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, wh
                 setDefaultConfigSettings();
                 self.store();
                 initting.resolve(self.data);
-            }).fail(console.warn);
+            }).fail(env.errhandler);
         }
     }
 

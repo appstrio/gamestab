@@ -1,7 +1,7 @@
 'use strict';
 
 define(['env', 'jquery', 'Renderer', 'Dial', 'when'], function(env, $, renderer, Dial, when) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : AppDial");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : AppDial");
     return function newAppDial(chromeId, title, icon, description, options) {
         var parent = Dial('', title, icon, {
             isParent : true
@@ -18,7 +18,7 @@ define(['env', 'jquery', 'Renderer', 'Dial', 'when'], function(env, $, renderer,
                     description: description
                 });
 
-            if (env.DEBUG && !options.isParent) {
+            if (window.DEBUG && !options.isParent) {
                 if (!self.chromeId || !self.description ) {
                     console.warn("newAppDial ERROR");
                 }

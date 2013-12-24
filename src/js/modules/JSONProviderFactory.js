@@ -1,7 +1,7 @@
 "use strict";
 
 define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], function JSONProviderFactory(env, $, when, BaseProvider, runtime, renderer, Dial) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : JSONProviderFactory");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : JSONProviderFactory");
     return function JSONProviderFactory(preLoad) {
         var initting = when.defer(),
             parent = BaseProvider(),

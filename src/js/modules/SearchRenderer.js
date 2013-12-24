@@ -1,7 +1,7 @@
 'use strict';
 
 define(['env', 'underscore', 'jquery', 'templates', 'when', 'Renderer'], function SearchRenderer(env, _, $, templates, when, renderer) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : SearchRenderer");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : SearchRenderer");
     var initting = when.defer(),
         self = {
             // name: "search"

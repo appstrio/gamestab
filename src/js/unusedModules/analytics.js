@@ -2,7 +2,7 @@ window._gaq = window._gaq || [];
 
 define(['Runtime', 'Config'], function Analytics(runtime, config) {
 
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Analytics");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : Analytics");
     /**
      * GOOGLE ANALYTICS EVENTS AND CUSTOM VARS
      *

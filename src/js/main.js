@@ -1,7 +1,7 @@
 "use strict";
 
 define(['env', 'Runtime', 'Renderer', 'SearchRenderer', 'MenuRenderer', 'DialsRenderer', 'Search'], function Main(env, Runtime, Renderer, SearchRenderer, MenuRenderer, DialsRenderer, Search) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Main");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : Main");
 
 }, window.rErrReport);
 

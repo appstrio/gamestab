@@ -1,7 +1,7 @@
 "use strict";
 
 define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredDialsProvider', 'WebAppsListProvider', 'ChromeAppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, runtime) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialsRenderer");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : DialsRenderer");
 
     var initting = when.defer(),
         self = {

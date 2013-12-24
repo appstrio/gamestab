@@ -1,7 +1,7 @@
 "use strict";
 
 define(['env', 'underscore', 'jquery', 'templates', 'when', 'Renderer'], function MenuRenderer(env, _, $, templates, when, renderer) {
-    if (env.DEBUG && env.logLoadOrdervar) console.log("Loading Module : MenuRenderer");
+    if (window.DEBUG && window.DEBUG.logLoadOrdervar) console.log("Loading Module : MenuRenderer");
     var initting = when.defer(),
         self = {
             // name: "menu"

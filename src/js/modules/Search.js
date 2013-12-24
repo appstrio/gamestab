@@ -1,7 +1,7 @@
 'use strict';
 
 define(['env', 'SearchRenderer', 'jquery', 'Runtime', 'when', 'typeahead'], function Search(env, renderer, $, runtime, when, typeahead) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Search");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : Search");
     var initting = when.defer(),
         self = {
             base_search_url: '',

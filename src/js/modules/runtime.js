@@ -26,7 +26,7 @@
  */
 
 define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, $, when, _, Config) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Runtime");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : Runtime");
 
     var initting = when.defer(),
         self = {
@@ -48,7 +48,7 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
             maxDials: 18,
         };
 
-    if(env.DEBUG && env.exposeModules) window.Runtime = self;
+    if(window.DEBUG && window.DEBUG.exposeModules) window.Runtime = self;
 
     /**
      * Callback function for config.promise success
@@ -60,7 +60,7 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
         // we need to check if we ran the runtime in the past
         // if we've done thid already, we will have the runtime object stored in the config object.
 
-        if (env.DEBUG && env.forceRefreshRuntimeData) self.config.runtime = null;
+        if (window.DEBUG && window.DEBUG.forceRefreshRuntimeData) self.config.runtime = null;
 
         if (self.config.runtime) {
             // we need to check if we need to run the 'enhancers' tests
@@ -90,8 +90,8 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
                 checkEnhancers();
 
                 return self.store();
-            }).otherwise(console.warn),
-            completingSetup = storingData.then(initting.resolve).otherwise(console.warn);
+            }).otherwise(env.errhandler),
+            completingSetup = storingData.then(initting.resolve).otherwise(env.errhandler);
 
 
         return initting.promise;

@@ -1,7 +1,7 @@
 "use strict";
 
 define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', 'Dial'], function WebAppsListProvider(env, $, when, JSONProviderFactory, Runtime, renderer, Dial) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : WebAppsListProvider");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : WebAppsListProvider");
     return (function() {
         var initting = when.defer(),
             parent = JSONProviderFactory(),
@@ -12,7 +12,7 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
                 pathToJSON: null,
             };
 
-        if(env.DEBUG && env.exposeModules) window.WebAppsListProvider = self;
+        if(window.DEBUG && window.DEBUG.exposeModules) window.WebAppsListProvider = self;
 
         var init = function initModule(runtimeData) {
             $.extend(self, {
@@ -26,7 +26,7 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
         };
 
         Runtime.promise.then(init)
-        initting.promise.otherwise(console.warn);
+        initting.promise.otherwise(env.errhandler);
 
         return self;
     })(JSONProviderFactory);
