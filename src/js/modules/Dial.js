@@ -3,7 +3,9 @@
 define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, renderer, when) {
     if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : DialContainer");
     return function newDial(url, title, icon, options) {
-        var self = {},
+        var self = {
+                    url: '',
+                    id: '',},
             options = options || {};
 
         var init = function initDial() {

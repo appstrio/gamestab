@@ -1,6 +1,6 @@
 "use strict";
 
-define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredDialsProvider', 'WebAppsListProvider', 'ChromeAppsProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, runtime) {
+define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredDialsProvider', 'WebAppsListProvider', 'ChromeAppsProvider', 'AndroidAppsListProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, AndroidAppsListProvider, runtime) {
     if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : DialsRenderer");
 
     var initting = when.defer(),
@@ -30,6 +30,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
         }));
         promises.push(self.renderProvider(WebAppsListProvider, self.$webAppsOverlay));
         promises.push(self.renderProvider(ChromeAppsProvider, renderer.$appsWrapper));
+        promises.push(self.renderProvider(AndroidAppsListProvider, renderer.$androidWrapper));
 
         //TODO hardcoded
         $("#dials-wrapper").show();
