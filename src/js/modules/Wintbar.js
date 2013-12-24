@@ -1,50 +1,47 @@
 'use strict';
 
-define(['env', 'SearchRenderer', 'jquery', 'Runtime', 'when', 'typeahead'], function Search(env, renderer, $, runtime, when, typeahead) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Search");
+define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'], function Wintbar(env, $, when, typeahead, Runtime, Renderer, Template) {
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Wintbar");
     var initting = when.defer(),
         self = {
-            base_search_url: '',
-            base_suggestions_url: '',
             promise: initting.promise,
-        };
+        },baseSearchURL, baseSuggestionsURL,runtimeConfig;
 
-    var init = function initModule() {
-        runtime.promise.then(function(runtimeData) {
-            var runtimeConfig = runtime.config;
-            self.base_search_url = runtimeConfig.base_search_url;
-            self.base_suggestions_url = runtimeConfig.base_suggestions_url;
+    var init = function initModule(runtimeData) {
+         runtimeConfig = Runtime.config;
+            baseSearchURL = runtimeConfig.base_search_url;
+            baseSuggestionsURL = runtimeConfig.base_suggestions_url;
 
-            // self.cc = self.runtimeConfig.location.country.short_name;
+        // self.cc = self.runtimeConfig.location.country.short_name;
 
-            setEventHandlers();
-            setupTypeahead();
-            return initting.resolve();
-        }).catch(initting.reject);
+        setupUI();
+
+        setEventHandlers();
+        setupTypeahead();
+        return initting.resolve();
     };
 
     var setEventHandlers = function() {
         var searchHandler = function searchHandler(e) {
-            // First one is twitter typeahead
-            var query = renderer.$searchWrapper.find('input').eq(1).val();
+            var query = self.$searchWrapper.find('input').eq(1).val();
             doSearch(query);
         };
 
         $.fn.onEnterKey = function(callback) {
-           return $(this).keyup(function(e) {
+            return $(this).keyup(function(e) {
                 if (e.keyCode == 13) {
                     callback(e);
                 }
             });
         }
 
-        renderer.$searchWrapper
+        self.$searchWrapper
             .on('click', '.submit-button', searchHandler)
             .onEnterKey(searchHandler);
 
     }
     var setupTypeahead = function() {
-        var input = renderer.$searchWrapper.find('.search-input').eq(0);
+        var input = self.$searchWrapper.find('.search-input').eq(0);
         input.typeahead({
             source: getSuggestions,
             updater: function(item) {
@@ -54,7 +51,7 @@ define(['env', 'SearchRenderer', 'jquery', 'Runtime', 'when', 'typeahead'], func
     };
 
     var getSuggestions = function(query, process) {
-        var url = self.base_suggestions_url + query;
+        var url = baseSuggestionsURL + query;
 
         $.ajax({
             method: "GET",
@@ -83,7 +80,7 @@ define(['env', 'SearchRenderer', 'jquery', 'Runtime', 'when', 'typeahead'], func
         }
     };
 
-    var isURL = function COMMON_isUrl (url){
+    var isURL = function COMMON_isUrl(url) {
         return (url.indexOf('http://') == 0 || url.indexOf('https://') == 0 || url.indexOf('www.') == 0);
     }
 
@@ -114,15 +111,32 @@ define(['env', 'SearchRenderer', 'jquery', 'Runtime', 'when', 'typeahead'], func
                 label: query,
                 value: val
             }, function() {
-                window.location.href = self.base_search_url + query;
+                window.location.href = baseSearchURL + query;
             });
         }
         setTimeout(function() {
-            window.location.href = self.base_search_url + query;
+            window.location.href = baseSearchURL + query;
         }, 500);
     };
+    var setupUI = function() {
+        // widely used dom selectors
+        self.$searchWrapper = Renderer.$layout.find('.search-wrapper').eq(0);
+        // setup search layout
+        self.$searchWrapper.html($(Template['search-wrapper']()));
+    }
 
-    init();
+    var focusOnSearch = function() {
+        chrome.tabs.getCurrent(function(tab) {
+            chrome.tabs.update(tab.id, {
+                selected: true
+            }, function() {
+                $('.search-input').blur().focus();
+            });
+        });
+    };
+
+    Runtime.promise.then(init).otherwise(initting.reject);
+
 
     return self;
 });

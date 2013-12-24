@@ -12,12 +12,11 @@ require.config({
         "Config"              : "modules/Config",
         "Runtime"             : "modules/Runtime",
 
-        "Search"              : "modules/Search",
+        "Wintbar"             : "modules/Wintbar",
         "Storage"             : "modules/Storage",
         "Provider"            : "modules/Provider",
 
         "Renderer"            : "modules/Renderer",
-        "SearchRenderer"      : "modules/SearchRenderer",
         "MenuRenderer"        : "modules/MenuRenderer",
         "DialsRenderer"       : "modules/DialsRenderer",
 
