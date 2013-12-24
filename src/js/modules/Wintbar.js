@@ -1,16 +1,17 @@
+/* jshint global window,define */
 'use strict';
 
-define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'], function Wintbar(env, $, when, typeahead, Runtime, Renderer, Template) {
+define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates', 'VimiumUtils'], function Wintbar(env, $, when, typeahead, Runtime, Renderer, Template, VimiumUtils) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Wintbar");
     var initting = when.defer(),
         self = {
             promise: initting.promise,
-        },baseSearchURL, baseSuggestionsURL,runtimeConfig;
+        }, baseSearchURL, baseSuggestionsURL, runtimeConfig;
 
     var init = function initModule(runtimeData) {
-         runtimeConfig = Runtime.config;
-            baseSearchURL = runtimeConfig.base_search_url;
-            baseSuggestionsURL = runtimeConfig.base_suggestions_url;
+        runtimeConfig = Runtime.config;
+        baseSearchURL = runtimeConfig.base_search_url;
+        baseSuggestionsURL = runtimeConfig.base_suggestions_url;
 
         // self.cc = self.runtimeConfig.location.country.short_name;
 
@@ -29,7 +30,7 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
 
         $.fn.onEnterKey = function(callback) {
             return $(this).keyup(function(e) {
-                if (e.keyCode == 13) {
+                if (e.keyCode === 13) {
                     callback(e);
                 }
             });
@@ -50,26 +51,39 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
         });
     };
 
-    var getSuggestions = function(query, process) {
-        var url = baseSuggestionsURL + query;
+    var getSuggestions = function(query, callback) {
+        var url = baseSuggestionsURL + query,
+            gettingSearchSuggestions = $.ajax({
+                method: "GET",
+                url: url,
+                dataType: 'xml',
+            }),
+            gettingDomainSuggestions = when.defer();
 
-        $.ajax({
-            method: "GET",
-            url: url,
-            success: function(xml) {
-                var results = $(xml).find('suggestion'),
-                    current, output = [];
-                for (var i = 0; i < 3, i < results.length; ++i) {
-                    current = results[i];
-                    output.push($(current).attr('data'));
-                }
+        VimiumUtils.DomainCompleter.prototype.filter(query, function(results) {
+            // Only the top result
+            var topSuggestion = results[0],
+                extract = function(res) {
+                    return "http://" + res.url;
+                }, topResult = extract(topSuggestion)
 
-                if (output[0] !== query) output.unshift(query);
+            gettingDomainSuggestions.resolve(topResult);
+        })
 
-                process(output);
-            },
-            dataType: 'xml'
-        });
+        when.join(gettingSearchSuggestions, gettingDomainSuggestions.promise).then(function ExtractSearchSuggestionsAndsortSuggestions(values) {
+            var xml = values[0],
+                domainTopSuggestion = values[1],
+                results = $(xml).find('suggestion'),
+                current, output = [domainTopSuggestion];
+            for (var i = 0; i < 3, i < results.length; ++i) {
+                current = results[i];
+                output.push($(current).attr('data'));
+            }
+
+            // if (output[0] !== query) output.unshift(query);
+
+            callback(output);
+        }).otherwise(console.warn);
     };
 
     var doSearch = function(query) {
@@ -81,7 +95,7 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
     };
 
     var isURL = function COMMON_isUrl(url) {
-        return (url.indexOf('http://') == 0 || url.indexOf('https://') == 0 || url.indexOf('www.') == 0);
+        return (url.indexOf('http://') === 0 || url.indexOf('https://') === 0 || url.indexOf('www.') === 0);
     }
 
     var redirectToUrl = function(url) {
@@ -136,7 +150,6 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
     };
 
     Runtime.promise.then(init).otherwise(initting.reject);
-
 
     return self;
 });

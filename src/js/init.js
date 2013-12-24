@@ -13,6 +13,7 @@ require.config({
         "Runtime"             : "modules/Runtime",
 
         "Wintbar"             : "modules/Wintbar",
+            "VimiumUtils"             : "modules/VimiumUtils",
         "Storage"             : "modules/Storage",
         "Provider"            : "modules/Provider",
 
