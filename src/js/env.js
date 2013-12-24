@@ -3,15 +3,17 @@ define(function env() {
         type                          : "development",
         booster                       : true,
         // Global Error handler
-        errhandler: function defaultErrorHandler(err) {
-            if(window.DEBUG) {
-                log(err);
-            } else {
-                console.log('Error loading, try to refersh or re-install the app.');
-            }
+        errhandler: function defaultErrorHandler(e) {
+            if(typeof e === "string")
+                alert(e)
+            else
+                if(window.DEBUG) {
+                    log(e);
+                } else {
+                    console.log('Error loading, try to refersh or re-install the app.');
+                }
         },
     };
-    settings.DEBUG = settings.type === "development";
 
     if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : env");
 

@@ -100,12 +100,13 @@ module.exports = (grunt) ->
 
   # Dynamic watchers building
   watchSingleExclude = ["compile-templates","less"]
-  initConfig.watch   = buildWatchers initConfig, ["path","copy:libs","copy:assets"]
+  dynamicConstructedWatches = buildWatchers initConfig, ["path","copy:libs","copy:assets"]
+  initConfig.watch = dynamicConstructedWatches
   initConfig.watch.lessCompile =
     files: ["src/less/**/*.less"]
     tasks: ["less:compile"]
   grunt.initConfig initConfig
-
+  grunt.registerTask "printWatches", -> log dynamicConstructedWatches
   # change filepath on the fly to compile only the changed file NOTE only works with flatten:true for some reason, has something todo with cwd
   grunt.event.on "watch", (action, fpath, watchtarget) ->
     preconfiguredPath = grunt.config "watch.#{watchtarget}.path"

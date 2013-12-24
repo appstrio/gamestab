@@ -7,7 +7,11 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
         self = {
             promise: initting.promise,
             androRow: false,
+            maxDials: null,
+            currentDials: [],
+            timeout: 0,
         };
+    self.STATUS = {}
 
     /**
      *  starts the module :
@@ -26,19 +30,32 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
 
         //Must be set before renderProvider is called
         self.androRow = runtimeData.androRow;
+        self.maxDials = runtimeData.maxDials
 
-        renderingStoredDials = renderDialsByRow([{
-            provider: StoredDialsProvider,
-        }, {
-            provider: AndroidAppsListProvider,
-            shuffle: true
-        }, {
-            provider: AndroidAppsListProvider,
-            shuffle: true
-        }], {
-            maxDials: 18,
-            $container: renderer.$dialsWrapper,
-        });
+        when.join(
+            StoredDialsProvider.promise,
+            AndroidAppsListProvider.promise
+        ).then(function render(dialsArray) {
+            var StoredDialsDials = dialsArray[0],
+                AndroidAppsDials = dialsArray[1];
+
+            renderingStoredDials = renderDialsByRow([{
+                provider: StoredDialsProvider,
+                dials: StoredDialsDials,
+            }, {
+                provider: AndroidAppsListProvider,
+                dials: AndroidAppsDials,
+                shuffle: true
+            }, {
+                provider: AndroidAppsListProvider,
+                dials: AndroidAppsDials,
+                shuffle: true
+            }], {
+                maxDials: self.maxDials,
+                $container: renderer.$dialsWrapper,
+            });
+        }).otherwise(env.errhandler)
+
         renderingWebApps = self.renderProvider(WebAppsListProvider, self.$webAppsOverlay)
         renderingChromeApps = self.renderProvider(ChromeAppsProvider, renderer.$appsWrapper)
         // renderingAndroidApps = self.renderProvider(AndroidAppsListProvider, renderer.$androidWrapper);
@@ -69,41 +86,39 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
     };
 
     var renderDialsByRow = function(rows, options) {
-        var renderingRows = [],
-            $container = options.$container,
+        var $container = options.$container,
             maxDials = options.maxDials || 18,
             rowsCount = rows.length,
             dialsPerRow = maxDials / rowsCount;
-        _.each(rows, function renderRow(row) {
-            var rendering = when.defer(),
-                rowProvider = row.provider;
-            renderingRows.push(rendering.promise);
 
-            rowProvider.promise.then(function(dials) {
-                var rowLength = dials.length > dialsPerRow ? dialsPerRow : dials.length,
-                    options = {
-                        maxDials: rowLength,
-                        disableContainerClean: true,
-                    };
+        var rendering = _.map(rows, function renderAggregatedDials(row) {
+            var dials = row.dials,
+                rowLength = dials.length > dialsPerRow ? dialsPerRow : dials.length,
+                options = {
+                    maxDials: rowLength,
+                    cleanContainer: false,
+                };
 
-                options.maxDials = rowLength;
-                if (row.shuffle)
-                    dials = shuffleArray(dials);
+            if (row.shuffle)
+                dials = shuffleArray(dials);
 
-                renderDials(rowProvider, $container, dials, options)
-                    .then(rendering.resolve).otherwise(rendering.reject)
-            }).otherwise(env.errhandler);
+            dials = dials.slice(0,rowLength);
+
+            return renderDials(row.provider, $container, dials, options)
         });
 
-        return when.all(renderingRows)
+        return when.all(rendering);
     }
+
     /**
      * @param options {maxDials: number}
      */
     var renderDials = function renderDials(provider, $container, dials, options) {
-        options = options || {};
-        //Clean dials zone
-        if(!options.disableContainerClean)
+        options = $.extend({
+            cleanContainer: true
+        }, options);
+
+        if(options.cleanContainer)
             $container.html('');
 
         var maxDials = options.maxDials || dials.length;
@@ -126,7 +141,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
 
 
         $dial.on('click', dial.launch);
-        $dial.on('click', '.dial-remove-button', self.renderDialRemovalMaker(provider, dial));
+        $dial.on('click', '.dial-remove-button', self.renderDialRemovalFactory(provider, dial));
 
         if (dial.id) $dial.data('id', dial.id);
 
@@ -137,7 +152,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
         return $dial;
     };
 
-    self.renderDialRemovalMaker = function(provider, dial) {
+    self.renderDialRemovalFactory = function(provider, dial) {
         return function(e) {
             e.stopPropagation();
             e.preventDefault();
@@ -150,6 +165,10 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
                         $ele.off().remove();
                     });
                 });
+                if(provider.name === "StoredDialsProvider") {
+                    var index = self.currentDials.indexOf(dial);
+                    self.dials = self.dials.splice(index, 1);
+                }
             }
         }
     };
@@ -165,6 +184,7 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
             $element.show();
         };
     };
+
     var noopOverlayHandler = function function_name(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -179,15 +199,15 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
 
     var overlayDialLaunchHandler = function(dial) {
         return function(e) {
-            var adding = StoredDialsProvider.addDial(dial)
-            adding.then(function callRenderDial(dial) {
-                dial.launch = dial.oldLaunch
-                delete dial.oldLaunch
-                self.renderDial(StoredDialsProvider, renderer.$dialsWrapper, dial)
-            }).otherwise(function callErrorDisplayer(msg) {
-                alert(msg)
-            })
-            return adding.promise
+            if(self.currentDials.length < self.maxDials) {
+                var adding = StoredDialsProvider.addDial(dial)
+                adding.then(function callRenderDial(dial) {
+                    dial.launch = dial.oldLaunch
+                    delete dial.oldLaunch
+                    self.renderDial(StoredDialsProvider, renderer.$dialsWrapper, dial)
+                }).otherwise(env.errhandler)
+                return adding.promise
+            } else when.reject("No more room, delete something first!")
         }
     }
 
