@@ -127,7 +127,7 @@ define(['env', 'when', 'jquery', 'underscore'], function AndroIt(env, when, jque
         var Device = function (props) {
             // Last checked below information stamp 23.12.13
             this.vendorAndModelNames = props[0]; // e.g. "HTC HTC Desire X",
-            this.Unidentified0       = props[1]; // e.g. "g2ca054eec3cfdef1",
+            this.deviceID             = props[1]; // e.g. "g2ca054eec3cfdef1",
             this.vendorName          = props[2]; // e.g. "HTC",
             this.deviceModelName     = props[3]; // e.g. "HTC Desire X",
             this.Unidentified1       = props[4]; // e.g. 0,
