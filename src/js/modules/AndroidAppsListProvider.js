@@ -1,36 +1,32 @@
 "use strict";
 
-define(['env', 'jquery', 'when', 'JSONProviderFactory', 'AndroidDial'], function AndroidAppsListProvider(env, $, when, JSONProviderFactory, AndroidDial) {
+define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'AndroidDial'], function AndroidAppsListProvider(env, $, when, JSONProviderFactory, Runtime, AndroidDial) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : AndroidAppsListProvider");
     return (function() {
         var initting = when.defer(),
-            parent = JSONProviderFactory({
-                name        : "AndroidAppsListProvider",
-                preLoad     : false,
-                mutableList : false,
-                pathToJSON  : '/js/data/android-editors_choice.json',
-                wrapDial    : AndroidDial,
-                forceLoadFromJSON    : true,
-            }),
+            parent = JSONProviderFactory(),
             self = Object.create(parent),
-            options = options || {};
+            settings = {
+                maxDials: null,
+                mutableList: false,
+                pathToJSON: null,
+                wrapDial: AndroidDial
+            };
 
-        self.settings = {
-            preLoad           : options.preLoad           || true
-        };
+        if(window.DEBUG && window.DEBUG.exposeModules) window.AndroidAppsListProvider = self;
 
-        var init = function initModule(options) {
-            $.extend(self,{
-                promise  : initting.promise,
+        var init = function initModule(runtimeData) {
+            $.extend(self, {
+                promise: initting.promise,
             });
 
-            var parentInitting = parent.init();
-            parentInitting.then(initting.resolve);
+            settings.pathToJSON = runtimeData.JSONPrefix + '/android_free_games.json'
+
+            var parentInitting = parent.init("AndroidAppsListProvider", settings);
+            parentInitting.then(initting.resolve).otherwise(initting.reject);
         };
 
-        if (self.settings.preLoad)
-            init();
-
+        Runtime.promise.then(init)
         initting.promise.otherwise(env.errhandler);
 
         return self;

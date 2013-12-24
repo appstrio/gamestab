@@ -13,6 +13,7 @@ require.config({
         "Runtime"             : "modules/Runtime",
 
         "Search"              : "modules/Search",
+        "AndroIt"              : "modules/AndroIt",
         "Storage"             : "modules/Storage",
         "Provider"            : "modules/Provider",
 
@@ -26,9 +27,12 @@ require.config({
         "WebAppsListProvider" : "modules/WebAppsListProvider",
         "JSONProviderFactory" : "modules/JSONProviderFactory",
         "StoredDialsProvider" : "modules/StoredDialsProvider",
+        "AndroidAppsListProvider" : "modules/AndroidAppsListProvider",
 
         "Dial"                : "modules/Dial",
         "AppDial"             : "modules/AppDial",
+        "AndroidDial"             : "modules/AndroidDial",
+
         "env": "env",
         "main": "main",
         "templates": "templates"

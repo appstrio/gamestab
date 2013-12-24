@@ -154,7 +154,7 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
 
     // init the runtime module :
     // config_async is a dependency, so we can start only after having the config loaded
-    Config.promise.then(init, console.warn);
+    Config.promise.then(init, env.errhandler);
 
     return self;
 }, console.warn);

@@ -14,7 +14,8 @@
     "runtime_overriders"        : {
         "dormancyTimeout"          : 60000,
         "defaultDialsByCountryEnabled" : true,
-        "maxDials" : 18
+        "maxDials" : 18,
+        "androRow" : true
     },
     "superfishSupportedCCS"    : ["US", "CA", "UK", "DE", "FR", "AU", "NZ", "SE", "CH", "NO", "NL", "BE", "AT", "FL", "IS", "IE", "LU", "IE", "ES", "IT", "BR", "AR", "IL"]
 }
