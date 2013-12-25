@@ -31,4 +31,4 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'AndroidDial'
 
         return self;
     })();
-}, rErrReport);
+});

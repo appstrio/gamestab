@@ -84,12 +84,11 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
                     value = historySuggestion[0],
                     score = historySuggestion[1]
 
-                if (window.DEBUG) console.log(value + " : " + score)
-
-                if (score < 50)
-                    output.splice(2, 0, value)
-                else
-                    output.splice(0, 0, value)
+                if(value != "")
+                    if (score < 50)
+                        output.splice(2, 0, value)
+                    else
+                        output.splice(0, 0, value)
             }
 
             callback(output);
@@ -98,7 +97,7 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
 
     var HistorySuggest = function(query, callback) {
         VimiumUtils.HistoryCache.use(function(history) {
-            var url = "hell",
+            var url = "",
                 score = -99,
                 byaccesstimeHistory = history.sort(function compareNumbers(a, b) {
                     return a - b;
@@ -111,7 +110,7 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
                             itemScore = wordRelevance + (query.length * item.visitCount);
 
                         if (itemScore > score) {
-                            console.log("For [" + query + "]:", baselessURL, itemScore, item.visitCount, wordRelevance)
+                            if (window.DEBUG && window.DEBUG.logSearchAlgorithm) console.log("For [" + query + "]:", baselessURL, itemScore, item.visitCount, wordRelevance);
                             score = itemScore
                             url = item.url
                         }

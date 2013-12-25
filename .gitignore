@@ -9,6 +9,7 @@ parts.min
 builds
 build
 tmp-*
+buildAssets
 
 COMMIT_MSG
 debugSettings.js
