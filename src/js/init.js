@@ -1,42 +1,34 @@
 require.config({
     "baseUrl": "js/",
     "paths": {
-        "when"       : "libs/when",
-        "jquery"     : "libs/jquery",
-        "jfeed"      : "libs/jfeed",
-        "moment"     : "libs/moment",
-        "underscore" : "libs/underscore",
-        "uri"        : "libs/uri",
-        "typeahead"  : "libs/typeahead",
+        "when"                : "libs/when",
+        "jquery"              : "libs/jquery",
+        "jfeed"               : "libs/jfeed",
+        "moment"              : "libs/moment",
+        "underscore"          : "libs/underscore",
+        "uri"                 : "libs/uri",
+        "typeahead"           : "libs/typeahead",
 
-        "Config"         : "modules/Config",
-        "Runtime"        : "modules/Runtime",
+        "Config"              : "modules/Config",
+        "Runtime"             : "modules/Runtime",
 
-        "Search"         : "modules/Search",
-        "AndroIt"        : "modules/AndroIt",
-        "Storage"        : "modules/Storage",
-        "Provider"       : "modules/Provider",
+        "Wintbar"             : "modules/Wintbar",
+            "VimiumUtils"             : "modules/VimiumUtils",
+        "Storage"             : "modules/Storage",
+        "Provider"            : "modules/Provider",
 
-        "Renderer"       : "modules/Renderer",
-        "SearchRenderer" : "modules/SearchRenderer",
-        "MenuRenderer"   : "modules/MenuRenderer",
-        "DialsRenderer"  : "modules/DialsRenderer",
+        "Renderer"            : "modules/Renderer",
+        "MenuRenderer"        : "modules/MenuRenderer",
+        "DialsRenderer"       : "modules/DialsRenderer",
 
-        "Dial"           : "modules/Dial",
-        "AppDial"        : "modules/AppDial",
-        "AndroidDial"    : "modules/AndroidDial",
+        "TopsitesProvider"    : "modules/TopsitesProvider",
+        "ChromeAppsProvider"  : "modules/ChromeAppsProvider",
+        "WebAppsListProvider" : "modules/WebAppsListProvider",
+        "JSONProviderFactory" : "modules/JSONProviderFactory",
+        "StoredDialsProvider" : "modules/StoredDialsProvider",
 
-        "Overlay"          : "modules/UI/Overlay",
-        "AdderOverlay"     : "modules/UI/AdderOverlay",
-        "AndroidOverlay"   : "modules/UI/AndroidOverlay",
-
-        "TopsitesProvider"         : "modules/TopsitesProvider",
-        "ChromeAppsProvider"       : "modules/ChromeAppsProvider",
-        "WebAppsListProvider"      : "modules/WebAppsListProvider",
-        "JSONProviderFactory"      : "modules/JSONProviderFactory",
-        "StoredDialsProvider"      : "modules/StoredDialsProvider",
-        "AndroidAppsListProvider"  : "modules/AndroidAppsListProvider",
-
+        "Dial"                : "modules/Dial",
+        "AppDial"             : "modules/AppDial",
         "env": "env",
         "main": "main",
         "templates": "templates"
@@ -54,8 +46,8 @@ define(function initWINT(require) {
     var env = require("env"),
         config = require("Config");
 
-    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : initWINT");
-    if (window.DEBUG && window.DEBUG.wipeLocalStorageOnStart) localStorage.clear();
+    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : initWINT");
+    if (env.DEBUG && env.wipeLocalStorageOnStart) localStorage.clear();
 
     config.promise.then(function(configData) {
         ///Check if runtime exists (= Not first run) and check whether to use the "booster"
