@@ -16,19 +16,27 @@ require.config({
             "VimiumUtils"             : "modules/VimiumUtils",
         "Storage"             : "modules/Storage",
         "Provider"            : "modules/Provider",
+        "AndroIt"        : "modules/AndroIt",
 
-        "Renderer"            : "modules/Renderer",
-        "MenuRenderer"        : "modules/MenuRenderer",
-        "DialsRenderer"       : "modules/DialsRenderer",
+        "Renderer"       : "modules/Renderer",
+        "MenuRenderer"   : "modules/MenuRenderer",
+        "DialsRenderer"  : "modules/DialsRenderer",
 
-        "TopsitesProvider"    : "modules/TopsitesProvider",
-        "ChromeAppsProvider"  : "modules/ChromeAppsProvider",
-        "WebAppsListProvider" : "modules/WebAppsListProvider",
-        "JSONProviderFactory" : "modules/JSONProviderFactory",
-        "StoredDialsProvider" : "modules/StoredDialsProvider",
+        "Dial"           : "modules/Dial",
+        "AppDial"        : "modules/AppDial",
+        "AndroidDial"    : "modules/AndroidDial",
 
-        "Dial"                : "modules/Dial",
-        "AppDial"             : "modules/AppDial",
+        "Overlay"          : "modules/UI/Overlay",
+        "AdderOverlay"     : "modules/UI/AdderOverlay",
+        "AndroidOverlay"   : "modules/UI/AndroidOverlay",
+
+        "TopsitesProvider"         : "modules/TopsitesProvider",
+        "ChromeAppsProvider"       : "modules/ChromeAppsProvider",
+        "WebAppsListProvider"      : "modules/WebAppsListProvider",
+        "JSONProviderFactory"      : "modules/JSONProviderFactory",
+        "StoredDialsProvider"      : "modules/StoredDialsProvider",
+        "AndroidAppsListProvider"  : "modules/AndroidAppsListProvider",
+
         "env": "env",
         "main": "main",
         "templates": "templates"

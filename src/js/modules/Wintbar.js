@@ -19,6 +19,9 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
 
         setEventHandlers();
         setupTypeahead();
+
+        focusOnSearch();
+
         return initting.resolve();
     };
 
@@ -60,31 +63,68 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
             }),
             gettingDomainSuggestions = when.defer();
 
-        VimiumUtils.DomainCompleter.prototype.filter(query, function(results) {
-            // Only the top result
-            var topSuggestion = results[0],
-                extract = function(res) {
-                    return "http://" + res.url;
-                }, topResult = extract(topSuggestion)
-
-            gettingDomainSuggestions.resolve(topResult);
-        })
+        HistorySuggest(query, gettingDomainSuggestions.resolve)
 
         when.join(gettingSearchSuggestions, gettingDomainSuggestions.promise).then(function ExtractSearchSuggestionsAndsortSuggestions(values) {
+            // Only the top result
+
+
             var xml = values[0],
-                domainTopSuggestion = values[1],
                 results = $(xml).find('suggestion'),
-                current, output = [domainTopSuggestion];
+                current, output = [];
+
             for (var i = 0; i < 3, i < results.length; ++i) {
                 current = results[i];
                 output.push($(current).attr('data'));
             }
 
-            // if (output[0] !== query) output.unshift(query);
+            if (query.indexOf("http://") == -1) {
+                //fetch domain suggestion
+                var historySuggestion = values[1],
+                    value = historySuggestion[0],
+                    score = historySuggestion[1]
+
+                if (window.DEBUG) console.log(value + " : " + score)
+
+                if (score < 50)
+                    output.splice(2, 0, value)
+                else
+                    output.splice(0, 0, value)
+            }
 
             callback(output);
         }).otherwise(env.errhandler);
     };
+
+    var HistorySuggest = function(query, callback) {
+        VimiumUtils.HistoryCache.use(function(history) {
+            var url = "hell",
+                score = -99,
+                byaccesstimeHistory = history.sort(function compareNumbers(a, b) {
+                    return a - b;
+                });
+
+                _.each(byaccesstimeHistory, function cherryPickFromHistory(item) {
+                    if(item.url.indexOf(query) != -1 && item.url.indexOf("file://") === -1 && item.url.indexOf("ftp://") === -1) {
+                        var baselessURL = item.url.replace(/https?:\/\/?\.?/, "").replace("www.", ""),
+                            wordRelevance = -baselessURL.indexOf(query) * query.length,
+                            itemScore = wordRelevance + (query.length * item.visitCount);
+
+                        if (itemScore > score) {
+                            console.log("For [" + query + "]:", baselessURL, itemScore, item.visitCount, wordRelevance)
+                            score = itemScore
+                            url = item.url
+                        }
+                    }
+                });
+
+            callback([url, score])
+        });
+    }
+
+    var RankSuggestion = function(Suggestion) {
+
+    }
 
     var doSearch = function(query) {
         if (isURL(query)) {
@@ -99,7 +139,7 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
     }
 
     var redirectToUrl = function(url) {
-        if (url.indexOf('http://') !== 0) url = 'http://' + url;
+        if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = 'http://' + url;
 
         if (window.analytics) window.analytics.sendEvent({
             category: 'Search',
@@ -132,11 +172,13 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
             window.location.href = baseSearchURL + query;
         }, 500);
     };
+
     var setupUI = function() {
         // widely used dom selectors
         self.$searchWrapper = Renderer.$layout.find('.search-wrapper').eq(0);
         // setup search layout
         self.$searchWrapper.html($(Template['search-wrapper']()));
+
     }
 
     var focusOnSearch = function() {

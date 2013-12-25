@@ -252,7 +252,8 @@ define(['env'], function VimiumUtils(env) {
                 return onComplete([]);
             }
             topDomain = domains[0][0];
-            return onComplete([new Suggestion(queryTerms, "domain", topDomain, null, this.computeRelevancy)]);
+            // LIBMOD
+            return onComplete([new Suggestion(queryTerms, "domain", topDomain, null, this.computeRelevancy, domains[0][1])]);
         };
 
         DomainCompleter.prototype.sortDomainsByRelevancy = function(queryTerms, domainCandidates) {
@@ -319,7 +320,9 @@ define(['env'], function VimiumUtils(env) {
         };
 
         DomainCompleter.prototype.computeRelevancy = function() {
-            return 1;
+            // LIBMOD
+
+            return this.extraRelevancyData;
         };
 
         return DomainCompleter;
