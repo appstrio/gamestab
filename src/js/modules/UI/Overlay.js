@@ -15,8 +15,10 @@ define(["env", "when", "jquery", "templates", "Renderer"], function Overlay(env,
 
 
         this.open = function openOverlay(DOMEvent) {
-            DOMEvent.stopPropagation();
-            DOMEvent.preventDefault();
+            if(DOMEvent) {
+                DOMEvent.stopPropagation();
+                DOMEvent.preventDefault();
+            }
             //Show only the selected page
             $('.overlay').hide();
             Renderer.$fadescreen.removeClass('hide');

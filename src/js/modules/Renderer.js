@@ -3,10 +3,7 @@
 define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(env, _, $, templates, when) {
     if (window.DEBUG && window.DEBUG.logLoadOrder) console.log('Loading Module : Renderer');
     var
-    // initting = when.defer(),
-        self = {
-            // promise: initting.promise
-        };
+        self = {};
 
     /**
      * Callback function for self.promise success
@@ -30,16 +27,10 @@ define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(e
             $androidWrapper : $('#android-wrapper'),
 
             $fadescreen     : $('#fadescreen').eq(0),
-        })
-
-        // setTimeout(function(){
-        //     return initting.resolve();
-        // }, 0);
+        });
     };
 
     init();
-
-    // initting.promise.otherwise(env.errhandler);
 
     return self;
 });

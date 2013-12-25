@@ -1,0 +1,7 @@
+<div id="android-overlay" class="overlay">
+    <img src="{{=it.dial.icon }}" alt="{{=it.dial.title }}" />
+    <div class="title">{{=it.dial.title }}</div>
+    <select id="devices" ></select>
+    <button id="confirm" > {{=it.lang.confirm }} </button>
+    <button id="cancel" > {{=it.lang.cancel }} </button>
+</div>

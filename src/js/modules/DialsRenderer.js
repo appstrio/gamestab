@@ -194,7 +194,7 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
         self.$webAppsOverlayBtn.on("click", function(e) {
             AdderOverlay.open(e);
         });
-        Renderer.$fadescreen.on("click", Overlay.closeOverlayHandler);
+        // Renderer.$fadescreen.on("click", Overlay.closeOverlayHandler);
     };
 
     //SRC: http://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript

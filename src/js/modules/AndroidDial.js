@@ -1,6 +1,6 @@
 "use strict";
 
-define(['env', 'jquery', 'Renderer', 'when', 'AndroIt'], function DialContainer(env, $, renderer, when, AndroIt) {
+define(["env", "jquery", "Renderer", "when", "AndroIt","AndroidOverlay"], function DialContainer(env, $, renderer, when, AndroIt,AndroidOverlay) {
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialContainer");
     return function newDial(appID, title, icon, options) {
         var self = {},
@@ -31,18 +31,9 @@ define(['env', 'jquery', 'Renderer', 'when', 'AndroIt'], function DialContainer(
             e.stopPropagation();
             e.preventDefault();
 
-            var def = when.defer(),
-                confirming = when.defer(),
-                userConfirmedInstallation = confirm("Are you sure you want to install " + self.title + "?");
+            var overlay = new AndroidOverlay(self);
 
-            if(userConfirmedInstallation) confirming.resolve(); else confirming.reject()
-
-            confirming.promise.then(function installSpecificApp() {
-                AndroIt.install(self.appID)
-                def.resolve()
-            }).otherwise(def.reject)
-
-            return def.promise
+            return overlay.init();
         };
 
         init();
