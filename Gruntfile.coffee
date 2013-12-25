@@ -91,6 +91,12 @@ module.exports = (grunt) ->
         cwd: "src/js/modules"
         src: "*.js*"
         dest: "<%= path.build %>/js/modules"
+      ui:
+        flatten: true
+        expand: true
+        cwd: "src/js/modules/UI"
+        src: "*.js*"
+        dest: "<%= path.build %>/js/modules/UI"
       data:
         flatten: true
         expand: true
@@ -119,7 +125,7 @@ module.exports = (grunt) ->
       grunt.config "#{actualtarget}.src", fpath
       grunt.config "#{actualtarget}.cwd", "" # fpath contains full path
 
-  baseCopyTasks = ["copy:extra", "copy:libs", "copy:assets", "copy:data", "copy:js", "copy:modules"]
+  baseCopyTasks = ["copy:extra", "copy:libs", "copy:assets", "copy:data", "copy:js", "copy:modules", "copy:ui"]
   grunt.registerTask "copy:production", baseCopyTasks.concat ["copy:prod"]
   grunt.registerTask "copy:development", baseCopyTasks.concat ["concat:dev", "copy:dev"]
 

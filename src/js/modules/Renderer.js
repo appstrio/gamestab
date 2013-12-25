@@ -2,9 +2,10 @@
 
 define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(env, _, $, templates, when) {
     if (window.DEBUG && window.DEBUG.logLoadOrder) console.log('Loading Module : Renderer');
-    var initting = when.defer(),
+    var
+    // initting = when.defer(),
         self = {
-            promise: initting.promise
+            // promise: initting.promise
         };
 
     /**
@@ -14,33 +15,31 @@ define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(e
     var init = function initModule(options) {
 
         // setup the general layout
-        self.$wrapper = $('#wrapper');
-        self.$layout = $(templates['classic']()); // NOTE: Used inside searchRenderer;
+        self.$wrapper        = $('#wrapper');
+        self.$layout         = $(templates['classic']());
 
         // setup general layout
         self.$wrapper.html(self.$layout);
+        $.extend(self, {
+            $dialsSwitch    : $('#dials-switch'),
+            $appsSwitch     : $('#apps-switch'),
+            $androidSwitch  : $('#android-switch'),
 
-        self.$dialsSwitch = $('#dials-switch');
-        self.$appsSwitch = $('#apps-switch');
-        self.$androidSwitch = $('#android-switch');
+            $dialsWrapper   : $('#dials-wrapper'),
+            $appsWrapper    : $('#apps-wrapper'),
+            $androidWrapper : $('#android-wrapper'),
 
-        self.$dialsWrapper = $('#dials-wrapper');
-        self.$appsWrapper = $('#apps-wrapper');
-        self.$androidWrapper = $('#android-wrapper');
+            $fadescreen     : $('#fadescreen').eq(0),
+        })
 
-        setTimeout(function(){
-            return initting.resolve();
-        }, 0);
-    };
-    var errorLoading = function(err) {
-        // alert('Error loading, try to refersh or re-install the app.');
-        console.log('Error loading, try to refersh or re-install the app.');
+        // setTimeout(function(){
+        //     return initting.resolve();
+        // }, 0);
     };
 
     init();
 
-    //If init fails handlers
-    initting.promise.catch (errorLoading);
+    // initting.promise.otherwise(env.errhandler);
 
     return self;
 });

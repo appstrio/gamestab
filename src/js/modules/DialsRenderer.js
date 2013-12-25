@@ -1,15 +1,15 @@
 "use strict";
 
-define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredDialsProvider', 'WebAppsListProvider', 'ChromeAppsProvider', 'AndroidAppsListProvider', 'Runtime'], function DialsRenderer(env, _, $, renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, AndroidAppsListProvider, Runtime) {
+define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredDialsProvider", "WebAppsListProvider", "ChromeAppsProvider", "AndroidAppsListProvider", "Runtime", "AdderOverlay", "Overlay"], function DialsRenderer(env, _, $, Renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, AndroidAppsListProvider, Runtime, AdderOverlay, Overlay) {
     if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : DialsRenderer");
 
     var initting = when.defer(),
         self = {
-            promise: initting.promise,
-            androRow: false,
-            maxDials: null,
-            currentDials: [],
-            timeout: 0,
+            promise      : initting.promise,
+            androRow     : false,
+            maxDials     : null,
+            currentDials : [],
+            timeout      : 0,
         };
     self.STATUS = {}
 
@@ -23,9 +23,8 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
         var renderingStoredDials, renderingWebApps, renderingChromeApps;
         // widely used dom selectors
         $.extend(self, {
-            $webAppsOverlayBtn: $('#webapps-overlay-btn').eq(0),
-            $webAppsOverlay: $('#webapps-overlay').eq(0),
-            $fadescreen: $('#fadescreen').eq(0),
+            $webAppsOverlayBtn: $("#webapps-overlay-btn").eq(0),
+            $webAppsOverlay: AdderOverlay.$overlay,
         });
 
         //Must be set before renderProvider is called
@@ -40,25 +39,25 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
                 AndroidAppsDials = dialsArray[1];
 
             renderingStoredDials = renderDialsByRow([{
-                provider: StoredDialsProvider,
-                dials: StoredDialsDials,
+                provider  : StoredDialsProvider,
+                dials     : StoredDialsDials,
             }, {
-                provider: AndroidAppsListProvider,
-                dials: AndroidAppsDials,
-                shuffle: true
+                provider  : AndroidAppsListProvider,
+                dials     : AndroidAppsDials,
+                shuffle   : true
             }, {
-                provider: AndroidAppsListProvider,
-                dials: AndroidAppsDials,
-                shuffle: true
+                provider  : AndroidAppsListProvider,
+                dials     : AndroidAppsDials,
+                shuffle   : true
             }], {
-                maxDials: self.maxDials,
-                $container: renderer.$dialsWrapper,
+                maxDials  : self.maxDials,
+                $container: Renderer.$dialsWrapper,
             });
         }).otherwise(env.errhandler)
 
         renderingWebApps = self.renderProvider(WebAppsListProvider, self.$webAppsOverlay)
-        renderingChromeApps = self.renderProvider(ChromeAppsProvider, renderer.$appsWrapper)
-        // renderingAndroidApps = self.renderProvider(AndroidAppsListProvider, renderer.$androidWrapper);
+        renderingChromeApps = self.renderProvider(ChromeAppsProvider, Renderer.$appsWrapper)
+        // renderingAndroidApps = self.renderProvider(AndroidAppsListProvider, Renderer.$androidWrapper);
 
         //TODO hardcoded
         $("#dials-wrapper").show();
@@ -118,8 +117,8 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
             cleanContainer: true
         }, options);
 
-        if(options.cleanContainer)
-            $container.html('');
+        if (options.cleanContainer)
+            $container.html("");
 
         var maxDials = options.maxDials || dials.length;
         for (var i = 0; i < dials.length && i < maxDials; i++) {
@@ -131,19 +130,22 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
     };
 
     self.renderDial = function(provider, $container, dial, options) {
-        var $dial
+        var $dial;
+
         if (provider.name == "WebAppsListProvider") {
             dial.oldLaunch = dial.launch;
             dial.launch = overlayDialLaunchHandler(dial);
-            $dial = $(templates['overlay-dial'](dial));
+            $dial = $(templates["overlay-dial"](dial));
         } else
-            $dial = $(templates['classic-dial'](dial));
+            $dial = $(templates["classic-dial"](dial));
 
+        if(Renderer.$dialsWrapper === $container)
+            self.currentDials.push(dial);
 
-        $dial.on('click', dial.launch);
-        $dial.on('click', '.dial-remove-button', self.renderDialRemovalFactory(provider, dial));
+        $dial.on("click", dial.launch);
+        $dial.on("click", ".dial-remove-button", self.renderDialRemovalFactory(provider, dial));
 
-        if (dial.id) $dial.data('id', dial.id);
+        if (dial.id) $dial.data("id", dial.id);
 
         $dial.hide();
         $container.append($dial);
@@ -151,6 +153,21 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
 
         return $dial;
     };
+
+
+    var overlayDialLaunchHandler = function(dial) {
+        return function(e) {
+            if(self.currentDials.length < self.maxDials) {
+                var adding = StoredDialsProvider.addDial(dial)
+                adding.then(function callRenderDial(dial) {
+                    dial.launch = dial.oldLaunch
+                    delete dial.oldLaunch
+                    self.renderDial(StoredDialsProvider, Renderer.$dialsWrapper, dial)
+                }).otherwise(env.errhandler)
+                return adding.promise
+            } else alert("No more room, delete something first!")
+        }
+    }
 
     self.renderDialRemovalFactory = function(provider, dial) {
         return function(e) {
@@ -160,61 +177,24 @@ define(['env', 'underscore', 'jquery', 'Renderer', 'templates', 'when', 'StoredD
             if (provider.removeDialFromList) {
                 var removing = provider.removeDialFromList(dial);
                 removing.then(function() {
-                    var $ele = $(e.currentTarget).parents('.dial').eq(0);
+                    var $ele = $(e.currentTarget).parents(".dial").eq(0);
                     $ele.fadeOut(function() {
                         $ele.off().remove();
                     });
                 });
                 if(provider.name === "StoredDialsProvider") {
                     var index = self.currentDials.indexOf(dial);
-                    self.dials = self.dials.splice(index, 1);
+                    self.currentDials = self.currentDials.splice(index, 1);
                 }
             }
         }
     };
 
-    var openOverlayHandler = function function_name($element) {
-        return function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            //Show only the selected page
-            $('.overlay').hide();
-            self.$fadescreen.removeClass('hide');
-            self.$fadescreen.fadeIn();
-            $element.show();
-        };
-    };
-
-    var noopOverlayHandler = function function_name(e) {
-        e.stopPropagation();
-        e.preventDefault();
-    };
-
-    var closeOverlayHandler = function function_name() {
-        $('.overlay').hide();
-        self.$fadescreen.fadeOut(function() {
-            self.$fadescreen.addClass('hide');
-        });
-    };
-
-    var overlayDialLaunchHandler = function(dial) {
-        return function(e) {
-            if(self.currentDials.length < self.maxDials) {
-                var adding = StoredDialsProvider.addDial(dial)
-                adding.then(function callRenderDial(dial) {
-                    dial.launch = dial.oldLaunch
-                    delete dial.oldLaunch
-                    self.renderDial(StoredDialsProvider, renderer.$dialsWrapper, dial)
-                }).otherwise(env.errhandler)
-                return adding.promise
-            } else when.reject("No more room, delete something first!")
-        }
-    }
-
     var setEventHandlers = function() {
-        self.$webAppsOverlayBtn.on('click', openOverlayHandler(self.$webAppsOverlay));
-        self.$webAppsOverlay.on('click', noopOverlayHandler); // HACK to not-close overlay if user clicked directly on the overlay (instead of on the fadescreen).
-        self.$fadescreen.on('click', closeOverlayHandler);
+        self.$webAppsOverlayBtn.on("click", function(e) {
+            AdderOverlay.open(e);
+        });
+        Renderer.$fadescreen.on("click", Overlay.closeOverlayHandler);
     };
 
     //SRC: http://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript

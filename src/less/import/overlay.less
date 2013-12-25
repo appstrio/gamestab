@@ -18,51 +18,52 @@
         overflow-y: scroll;
         background: white;
     }
-    #webapps-overlay {
+    // #android-popup {
+    //     background:yellow;
+    //     z-index:2;
+    // }
+    #adder-overlay {
         width: 400px;
         height: 400px;
         z-index: 2;
         clear: both;
-        // @media all and (max-width: 970px) {
-            // // width: 480px;
-            // // overflow: hidden;
-            border:1px;
-            .dial {
-                width: 60px;
-                height: 75px;
-                display: block;
-                float: left;
-                margin: 30px;
-                a.inner {
-                    text-decoration: none;
-                    color: #333;
-                    .thumbnail-wrapper {
-                        border: 1px solid #e4e4e4;
-                        border-radius: 2px;
-                        width: 60px;
-                        height: 60px;
-                        background: url(/img/logo_icons/placeholder175x175.png);
-                        background-size: cover;
-                        position: relative;
-                        border-radius : 20px;
-                        .favicon {
-                            position: absolute;
-                            bottom: 5px;
-                            left: 5px;
-                            display:none;
-                        }
+        border:1px;
+        .dial {
+            width: 60px;
+            height: 75px;
+            display: block;
+            float: left;
+            margin: 30px;
+            a.inner {
+                text-decoration: none;
+                color: #333;
+                .thumbnail-wrapper {
+                    border: 1px solid #e4e4e4;
+                    border-radius: 2px;
+                    width: 60px;
+                    height: 60px;
+                    background: url(/img/logo_icons/placeholder175x175.png);
+                    background-size: cover;
+                    position: relative;
+                    border-radius : 20px;
+                    .favicon {
+                        position: absolute;
+                        bottom: 5px;
+                        left: 5px;
+                        display:none;
                     }
-                    .title {
-                        text-align: center;
-                        height: 20px;
-                        font-size: 14px;
-                        line-height: 20px;
-                        width: 100%;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        font-size: 12px;
-                    }
+                }
+                .title {
+                    text-align: center;
+                    height: 20px;
+                    font-size: 14px;
+                    line-height: 20px;
+                    width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    font-size: 12px;
                 }
             }
         }
     }
+}

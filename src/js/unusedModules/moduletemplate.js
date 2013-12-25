@@ -1,15 +1,15 @@
-define(function DialsGrid () {
-    var self = {
+define(['env','when'],function Module (env, when) {
+    var initting = when.defer(),
+        self = {
 
-    };
+        };
 
-    self.funSample = function funSample () {
+    var init = function initModule() {
 
     }
 
-    self.init = (function initDialsGrid () {
-
-    })();
+    init()
+    initting.otherwise(env.errhandler)
 
     return self;
 })
