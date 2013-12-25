@@ -1,7 +1,6 @@
 {
-    "version"                  : "2.0.0.0",
     "current_build"            : "alpha",
-    "buildName"                : "lovedgames",
+    "build_name"                : "lovedgames",
     "google_analytics_uid"     : "UA-40447064-6",
     "base_search_url"          : "http://search.certified-toolbar.com/?si=41613&q=",
     "base_suggestions_url"     : "http://google.com/complete/search?&output=toolbar&q=",

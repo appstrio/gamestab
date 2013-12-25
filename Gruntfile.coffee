@@ -69,7 +69,7 @@ module.exports = (grunt) ->
             manifest:
                 files:
                     "<%= path.build %>/manifest.json": "src/manifest.json"
-            prod:
+            requirejs:
                 files:
                     "<%= path.build %>/js/libs/require.js"    : "bower_components/requirejs/require.js"
             libs:
@@ -92,7 +92,7 @@ module.exports = (grunt) ->
                 flatten: true
                 expand: true
                 cwd: "<%= path.src %>/js"
-                src: ["*.js","!init.js","!debug*.js"]
+                src: ["*.js","!debug*.js"]
                 dest: "<%= path.build %>/js"
             modules:
                 flatten: true
@@ -119,12 +119,12 @@ module.exports = (grunt) ->
 
     grunt.registerTask "copy:development", baseJSCopyTasks.concat ["copy:extra","concat:dev", "copy:manifest", "copy:data"]
     grunt.registerTask "default", ["setup_dev_env","build","watch"]
-    grunt.registerTask "setup_dev_env", ["copy:setup_dev_env","copy:libs"]
+    grunt.registerTask "setup_dev_env", ["copy:setup_dev_env","copy:libs", "copy:assets"]
     grunt.registerTask "build", ["clean","copy:development","jade","less","dot"]
 
     # Production Building Tasks
     grunt.registerTask "copy:baseJS", baseJSCopyTasks
-    grunt.registerTask "copy:production", ["copy:extra", "copy:assets", "copy:manifest", "copy:data", "copy:prod"]
+    grunt.registerTask "copy:production", ["copy:extra", "copy:assets", "copy:manifest", "copy:data", "copy:requirejs"]
 
     grunt.registerTask "package", ["step1", "step2", "step3"]
     grunt.registerTask "copyJS", [
@@ -147,6 +147,8 @@ module.exports = (grunt) ->
         "less"
     ]
     grunt.registerTask "step3", "compileAssets"
+
+    grunt.registerTask "buildstuff"
 
     grunt.registerTask "cd_tmp", ->
         grunt.config "path.build", grunt.config "path.tmp"
