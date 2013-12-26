@@ -1,0 +1,23 @@
+{
+    "undef"     : true,
+    "unused"    : true,
+    "browser"   : true,
+    "jquery"    : true,
+    "devel"     : true,
+    "curly"     : true,
+    "bitwise"   : true,
+    "camelcase" : true,
+    "plusplus"  : true,
+    "quotmark"  : "double",
+    "indent"    : 4,
+    "immed"     : true
+    "globals"   : {
+        "define": false,
+
+        "localStorage": false,
+        "chrome": false,
+
+        "window.DEBUG": false
+        "window.close": false
+    }
+}

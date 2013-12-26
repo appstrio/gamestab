@@ -75,5 +75,5 @@ define(function initWINT(require) {
         } else {
             require(["main"], null);
         }
-    }, alert);
+    }).otherwise(env.errhandler);
 });
