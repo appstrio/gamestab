@@ -61,19 +61,20 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
         var processXML = function(xml) {
             return $(xml).find("suggestion").attrFromAll('data');
         }
-
         var input = self.$searchWrapper.find(".search-input").eq(0);
         input.typeahead({
             // source: getSuggestions,
             remote: {
+                name: "suggestions",
                 method   : "GET",
                 url      : baseSuggestionsURL + "%QUERY",
+                wildcard : "%QUERY",
                 dataType : "text",
-                filter   : processXML
-            },
-            updater: function(Suggestion) {
-                doSearch(Suggestion);
-            },
+                filter   : processXML,
+                rateLimitWait : 50, // by milisecs (300 is default)
+                maxParallelRequests : 6, // Default value is 6
+                cache : false
+            }
         });
     };
 
@@ -163,10 +164,10 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
     var doSearch = function(x) {
         if (typeof x === "string") {
-            redirectToSearch(URL);
+            redirectToSearch(x);
         } else if(x instanceof "Suggestion") {
             var url = x.url;
-            redirectToUrl(URL);
+            redirectToUrl(url);
         }
     };
 
