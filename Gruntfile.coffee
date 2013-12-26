@@ -9,7 +9,7 @@ module.exports = (grunt) ->
         # The name and version of the build that's currently
         # being built. [Overwritten dynamicaly]
         build:
-            name: "some_build"
+            name: "lovedgames"
             version: "1.0.0.0-omega"
         path:
             build: "build"
@@ -63,11 +63,14 @@ module.exports = (grunt) ->
                 files:
                     "<%= path.src %>/js/debugSettings.js": "<%= path.src %>/js/debugTemplate.js"
             # Build-specific files
-            extra:
+            extraAssets:
                 expand:true
-                cwd: "extra/<%= build.buildName %>/assets"
-                src: "**"
+                cwd: "extra/<%= build.name %>/"
+                src: "assets/**"
                 dest: "<%= path.build %>"
+            extraBuild:
+                files:
+                    "<%= path.build %>/data/build.json": "extra/<%= build.name %>/build.json"
             # Core files:
             manifest:
                 files:
@@ -114,14 +117,14 @@ module.exports = (grunt) ->
 
     # Development Tasks
 
-    grunt.registerTask "copy:development", baseJSCopyTasks.concat ["copy:extra","concat:dev", "copy:manifest", "copy:data"]
+    grunt.registerTask "copy:development", baseJSCopyTasks.concat ["copy:extraAssets","concat:dev", "copy:manifest", "copy:extraBuild"]
     grunt.registerTask "default", ["setup_dev_env","build","watch"]
     grunt.registerTask "setup_dev_env", ["clean","copy:setup_dev_env","copy:libs", "copy:assets"]
     grunt.registerTask "build", ["copy:development","jade","less","dot"]
 
     # Production Building Tasks
     grunt.registerTask "copy:baseJS", baseJSCopyTasks
-    grunt.registerTask "copy:production", ["copy:extra", "copy:assets", "copy:manifest", "copy:requirejs"]
+    grunt.registerTask "copy:production", ["copy:extraAssets", "copy:assets", "copy:manifest", "copy:requirejs", "copy:extraBuild"]
 
     grunt.registerTask "package", ->
 
@@ -168,12 +171,18 @@ module.exports = (grunt) ->
         console.log "Changed directory path.build ->to->", grunt.config "path.builds"
 
     # Dynamic watchers building
-    watchSingleExclude = ["dot","less"]
+    watchSingleExclude = ["dot","less","concat"]
     dynamicConstructedWatches = buildWatchers initConfig, ["path","copy:libs","copy:assets"]
     initConfig.watch = dynamicConstructedWatches
     initConfig.watch.lessCompile =
         files: ["src/less/**/*.less"]
         tasks: ["less:compile"]
+    initConfig.watch.concatDev =
+        files: ["<%= path.src %>/js/init.js","<%= path.src %>/js/debugSettings.js"]
+        tasks: ["concat:dev"]
+    initConfig.watch.copyJs =
+        files: ["<%= path.src %>/js/*.js","<%= path.src %>/js/!debug*.js","!<%= path.src %>/js/init.js"]
+        tasks: ["copy:js"]
     grunt.initConfig initConfig
     grunt.registerTask "printWatches", -> log dynamicConstructedWatches
     # change filepath on the fly to compile only the changed file NOTE only works with flatten:true for some reason, has something todo with cwd

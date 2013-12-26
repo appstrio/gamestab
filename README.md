@@ -1,6 +1,8 @@
 WINT (White Label New Tab)
 --------------------------
 
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+
 ## First Installation
 
 1. Clone repo.
