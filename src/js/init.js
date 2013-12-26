@@ -1,3 +1,5 @@
+// document.title = chrome.i18n.getMessage("appName");
+
 require.config({
     "baseUrl": "js/",
     "paths": {

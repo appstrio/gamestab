@@ -6,7 +6,7 @@ module.exports = (grunt) ->
 
     initConfig =
         # Core Properties
-        # The name and version of the build that's currently
+        # The name and version of the build that"s currently
         # being built. [Overwritten dynamicaly]
         build:
             name: "lovedgames"
@@ -72,9 +72,6 @@ module.exports = (grunt) ->
                 files:
                     "<%= path.build %>/data/build.json": "extra/<%= build.name %>/build.json"
             # Core files:
-            manifest:
-                files:
-                    "<%= path.build %>/manifest.json": "src/manifest.json"
             requirejs:
                 files:
                     "<%= path.build %>/js/libs/require.js"    : "bower_components/requirejs/require.js"
@@ -117,14 +114,14 @@ module.exports = (grunt) ->
 
     # Development Tasks
 
-    grunt.registerTask "copy:development", baseJSCopyTasks.concat ["copy:extraAssets","concat:dev", "copy:manifest", "copy:extraBuild"]
+    grunt.registerTask "copy:development", baseJSCopyTasks.concat ["copy:extraAssets","concat:dev", "createManifestFromOverrides", "copy:extraBuild"]
     grunt.registerTask "default", ["setup_dev_env","build","watch"]
     grunt.registerTask "setup_dev_env", ["clean","copy:setup_dev_env","copy:libs", "copy:assets"]
     grunt.registerTask "build", ["copy:development","jade","less","dot"]
 
     # Production Building Tasks
     grunt.registerTask "copy:baseJS", baseJSCopyTasks
-    grunt.registerTask "copy:production", ["copy:extraAssets", "copy:assets", "copy:manifest", "copy:requirejs", "copy:extraBuild"]
+    grunt.registerTask "copy:production", ["copy:extraAssets", "copy:assets", "createManifestFromOverrides", "copy:requirejs", "copy:extraBuild"]
 
     grunt.registerTask "package", ->
 
@@ -169,6 +166,30 @@ module.exports = (grunt) ->
     grunt.registerTask "cd_mkdir_build", ->
         grunt.config "path.build", grunt.config "path.builds"
         console.log "Changed directory path.build ->to->", grunt.config "path.builds"
+
+    # Manifest mangling
+
+    grunt.registerTask "createManifestFromOverrides", "Update manifest with Overriding build values", ->
+      fs = require "fs"
+
+      buildName = grunt.config "build.name"
+      srcPath = grunt.config "path.src"
+      buildPath = grunt.config "path.build"
+
+      overridingManifestPath = "./extra/" + buildName  + "/manifest.json";
+      oldManifestPath = "./#{srcPath}/manifest.json"
+      buildManifsetPath = "./#{buildPath}/manifest.json"
+      console.log overridingManifestPath,oldManifestPath
+
+      defaultManifest = require oldManifestPath
+      OverridingManifest = require  overridingManifestPath
+
+      for key, value of OverridingManifest
+        defaultManifest[key] = value
+
+      fs.writeFileSync buildManifsetPath, JSON.stringify defaultManifest
+      console.log "Created [#{buildManifsetPath}] from override-manifest."
+
 
     # Dynamic watchers building
     watchSingleExclude = ["dot","less","concat"]
