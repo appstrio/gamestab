@@ -1,20 +1,7 @@
-"use strict";
+/* jshint global window,define */
+'use strict';
 
-// jQuery Helpers
-(function($) {
-    $.fn.attrFromAll = function basicToJSON(attr) {
-        var items = [],
-            $this = $(this);
-
-        this.each(function iterator() {
-            items.push($(this).attr(attr));
-        });
-
-        return items;
-    };
-})(jQuery)
-
-define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates", "VimiumUtils"], function Wintbar(env, $, when, typeahead, Runtime, Renderer, Template, VimiumUtils) {
+define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates', 'VimiumUtils'], function Wintbar(env, $, when, typeahead, Runtime, Renderer, Template, VimiumUtils) {
     if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : Wintbar");
     var initting = when.defer(),
         self = {
@@ -40,7 +27,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
     var setEventHandlers = function() {
         var searchHandler = function searchHandler(e) {
-            var query = self.$searchWrapper.find("input").eq(1).val();
+            var query = self.$searchWrapper.find('input').eq(1).val();
             doSearch(query);
         };
 
@@ -50,86 +37,62 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
                     callback(e);
                 }
             });
-        };
+        }
 
         self.$searchWrapper
-            .on("click", ".submit-button", searchHandler)
+            .on('click', '.submit-button', searchHandler)
             .onEnterKey(searchHandler);
-    };
 
+    }
     var setupTypeahead = function() {
-        var processXML = function(xml) {
-            return $(xml).find("suggestion").attrFromAll('data');
-        }
-        var input = self.$searchWrapper.find(".search-input").eq(0);
+        var input = self.$searchWrapper.find('.search-input').eq(0);
         input.typeahead({
-            // source: getSuggestions,
-            remote: {
-                name: "suggestions",
-                method   : "GET",
-                url      : baseSuggestionsURL + "%QUERY",
-                wildcard : "%QUERY",
-                dataType : "text",
-                filter   : processXML,
-                rateLimitWait : 50, // by milisecs (300 is default)
-                maxParallelRequests : 6, // Default value is 6
-                cache : false
+            source: getSuggestions,
+            updater: function(item) {
+                doSearch(item);
             }
         });
     };
 
-    // var getSuggestions = function(query, callback) {
-    //     var url = baseSuggestionsURL + query,
-    //         gettingSearchSuggestions = $.ajax({
-    //             method: "GET",
-    //             url: url,
-    //             dataType: "xml",
-    //         }),
-    //         gettingDomainSuggestions = when.defer();
+    var getSuggestions = function(query, callback) {
+        var url = baseSuggestionsURL + query,
+            gettingSearchSuggestions = $.ajax({
+                method: "GET",
+                url: url,
+                dataType: 'xml',
+            }),
+            gettingDomainSuggestions = when.defer();
 
-    //     HistorySuggest(query, gettingDomainSuggestions.resolve);
+        HistorySuggest(query, gettingDomainSuggestions.resolve)
 
-    //     when.join(gettingSearchSuggestions, gettingDomainSuggestions.promise).then(function ExtractSearchSuggestionsAndsortSuggestions(values) {
-    //         // Only the top result
+        when.join(gettingSearchSuggestions, gettingDomainSuggestions.promise).then(function ExtractSearchSuggestionsAndsortSuggestions(values) {
+            // Only the top result
 
 
-    //         var xml = values[0],
-    //             results = $(xml).find("suggestion"),
-    //             current, output = [];
+            var xml = values[0],
+                results = $(xml).find('suggestion'),
+                current, output = [];
 
-    //         for (var i = 0; i < 3, i < results.length; ++i) {
-    //             current = results[i];
-    //             output.push({
-    //                 $(current).attr("data")
-    //             });
-    //             {
-    //               value: "@JakeHarding",
-    //               cleanValue: "Jake Harding",
-    //               profileImageUrl: "https://twitter.com/JakeHaridng/profile_img"
-    //             }
-    //         }
+            for (var i = 0; i < 3, i < results.length; ++i) {
+                current = results[i];
+                output.push($(current).attr('data'));
+            }
 
-    //         if (query.indexOf("http://") == -1) {
-    //             //fetch domain suggestion
-    //             var historySuggestion = values[1],
-    //                 value = historySuggestion[0],
-    //                 score = historySuggestion[1];
+            if (query.indexOf("http://") == -1) {
+                //fetch domain suggestion
+                var historySuggestion = values[1],
+                    value = historySuggestion[0],
+                    score = historySuggestion[1]
 
-    //             if(value !== "")
-    //                 if (score < 50)
-    //                     output.splice(2, 0, value);
-    //                 else
-    //                     output.splice(0, 0, value);
-    //         }
+                if(value != "")
+                    if (score < 50)
+                        output.splice(2, 0, value)
+                    else
+                        output.splice(0, 0, value)
+            }
 
-    //         callback(output);
-    //     }).otherwise(env.errhandler);
-    // };
-
-    var Suggestion = function(url, title, score) {
-        this.url = url;
-        this.title = title;
-        this.score = score;
+            callback(output);
+        }).otherwise(env.errhandler);
     };
 
     var HistorySuggest = function(query, callback) {
@@ -154,7 +117,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
                     }
                 });
 
-            callback(suggestion)
+            callback([url, score])
         });
     }
 
@@ -162,25 +125,24 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
     }
 
-    var doSearch = function(x) {
-        if (typeof x === "string") {
-            redirectToSearch(x);
-        } else if(x instanceof "Suggestion") {
-            var url = x.url;
-            redirectToUrl(url);
+    var doSearch = function(query) {
+        if (isURL(query)) {
+            redirectToUrl(query);
+        } else {
+            redirectToSearch(query);
         }
     };
 
     var isURL = function COMMON_isUrl(url) {
-        return (url.indexOf("http://") === 0 || url.indexOf("https://") === 0 || url.indexOf("www.") === 0);
+        return (url.indexOf('http://') === 0 || url.indexOf('https://') === 0 || url.indexOf('www.') === 0);
     }
 
     var redirectToUrl = function(url) {
-        if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = "http://" + url;
+        if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = 'http://' + url;
 
         if (window.analytics) window.analytics.sendEvent({
-            category: "Search",
-            action: "Url",
+            category: 'Search',
+            action: 'Url',
             label: url,
             value: 0
         }, function() {
@@ -197,8 +159,8 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
             var val = window.analytics.getEventValue(self.cc);
 
             if (window.analytics) window.analytics.sendEvent({
-                category: "Search",
-                action: "Search",
+                category: 'Search',
+                action: 'Search',
                 label: query,
                 value: val
             }, function() {
@@ -212,9 +174,9 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
     var setupUI = function() {
         // widely used dom selectors
-        self.$searchWrapper = Renderer.$layout.find(".search-wrapper").eq(0);
+        self.$searchWrapper = Renderer.$layout.find('.search-wrapper').eq(0);
         // setup search layout
-        self.$searchWrapper.html($(Template["search-wrapper"]()));
+        self.$searchWrapper.html($(Template['search-wrapper']()));
 
     }
 
@@ -223,7 +185,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
             chrome.tabs.update(tab.id, {
                 selected: true
             }, function() {
-                $(".search-input").blur().focus();
+                $('.search-input').blur().focus();
             });
         });
     };
