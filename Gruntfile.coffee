@@ -125,14 +125,25 @@ module.exports = (grunt) ->
 
     grunt.registerTask "package", ->
 
-        buildName = arguments[0]
-        version = arguments[1] ? grunt.config "build.version"
+        if arguments[0]?
+            for INDEX in arguments.length by 2
+                name = arguments[INDEX]
+                version = arguments[INDEX + 1]
 
-        # JSON = grunt.file.readJSON "extra/#{buildName}/build.json"
-        grunt.config "build.name", buildName
-        grunt.config "build.version", version
+                grunt.config "build.name", name
+                grunt.config "build.version", version
 
-        grunt.task.run ["step1", "step2", "step3"]
+                grunt.task.run ["step1", "step2", "step3"]
+        else
+            builds = grunt.file.readJSON "builds.json"
+
+            for build in builds
+                grunt.config "build.name", build.name
+                grunt.config "build.version", build.version
+
+                grunt.task.run ["step1", "step2", "step3"]
+
+
 
     grunt.registerTask "copyJS", [
         "cd_tmp"
