@@ -4,7 +4,7 @@
 
 /**
  * The Config module handles the build specific config settings as well as the on-going runtime data.
- * The config settings could be loaded from the config file (e.g. 'production.json') or from the remote server.
+ * The config settings could be loaded from the config file (e.g. "production.json") or from the remote server.
  * The runtime data is determined by the Runtime module. The reason why it is stored on the config is to have this data
  * available as quick as the app starts without waiting for the Runtime module.
  *
@@ -14,11 +14,11 @@
  *
  */
 
-define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, when) {
+define(["env", "jquery", "Storage", "when"], function Config(env, $, storage, when) {
     if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : Config");
 
     var storageKey      = "config",
-        pathToBuildJSON = '/js/data/build.json',
+        pathToBuildJSON = "/data/build.json",
         initting        = when.defer(),
         self = {
             promise: initting.promise,
@@ -37,7 +37,7 @@ define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, wh
             timestamp: Date.now(),
             ab_testing_group: ((Math.random() > 0.5) ? "A" : "B"),
             install_week_number: weekNumber(),
-            client_version: (chrome && chrome.app && chrome.app.getDetails()) ? chrome.app.getDetails().version : ''
+            client_version: (chrome && chrome.app && chrome.app.getDetails()) ? chrome.app.getDetails().version : ""
         };
 
         // Try to fetch appdata from the localstorage
@@ -51,7 +51,7 @@ define(['env', 'jquery', 'Storage', 'when'], function Config(env, $, storage, wh
             }
             initting.resolve(self.data);
         } else {
-            // Or try to load it from the JSON that's included with the extension
+            // Or try to load it from the JSON that"s included with the extension
             $.getJSON(pathToBuildJSON).then(function(fetchedConfig) {
                 self.data = fetchedConfig;
                 setDefaultConfigSettings();
