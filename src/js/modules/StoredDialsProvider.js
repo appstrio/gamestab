@@ -23,7 +23,7 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
             });
             // Determine whether to load default-by-ccJSON or defaultJSON
             if(runtimeData.defaultDialsByCountryEnabled) {
-                settings.pathToJSON = runtimeData.JSONPrefix + "/defaults_" + runtimeData.countryCode + ".json";
+                settings.pathToJSON = runtimeData.JSONPrefix + "/defaults" + runtimeData.countryCode.toUpperCase() + ".json";
             } else {
                 settings.pathToJSON = runtimeData.JSONPrefix + "/defaultDials.json";
             }

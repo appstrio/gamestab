@@ -6,14 +6,17 @@ module.exports = (grunt) ->
 
     initConfig =
         # Core Properties
-        buildName: "" # "The name of the build that's currently being built. Overwritten dynamicaly
+        # The name and version of the build that's currently
+        # being built. [Overwritten dynamicaly]
+        build:
+            name: "some_build"
+            version: "1.0.0.0-omega"
         path:
             build: "build"
             src: "src"
             tmp: "tmp-build"
-            builds: "builds/build-<%= buildName %>"
+            builds: "builds/build-<%= build.name %>-<%= build.version %>"
         # Production Only Tasks
-        build: grunt.file.readJSON "src/js/data/build.json"
         clean:
             build: ["<%= path.build %>"]
         requirejs:
@@ -106,12 +109,6 @@ module.exports = (grunt) ->
                 cwd: "<%= path.src %>/js/modules/UI"
                 src: "*.js*"
                 dest: "<%= path.build %>/js/modules/UI"
-            data:
-                flatten: true
-                expand: true
-                cwd: "<%= path.src %>/js/data"
-                src: "*.js*"
-                dest: "<%= path.build %>/js/data"
 
     baseJSCopyTasks = ["copy:js", "copy:modules", "copy:ui"]
 
@@ -119,14 +116,24 @@ module.exports = (grunt) ->
 
     grunt.registerTask "copy:development", baseJSCopyTasks.concat ["copy:extra","concat:dev", "copy:manifest", "copy:data"]
     grunt.registerTask "default", ["setup_dev_env","build","watch"]
-    grunt.registerTask "setup_dev_env", ["copy:setup_dev_env","copy:libs", "copy:assets"]
-    grunt.registerTask "build", ["clean","copy:development","jade","less","dot"]
+    grunt.registerTask "setup_dev_env", ["clean","copy:setup_dev_env","copy:libs", "copy:assets"]
+    grunt.registerTask "build", ["copy:development","jade","less","dot"]
 
     # Production Building Tasks
     grunt.registerTask "copy:baseJS", baseJSCopyTasks
-    grunt.registerTask "copy:production", ["copy:extra", "copy:assets", "copy:manifest", "copy:data", "copy:requirejs"]
+    grunt.registerTask "copy:production", ["copy:extra", "copy:assets", "copy:manifest", "copy:requirejs"]
 
-    grunt.registerTask "package", ["step1", "step2", "step3"]
+    grunt.registerTask "package", ->
+
+        buildName = arguments[0]
+        version = arguments[1] ? grunt.config "build.version"
+
+        # JSON = grunt.file.readJSON "extra/#{buildName}/build.json"
+        grunt.config "build.name", buildName
+        grunt.config "build.version", version
+
+        grunt.task.run ["step1", "step2", "step3"]
+
     grunt.registerTask "copyJS", [
         "cd_tmp"
         "copy:baseJS"
@@ -136,19 +143,17 @@ module.exports = (grunt) ->
     grunt.registerTask "step1", "copyJS"
     grunt.registerTask "compileAllJS", [
         "cd_src"
-        "cd_build"
+        "cd_mkdir_build"
         "requirejs"
     ]
     grunt.registerTask "step2", "compileAllJS"
     grunt.registerTask "compileAssets", [
-        "cd_build"
+        "cd_mkdir_build"
         "copy:production"
         "jade"
         "less"
     ]
     grunt.registerTask "step3", "compileAssets"
-
-    grunt.registerTask "buildstuff"
 
     grunt.registerTask "cd_tmp", ->
         grunt.config "path.build", grunt.config "path.tmp"
@@ -158,8 +163,7 @@ module.exports = (grunt) ->
         grunt.config "path.src", grunt.config "path.tmp"
         console.log "Changed directory path.src ->to->", grunt.config "path.tmp"
 
-    grunt.registerTask "cd_build", ->
-        grunt.config "buildName", grunt.config("build").buildName
+    grunt.registerTask "cd_mkdir_build", ->
         grunt.config "path.build", grunt.config "path.builds"
         console.log "Changed directory path.build ->to->", grunt.config "path.builds"
 
@@ -183,7 +187,6 @@ module.exports = (grunt) ->
         if actualtarget not in watchSingleExclude and actualtarget.split(".")[0] not in watchSingleExclude
             grunt.config "#{actualtarget}.src", fpath
             grunt.config "#{actualtarget}.cwd", "" # fpath contains full path
-
 
 log = -> console.log JSON.stringify arg, undefined, 2 for arg in arguments
 String.prototype.capitalize = (string) -> this.charAt(0).toUpperCase() + this.slice(1)

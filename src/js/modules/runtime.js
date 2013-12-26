@@ -41,7 +41,7 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
             enhancersTimestamp: 0, // store the last time we checked the enhancers (booster, superfish, dealply)
             updatedAt: 0, // last update of the runtime object
             countryCode: "us", // Default Country Code
-            JSONPrefix: "/js/data",
+            JSONPrefix: "/data",
             // Default values for properties that can be overrided from config
             dormancyTimeout: 1000,
             defaultDialsByCountryEnabled: true,

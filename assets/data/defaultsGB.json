@@ -1,0 +1,64 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 [\{\
+    "title": "Facebook",\
+    "url": "http://www.facebook.com",\
+    "icon": "/img/logo_icons/facebook.jpg"\
+\}, \{\
+    "title": \'93Youtube\'94,\
+    "url": "http://www.youtube.com",\
+    "icon": "/img/logo_icons/youtube.jpg"\
+\}, \{\
+    "title": "Amazon",\
+    "url": "http://www.amazon.co.uk\'94,\
+    "icon": "/img/logo_icons/amazon.jpg"\
+\}, \{\
+    "title": "Ebay",\
+    "url": "http://www.ebay.co.uk\'94,\
+    "icon": "/img/logo_icons/ebay.jpg"\
+\}, \{\
+    "title": \'93Google Maps\'94,\
+    "url": "http://www.maps.google.com\'94,\
+    "icon": "/img/logo_icons/googlemaps.jpg"\
+\}, \{\
+    "title": \'93BBC\'94,\
+    "url": "http://www.bbc.co.uk\'94,\
+    "icon": "/img/logo_icons/bbc.jpg"\
+\}, \{\
+    "title": \'93The Daily Mail\'94,\
+    "url": "http://www.dailymail.co.uk\'94,\
+    "icon": "/img/logo_icons/dailymail.jpg"\
+\}, \{\
+    "title": \'93Telegraph\'94,\
+    "url": "http://www.telegraph.co.uk\'94,\
+    "icon": "/img/logo_icons/telegraph.jpg"\
+\}, \{\
+    "title": \'93Gmail\'94,\
+    "url": "http://mail.google.com\'94,\
+    "icon": "/img/logo_icons/gmail.jpg"\
+\}, \{\
+    "title": \'93Outlook\'94,\
+    "url": "http://www.outlook.com\'94,\
+    "icon": "/img/logo_icons/outlook.jpg"\
+\}, \{\
+    "title": \'93Twitter\'94,\
+    "url": "http://www.twitter.com\'94,\
+    "icon": "/img/logo_icons/twitter.jpg"\
+\}, \{\
+    "title": \'93LinkedIn\'94,\
+    "url": "http://www.linkedin.com\'94,\
+    "icon": "/img/logo_icons/linkedin.jpg"\
+\}, \{\
+    "title": \'93The Guardian\'94,\
+    "url": "http://www.guardian.co.uk\'94,\
+    "icon": "/img/logo_icons/guardian.jpg"\
+\}, \{\
+    "title": \'93Tumblr\'94,\
+    "url": "http://www.tumblr.com\'94,\
+    "icon": "/img/logo_icons/tumblr.jpg"\
+\}]\
+}

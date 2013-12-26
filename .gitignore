@@ -1,17 +1,13 @@
-# Modules
+# Libraries
 node_modules
 bower_components
-
-# GruntBuild tmp folders
-parts.min
 
 # Builds
 builds
 build
 tmp-*
-buildAssets
 
-COMMIT_MSG
+# My own stuff
 debugSettings.js
 
 # Bullshit
