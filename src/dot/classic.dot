@@ -4,7 +4,7 @@
         <div class="viewport">
            <div id="dials-wrapper" class="dials-wrapper"></div>
            <div id="apps-wrapper" class="dials-wrapper"></div>
-           <div id="android-wrapper" class="dials-wrapper"></div>
+           <!--<div id="android-wrapper" class="dials-wrapper"></div>-->
         </div>
     </div>
     <div class="bottom-wrapper">
@@ -13,7 +13,7 @@
             <a id="webapps-overlay-btn" href="#" class="btn"> + </a>
             <a id="dials-switch" href="#" class="switch"> Home </a>
             <a id="apps-switch" href="#" class="switch"> Apps </a>
-            <a id="android-switch" href="#" class="switch"> android </a>
+            <!--<a id="android-switch" href="#" class="switch"> android </a>-->
         </div>
     </div>
 </div>
