@@ -20,11 +20,11 @@ define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(e
         $.extend(self, {
             $dialsSwitch    : $('#dials-switch'),
             $appsSwitch     : $('#apps-switch'),
-            $androidSwitch  : $('#android-switch'),
+            // $androidSwitch  : $('#android-switch'),
 
             $dialsWrapper   : $('#dials-wrapper'),
             $appsWrapper    : $('#apps-wrapper'),
-            $androidWrapper : $('#android-wrapper'),
+            // $androidWrapper : $('#android-wrapper'),
 
             $fadescreen     : $('#fadescreen').eq(0),
         });
