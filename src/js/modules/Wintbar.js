@@ -66,7 +66,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
             name: "main",
             template: function renderTemplate(datum) {
                 var url = typeof datum.url === "undefined" ? "" : datum.url;
-                return "<p data-url=\"" + url + "\">" + datum.value + "</p>";
+                return "<p><a href=\"" + url + "\">" + datum.value + "</a></p>";
             },
             source: getSuggestions,
             updater: function(item) {
