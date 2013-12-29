@@ -33,13 +33,13 @@
     input.search-input {
       width: 100%;
       display: block;
-      height: 50px;
+      height: 46px;
       outline: none;
       line-height: 34px;
       padding-left: 44px;
       font-size: 14px;
       border: 1px solid #4196ed;
-      box-shadow: 0 0px 4px rgba(0, 0, 0, 0.2) inset;
+      //box-shadow: 0 0px 4px rgba(0, 0, 0, 0.2) inset;
       -webkit-animation: search-input-anim 3s infinite;
       &::-webkit-input-placeholder {
         -webkit-animation: search-input-placeholder-anim 3s infinite;
@@ -47,7 +47,7 @@
       &:focus {
         -webkit-animation: none;
         border-color: #4196ed !important;
-        box-shadow: 0 0px 3px rgba(0, 0, 0, 0.3) inset;
+        //box-shadow: 0 0px 3px rgba(0, 0, 0, 0.3) inset;
         &::-webkit-input-placeholder {
           -webkit-animation: none;
         }
@@ -57,12 +57,15 @@
   }
 
   button.submit-button {
-    height: 50px;
+    height: 46px;
     width: 130px;
     margin-left: 10px;
     display: inline-block;
     vertical-align: middle;
     border-radius: 3px;
+    background: #4196ed;
+    outline: none;
+    color: white;
   }
 }
 
@@ -103,7 +106,7 @@
   padding-right: 14px;
   font-size: 14px;
   border: 1px solid #4196ed;
-  box-shadow: 0 0px 4px rgba(0, 0, 0, 0.2) inset;
+  //box-shadow: 0 0px 4px rgba(0, 0, 0, 0.2) inset;
   background: transparent !important;
   -webkit-animation: search-input-anim 3s infinite;
 }
@@ -112,7 +115,7 @@
 .search-wrapper .input-container input.tt-hint:focus {
   -webkit-animation: none;
   border-color: #4196ed !important;
-  box-shadow: 0 0px 3px rgba(0, 0, 0, 0.3) inset;
+  //box-shadow: 0 0px 3px rgba(0, 0, 0, 0.3) inset;
 }
 .search-wrapper .input-container input.search-input:focus::-webkit-input-placeholder,
 .search-wrapper .input-container input.tt-query:focus::-webkit-input-placeholder,
@@ -157,6 +160,9 @@
   display: inline-block;
   vertical-align: middle;
   border-radius: 3px;
+  background: #4196ed;
+  outline: none;
+  color: white;
 }
 
 
