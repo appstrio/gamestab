@@ -6,7 +6,7 @@
     "devel"     : true,
     "curly"     : true,
     "bitwise"   : true,
-    "camelcase" : true,
+    "camelcase" : false,
     "plusplus"  : true,
     "quotmark"  : "double",
     "indent"    : 4,

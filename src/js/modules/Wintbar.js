@@ -1,16 +1,31 @@
-/* jshint global window,define */
-'use strict';
+(function($) {
+    "use strict";
 
-define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates', 'VimiumUtils'], function Wintbar(env, $, when, typeahead, Runtime, Renderer, Template, VimiumUtils) {
-    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : Wintbar");
+    $.fn.attrFromAll = function basicToJSON(attr) {
+        var items = [];
+
+        this.each(function iterator() {
+            items.push($(this).attr(attr));
+        });
+
+        return items;
+    };
+})(jQuery);
+
+define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates", "underscore"], function Wintbar(env, $, when, typeahead, Runtime, Renderer, Template, _) {
+    "use strict";
+
+    if (window.DEBUG && window.DEBUG.logLoadOrder) {
+        console.log("Loading Module : Wintbar");
+    }
     var initting = when.defer(),
         self = {
             promise: initting.promise,
-        }, baseSearchURL, baseSuggestionsURL, runtimeConfig;
+        }, baseSearchUrl, baseSuggestionsURL, runtimeConfig;
 
-    var init = function initModule(runtimeData) {
+    var init = function initModule() {
         runtimeConfig = Runtime.config;
-        baseSearchURL = runtimeConfig.base_search_url;
+        baseSearchUrl = runtimeConfig.base_search_url;
         baseSuggestionsURL = runtimeConfig.base_suggestions_url;
 
         // self.cc = self.runtimeConfig.location.country.short_name;
@@ -26,8 +41,8 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
     };
 
     var setEventHandlers = function() {
-        var searchHandler = function searchHandler(e) {
-            var query = self.$searchWrapper.find('input').eq(1).val();
+        var searchHandler = function searchHandler() {
+            var query = self.$searchWrapper.find("input").eq(1).val();
             doSearch(query);
         };
 
@@ -37,16 +52,18 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
                     callback(e);
                 }
             });
-        }
+        };
 
         self.$searchWrapper
-            .on('click', '.submit-button', searchHandler)
+            .on("click", ".submit-button", searchHandler)
             .onEnterKey(searchHandler);
 
-    }
+    };
     var setupTypeahead = function() {
-        var input = self.$searchWrapper.find('.search-input').eq(0);
+        var input = self.$searchWrapper.find(".search-input").eq(0);
         input.typeahead({
+            name: "main",
+            template: function renderTemplate(datum) { return "<p>" + datum.title + "</p>"; },
             source: getSuggestions,
             updater: function(item) {
                 doSearch(item);
@@ -54,76 +71,95 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
         });
     };
 
+    var fetchRemoteSuggestionsRaw = function(query) {
+        var url = baseSuggestionsURL + query;
+        // limitResults = 10,
+        return $.ajax({
+            method: "GET",
+            url: url,
+            dataType: "xml",
+        }).then(function processXML(xml) {
+            return $(xml).find("suggestion").attrFromAll("data");
+        });
+    };
+
+    var fetchRemoteSuggestions = function(query) {
+        var fetchingRawData = fetchRemoteSuggestionsRaw(query);
+
+        return fetchingRawData.then(function processRawData(data) {
+            return _.map(data, function(rawData) {
+                return {
+                    title: rawData,
+                    value: rawData,
+                    // icon: "some url to an icon of remote suggestion here"
+                    // tokens: []
+                };
+            });
+        });
+    };
+
+    var fetchHistorySuggestions = function(query) {
+        var def = when.defer();
+        chrome.history.search({
+            text: "",
+            maxResults: 20000,
+            startTime: 0
+        }, function(history) {
+            var url = "",
+                score = -99,
+                domain = "";
+
+            _.each(history, function cherryPickEntriesFromHistory(item) {
+                if (item.url.indexOf(query) != -1 && item.url.indexOf("file://") === -1 && item.url.indexOf("ftp://") === -1) {
+                    var itemDomain = item.url.replace(/https?:\/\/?\.?/, "").replace("www.", ""),
+                        wordRelevance = -itemDomain.indexOf(query) * query.length,
+                        itemScore = wordRelevance + (query.length * item.visitCount);
+
+                    if (itemScore > score) {
+                        if (window.DEBUG && window.DEBUG.logSearchAlgorithm) {
+                            console.log("For [" + query + "]:", itemDomain, itemScore, item.visitCount, wordRelevance);
+                        }
+                        score = itemScore;
+                        domain = itemDomain;
+                        url = item.url;
+                    }
+                }
+            });
+
+            def.resolve({
+                title: domain,
+                value: url,
+                score: score
+            });
+        });
+        return def.promise;
+    };
+
     var getSuggestions = function(query, callback) {
-        var url = baseSuggestionsURL + query,
-            gettingSearchSuggestions = $.ajax({
-                method: "GET",
-                url: url,
-                dataType: 'xml',
-            }),
-            gettingDomainSuggestions = when.defer();
+        // var getSuggestions = when.defer();
 
-        HistorySuggest(query, gettingDomainSuggestions.resolve)
+        when.join(fetchRemoteSuggestions(query), fetchHistorySuggestions(query)).then(function ExtractSearchSuggestionsAndsortSuggestions(values) {
+            var output = values[0];
 
-        when.join(gettingSearchSuggestions, gettingDomainSuggestions.promise).then(function ExtractSearchSuggestionsAndsortSuggestions(values) {
             // Only the top result
-
-
-            var xml = values[0],
-                results = $(xml).find('suggestion'),
-                current, output = [];
-
-            for (var i = 0; i < 3, i < results.length; ++i) {
-                current = results[i];
-                output.push($(current).attr('data'));
-            }
-
             if (query.indexOf("http://") == -1) {
                 //fetch domain suggestion
-                var historySuggestion = values[1],
-                    value = historySuggestion[0],
-                    score = historySuggestion[1]
+                var historySuggestion = values[1];
 
-                if(value != "")
-                    if (score < 50)
-                        output.splice(2, 0, value)
-                    else
-                        output.splice(0, 0, value)
+                if (historySuggestion !== "") {
+                    if (historySuggestion.score < 50) {
+                        output.splice(2, 0, historySuggestion);
+                    } else {
+                        output.splice(0, 0, historySuggestion);
+                    }
+                }
             }
 
             callback(output);
         }).otherwise(env.errhandler);
+
+        // return getSuggestions.promise;
     };
-
-    var HistorySuggest = function(query, callback) {
-        VimiumUtils.HistoryCache.use(function(history) {
-            var url = "",
-                score = -99,
-                byaccesstimeHistory = history.sort(function compareNumbers(a, b) {
-                    return a - b;
-                });
-
-                _.each(byaccesstimeHistory, function cherryPickFromHistory(item) {
-                    if(item.url.indexOf(query) != -1 && item.url.indexOf("file://") === -1 && item.url.indexOf("ftp://") === -1) {
-                        var baselessURL = item.url.replace(/https?:\/\/?\.?/, "").replace("www.", ""),
-                            wordRelevance = -baselessURL.indexOf(query) * query.length,
-                            itemScore = wordRelevance + (query.length * item.visitCount);
-
-                        if (itemScore > score) {
-                            if (window.DEBUG && window.DEBUG.logSearchAlgorithm) console.log("For [" + query + "]:", baselessURL, itemScore, item.visitCount, wordRelevance);
-                            score = itemScore
-                            url = item.url
-                        }
-                    }
-                });
-
-            callback([url, score])
-        });
-    }
-
-    var RankSuggestion = function(Suggestion) {
-
-    }
 
     var doSearch = function(query) {
         if (isURL(query)) {
@@ -134,15 +170,15 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
     };
 
     var isURL = function COMMON_isUrl(url) {
-        return (url.indexOf('http://') === 0 || url.indexOf('https://') === 0 || url.indexOf('www.') === 0);
+        return (url.indexOf("http://") === 0 || url.indexOf("https://") === 0 || url.indexOf("www.") === 0);
     }
 
     var redirectToUrl = function(url) {
-        if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = 'http://' + url;
+        if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = "http://" + url;
 
         if (window.analytics) window.analytics.sendEvent({
-            category: 'Search',
-            action: 'Url',
+            category: "Search",
+            action: "Url",
             label: url,
             value: 0
         }, function() {
@@ -159,24 +195,24 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
             var val = window.analytics.getEventValue(self.cc);
 
             if (window.analytics) window.analytics.sendEvent({
-                category: 'Search',
-                action: 'Search',
+                category: "Search",
+                action: "Search",
                 label: query,
                 value: val
             }, function() {
-                window.location.href = baseSearchURL + query;
+                window.location.href = baseSearchUrl + query;
             });
         }
         setTimeout(function() {
-            window.location.href = baseSearchURL + query;
+            window.location.href = baseSearchUrl + query;
         }, 500);
     };
 
     var setupUI = function() {
         // widely used dom selectors
-        self.$searchWrapper = Renderer.$layout.find('.search-wrapper').eq(0);
+        self.$searchWrapper = Renderer.$layout.find(".search-wrapper").eq(0);
         // setup search layout
-        self.$searchWrapper.html($(Template['search-wrapper']()));
+        self.$searchWrapper.html($(Template["search-wrapper"]()));
 
     }
 
@@ -185,7 +221,7 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
             chrome.tabs.update(tab.id, {
                 selected: true
             }, function() {
-                $('.search-input').blur().focus();
+                $(".search-input").blur().focus();
             });
         });
     };
