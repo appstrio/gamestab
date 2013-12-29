@@ -207,5 +207,7 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
     Runtime.promise.then(init, env.errhandler);
     initting.promise.otherwise(env.errhandler);
 
+    if(window.DEBUG && window.DEBUG.exposeModules) { window.DialsRenderer = self; }
+
     return self;
 });
