@@ -11,8 +11,8 @@ define(["env", "when", "templates", "DialsRenderer", "Overlay", "AndroIt"], func
         this.promise   = this.confirmed.promise;
 
         this.$overlay  = $(Template["android-overlay"]({"dial":this.androdial, "lang": lang}));
-        this.$overlay.find("#confirm").click(this.confirmed.resolve)
-        this.$overlay.find("#cancel").click(this.confirmed.reject)
+        this.$overlay.find("#confirm").click(this.confirmed.resolve);
+        this.$overlay.find("#cancel").click(this.confirmed.reject);
 
         this.render();
         this.setEventHandlers();

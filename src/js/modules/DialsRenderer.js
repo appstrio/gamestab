@@ -24,7 +24,7 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
         // widely used dom selectors
         $.extend(self, {
             $webAppsOverlayBtn: $("#webapps-overlay-btn").eq(0),
-            $webAppsOverlay: AdderOverlay.$overlay,
+            $webAppsOverlay: AdderOverlay.$content,
         });
 
         //Must be set before renderProvider is called

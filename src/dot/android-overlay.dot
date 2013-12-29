@@ -1,7 +1,18 @@
 <div id="android-overlay" class="overlay">
-    <img src="{{=it.dial.icon }}" alt="{{=it.dial.title }}" />
-    <div class="title">{{=it.dial.title }}</div>
-    <select id="devices" ></select>
-    <button id="confirm" > {{=it.lang.confirm }} </button>
-    <button id="cancel" > {{=it.lang.cancel }} </button>
+    <div class="inner">
+        <div class="header">
+        <span class="icon" style="background-image:url({{=it.dial.icon }});"/>
+        <span class="title">{{=it.dial.title }} <small> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </small> </span>
+        </div>
+        <div class="content">
+            <div class="choose-device">
+                <p> Choose Device :</p>
+                <div> <select id="devices" ></select> </div>
+            </div>
+            <div class="buttons">
+                <button id="confirm" > {{=it.lang.confirm }} </button>
+                <button id="cancel" > {{=it.lang.cancel }} </button>
+            </div>
+        </div>
+    </div>
 </div>

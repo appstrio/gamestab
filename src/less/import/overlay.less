@@ -13,71 +13,102 @@
         display : none !important;
     }
     .overlay {
-        display:none;
-        -webkit-box-shadow: 2px 2px 2px 1px #000;
-        overflow-y: scroll;
-        background: white;
+      display:none;
+      overflow: hidden;
+      background: white;
+      border-radius: 24px;
+
+      .inner{
+        .header{
+
+        }
+        .content{
+          overflow-x: hidden;
+          overflow-y: auto;
+        }
+      }
     }
     #android-overlay {
-        width: 500px;
-        height: 260px;
-        text-align: center;
-        overflow: hidden;
-        padding:5px;
-        -webkit-box-shadow: 0 0 20px 1px #999;
-        box-shadow: 0 0 20px 1px #999;
-        background-color: #fff;
-
-        .title {
-            height: 75px;
-            color: #b3c833;
-            font-size: 28px;
-            font-family: "Roboto",Arial,sans-serif;
+      width: 460px;
+      height: 190px;
+      .header{
+        height: 70px;
+        padding:15px 20px 0px 20px;
+        text-align:left;
+        span.icon{
+          background: red;
+          width: 75px;
+          height: 75px;
+          display: block;
+          margin-right: 20px;
+          float: left;
+          border-radius: 14px;
         }
+        span.title{
+          font-size:18px;
+          font-weight: bold;
+          small{
+            display:block;
+            color:#666;
+            font-weight: normal;
+          }
+        }
+      }
+      .content{
+        padding: 12px 20px;
+        clear: both;
+        .choose-device{
+          margin-bottom:12px;
+          p{
+            font-size: 11px;
+            color:#888;
+            margin-bottom:0px;
+          }
+          div{
+            select{
+              width:100%;
+            }
+          }
+        }
+        .buttons{
+          position: relative;
+          height: 30px;
+          #confirm{
+            position: absolute;
+            right:70px;
+            background: #2ecc71;
+            border:0;
+            color:white;
+            outline:none;
+          }
+          #cancel{
+            position: absolute;
+            right:0px;
+            background: #e74c3c;
+            color:white;
+            border:0;
+            outline:none;
+          }
+        }
+      }
     }
     #adder-overlay {
-        width: 415px;
-        height: 400px;
         z-index: 2;
         clear: both;
         border:1px;
-        padding: 0 0 0 21px;
-        .dial {
-            width: 60px;
-            height: 75px;
-            display: block;
-            float: left;
-            margin: 30px;
-            a.inner {
-                text-decoration: none;
-                color: #333;
-                .thumbnail-wrapper {
-                    border: 1px solid #e4e4e4;
-                    border-radius: 2px;
-                    width: 60px;
-                    height: 60px;
-                    background: url(/img/logo_icons/placeholder175x175.png);
-                    background-size: cover;
-                    position: relative;
-                    border-radius : 20px;
-                    .favicon {
-                        position: absolute;
-                        bottom: 5px;
-                        left: 5px;
-                        display:none;
-                    }
-                }
-                .title {
-                    text-align: center;
-                    height: 20px;
-                    font-size: 14px;
-                    line-height: 20px;
-                    width: 100%;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    font-size: 12px;
-                }
-            }
-        }
+      .header{
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+        font-size: 17px;
+        color: #333;
+      }
+      .dials-wrapper{
+        display: block !important;
+        height: 420px;
+        width: 725px;
+      }
     }
 }
+
+

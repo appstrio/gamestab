@@ -1,1 +1,6 @@
-<div id="adder-overlay" class="overlay"></div>
+<div id="adder-overlay" class="overlay">
+    <div class="inner">
+        <div class="header"> Add More Apps </div>
+        <div class="content dials-wrapper"> </div>
+    </div>
+</div>
