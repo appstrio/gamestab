@@ -1,37 +1,45 @@
 [{
     "title": "Angry Birds",
     "appID": "com.rovio.angrybirds",
-    "icon": "img/android/com.rovio.angrybirds.webp"
-}, {
+    "icon": ""
+},
+{
     "title": "Bebbled",
     "appID": "com.devuni.multibubbles.trial",
-    "icon": "img/android/com.devuni.multibubbles.trial.webp"
-}, {
+    "icon": ""
+},
+{
     "title": "Red Stone",
     "appID": "my.redstone",
-    "icon": "img/android/my.redstone.webp"
-}, {
+    "icon": ""
+},
+{
     "title": "Newton",
     "appID": "com.badlogic.newton",
-    "icon": "img/android/com.badlogic.newton.webp"
-}, {
+    "icon": ""
+},
+{
     "title": "Angry Birds Star Wars",
     "appID": "com.rovio.angrybirdsstarwars.ads.iap",
-    "icon": "img/android/com.rovio.angrybirdsstarwars.ads.iap.webp"
-}, {
+    "icon": ""
+},
+{
     "title": "Drop",
     "appID": "com.infraredpixel.drop",
-    "icon": "img/android/com.infraredpixel.drop.webp"
-}, {
+    "icon": ""
+},
+{
     "title": "Frozen Bubble",
     "appID": "org.jfedor.frozenbubble",
-    "icon": "img/android/org.jfedor.frozenbubble.webp"
-}, {
+    "icon": ""
+},
+{
     "title": "Replica Island",
     "appID": "com.replica.replicaisland",
-    "icon": "img/android/com.replica.replicaisland.webp"
-}, {
+    "icon": ""
+},
+{
     "title": "Gem Miner",
     "appID": "au.com.phil.minedemo",
-    "icon": "img/android/au.com.phil.minedemo.webp"
+    "icon": ""
 }]

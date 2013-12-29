@@ -8,7 +8,7 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
             self = Object.create(parent);
         self.settings = {
             preLoad: (typeof preLoad !== 'undefined') ? preLoad : false,
-            forceLoadFromJSON: env.JSONProviderForceLoadFromJSON,
+            forceLoadFromJSON: window.DEBUG.JSONProviderForceLoadFromJSON,
             mutableList: true,
             wrapDial: Dial,
         };
