@@ -13,7 +13,6 @@ define(["env", "when", "jquery", "templates", "Renderer"], function Overlay(env,
             });
         };
 
-
         this.open = function openOverlay(DOMEvent) {
             if(DOMEvent) {
                 DOMEvent.stopPropagation();
@@ -24,20 +23,18 @@ define(["env", "when", "jquery", "templates", "Renderer"], function Overlay(env,
             Renderer.$fadescreen.removeClass('hide');
             Renderer.$fadescreen.fadeIn();
             this.$overlay.show();
-        }
+        };
 
-        this.close = function closeOverlay() {
-
-        }
+        this.close = function closeOverlay() {};
 
         this.render = function() {
             Renderer.$fadescreen.append(this.$overlay)
             this.$overlay.fadeIn();
-        }
+        };
 
         this.setEventHandlers = function () {
-            this.$overlay.click(Renderer.noopOverlayHandler)
-        }
+            // this.$overlay.click(Renderer.noopOverlayHandler)
+        };
     };
 
     return new Overlay();
