@@ -38,6 +38,7 @@ require.config({
         "JSONProviderFactory"      : "modules/JSONProviderFactory",
         "StoredDialsProvider"      : "modules/StoredDialsProvider",
         "AndroidAppsListProvider"  : "modules/AndroidAppsListProvider",
+        "LovedGamesGamesProvider"    :  "modules/LovedGamesGamesProvider",
 
         "env": "env",
         "main": "main",

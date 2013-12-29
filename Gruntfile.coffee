@@ -115,7 +115,8 @@ module.exports = (grunt) ->
     # Development Tasks
 
     grunt.registerTask "copy:development", baseJSCopyTasks.concat ["copy:extraAssets","concat:dev", "createManifestFromOverrides", "copy:extraBuild"]
-    grunt.registerTask "default", ["setup_dev_env","build","watch"]
+    grunt.registerTask "start", ["setup_dev_env","build","watch"]
+    grunt.registerTask "default", ["build","watch"]
     grunt.registerTask "setup_dev_env", ["clean","copy:setup_dev_env","copy:libs", "copy:assets"]
     grunt.registerTask "build", ["copy:development","jade","less","dot"]
 

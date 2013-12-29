@@ -20,7 +20,7 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'AndroidDial'
                 promise: initting.promise,
             });
 
-            settings.pathToJSON = runtimeData.JSONPrefix + '/android_free_games.json'
+            settings.pathToJSON = runtimeData.JSONPrefix + '/games.json'
 
             var parentInitting = parent.init("LovedGamesGamesProvider", settings);
             parentInitting.then(initting.resolve).otherwise(initting.reject);

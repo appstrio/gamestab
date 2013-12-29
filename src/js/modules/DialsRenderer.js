@@ -1,6 +1,6 @@
 "use strict";
 
-define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredDialsProvider", "WebAppsListProvider", "ChromeAppsProvider", "AndroidAppsListProvider", "Runtime", "AdderOverlay", "Overlay"], function DialsRenderer(env, _, $, Renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, AndroidAppsListProvider, Runtime, AdderOverlay, Overlay) {
+define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredDialsProvider", "WebAppsListProvider", "ChromeAppsProvider", "AndroidAppsListProvider", "LovedGamesGamesProvider", "Runtime", "AdderOverlay", "Overlay"], function DialsRenderer(env, _, $, Renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, AndroidAppsListProvider, LovedGamesGamesProvider, Runtime, AdderOverlay, Overlay) {
     if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : DialsRenderer");
 
     var initting = when.defer(),
@@ -33,18 +33,20 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
 
         when.join(
             StoredDialsProvider.promise,
-            AndroidAppsListProvider.promise
+            AndroidAppsListProvider.promise,
+            LovedGamesGamesProvider.promise
         ).then(function render(dialsArray) {
             var StoredDialsDials = dialsArray[0],
-                AndroidAppsDials = dialsArray[1];
+                AndroidAppsDials = dialsArray[1],
+                LovedGamesGamesDials = dialsArray[2];
 
             renderingStoredDials = renderDialsByRow([{
                 provider  : StoredDialsProvider,
                 dials     : StoredDialsDials,
             }, {
-                provider  : AndroidAppsListProvider,
-                dials     : AndroidAppsDials,
-                shuffle   : true
+                provider  : LovedGamesGamesProvider,
+                dials     : LovedGamesGamesDials,
+                shuffle   : true // A/b self xDs
             }, {
                 provider  : AndroidAppsListProvider,
                 dials     : AndroidAppsDials,
