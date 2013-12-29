@@ -63,7 +63,10 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
         var input = self.$searchWrapper.find(".search-input").eq(0);
         input.typeahead({
             name: "main",
-            template: function renderTemplate(datum) { return "<p>" + datum.title + "</p>"; },
+            template: function renderTemplate(datum) {
+                var url = typeof datum.url === "undefined" ? "" : datum.url;
+                return "<p data-url=\"" + url + "\">" + datum.value + "</p>";
+            },
             source: getSuggestions,
             updater: function(item) {
                 doSearch(item);
@@ -89,7 +92,6 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
         return fetchingRawData.then(function processRawData(data) {
             return _.map(data, function(rawData) {
                 return {
-                    title: rawData,
                     value: rawData,
                     // icon: "some url to an icon of remote suggestion here"
                     // tokens: []
@@ -100,38 +102,59 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
     var fetchHistorySuggestions = function(query) {
         var def = when.defer();
-        chrome.history.search({
-            text: "",
-            maxResults: 20000,
-            startTime: 0
-        }, function(history) {
+        var processHistoryEntries =  function processHistoryEntries(historyEntries) {
             var url = "",
-                score = -99,
-                domain = "";
+                bestEntriesStack = [],
+                lastEntryScore = 0,
+                domain = "",
+                datums = [];
+            _.each(historyEntries, function transformToTypeaheadDatums(rawDatum) {
+                if (rawDatum.url.indexOf("file://") === -1 && rawDatum.url.indexOf("ftp://") === -1) {
+                    datums.push({
+                        url: rawDatum.url,
+                        value: rawDatum.url.replace("www.", ""),
+                        visitCount: rawDatum.visitCount,
+                    });
+                    datums.push({
+                        url: rawDatum.url,
+                        value: rawDatum.url.replace(/https?:\/\/?\.?/, ""),
+                        visitCount: rawDatum.visitCount,
+                    });
+                    datums.push({
+                        url: rawDatum.url,
+                        value: rawDatum.url.replace(/https?:\/\/?\.?/, "").replace("www.", ""),
+                        visitCount: rawDatum.visitCount,
+                    });
+                }
+            });
 
-            _.each(history, function cherryPickEntriesFromHistory(item) {
-                if (item.url.indexOf(query) != -1 && item.url.indexOf("file://") === -1 && item.url.indexOf("ftp://") === -1) {
-                    var itemDomain = item.url.replace(/https?:\/\/?\.?/, "").replace("www.", ""),
-                        wordRelevance = -itemDomain.indexOf(query) * query.length,
-                        itemScore = wordRelevance + (query.length * item.visitCount);
-
-                    if (itemScore > score) {
+            _.each(datums, function cherryPickEntriesFromHistory(entry) {
+                // Enforce matching only at the start of the domain
+                var entryDomain = entry.value;
+                if (entryDomain.indexOf(query) === 0) {
+                    var entryScore = query.length + entry.visitCount;
+                    if (entryScore > lastEntryScore) {
                         if (window.DEBUG && window.DEBUG.logSearchAlgorithm) {
-                            console.log("For [" + query + "]:", itemDomain, itemScore, item.visitCount, wordRelevance);
+                            console.log("For [" + query + "]:", entry.value, entry.visitCount, entryScore);
                         }
-                        score = itemScore;
-                        domain = itemDomain;
-                        url = item.url;
+                        lastEntryScore = entryScore;
+                        entry.score = entryScore;
+                        bestEntriesStack.push(entry);
                     }
                 }
             });
 
-            def.resolve({
-                title: domain,
-                value: url,
-                score: score
-            });
-        });
+            //debugger
+
+            def.resolve(bestEntriesStack.pop());
+        };
+
+        chrome.history.search({
+            text: "",
+            maxResults: 20000,
+            startTime: 0
+        }, processHistoryEntries);
+
         return def.promise;
     };
 
@@ -146,7 +169,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
                 //fetch domain suggestion
                 var historySuggestion = values[1];
 
-                if (historySuggestion !== "") {
+                if (typeof historySuggestion !== "undefined") {
                     if (historySuggestion.score < 50) {
                         output.splice(2, 0, historySuggestion);
                     } else {
