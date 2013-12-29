@@ -124,9 +124,8 @@ module.exports = (grunt) ->
     grunt.registerTask "copy:production", ["copy:extraAssets", "copy:assets", "createManifestFromOverrides", "copy:requirejs", "copy:extraBuild"]
 
     grunt.registerTask "package", ->
-
         if arguments[0]?
-            for INDEX in arguments.length by 2
+            for INDEX in [0..arguments.length - 1] by 2
                 name = arguments[INDEX]
                 version = arguments[INDEX + 1]
 
@@ -142,8 +141,6 @@ module.exports = (grunt) ->
                 grunt.config "build.version", build.version
 
                 grunt.task.run ["step1", "step2", "step3"]
-
-
 
     grunt.registerTask "copyJS", [
         "cd_tmp"
