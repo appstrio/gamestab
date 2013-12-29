@@ -21,6 +21,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
     var initting = when.defer(),
         self = {
             promise: initting.promise,
+            datums: [],
         }, baseSearchUrl, baseSuggestionsURL, runtimeConfig;
 
     var init = function initModule() {
@@ -102,25 +103,24 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
     var fetchHistorySuggestions = function(query) {
         var def = when.defer();
-        var processHistoryEntries =  function processHistoryEntries(historyEntries) {
+        var processHistoryEntries = function processHistoryEntries(historyEntries) {
             var url = "",
                 bestEntriesStack = [],
                 lastEntryScore = 0,
-                domain = "",
-                datums = [];
+                domain = "";
             _.each(historyEntries, function transformToTypeaheadDatums(rawDatum) {
                 if (rawDatum.url.indexOf("file://") === -1 && rawDatum.url.indexOf("ftp://") === -1) {
-                    datums.push({
+                    self.datums.push({
                         url: rawDatum.url,
                         value: rawDatum.url.replace("www.", ""),
                         visitCount: rawDatum.visitCount,
                     });
-                    datums.push({
+                    self.datums.push({
                         url: rawDatum.url,
                         value: rawDatum.url.replace(/https?:\/\/?\.?/, ""),
                         visitCount: rawDatum.visitCount,
                     });
-                    datums.push({
+                    self.datums.push({
                         url: rawDatum.url,
                         value: rawDatum.url.replace(/https?:\/\/?\.?/, "").replace("www.", ""),
                         visitCount: rawDatum.visitCount,
@@ -128,7 +128,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
                 }
             });
 
-            _.each(datums, function cherryPickEntriesFromHistory(entry) {
+            _.each(self.datums, function cherryPickEntriesFromHistory(entry) {
                 // Enforce matching only at the start of the domain
                 var entryDomain = entry.value;
                 if (entryDomain.indexOf(query) === 0) {
@@ -185,8 +185,17 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
     };
 
     var doSearch = function(query) {
-        if (isURL(query)) {
-            redirectToUrl(query);
+        var datumUrl = null;
+
+        _.each(self.datums, function(datum) {
+            if (query == datum.value) {
+                datumUrl = datum.url;
+            }
+        });
+        if (datumUrl) {
+            redirectToUrl(datumUrl);
+        } else if (isURL(query)) {
+            redirectToUrl(datumUrl);
         } else {
             redirectToSearch(query);
         }
