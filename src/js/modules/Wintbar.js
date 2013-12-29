@@ -82,14 +82,14 @@ define(['env', 'jquery', 'when', 'typeahead', 'Runtime', 'Renderer', 'templates'
                 //fetch domain suggestion
                 var historySuggestion = values[1],
                     value = historySuggestion[0],
-                    score = historySuggestion[1]
+                    score = historySuggestion[1];
 
-                if(value != "")
+                if(value !== "")
                     if (score < 50)
-                        output.splice(2, 0, value)
+                        output.splice(2, 0, value);
                     else
-                        output.splice(0, 0, value)
-            }
+                        output.splice(0, 0, value);
+            };
 
             callback(output);
         }).otherwise(env.errhandler);
