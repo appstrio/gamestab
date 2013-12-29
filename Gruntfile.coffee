@@ -65,8 +65,8 @@ module.exports = (grunt) ->
             # Build-specific files
             extraAssets:
                 expand:true
-                cwd: "extra/<%= build.name %>/"
-                src: "assets/**"
+                cwd: "extra/<%= build.name %>/assets"
+                src: "**/*"
                 dest: "<%= path.build %>"
             extraBuild:
                 files:
