@@ -39,19 +39,19 @@ define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, ren
 
             var url = $(e.currentTarget).find('a').attr('href');
 
-            if (window.analytics) {
-                window.analytics.sendEvent({
-                    category: 'Dials',
-                    action: 'Click',
-                    label: url
-                }, function() {
-                    window.location.href = url;
-                });
-            }
+            // if (window.analytics) {
+            //     window.analytics.sendEvent({
+            //         category: 'Dials',
+            //         action: 'Click',
+            //         label: url
+            //     }, function() {
+            //         window.location.href = url;
+            //     });
+            // }
 
-            setTimeout(function() {
+            // setTimeout(function() {
                 window.location.href = url;
-            }, 500);
+            // }, 500);
         };
 
 

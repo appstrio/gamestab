@@ -1,13 +1,14 @@
-"use strict";
 
 define(["env", "jquery", "Renderer", "when", "AndroIt","AndroidOverlay"], function DialContainer(env, $, renderer, when, AndroIt,AndroidOverlay) {
+    "use strict";
+
     if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : DialContainer");
     return function newDial(appID, title, icon, options) {
         var self = {},
             options = options || {},
             dialArgs = arguments;
 
-        var init = function initDial() {;
+        var init = function initDial() {
             if (dialArgs[0] && !dialArgs[1] && !dialArgs[2]) {
                 $.extend(self, dialArgs[0]);
             } else {
@@ -17,7 +18,7 @@ define(["env", "jquery", "Renderer", "when", "AndroIt","AndroidOverlay"], functi
                     icon: icon,
                 });
             }
-        }
+        };
 
         self.toObject = function getDialInformation() {
             return {
@@ -25,7 +26,7 @@ define(["env", "jquery", "Renderer", "when", "AndroIt","AndroidOverlay"], functi
                 title: title,
                 icon: icon,
             };
-        }
+        };
 
         self.launch = function launchHandler(e) {
             e.stopPropagation();

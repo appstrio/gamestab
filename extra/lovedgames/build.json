@@ -8,7 +8,7 @@
     "runtime_overriders"        : {
         "dormancyTimeout"          : 60000,
         "defaultDialsByCountryEnabled" : true,
-        "maxDials" : 18,
+        "maxDials" : 15,
         "androRow" : true
     }
 }

@@ -29,37 +29,11 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
 
         //Must be set before renderProvider is called
         self.androRow = runtimeData.androRow;
-        self.maxDials = runtimeData.maxDials
-
-        when.join(
-            StoredDialsProvider.promise,
-            AndroidAppsListProvider.promise,
-            LovedGamesGamesProvider.promise
-        ).then(function render(dialsArray) {
-            var StoredDialsDials = dialsArray[0],
-                AndroidAppsDials = dialsArray[1],
-                LovedGamesGamesDials = dialsArray[2];
-
-            renderingStoredDials = renderDialsByRow([{
-                provider  : StoredDialsProvider,
-                dials     : StoredDialsDials,
-            }, {
-                provider  : LovedGamesGamesProvider,
-                dials     : LovedGamesGamesDials,
-                shuffle   : true // A/b self xDs
-            }, {
-                provider  : AndroidAppsListProvider,
-                dials     : AndroidAppsDials,
-                shuffle   : true
-            }], {
-                maxDials  : self.maxDials,
-                $container: Renderer.$dialsWrapper,
-            });
-        }).otherwise(env.errhandler)
+        self.maxDials = runtimeData.maxDials;
 
         renderingWebApps = self.renderProvider(WebAppsListProvider, self.$webAppsOverlay)
+        renderingStoredDials = self.renderProvider(StoredDialsProvider, Renderer.$dialsWrapper)
         renderingChromeApps = self.renderProvider(ChromeAppsProvider, Renderer.$appsWrapper)
-        // renderingAndroidApps = self.renderProvider(AndroidAppsListProvider, Renderer.$androidWrapper);
 
         //TODO hardcoded
         $("#dials-wrapper").show();

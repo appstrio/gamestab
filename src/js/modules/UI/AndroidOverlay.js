@@ -18,9 +18,13 @@ define(["env", "when", "templates", "DialsRenderer", "Overlay", "AndroIt"], func
         this.setEventHandlers();
 
         var devices = this.$overlay.find("#devices");
+        if(!AndroIt.devicesList) { //TODO: clean this up
+            alert("Please log in into Play Store.");
+            return;
+        }
         $.each(AndroIt.devicesList, function() {
             devices.append($("<option />").val(this.deviceID).text(this.deviceModelName));
-        })
+        });
 
         this.open();
 

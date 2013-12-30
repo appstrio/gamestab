@@ -25,7 +25,7 @@
  *
  */
 
-define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, $, when, _, Config) {
+define(["env","jquery", "when", "underscore", "Config"], function Runtime (env, $, when, _, Config) {
     if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : Runtime");
 
     var initting = when.defer(),
@@ -92,7 +92,6 @@ define(['env','jquery', 'when', 'underscore', 'Config'], function Runtime (env, 
                 return self.store();
             }).otherwise(env.errhandler),
             completingSetup = storingData.then(initting.resolve).otherwise(env.errhandler);
-
 
         return initting.promise;
     };

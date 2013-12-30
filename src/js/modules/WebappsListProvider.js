@@ -19,7 +19,7 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
                 promise: initting.promise,
             });
 
-            settings.pathToJSON = runtimeData.JSONPrefix + '/webapps.json'
+            settings.pathToJSON = runtimeData.JSONPrefix + '/bestsites.json'
 
             var parentInitting = parent.init("WebAppsListProvider", settings);
             parentInitting.then(initting.resolve).otherwise(initting.reject);
