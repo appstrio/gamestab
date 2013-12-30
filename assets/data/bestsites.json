@@ -57,7 +57,7 @@
 }, {
     "title": "netflix",
     "url": "http://www.netflix.com",
-    "icon": "img/logo_icons/netflix.jpg"
+    "icon": "img/logo_icons/netflix.png"
 }, {
     "title": "hulu",
     "url": "http://www.hulu.com",
@@ -173,15 +173,11 @@
 }, {
     "title": "8tracks ",
     "url": "http://www.8tracks .com",
-    "icon": "img/logo_icons/8tracks .jpg"
-}, {
-    "title": "8tracks ",
-    "url": "http://www.8tracks .com",
-    "icon": "img/logo_icons/8tracks .jpg"
+    "icon": "img/logo_icons/8tracks.png"
 }, {
     "title": "tunein",
     "url": "http://www.tunein.com",
-    "icon": "img/logo_icons/.jpg"
+    "icon": "img/logo_icons/tunein.jpg"
 }, {
     "title": "grooveshark",
     "url": "http://www.grooveshark.com",
