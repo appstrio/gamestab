@@ -1,7 +1,10 @@
-"use strict";
+define(["env", "jquery", "when", "JSONProviderFactory", "Runtime"], function sitesProvider(env, $, when, JSONProviderFactory, Runtime) {
+    "use strict";
 
-define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', 'Dial'], function WebAppsListProvider(env, $, when, JSONProviderFactory, Runtime, renderer, Dial) {
-    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : WebAppsListProvider");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) {
+        console.log("Loading Module : sitesProvider");
+    }
+
     return (function() {
         var initting = when.defer(),
             parent = JSONProviderFactory(),
@@ -12,21 +15,22 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
                 pathToJSON: null,
             };
 
-        if(window.DEBUG && window.DEBUG.exposeModules) window.WebAppsListProvider = self;
+        if(window.DEBUG && window.DEBUG.exposeModules) {
+            window.sitesProvider = self;
+        }
 
         var init = function initModule(runtimeData) {
             $.extend(self, {
                 promise: initting.promise,
             });
 
-            settings.pathToJSON = runtimeData.JSONPrefix + '/webapps.json';
+            settings.pathToJSON = runtimeData.JSONPrefix + "/bestsites.json";
 
-            var parentInitting = parent.init("WebAppsListProvider", settings);
+            var parentInitting = parent.init("sitesProvider", settings);
             parentInitting.then(initting.resolve).otherwise(initting.reject);
         };
 
         Runtime.promise.then(init);
-
 
         return self;
     })(JSONProviderFactory);

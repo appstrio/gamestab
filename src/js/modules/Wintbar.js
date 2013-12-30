@@ -40,10 +40,12 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
         return initting.resolve();
     };
+
     var searchHandler = function searchHandler() {
         var query = self.$typeahead.val();
         doSearch(query);
     };
+
     var setEventHandlers = function() {
         $.fn.onEnterKey = function(callback) {
             return $(this).keyup(function(e) {
@@ -245,7 +247,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
         self.$searchWrapper.html($(Template["search-wrapper"]()));
 
         self.$typeahead = self.$searchWrapper.find(".search-input").eq(0);
-    }
+    };
 
     var focusOnSearch = function() {
         chrome.tabs.getCurrent(function(tab) {
