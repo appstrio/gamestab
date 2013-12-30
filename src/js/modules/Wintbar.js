@@ -104,25 +104,25 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
     var fetchHistorySuggestions = function(query) {
         var def = when.defer();
         var processHistoryEntries = function processHistoryEntries(historyEntries) {
-            var url = "",
-                bestEntriesStack = [],
-                lastEntryScore = 0,
-                domain = "";
+            var bestEntriesStack = [],
+                lastEntryScore = 0;
             _.each(historyEntries, function transformToTypeaheadDatums(rawDatum) {
                 if (rawDatum.url.indexOf("file://") === -1 && rawDatum.url.indexOf("ftp://") === -1) {
+                    var url = rawDatum.url;
+                    if (url.charAt(url.length - 1) == "/") url = url.substr(0, url.length - 1);
                     self.datums.push({
-                        url: rawDatum.url,
-                        value: rawDatum.url.replace("www.", ""),
+                        url: url,
+                        value: url.replace("www.", ""),
                         visitCount: rawDatum.visitCount,
                     });
                     self.datums.push({
-                        url: rawDatum.url,
-                        value: rawDatum.url.replace(/https?:\/\/?\.?/, ""),
+                        url: url,
+                        value: url.replace(/https?:\/\/?\.?/, ""),
                         visitCount: rawDatum.visitCount,
                     });
                     self.datums.push({
-                        url: rawDatum.url,
-                        value: rawDatum.url.replace(/https?:\/\/?\.?/, "").replace("www.", ""),
+                        url: url,
+                        value: url.replace(/https?:\/\/?\.?/, "").replace("www.", ""),
                         visitCount: rawDatum.visitCount,
                     });
                 }
