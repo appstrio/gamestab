@@ -1,5 +1,4 @@
-
-define(["env", "jquery", "Renderer", "when"], function DialContainer(env, $, renderer, when) {
+define(["env", "jquery", "Renderer", "when"], function Alert(env, $, renderer, when) {
     "use strict";
 
     var self = {},
@@ -7,18 +6,18 @@ define(["env", "jquery", "Renderer", "when"], function DialContainer(env, $, ren
         defaultOptions = {
             timeToDisplay : 1200
         },
-        $alert = $('#alert'),
-        $inner = $alert.find('.inner').eq(0);
+        $alert = $("#alert"),
+        $inner = $alert.find(".inner").eq(0);
 
     self.show = function(msg, _options){
         _options = _options || {};
         var options = $.extend({}, defaultOptions, _options);
         $inner.text(msg);
-        $alert.addClass('showed');
+        $alert.addClass("showed");
         setTimeout(function(){
-            $alert.removeClass('showed');
+            $alert.removeClass("showed");
         }, options.timeToDisplay + animationDuration);
-    }
+    };
 
     return self;
 });

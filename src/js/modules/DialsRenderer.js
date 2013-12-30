@@ -1,7 +1,9 @@
-"use strict";
-
 define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredDialsProvider", "WebAppsListProvider", "ChromeAppsProvider", "AndroidAppsListProvider", "LovedGamesGamesProvider", "Runtime", "AdderOverlay", "Overlay", "Alert"], function DialsRenderer(env, _, $, Renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, AndroidAppsListProvider, LovedGamesGamesProvider, Runtime, AdderOverlay, Overlay, Alert) {
-    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : DialsRenderer");
+    "use strict";
+
+    if (window.DEBUG && window.DEBUG.logLoadOrder) {
+        console.log("Loading Module : DialsRenderer");
+    }
 
     var initting = when.defer(),
         self = {
@@ -55,7 +57,7 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
             setTimeout(function() {
                 rendering.resolve();
             }, 0);
-        }).otherwise(env.errhandler);
+        });
 
         return rendering.promise;
     };
@@ -105,23 +107,27 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
         return when.resolve();
     };
 
-    self.renderDial = function(provider, $container, dial, options) {
+    self.renderDial = function(provider, $container, dial) {
         var $dial;
 
         if (provider.name == "WebAppsListProvider") {
             dial.oldLaunch = dial.launch;
             dial.launch = overlayDialLaunchHandler(dial);
             $dial = $(templates["overlay-dial"](dial));
-        } else
+        } else {
             $dial = $(templates["classic-dial"](dial));
+        }
 
-        if(Renderer.$dialsWrapper === $container)
+        if(Renderer.$dialsWrapper === $container) {
             self.currentDials.push(dial);
+        }
 
         $dial.on("click", dial.launch);
         $dial.on("click", ".dial-remove-button", self.renderDialRemovalFactory(provider, dial));
 
-        if (dial.id) $dial.data("id", dial.id);
+        if (dial.id) {
+            $dial.data("id", dial.id);
+        }
 
         $dial.hide();
         $container.append($dial);
@@ -132,24 +138,28 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
 
 
     var overlayDialLaunchHandler = function(dial) {
-        return function(e) {
+        return function() {
             if(self.currentDials.length < self.maxDials) {
-                var adding = StoredDialsProvider.addDial(dial)
+                var adding = StoredDialsProvider.addDial(dial);
                 adding.then(function callRenderDial(dial) {
-                    dial.launch = dial.oldLaunch
-                    delete dial.oldLaunch
-                    self.renderDial(StoredDialsProvider, Renderer.$dialsWrapper, dial)
-                }).otherwise(env.errhandler)
-                return adding.promise
-            } else alert("No more room, delete something first!")
-        }
-    }
+                    dial.launch = dial.oldLaunch;
+                    delete dial.oldLaunch;
+                    self.renderDial(StoredDialsProvider, Renderer.$dialsWrapper, dial);
+                    Alert.show("You Added an app. Yay!");
+                }).otherwise(env.errhandler);
+                return adding.promise;
+            } else {
+                Alert.show("No more room, delete something first!");
+            }
+        };
+    };
 
     self.renderDialRemovalFactory = function(provider, dial) {
         return function(e) {
             e.stopPropagation();
             e.preventDefault();
 
+            // If provider has this method, it is responsible for displaying the message.
             if (provider.removeDialFromList) {
                 var removing = provider.removeDialFromList(dial);
                 removing.then(function() {
@@ -163,9 +173,9 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
             if(provider.name === "StoredDialsProvider") {
                 var index = self.currentDials.indexOf(dial);
                 self.currentDials = self.currentDials.splice(index, 1);
-            }
 
-            Alert.show('Dial was removed successfully!');
+                Alert.show("Move.. to the TRASH!");
+            }
         };
     };
 
@@ -184,7 +194,6 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
         return o;
     };
     Runtime.promise.then(init, env.errhandler);
-    initting.promise.otherwise(env.errhandler);
 
     if(window.DEBUG && window.DEBUG.exposeModules) { window.DialsRenderer = self; }
 

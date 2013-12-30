@@ -177,7 +177,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
             }
 
             callback(output);
-        }).otherwise(env.errhandler);
+        });
 
         // return getSuggestions.promise;
     };

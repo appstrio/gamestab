@@ -117,7 +117,7 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "
         // self.removeDial = function removeDial(dial) {};
 
         Runtime.promise.then(init);
-        initting.promise.otherwise(env.errhandler);
+
 
         return self;
     })();

@@ -91,7 +91,7 @@ define(["env","jquery", "when", "underscore", "Config"], function Runtime (env, 
 
                 return self.store();
             }).otherwise(env.errhandler),
-            completingSetup = storingData.then(initting.resolve).otherwise(env.errhandler);
+            completingSetup = storingData.then(initting.resolve);
 
         return initting.promise;
     };

@@ -1,6 +1,11 @@
-define(["env", "when", "templates", "DialsRenderer", "Overlay", "AndroIt"], function AndroidOverlay(env, when, Template, DialsRenderer, Overlay, AndroIt) {
+define(["env", "when", "templates", "DialsRenderer", "Overlay", "AndroIt", "Alert"], function AndroidOverlayModule(env, when, Template, DialsRenderer, Overlay, AndroIt, Alert) {
 
     var init = function () {
+        if(!AndroIt.enabled) {
+            Alert.show("Error connecting to Play Store. Please try again later.");
+            return;
+        }
+
         var lang = {
             "confirm"    : "Install!",
             "cancel"     : "Cancel",
@@ -18,10 +23,7 @@ define(["env", "when", "templates", "DialsRenderer", "Overlay", "AndroIt"], func
         this.render();
 
         var devices = this.$overlay.find("#devices");
-        if(!AndroIt.devicesList) { //TODO: clean this up
-            alert("Please log in into Play Store.");
-            return;
-        }
+
         $.each(AndroIt.devicesList, function() {
             devices.append($("<option />").val(this.deviceID).text(this.deviceModelName));
         });
@@ -29,15 +31,15 @@ define(["env", "when", "templates", "DialsRenderer", "Overlay", "AndroIt"], func
         this.open();
 
         this.confirmed.promise.then(function callInstallApp() {
-            var deviceID = devices.val()
-            AndroIt.install(self.androdial.appID, deviceID)
+            var deviceID = devices.val();
+            AndroIt.install(self.androdial.appID, deviceID);
         }).ensure(function callInstallApp() {
             self.closeOverlayHandler();
             self.$overlay.remove();
-        })
+        });
 
         return this;
-    }
+    };
 
     var AndroidOverlay = function AndroidOverlay(androdial) {
         this.init = init;
@@ -46,4 +48,4 @@ define(["env", "when", "templates", "DialsRenderer", "Overlay", "AndroIt"], func
     AndroidOverlay.prototype = Overlay;
 
     return AndroidOverlay;
-})
+});

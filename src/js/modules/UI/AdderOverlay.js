@@ -1,7 +1,9 @@
-define(["env", "when", "jquery", "templates", "Renderer", "Overlay"], function AdderOverlay(env, when, $, Template, Renderer, Overlay) {
-    var AdderOverlay = function AdderOverlay(androdial) {
+define(["env", "when", "jquery", "templates", "Renderer", "Overlay"], function AdderOverlayModule(env, when, $, Template, Renderer, Overlay) {
+    "use strict";
+
+    var AdderOverlay = function AdderOverlay() {
         this.$overlay = $(Template["adder-overlay"]());
-        this.$content = this.$overlay.find('.content').eq(0);
+        this.$content = this.$overlay.find(".content").eq(0);
     };
 
     AdderOverlay.prototype = Overlay;
@@ -12,6 +14,6 @@ define(["env", "when", "jquery", "templates", "Renderer", "Overlay"], function A
         overlay.init();
         overlay.render();
 
-        return overlay
+        return overlay;
     })();
 });

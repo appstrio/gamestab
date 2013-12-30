@@ -1,6 +1,6 @@
 "use strict";
 
-define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'AndroidDial'], function LovedGamesGamesProvider(env, $, when, JSONProviderFactory, Runtime, AndroidDial) {
+define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "AndroidDial"], function LovedGamesGamesProvider(env, $, when, JSONProviderFactory, Runtime, AndroidDial) {
     if (window.DEBUG && window.DEBUGlogLoadOrder) console.log("Loading Module : LovedGamesGamesProvider");
     return (function() {
         var initting = when.defer(),
@@ -20,14 +20,13 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'AndroidDial'
                 promise: initting.promise,
             });
 
-            settings.pathToJSON = runtimeData.JSONPrefix + '/games.json'
+            settings.pathToJSON = runtimeData.JSONPrefix + "/games.json";
 
             var parentInitting = parent.init("LovedGamesGamesProvider", settings);
             parentInitting.then(initting.resolve).otherwise(initting.reject);
         };
 
-        Runtime.promise.then(init)
-        initting.promise.otherwise(env.errhandler);
+        Runtime.promise.then(init);
 
         return self;
     })();
