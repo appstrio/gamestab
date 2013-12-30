@@ -158,15 +158,15 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
                         $ele.off().remove();
                     });
                 });
-                if(provider.name === "StoredDialsProvider") {
-                    var index = self.currentDials.indexOf(dial);
-                    self.currentDials = self.currentDials.splice(index, 1);
-                }
-
-                Alert.show('Dial was removed successfully!');
-
             }
-        }
+
+            if(provider.name === "StoredDialsProvider") {
+                var index = self.currentDials.indexOf(dial);
+                self.currentDials = self.currentDials.splice(index, 1);
+            }
+
+            Alert.show('Dial was removed successfully!');
+        };
     };
 
     var setEventHandlers = function() {
