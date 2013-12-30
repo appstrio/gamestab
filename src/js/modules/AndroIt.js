@@ -11,7 +11,7 @@
  *
 **/
 define(['env', 'when', 'jquery', 'underscore'], function AndroIt(env, when, jquery, _) {
-    if (env.DEBUG && env.logLoadOrder) console.log("Loading Module : Runtime");
+    if (window.DEBUG && window.DEBUGlogLoadOrder) console.log("Loading Module : Runtime");
 
     var initting = when.defer(),
         self = {
