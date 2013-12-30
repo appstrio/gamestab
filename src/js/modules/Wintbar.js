@@ -40,13 +40,11 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
         return initting.resolve();
     };
-
+    var searchHandler = function searchHandler() {
+        var query = self.$typeahead.val();
+        doSearch(query);
+    };
     var setEventHandlers = function() {
-        var searchHandler = function searchHandler() {
-            var query = self.$searchWrapper.find("input").eq(1).val();
-            doSearch(query);
-        };
-
         $.fn.onEnterKey = function(callback) {
             return $(this).keyup(function(e) {
                 if (e.keyCode === 13) {
@@ -61,8 +59,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
     };
     var setupTypeahead = function() {
-        var input = self.$searchWrapper.find(".search-input").eq(0);
-        input.typeahead({
+        self.$typeahead.typeahead({
             name: "main",
             template: function renderTemplate(datum) {
                 var url = typeof datum.url === "undefined" ? "" : datum.url;
@@ -73,6 +70,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
                 doSearch(item);
             }
         });
+        $(document).on("typeahead:selected", searchHandler);
     };
 
     var fetchRemoteSuggestionsRaw = function(query) {
@@ -203,7 +201,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
     var isURL = function COMMON_isUrl(url) {
         return (url.indexOf("http://") === 0 || url.indexOf("https://") === 0 || url.indexOf("www.") === 0);
-    }
+    };
 
     var redirectToUrl = function(url) {
         if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = "http://" + url;
@@ -246,6 +244,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
         // setup search layout
         self.$searchWrapper.html($(Template["search-wrapper"]()));
 
+        self.$typeahead = self.$searchWrapper.find(".search-input").eq(0);
     }
 
     var focusOnSearch = function() {
