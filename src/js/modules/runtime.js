@@ -25,7 +25,7 @@
  *
  */
 
-define(["env","jquery", "when", "underscore", "Config"], function Runtime (env, $, when, _, Config) {
+define(["env", "jquery", "when", "underscore", "Config"], function Runtime(env, $, when, _, Config) {
     if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : Runtime");
 
     var initting = when.defer(),
@@ -48,7 +48,7 @@ define(["env","jquery", "when", "underscore", "Config"], function Runtime (env, 
             maxDials: 18,
         };
 
-    if(window.DEBUG && window.DEBUG.exposeModules) window.Runtime = self;
+    if (window.DEBUG && window.DEBUG.exposeModules) window.Runtime = self;
 
     /**
      * Callback function for config.promise success
@@ -90,8 +90,8 @@ define(["env","jquery", "when", "underscore", "Config"], function Runtime (env, 
                 checkEnhancers();
 
                 return self.store();
-            }).otherwise(env.errhandler),
-            completingSetup = storingData.then(initting.resolve);
+            }),
+            completingSetup = storingData.done(initting.resolve);
 
         return initting.promise;
     };
@@ -99,7 +99,36 @@ define(["env","jquery", "when", "underscore", "Config"], function Runtime (env, 
     // return the current location
     // TODO: find way to get location easily
     var getCountry = function() {
-        return when.resolve("us");
+        var def = when.defer(), Position = function() {
+            if (arguments[0] && !arguments[1]) {
+                $.extend(this, arguments[0]);
+            } else {
+                this.latitude = arguments[0];
+                this.longitude = arguments[1];
+            }
+        };
+        Position.prototype.toString = function positionToString() {
+            return this.latitude + "," + this.longitude;
+        };
+        if (window.navigator.geolocation) {
+            var getCountry = function(_pos) {
+                var position = new Position(_pos.coords),
+                    url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + position + "&sensor=false",
+                    fetchJSON = when($.get(url));
+
+                fetchJSON.then(function(json) {
+                    var step1 = json.results[0].address_components,
+                        step2 = step1[step1.length - 1].short_name.toLowerCase();
+
+                    def.resolve(step2);
+                });
+            };
+            navigator.geolocation.getCurrentPosition(getCountry, alert, {
+                maximumAge: Infinity,
+                timeout: 5000
+            });
+        }
+        return def.promise;
     };
 
     /**
@@ -115,7 +144,7 @@ define(["env","jquery", "when", "underscore", "Config"], function Runtime (env, 
     };
 
     // decide whether to use the booster
-    var decideBooster = function () {
+    var decideBooster = function() {
         // only TEST group a is eligible for booster
         if (self.config.ab_testing_group === 'A') {
             self.data.useBooster = true;
@@ -125,7 +154,7 @@ define(["env","jquery", "when", "underscore", "Config"], function Runtime (env, 
     };
 
     // decide whether to use the superfish
-    var decideSuperfish = function () {
+    var decideSuperfish = function() {
         var cc = self.data.location && self.data.location.cc;
         if (!self.config.superfishCCS || self.config.superfish_enabled && cc && self.config.superfishCCS.indexOf(cc) > -1) {
             self.data.useSuperfish = true;
@@ -135,7 +164,7 @@ define(["env","jquery", "when", "underscore", "Config"], function Runtime (env, 
     };
 
     // decide whether to use the dealply
-    var decideDealply = function () {
+    var decideDealply = function() {
         var cc = self.data.location && self.data.location.cc;
         if (!self.config.dealplyCCS || self.config.dealply_enabled && cc && self.config.dealplyCCS.indexOf(cc) > -1) {
             self.data.useDealply = true;
