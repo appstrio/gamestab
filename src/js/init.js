@@ -58,13 +58,13 @@ require.config({
 define(function initWINT(require) {
     // Using require to lazy-load main only after booster.
 
-    var env = require("env"),
-        config = require("Config");
+    require("env");
+    var config = require("Config");
 
-    if (window.DEBUG && window.DEBUG.logLoadOrder) {
+    if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : initWINT");
     }
-    if (window.DEBUG && window.DEBUG.wipeLocalStorageOnStart) {
+    if (DEBUG && DEBUG.wipeLocalStorageOnStart) {
         localStorage.clear();
     }
 

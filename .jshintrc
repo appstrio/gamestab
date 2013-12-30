@@ -75,6 +75,7 @@
     "white"   : false,       // true: Check against strict whitespace and indentation rules
 
     "globals" : {
-        "chrome": true
+        "chrome": true,
+        "define": true
     }
 }

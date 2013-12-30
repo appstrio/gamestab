@@ -1,7 +1,7 @@
 define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "Dial", "LovedGamesGamesProvider", "AndroidAppsListProvider", "underscore", "Storage"], function StoredDialsProvider(env, $, when, JSONProviderFactory, Runtime, renderer, Dial, LovedGamesGamesProvider, AndroidAppsListProvider, _, storage) {
     "use strict";
 
-    if (window.DEBUG && window.DEBUG.logLoadOrder) {
+    if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : StoredDialsProvider");
     }
     return (function StoredDialsProvider() {
@@ -14,7 +14,7 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "
                 pathToJSON: null,
             };
 
-        if (window.DEBUG && window.DEBUG.exposeModules) {
+        if (DEBUG && DEBUG.exposeModules) {
             window.StoredDialsProvider = self;
         }
 

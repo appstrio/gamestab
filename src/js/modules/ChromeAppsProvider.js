@@ -1,7 +1,7 @@
 define(["env", "jquery", "when", "Provider", "AppDial", "Alert", "underscore"], function ChromeAppsProvider(env, $, when, provider, AppDial, Alert, _) {
     "use strict";
 
-    if (window.DEBUG && window.DEBUG.logLoadOrder) {
+    if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : ChromeAppsProvider");
     }
     return (function(parent) {

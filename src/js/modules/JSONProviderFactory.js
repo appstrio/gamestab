@@ -1,7 +1,7 @@
 define(["env", "jquery", "when", "Provider", "Runtime", "Renderer", "Dial", "AndroidDial", "underscore"], function JSONProviderFactory(env, $, when, BaseProvider, runtime, renderer, Dial, AndroidDial, _) {
     "use strict";
 
-    if (window.DEBUG && window.DEBUG.logLoadOrder) {
+    if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : JSONProviderFactory");
     }
 
@@ -11,7 +11,7 @@ define(["env", "jquery", "when", "Provider", "Runtime", "Renderer", "Dial", "And
             self = Object.create(parent);
         self.settings = {
             preLoad: (typeof preLoad !== 'undefined') ? preLoad : false,
-            forceLoadFromJSON: window.DEBUG.JSONProviderForceLoadFromJSON,
+            forceLoadFromJSON: false,
             mutableList: true,
             wrapDial: Dial,
         };

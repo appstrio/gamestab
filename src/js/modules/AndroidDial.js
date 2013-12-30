@@ -2,7 +2,7 @@
 define(["env", "jquery", "Renderer", "when", "AndroIt","AndroidOverlay"], function AndroidDial(env, $, renderer, when, AndroIt,AndroidOverlay) {
     "use strict";
 
-    if (window.DEBUG && window.DEBUGlogLoadOrder) console.log("Loading Module : AndroidDial");
+    if (DEBUG && DEBUGlogLoadOrder) console.log("Loading Module : AndroidDial");
     return function newAndroidDial(appID, title, icon, options) {
         var self = {},
             options = options || {},

@@ -19,6 +19,7 @@ module.exports = (grunt) ->
         # Production Only Tasks
         clean:
             build: ["<%= path.build %>"]
+        # // https://github.com/jrburke/r.js/blob/master/build/example.build.js
         requirejs:
             production:
                 options:
@@ -28,6 +29,10 @@ module.exports = (grunt) ->
                     out: "<%= path.build %>/js/init.js"
                     findNestedDependencies: true
                     preserveLicenseComments: false # No fucking comments at the top of my build.
+                    uglify:
+                        defines:
+                            DEBUG: ['name', 'false']
+
         # Core Tasks
         jade:
             compile:
@@ -70,6 +75,7 @@ module.exports = (grunt) ->
                 dest: "<%= path.build %>"
             extraBuild:
                 files:
+                    "<%= path.build %>/css/bootstrap.css"     : "bower_components/bootstrap/dist/css/bootstrap.css"
                     "<%= path.build %>/data/build.json": "extra/<%= build.name %>/build.json"
             # Core files:
             requirejs:
@@ -85,7 +91,6 @@ module.exports = (grunt) ->
                     "<%= path.build %>/js/libs/underscore.js" : "bower_components/underscore/underscore-min.js"
                     "<%= path.build %>/js/libs/uri.js"        : "bower_components/uri.js/src/URI.min.js",
                     "<%= path.build %>/js/libs/typeahead.js"  : "<%= path.src %>/js/modified_libs/typeahead_modified.js"
-                    "<%= path.build %>/css/bootstrap.css"     : "bower_components/bootstrap/dist/css/bootstrap.css"
             assets:
                 expand: true
                 cwd: "assets"

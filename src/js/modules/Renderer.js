@@ -1,7 +1,7 @@
 'use strict';
 
 define(['env', 'underscore', 'jquery', 'templates', 'when'], function Renderer(env, _, $, templates, when) {
-    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log('Loading Module : Renderer');
+    if (DEBUG && DEBUG.logLoadOrder) console.log('Loading Module : Renderer');
     var
         self = {};
 

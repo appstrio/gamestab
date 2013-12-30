@@ -2,7 +2,7 @@
 define(["env", "underscore", "jquery", "templates", "when", "Renderer"], function MenuRenderer(env, _, $, templates, when, renderer) {
     "use strict";
 
-    if (window.DEBUG && window.DEBUG.logLoadOrdervar) {
+    if (DEBUG && DEBUG.logLoadOrdervar) {
         console.log("Loading Module : MenuRenderer");
     }
 

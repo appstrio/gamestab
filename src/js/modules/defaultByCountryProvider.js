@@ -1,7 +1,7 @@
 define(["env", "jquery", "when", "JSONProviderFactory", "Runtime"], function defaultByCountryProvider(env, $, when, JSONProviderFactory, Runtime) {
     "use strict";
 
-    if (window.DEBUG && window.DEBUG.logLoadOrder) {
+    if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : defaultByCountryProvider");
     }
 
@@ -15,7 +15,7 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime"], function def
                 pathToJSON: null,
             };
 
-        if(window.DEBUG && window.DEBUG.exposeModules) {
+        if(DEBUG && DEBUG.exposeModules) {
             window.defaultByCountryProvider = self;
         }
 

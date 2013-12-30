@@ -1,7 +1,7 @@
 'use strict';
 
 define(['env', 'when'], function Storage(env, when) {
-    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : Storage");
+    if (DEBUG && DEBUG.logLoadOrder) console.log("Loading Module : Storage");
     var self = {};
 
     // TODO : localstorage is not async, but chrome.storage is http://developer.chrome.com/extensions/storage.html#type-StorageArea

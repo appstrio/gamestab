@@ -4,7 +4,7 @@ define(function env() {
         booster                       : true
     };
 
-    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : env");
+    if (DEBUG && DEBUG.logLoadOrder) console.log("Loading Module : env");
 
     return settings;
 });

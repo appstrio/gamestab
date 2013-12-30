@@ -1,7 +1,7 @@
 define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredDialsProvider", "WebAppsListProvider", "ChromeAppsProvider", "AndroidAppsListProvider", "LovedGamesGamesProvider", "Runtime", "AdderOverlay", "Overlay", "Alert", "sitesProvider", "defaultByCountryProvider"], function DialsRenderer(env, _, $, Renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, AndroidAppsListProvider, LovedGamesGamesProvider, Runtime, AdderOverlay, Overlay, Alert, sitesProvider, defaultByCountryProvider) {
     "use strict";
 
-    if (window.DEBUG && window.DEBUG.logLoadOrder) {
+    if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : DialsRenderer");
     }
 
@@ -225,7 +225,7 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
     };
     Runtime.promise.then(init, env.errhandler);
 
-    if (window.DEBUG && window.DEBUG.exposeModules) {
+    if (DEBUG && DEBUG.exposeModules) {
         window.DialsRenderer = self;
     }
 

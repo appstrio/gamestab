@@ -1,6 +1,6 @@
 
 (function initDEBUGOptions () {
-    window.DEBUG = {
+    DEBUG = {
         logLoadOrder                  : false,
         exposeModules                 : false,
         forceRefreshRuntimeData       : false,

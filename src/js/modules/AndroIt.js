@@ -12,7 +12,7 @@
 define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, when, jquery, _, Alert) {
     "use strict";
 
-    if (window.DEBUG && window.DEBUGlogLoadOrder) {
+    if (DEBUG && DEBUGlogLoadOrder) {
         console.log("Loading Module : Runtime");
     }
 
@@ -29,7 +29,7 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
             },
         };
 
-    if (window.DEBUG && window.DEBUG.exposeModules) {
+    if (DEBUG && DEBUG.exposeModules) {
         window.AndroIt = self;
     }
 
@@ -58,7 +58,7 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
                 isTokenFound = matches.length >= 2;
 
             if (!isTokenFound) {
-                if(window.DEBUG) debugger
+                if(DEBUG) debugger
                 return def.reject("Token wasn't found");
             } else {
                 var userToken = matches[1];

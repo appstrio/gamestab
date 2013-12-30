@@ -15,7 +15,7 @@
 define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates", "underscore"], function Wintbar(env, $, when, typeahead, Runtime, Renderer, Template, _) {
     "use strict";
 
-    if (window.DEBUG && window.DEBUG.logLoadOrder) {
+    if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : Wintbar");
     }
     var initting = when.defer(),
@@ -134,7 +134,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
                 if (entryDomain.indexOf(query) === 0) {
                     var entryScore = query.length + entry.visitCount;
                     if (entryScore > lastEntryScore) {
-                        if (window.DEBUG && window.DEBUG.logSearchAlgorithm) {
+                        if (DEBUG && DEBUG.logSearchAlgorithm) {
                             console.log("For [" + query + "]:", entry.value, entry.visitCount, entryScore);
                         }
                         lastEntryScore = entryScore;
