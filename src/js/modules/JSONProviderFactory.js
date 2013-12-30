@@ -1,7 +1,10 @@
-"use strict";
+define(["env", "jquery", "when", "Provider", "Runtime", "Renderer", "Dial", "AndroidDial", "underscore"], function JSONProviderFactory(env, $, when, BaseProvider, runtime, renderer, Dial, AndroidDial, _) {
+    "use strict";
 
-define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], function JSONProviderFactory(env, $, when, BaseProvider, runtime, renderer, Dial) {
-    if (window.DEBUG && window.DEBUG.logLoadOrder) console.log("Loading Module : JSONProviderFactory");
+    if (window.DEBUG && window.DEBUG.logLoadOrder) {
+        console.log("Loading Module : JSONProviderFactory");
+    }
+
     return function JSONProviderFactory(preLoad) {
         var initting = when.defer(),
             parent = BaseProvider(),
@@ -28,14 +31,16 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
             $.extend(self.settings, options);
 
             // if we don't want the dial list to ever change:
-            if (!self.settings.mutableList)
+            if (!self.settings.mutableList) {
                 this.removeDialFromList = null;
+            }
 
             //Fetch list of dials
-            if (self.settings.forceLoadFromJSON)
+            if (self.settings.forceLoadFromJSON) {
                 listFetching = when.reject();
-            else
+            } else {
                 listFetching = self.getDialList(self.name);
+            }
 
             listFetching.then(resolveAndSave)
                 .otherwise(function NoDialsInLocalStorage() {
@@ -52,11 +57,21 @@ define(['env', 'jquery', 'when', 'Provider', 'Runtime', 'Renderer', 'Dial'], fun
             if (dials) {
                 self.storeDialList(self.name, dials, true);
                 self.dials = _.map(dials, function(dial) {
-                    return self.settings.wrapDial(dial);
+                    if (dial._type) {
+                        if (dial._type === "Dial") {
+                            return Dial(dial);
+                        } else if (dial._type === "AndroidDial") {
+                            return AndroidDial(dial);
+                        }
+                    } else {
+                        return self.settings.wrapDial(dial);
+                    }
                 });
                 initting.resolve(self.dials);
-            } else initting.reject("NoDials")
-        }
+            } else {
+                initting.reject("NoDials");
+            }
+        };
 
         if (self.settings.preLoad)
             self.init();

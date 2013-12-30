@@ -26,8 +26,6 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "
             settings.maxDials = runtimeData.maxDials;
             settings.defaultDialPatternID = runtimeData.dialPatternID || "def";
 
-
-
             // Determine whether to load default-by-ccJSON or defaultJSON
             if (runtimeData.defaultDialsByCountryEnabled) {
                 settings.pathToJSON = runtimeData.JSONPrefix + "/defaults" + runtimeData.countryCode.toUpperCase() + ".json";
@@ -37,7 +35,7 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "
 
             var parentInitting = parent.init(name, settings);
 
-            var isntFirstRunTime = null //storage.get(name);
+            var isntFirstRunTime = storage.get(name);
             if (!isntFirstRunTime) {
                 parentInitting.then(loadDialPattern).then(initting.resolve).otherwise(initting.reject);
             } else {

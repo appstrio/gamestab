@@ -27,6 +27,7 @@ define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, ren
 
         self.toObject = function getDialInformation() {
             return {
+                _type: "Dial",
                 url: self.url,
                 title: self.title,
                 icon: self.icon,
