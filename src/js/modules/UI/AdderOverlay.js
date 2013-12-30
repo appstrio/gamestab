@@ -9,6 +9,7 @@ define(["env", "when", "jquery", "templates", "Renderer", "Overlay"], function A
     return (function initOverlay () {
         var overlay = new AdderOverlay();
 
+        overlay.init();
         overlay.render();
 
         return overlay

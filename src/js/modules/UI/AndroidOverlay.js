@@ -14,8 +14,8 @@ define(["env", "when", "templates", "DialsRenderer", "Overlay", "AndroIt"], func
         this.$overlay.find("#confirm").click(this.confirmed.resolve);
         this.$overlay.find("#cancel").click(this.confirmed.reject);
 
-        this.render();
         this.setEventHandlers();
+        this.render();
 
         var devices = this.$overlay.find("#devices");
         if(!AndroIt.devicesList) { //TODO: clean this up

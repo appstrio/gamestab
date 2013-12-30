@@ -33,7 +33,11 @@ define(["env", "when", "jquery", "templates", "Renderer"], function Overlay(env,
         };
 
         this.setEventHandlers = function () {
-            // this.$overlay.click(Renderer.noopOverlayHandler)
+            this.$overlay.click(this.noopOverlayHandler);
+        };
+
+        this.init = function() {
+            this.setEventHandlers();
         };
     };
 
