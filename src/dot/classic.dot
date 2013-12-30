@@ -19,3 +19,8 @@
 </div>
 <div id="fadescreen" class="hide">
 </div>
+<div id="alert">
+    <div class="inner">
+    Test Message...!Test Message!
+    </div>
+</div>

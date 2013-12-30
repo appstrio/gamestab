@@ -58,3 +58,23 @@ html {
 }
 
 
+#alert{
+  position: absolute;
+  z-index:10;
+  bottom:-100px;
+  width:100%;
+  display: -webkit-box;
+  -webkit-box-pack:center;
+  -webkit-box-align:center;
+  -webkit-transition: all 1s ease;
+  &.showed{
+    bottom:70px;
+  }
+  > .inner{
+    height:30px;
+    background:rgba(0,0,0,0.95);
+    color:white;
+    border-radius: 26px;
+    padding: 4px 14px;
+  }
+}
