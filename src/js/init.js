@@ -40,7 +40,7 @@ require.config({
         "AndroidAppsListProvider"  : "modules/AndroidAppsListProvider",
         "LovedGamesGamesProvider"  :  "modules/LovedGamesGamesProvider",
 
-        "Alert"                    : "modules/Alert",
+        "Alert"                    : "modules/UI/Alert",
 
         "env": "env",
         "main": "main",

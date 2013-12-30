@@ -1,6 +1,7 @@
-"use strict";
 
 define(["env", "jquery", "Renderer", "when"], function DialContainer(env, $, renderer, when) {
+    "use strict";
+
     var self = {},
         animationDuration = 1000,
         defaultOptions = {
