@@ -75,7 +75,11 @@
     "white"   : false,       // true: Check against strict whitespace and indentation rules
 
     "globals" : {
+        // Development specific
+        "DEBUG" : true,
+        // Environment (Extension)
         "chrome": true,
+        // RequireJS
         "define": true
     }
 }

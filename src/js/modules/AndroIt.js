@@ -12,7 +12,7 @@
 define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, when, jquery, _, Alert) {
     "use strict";
 
-    if (DEBUG && DEBUGlogLoadOrder) {
+    if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : Runtime");
     }
 

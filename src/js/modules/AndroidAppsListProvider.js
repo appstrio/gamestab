@@ -1,7 +1,7 @@
 "use strict";
 
 define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'AndroidDial'], function AndroidAppsListProvider(env, $, when, JSONProviderFactory, Runtime, AndroidDial) {
-    if (DEBUG && DEBUGlogLoadOrder) console.log("Loading Module : AndroidAppsListProvider");
+    if (DEBUG && DEBUG.logLoadOrder) console.log("Loading Module : AndroidAppsListProvider");
     return (function() {
         var initting = when.defer(),
             parent = JSONProviderFactory(),

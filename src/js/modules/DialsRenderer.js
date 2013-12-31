@@ -8,7 +8,6 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
     var initting = when.defer(),
         self = {
             promise: initting.promise,
-            androRow: false,
             maxDials: null,
             currentDials: [],
             timeout: 0,
@@ -30,7 +29,6 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
         });
 
         //Must be set before renderProvider is called
-        self.androRow = runtimeData.androRow;
         self.maxDials = runtimeData.maxDials;
 
         // var defaultDialsByCountryJSONPath = runtimeData.JSONPrefix + "/defaults" + runtimeData.countryCode.toUpperCase() + ".json",

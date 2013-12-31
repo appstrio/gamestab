@@ -1,7 +1,7 @@
 "use strict";
 
 define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "AndroidDial"], function LovedGamesGamesProvider(env, $, when, JSONProviderFactory, Runtime, AndroidDial) {
-    if (DEBUG && DEBUGlogLoadOrder) console.log("Loading Module : LovedGamesGamesProvider");
+    if (DEBUG && DEBUG.logLoadOrder) console.log("Loading Module : LovedGamesGamesProvider");
     return (function() {
         var initting = when.defer(),
             parent = JSONProviderFactory(),
@@ -13,7 +13,9 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "AndroidDial"
                 // wrapDial: Dial
             };
 
-        if(DEBUG && DEBUG.exposeModules) window.LovedGamesGamesProvider = self;
+        if(DEBUG && DEBUG.exposeModules) {
+            window.LovedGamesGamesProvider = self;
+        }
 
         var init = function initModule(runtimeData) {
             $.extend(self, {
