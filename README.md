@@ -79,5 +79,23 @@ GOOGLE ANALYTICS EVENTS AND CUSTOM VARS
 
 - EVENTS :
 --- EVENT CATEGORY : "Search"
------ EVENT ACTION : "Search"
-------- EVENT LABEL : THE SEARCH QUERY
+----- EVENT ACTION : "Search"|"URL"
+------- EVENT LABEL : SEARCH QUERY / URL
+--------- EVENT VALUE : SEARCH EVENT VALUE BY COUNTRY
+
+--- EVENT CATEGORY : "Dial"
+----- EVENT ACTION : "Launch"
+------- EVENT LABEL : URL|IDENTIFIER
+
+--- EVENT CATEGORY : "Dial"
+----- EVENT ACTION : "Add"
+------- EVENT LABEL : URL|IDENTIFIER
+
+--- EVENT CATEGORY : "Dial"
+----- EVENT ACTION : "Remove"
+------- EVENT LABEL : URL|IDENTIFIER
+
+
+--- EVENT CATEGORY : "Pageload"
+----- EVENT ACTION : "With Booster" | "No Booster"
+
