@@ -1,7 +1,8 @@
 define(["env", "when", "templates", "DialsRenderer", "Overlay", "AndroIt", "Alert"], function AndroidOverlayModule(env, when, Template, DialsRenderer, Overlay, AndroIt, Alert) {
 
     var init = function () {
-        if(!AndroIt.enabled) {
+        console.log(AndroIt);
+        if(!AndroIt.devicesList || AndroIt.devicesList.length <= 0) {
             Alert.show("Please connect to your Android account in order to get this game.");
             return;
         }
