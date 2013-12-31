@@ -38,6 +38,12 @@ define(['env', 'jquery', 'Renderer', 'Dial', 'when'], function(env, $, renderer,
             e.stopPropagation();
             e.preventDefault();
 
+            Analytics.sendEvent({
+                category: "Dial",
+                action: "Launch",
+                label: dial.title + ":" + dial.chromeId,
+            }, def.resolve);
+
             chrome.management.launchApp(self.chromeId);
         };
 

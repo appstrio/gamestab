@@ -1,25 +1,28 @@
-"use strict";
+define(["env", "jquery", "Renderer", "when", "Analytics"], function DialContainer(env, $, renderer, when, Analytics) {
+    "use strict";
 
-define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, renderer, when) {
     if (DEBUG && DEBUG.logLoadOrder) console.log("Loading Module : DialContainer");
+
     return function newDial(url, title, icon, options) {
         var self = {
-                    url: '',
-                    id: '',},
+            url: "",
+            id: "",
+        },
             options = options || {};
 
         var init = function initDial() {
             // check if passing object as first argument
             if (url && !title && !icon) $.extend(self, url);
-            else
+            else {
                 $.extend(self, {
                     url: url,
                     title: title,
                     icon: icon
                 });
+            }
 
             if (DEBUG && !options.isParent) {
-                if (!self.url || !self.title || !self.icon ) {
+                if (!self.url || !self.title || !self.icon) {
                     console.warn("newDial ERROR");
                 }
             }
@@ -38,21 +41,15 @@ define(['env', 'jquery', 'Renderer', 'when'], function DialContainer(env, $, ren
             e.stopPropagation();
             e.preventDefault();
 
-            var url = $(e.currentTarget).find('a').attr('href');
+            var url = $(e.currentTarget).find("a").attr("href");
 
-            // if (window.analytics) {
-            //     window.analytics.sendEvent({
-            //         category: 'Dials',
-            //         action: 'Click',
-            //         label: url
-            //     }, function() {
-            //         window.location.href = url;
-            //     });
-            // }
-
-            // setTimeout(function() {
+            Analytics.sendEvent({
+                category: "Dial",
+                action: "Launch",
+                label: url,
+            }, function() {
                 window.location.href = url;
-            // }, 500);
+            });
         };
 
 
