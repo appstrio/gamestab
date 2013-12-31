@@ -21,12 +21,7 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
             promise: initting.promise,
             userToken: null,
             devicesList: [],
-            STATUS: {
-                FAILED_TO_START: 0,
-                NO_TOKEN: 100,
-                GET_REQUEST_ERR: 101,
-                POST_REQUEST_ERR: 102,
-            },
+
         };
 
     if (DEBUG && DEBUG.exposeModules) {
@@ -39,13 +34,13 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
                 self.userToken = response.userToken;
                 var gettingDevices = getDevices(response);
                 return gettingDevices;
-            }).otherwise(errHandler(initting.reject), self.STATUS.FAILED_TO_START)
+            });
 
-            getDevicesDetails.then(function(devicesList) {
-                return initting.resolve()
-            }).otherwise(errHandler(initting.reject), self.STATUS.FAILED_TO_START)
+        getDevicesDetails.done(function anyway() {
+            return initting.resolve(self.devicesList.length > 0);
+        }, initting.reject);
 
-            return initting.promise
+        return initting.promise;
     };
 
     var getUserToken = function getUserToken() {
@@ -54,17 +49,15 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
         fetchingHTML.done(function(pageHTML) {
 
             var v1 = /window\._uc='\[\\42(.*?)\\42,/,
-                matches = pageHTML.match(v1),
-                isTokenFound = matches.length >= 2;
+                matches = pageHTML.match(v1);
 
-            if (!isTokenFound) {
-                if(DEBUG) debugger
-                return def.reject("Token wasn't found");
-            } else {
+            if (typeof matches.length !== "undefined" && matches.length >= 2) {
                 var userToken = matches[1];
                 def.resolve({
                     userToken: userToken
                 });
+            } else {
+                return def.reject("Token wasn't found");
             }
         }).fail(def.reject);
 
@@ -85,21 +78,21 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
 
                 var extracting = extractDevicesArrayFromGoogleJSON(response);
                 extracting.then(extract.resolve).otherwise(extract.reject);
-            }, "html").fail(env.errhandler)
+            }, "html").fail(env.errhandler);
 
-            extract.promise.then(function storeDevices(devicesList) {
-                self.devicesList = devicesList;
-                def.resolve(devicesList)
-            }).otherwise(env.errhandler)
+        extract.promise.then(function storeDevices(devicesList) {
+            self.devicesList = devicesList;
+            def.resolve(devicesList);
+        });
 
-            return def.promise;
+        return def.promise;
     };
     var extractDevicesArrayFromGoogleJSON = function extractDevicesArrayFromGoogleJSON(googlejson) {
         var data = parseGJSON(googlejson),
             devicesArray = data[0][2][10], // Location of devices in godJSON (stamp 23.12.13 [hasn"t changed in awhile, so stamp maybe un])
             devicesList = _.map(devicesArray, newDeviceObject);
 
-            return when.resolve(devicesList);
+        return when.resolve(devicesList);
     };
 
     // return - GodJSON into human JSON
@@ -142,10 +135,10 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
                 Alert.show("A request has been sent to your device.");
             });
 
-        return def.promise
-    }
+        return def.promise;
+    };
 
-    var isInstalled = function isInstalled(appID, deviceID) {}
+    var isInstalled = function isInstalled(appID, deviceID) {};
     var newDeviceObject = function newDeviceObject(deviceDetails) {
         var Device = function(props) {
             // Last checked below information stamp 23.12.13
@@ -155,7 +148,7 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
             this.deviceModelName = props[3]; // e.g. "HTC Desire X",
             this.Unidentified1 = props[4]; // e.g. 0,
             this.Unidentified2 = props[5]; // e.g. "",
-            this.phoneImage = props[6]; // e.g. "https://lh5.ggpht.com/wNAVXRUp1wFh1ErTDobmUUaHAeqCS0xTiBpEkDRiwZ2CPkC2ibOdjlIXtjXAcD_mQeXe=w50-h50-rw",
+            this.phoneImage = props[6]; // e.g. "https://lh5.ggpht.com/.*?-rw",
             this.Unidentified3 = props[7]; // e.g. "",
             this.Unidentified4 = props[8]; // e.g. "December 20,
             this.Unidentified5 = props[9]; // e.g.  2013",
@@ -163,19 +156,12 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
             this.Unidentified7 = props[11]; // e.g. 2012",
             this.Unidentified8 = props[12]; // e.g. "",
             this.Unidentified9 = props[13]; // e.g. 1
-        }
+        };
         Device.prototype.toString = function() {
             return this.vendorAndModelNames;
-        }
+        };
 
         return new Device(deviceDetails);
-    }
-
-    var errHandler = function AndroItErrorHandlerFactory(callback, errcode) {
-        return function AndroItErrorHandler(err) {
-            if (DEBUG) console.warn("AndroIt Module Error[" + getKeyByValue(self.STATUS, errcode) + "]: " + JSON.stringify(err));
-            callback();
-        };
     };
 
     self.toObject = function toObject() {
@@ -191,15 +177,17 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
     // Helpers
     //http://stackoverflow.com/questions/9907419/javascript-object-get-key-by-value
     var getKeyByValue = function(ob, value) {
-        if (value)
+        if (value) {
             for (var prop in ob) {
                 if (ob.hasOwnProperty(prop)) {
-                    if (ob[prop] === value)
+                    if (ob[prop] === value) {
                         return prop;
+                    }
+                } else {
+                    return null;
                 }
-            } else {
-                return null;
             }
+        }
     };
 
     init();

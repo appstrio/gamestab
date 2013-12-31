@@ -45,6 +45,7 @@ define(["env", "jquery", "when", "underscore", "Config"], function Runtime(env, 
             // Default values for properties that can be overrided from config
             dormancyTimeout: 1000,
             defaultDialsByCountryEnabled: true,
+            AndroItEnabled: true,
             maxDials: 18,
         };
 

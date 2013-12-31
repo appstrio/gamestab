@@ -1,4 +1,4 @@
-define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "Dial", "LovedGamesGamesProvider", "AndroidAppsListProvider", "underscore", "Storage"], function StoredDialsProvider(env, $, when, JSONProviderFactory, Runtime, renderer, Dial, LovedGamesGamesProvider, AndroidAppsListProvider, _, storage) {
+define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "Dial", "LovedGamesGamesProvider", "AndroidAppsListProvider", "underscore", "Storage", "AndroIt"], function StoredDialsProvider(env, $, when, JSONProviderFactory, Runtime, renderer, Dial, LovedGamesGamesProvider, AndroidAppsListProvider, _, storage, AndroIt) {
     "use strict";
 
     if (DEBUG && DEBUG.logLoadOrder) {
@@ -12,19 +12,27 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "
             settings = {
                 maxDials: null,
                 pathToJSON: null,
+            },
+            patterns = {
+                DEFAULT: 1000,
+                DEFAULT_NO_ANDROID: 1001,
             };
+
+        $.extend(self, {
+            promise: initting.promise,
+        });
 
         if (DEBUG && DEBUG.exposeModules) {
             window.StoredDialsProvider = self;
         }
 
-        var init = function initModule(runtimeData) {
-            $.extend(self, {
-                promise: initting.promise,
-            });
+        var init = function initModule(argsArray) {
+            var runtimeData = argsArray[0],
+                AndroItEnabled = argsArray[1],
+                defaultPattern = runtimeData.AndroItEnabled && AndroItEnabled ? patterns.DEFAULT : patterns.DEFAULT_NO_ANDROID;
 
             settings.maxDials = runtimeData.maxDials;
-            settings.defaultDialPatternID = runtimeData.dialPatternID || "def";
+            settings.defaultDialPatternID = runtimeData.dialPatternID || defaultPattern;
 
             // Determine whether to load default-by-ccJSON or defaultJSON
             if (runtimeData.defaultDialsByCountryEnabled) {
@@ -35,16 +43,18 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "
 
             var parentInitting = parent.init(name, settings);
 
-            var isntFirstRunTime = storage.get(name);
+            var isntFirstRunTime = storage.get(name),
+                loading, completing;
             if (!isntFirstRunTime) {
-                parentInitting.then(loadDialPattern).then(initting.resolve).otherwise(initting.reject);
+                loading = parentInitting.then(loadDialPattern);
+                completing = loading.then(initting.resolve).otherwise(initting.reject);
             } else {
-                parentInitting.then(initting.resolve).otherwise(initting.reject);
+                completing = parentInitting.then(initting.resolve).otherwise(initting.reject);
             }
         };
         var loadDialPattern = function() {
             var loadDials, dialPatternID = settings.defaultDialPatternID;
-            if (dialPatternID === "def") {
+            if (dialPatternID === patterns.DEFAULT) {
                 loadDials = when.join(
                     AndroidAppsListProvider.promise,
                     LovedGamesGamesProvider.promise
@@ -58,6 +68,25 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "
                         shuffle: true,
                     }, {
                         dials: AndroidAppsDials,
+                        shuffle: true,
+                    }], {
+                        maxDials: settings.maxDials
+                    });
+                });
+            } else if (dialPatternID === patterns.DEFAULT_NO_ANDROID) {
+                loadDials = when.join(
+                    LovedGamesGamesProvider.promise
+                ).then(function specifyPattern(argsArray) {
+                    var LovedGamesGamesDials = argsArray[0],
+                        dials1 = self.dials.slice(0, self.dials.length / 2),
+                        dials2 = self.dials.slice(self.dials.length / 2, self.dials.length);
+
+                    return storeDialRowPattern([{
+                        dials: dials1,
+                    }, {
+                        dials: dials2,
+                    }, {
+                        dials: LovedGamesGamesDials,
                         shuffle: true,
                     }], {
                         maxDials: settings.maxDials
@@ -116,8 +145,10 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "
 
         // self.removeDial = function removeDial(dial) {};
 
-        Runtime.promise.then(init);
-
+        when.all([
+            Runtime.promise,
+            AndroIt.promise
+        ]).done(init, initting.reject);
 
         return self;
     })();
