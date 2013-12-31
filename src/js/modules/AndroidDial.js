@@ -26,6 +26,7 @@ define(["env", "jquery", "Renderer", "when", "AndroIt","AndroidOverlay"], functi
                 appID: self.appID,
                 title: self.title,
                 icon : self.icon,
+                class : 'android-dial'
             };
         };
 
