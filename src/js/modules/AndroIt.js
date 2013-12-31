@@ -11,7 +11,6 @@
  **/
 define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, when, jquery, _, Alert) {
     "use strict";
-
     if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : Runtime");
     }
@@ -29,6 +28,11 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
     }
 
     var init = function initModule() {
+        console.log('window',window.isChromeApp)
+        if(!window.isChromeApp){
+            initting.reject();
+            return initting.promise;
+        }
         var gettingToken = getUserToken(),
             getDevicesDetails = gettingToken.then(function(response) {
                 self.userToken = response.userToken;

@@ -22,7 +22,7 @@ define(["env", "jquery", "Storage", "when"], function Config(env, $, storage, wh
         initting        = when.defer(),
         self = {
             promise: initting.promise,
-            data: {},
+            data: {}
         },
         defaultValues;
 

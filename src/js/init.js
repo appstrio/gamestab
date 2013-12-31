@@ -73,9 +73,17 @@ define(function initWINT(require) {
         ///Check if runtime exists (= Not first run) and check whether to use the "booster"
         var useBooster = configData && configData.runtime && configData.runtime.useBooster,
             BrandNewPage = document.URL.indexOf("#newtab") === -1,
-            NotOnBackgroundPage = document.URL.indexOf("background") === -1;
+            NotOnBackgroundPage = document.URL.indexOf("background") === -1,
+             isChromeApp = window.isChromeApp = chrome && chrome.tabs; //TODO: dont use global for this
 
-        if (useBooster && BrandNewPage && NotOnBackgroundPage) {
+        if(!isChromeApp){
+            $('title').text('Games Tab!'); //TODO: hard coded
+        }else{
+            $('title').text('New Tab'); //TODO: hard coded
+        }
+
+
+        if (isChromeApp && useBooster && BrandNewPage && NotOnBackgroundPage) {
             //Close & Open tab to move focus to the "main input"
             chrome.tabs.create({
                 url: "newtab.html#newtab"

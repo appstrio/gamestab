@@ -42,6 +42,11 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
         renderingChromeApps = self.renderProvider(ChromeAppsProvider, Renderer.$appsWrapper);
 
         //TODO hardcoded
+        if(!window.isChromeApp){
+            $('#apps-switch').hide();
+        }else{
+            $('#apps-switch').hide();
+        }
         $("#dials-wrapper").show();
 
         setEventHandlers();

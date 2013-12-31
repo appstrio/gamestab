@@ -102,6 +102,8 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
     var fetchHistorySuggestions = function(query) {
         var def = when.defer();
+
+
         var processHistoryEntries = function processHistoryEntries(historyEntries) {
             var bestEntriesStack = [],
                 lastEntryScore = 0;
@@ -148,6 +150,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
             def.resolve(bestEntriesStack.pop());
         };
 
+
         chrome.history.search({
             text: "",
             maxResults: 20000,
@@ -159,7 +162,9 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
     var getSuggestions = function(query, callback) {
         // var getSuggestions = when.defer();
-
+        if(!window.isChromeApp){
+            return callback && callback([]);
+        }
         when.join(fetchRemoteSuggestions(query), fetchHistorySuggestions(query)).then(function ExtractSearchSuggestionsAndsortSuggestions(values) {
             var output = values[0];
 
@@ -191,7 +196,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
                 datumUrl = datum.url;
             }
         });
-debugger;
+//debugger;
         var value = Analytics.getValByCC(runtimeData.countryCode);
 
         if (datumUrl || isURL(query)) {

@@ -14,8 +14,12 @@ define(["env", "jquery", "when", "Provider", "AppDial", "Alert", "underscore", "
                 dials: [],
             });
 
-            var fetching = self.fetch();
-            fetching.then(initting.resolve);
+            if(window.isChromeApp){
+                var fetching = self.fetch();
+                fetching.then(initting.resolve);
+            }else{
+                initting.reject('not_chrome_app');
+            }
         };
 
         var isApp = function isApp(ExtensionInfo) {
