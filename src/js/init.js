@@ -12,6 +12,7 @@ require.config({
         "typeahead"           : "libs/typeahead",
 
         "Config"              : "modules/Config",
+        "Analytics"           : "modules/Analytics",
         "Runtime"             : "modules/Runtime",
 
         "Wintbar"             : "modules/Wintbar",

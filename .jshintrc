@@ -80,6 +80,7 @@
         // Environment (Extension)
         "chrome": true,
         // RequireJS
-        "define": true
+        "define": true,
+        "require": true
     }
 }

@@ -60,3 +60,24 @@ WINT is quite complex in matter of files and directories. It has to be verstaile
 3. Each async module should have async_module.promise object that will be resolved when the module is'ready'
 4. Modules that are dependant on other async modules, should specify the module in the define function and
    to init only after listening to the async_module.promise.then(...)
+
+## WINT Analytics
+
+GOOGLE ANALYTICS EVENTS AND CUSTOM VARS
+- CUSTOM VARS :
+--- KEY #1 : AB_TESTING
+----- VALUE : "A"
+---- VALUE : "B"
+--- KEY #2 : INSTALL_WEEK_NUMBER
+----- VALUE : THE WEEK COUNT OUT OF 52
+--- KEY #3 :
+--- KEY #3 : REFERRAL
+----- VALUE : STORE || AIO
+
+--- KEY #4 : CLIENT_VERSION
+----- VALUE : CHROME WEBSTORE VERSION
+
+- EVENTS :
+--- EVENT CATEGORY : "Search"
+----- EVENT ACTION : "Search"
+------- EVENT LABEL : THE SEARCH QUERY

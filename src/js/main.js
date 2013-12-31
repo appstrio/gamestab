@@ -1,7 +1,9 @@
 "use strict";
 
-define(['env', 'Runtime', 'Wintbar', 'Renderer', 'MenuRenderer', 'DialsRenderer'], function Main(env) {
-    if (DEBUG && DEBUG.logLoadOrder) console.log("Loading Module : Main");
+define(["Analytics", "Runtime", "Wintbar", "Renderer", "MenuRenderer", "DialsRenderer"], function Main() {
+    if (DEBUG && DEBUG.logLoadOrder) {
+        console.log("Loading Module : Main");
+    }
 });
 
 Array.prototype.last = function() {
