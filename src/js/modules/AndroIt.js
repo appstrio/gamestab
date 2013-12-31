@@ -51,7 +51,7 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
             var v1 = /window\._uc='\[\\42(.*?)\\42,/,
                 matches = pageHTML.match(v1);
 
-            if (typeof matches.length !== "undefined" && matches.length >= 2) {
+            if (matches && matches.length && matches.length >= 2) {
                 var userToken = matches[1];
                 def.resolve({
                     userToken: userToken
