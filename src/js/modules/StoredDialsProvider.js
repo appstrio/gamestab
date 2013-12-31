@@ -1,5 +1,17 @@
-define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "Dial", "LovedGamesGamesProvider", "AndroidAppsListProvider", "underscore", "Storage", "AndroIt"], function StoredDialsProvider(env, $, when, JSONProviderFactory, Runtime, renderer, Dial, LovedGamesGamesProvider, AndroidAppsListProvider, _, storage, AndroIt) {
+define(function StoredDialsProvider(require) {
     "use strict";
+
+    var env                     = require("env"),
+        $                       = require("jquery"),
+        when                    = require("when"),
+        JSONProviderFactory     = require("JSONProviderFactory"),
+        Runtime                 = require("Runtime"),
+        renderer                = require("Renderer"),
+        Dial                    = require("Dial"),
+        LovedGamesGamesProvider = require("LovedGamesGamesProvider"),
+        AndroidAppsListProvider = require("AndroidAppsListProvider"),
+        _                       = require("underscore"),
+        storage                 = require("Storage");
 
     if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : StoredDialsProvider");
@@ -27,12 +39,9 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "
         }
 
         var init = function initModule(argsArray) {
-            var runtimeData = argsArray[0],
-                AndroItEnabled = argsArray[1],
-                defaultPattern = runtimeData.AndroItEnabled && AndroItEnabled ? patterns.DEFAULT : patterns.DEFAULT_NO_ANDROID;
+            var runtimeData = argsArray[0];
 
             settings.maxDials = runtimeData.maxDials;
-            settings.defaultDialPatternID = runtimeData.dialPatternID || defaultPattern;
 
             // Determine whether to load default-by-ccJSON or defaultJSON
             if (runtimeData.defaultDialsByCountryEnabled) {
@@ -43,13 +52,18 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "
 
             var parentInitting = parent.init(name, settings);
 
-            var isntFirstRunTime = storage.get(name),
-                loading, completing;
+            var isntFirstRunTime = storage.get(name);
             if (!isntFirstRunTime) {
-                loading = parentInitting.then(loadDialPattern);
-                completing = loading.then(initting.resolve).otherwise(initting.reject);
+                return require(["AndroIt"], function firstRun(AndroIt) {
+                    return AndroIt.promise.then(function first(AndroItEnabled) {
+                        var defaultPattern = runtimeData.AndroItEnabled && AndroItEnabled ? patterns.DEFAULT : patterns.DEFAULT_NO_ANDROID, loading;
+                        settings.defaultDialPatternID = runtimeData.dialPatternID || defaultPattern;
+                        loading = parentInitting.then(loadDialPattern);
+                        return loading.then(initting.resolve).otherwise(initting.reject);
+                    });
+                });
             } else {
-                completing = parentInitting.then(initting.resolve).otherwise(initting.reject);
+                return parentInitting.then(initting.resolve).otherwise(initting.reject);
             }
         };
         var loadDialPattern = function() {
@@ -146,8 +160,7 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "Renderer", "
         // self.removeDial = function removeDial(dial) {};
 
         when.all([
-            Runtime.promise,
-            AndroIt.promise
+            Runtime.promise
         ]).done(init, initting.reject);
 
         return self;
