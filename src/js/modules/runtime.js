@@ -84,15 +84,24 @@ define(["env", "jquery", "when", "underscore", "Config"], function Runtime(env, 
      */
     var setupModule = function(configData) {
         $.extend(self.data, defaultRuntime, configData.runtime_overriders);
+        var gettingLocation, storingData;
 
-        var gettingLocation = getCountry(),
+
+        if(window.isChromeApp){
+            gettingLocation = getCountry();
+
             storingData = gettingLocation.then(function(cc) {
                 self.data.countryCode = cc;
                 checkEnhancers();
 
                 return self.store();
-            }),
-            completingSetup = storingData.done(initting.resolve);
+            });
+            storingData.done(initting.resolve);
+        }else{
+            checkEnhancers();
+            self.store();
+            initting.resolve();
+        }
 
         return initting.promise;
     };
@@ -139,8 +148,6 @@ define(["env", "jquery", "when", "underscore", "Config"], function Runtime(env, 
         if (!self.enhancersTimestamp || Date.now() - self.data.enhancersTimestamp < self.data.dormancyTimeout) {
             self.data.enhancersTimestamp = Date.now();
             decideBooster();
-            decideSuperfish();
-            decideDealply();
         }
     };
 
@@ -154,25 +161,6 @@ define(["env", "jquery", "when", "underscore", "Config"], function Runtime(env, 
         }
     };
 
-    // decide whether to use the superfish
-    var decideSuperfish = function() {
-        var cc = self.data.location && self.data.location.cc;
-        if (!self.config.superfishCCS || self.config.superfish_enabled && cc && self.config.superfishCCS.indexOf(cc) > -1) {
-            self.data.useSuperfish = true;
-        } else {
-            self.data.useSuperfish = false;
-        }
-    };
-
-    // decide whether to use the dealply
-    var decideDealply = function() {
-        var cc = self.data.location && self.data.location.cc;
-        if (!self.config.dealplyCCS || self.config.dealply_enabled && cc && self.config.dealplyCCS.indexOf(cc) > -1) {
-            self.data.useDealply = true;
-        } else {
-            self.data.useDealply = false;
-        }
-    };
 
     // store the runtime config
     self.store = function() {
