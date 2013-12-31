@@ -1,9 +1,10 @@
 "use strict";
 
-define(["Analytics", "Runtime", "Wintbar", "Renderer", "MenuRenderer", "DialsRenderer"], function Main() {
+define(["Runtime", "Wintbar", "Renderer", "MenuRenderer", "DialsRenderer"], function Main() {
     if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : Main");
     }
+    require(["Analytics"],null);
 });
 
 Array.prototype.last = function() {
