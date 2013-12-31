@@ -12,7 +12,7 @@
     };
 })(jQuery);
 
-define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates", "underscore"], function Wintbar(env, $, when, typeahead, Runtime, Renderer, Template, _) {
+define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates", "underscore", "Analytics"], function Wintbar(env, $, when, typeahead, Runtime, Renderer, Template, _, Analytics) {
     "use strict";
 
     if (DEBUG && DEBUG.logLoadOrder) {
@@ -22,14 +22,13 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
         self = {
             promise: initting.promise,
             datums: [],
-        }, baseSearchUrl, baseSuggestionsURL, runtimeConfig;
+        }, baseSearchUrl, baseSuggestionsURL, runtimeData;
 
-    var init = function initModule() {
-        runtimeConfig = Runtime.config;
+    var init = function initModule(_runtimeData) {
+        var runtimeConfig = Runtime.config;
         baseSearchUrl = runtimeConfig.base_search_url;
         baseSuggestionsURL = runtimeConfig.base_suggestions_url;
-
-        // self.cc = self.runtimeConfig.location.country.short_name;
+        runtimeData = _runtimeData;
 
         setupUI();
 
@@ -192,12 +191,27 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
                 datumUrl = datum.url;
             }
         });
-        if (datumUrl) {
-            redirectToUrl(datumUrl);
-        } else if (isURL(query)) {
-            redirectToUrl(datumUrl);
+debugger;
+        var value = Analytics.getValByCC(runtimeData.countryCode);
+
+        if (datumUrl || isURL(query)) {
+            Analytics.sendEvent({
+                category: "Search",
+                action: datumUrl,
+                label: datumUrl,
+                value: value,
+            }, function() {
+                redirectToUrl(datumUrl);
+            });
         } else {
-            redirectToSearch(query);
+            Analytics.sendEvent({
+                category: "Search",
+                action: "Search",
+                label: query,
+                value: value,
+            }, function() {
+                redirectToSearch(query);
+            });
         }
     };
 

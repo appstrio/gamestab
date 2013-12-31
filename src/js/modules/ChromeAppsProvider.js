@@ -1,4 +1,4 @@
-define(["env", "jquery", "when", "Provider", "AppDial", "Alert", "underscore"], function ChromeAppsProvider(env, $, when, provider, AppDial, Alert, _) {
+define(["env", "jquery", "when", "Provider", "AppDial", "Alert", "underscore", "Analytics"], function ChromeAppsProvider(env, $, when, provider, AppDial, Alert, _, Analytics) {
     "use strict";
 
     if (DEBUG && DEBUG.logLoadOrder) {
@@ -7,13 +7,11 @@ define(["env", "jquery", "when", "Provider", "AppDial", "Alert", "underscore"], 
     return (function(parent) {
         var initting = when.defer(),
             self = Object.create(parent);
-        // defaultSettings = {};
 
         var init = function initModule() {
             $.extend(self, {
                 promise: initting.promise,
                 dials: [],
-                // settings : $.extend(defaultSettings, options),
             });
 
             var fetching = self.fetch();
@@ -29,8 +27,9 @@ define(["env", "jquery", "when", "Provider", "AppDial", "Alert", "underscore"], 
             chrome.management.getAll(function(rawDials) {
                 for (var i = 0; i < rawDials.length; i += 1) {
                     var raw = rawDials[i];
-                    if (isApp(raw))
+                    if (isApp(raw)) {
                         self.dials.push(AppDial(raw.id, raw.shortName, raw.icons.last().url, raw.description));
+                    }
                 }
                 def.resolve(self.dials);
             });
@@ -44,7 +43,13 @@ define(["env", "jquery", "when", "Provider", "AppDial", "Alert", "underscore"], 
             chrome.management.uninstall(dial.chromeId, {
                 showConfirmDialog: true
             }, function confirmIfDeletionOccured() {
-                findApp(dial.chromeId).then(def.reject).otherwise(def.resolve);
+                findApp(dial.chromeId).then(def.reject).otherwise(function deleteSuccessful() {
+                    Analytics.sendEvent({
+                        category: "Dial",
+                        action: "Remove",
+                        label: dial.title + ":" + dial.chromeId,
+                    }, def.resolve);
+                });
             });
 
             removing.done(function showAlert() {

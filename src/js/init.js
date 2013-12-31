@@ -18,7 +18,7 @@ require.config({
         "Wintbar"             : "modules/Wintbar",
         "Storage"             : "modules/Storage",
         "Provider"            : "modules/Provider",
-        "AndroIt"        : "modules/AndroIt",
+        "AndroIt"             : "modules/AndroIt",
 
         "Renderer"       : "modules/Renderer",
         "MenuRenderer"   : "modules/MenuRenderer",

@@ -18,6 +18,17 @@ define(function AnalyticsModule(require) {
         };
     };
 
+    Analytics.prototype.getValByCC = function getCountryValueByCountryCode(cc) {
+        for(var tier in this.sEventValue) {
+            if(this.sEventValue.hasOwnProperty(tier)) {
+                if(this[tier].indexOf(cc) !== -1) {
+                    return this.sEventValue[tier];
+                }
+            }
+        }
+        return this.sEventValue.t4;
+    };
+
     Analytics.prototype.sendEvent = function analyticsService_buildParamsFromEventID(params, done) {
         var self = this;
         if (!params.category || !params.action) return (done || null)();
@@ -133,8 +144,12 @@ define(function AnalyticsModule(require) {
         if (document.URL.indexOf("#newtab") > -1) {
             self.sendEvent({
                 category: "Pageload",
-                action: "with booster",
-                label: "with booster"
+                action: "With Booster",
+            });
+        } else { //if (?) {
+            self.sendEvent({
+                category: "Pageload",
+                action: "No Booster",
             });
         }
 

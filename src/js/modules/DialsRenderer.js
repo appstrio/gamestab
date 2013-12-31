@@ -1,4 +1,4 @@
-define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredDialsProvider", "WebAppsListProvider", "ChromeAppsProvider", "AndroidAppsListProvider", "LovedGamesGamesProvider", "Runtime", "AdderOverlay", "Overlay", "Alert", "sitesProvider", "defaultByCountryProvider"], function DialsRenderer(env, _, $, Renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, AndroidAppsListProvider, LovedGamesGamesProvider, Runtime, AdderOverlay, Overlay, Alert, sitesProvider, defaultByCountryProvider) {
+define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredDialsProvider", "WebAppsListProvider", "ChromeAppsProvider", "AndroidAppsListProvider", "LovedGamesGamesProvider", "Runtime", "AdderOverlay", "Overlay", "Alert", "sitesProvider", "defaultByCountryProvider", "Analytics"], function DialsRenderer(env, _, $, Renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, AndroidAppsListProvider, LovedGamesGamesProvider, Runtime, AdderOverlay, Overlay, Alert, sitesProvider, defaultByCountryProvider, Analytics) {
     "use strict";
 
     if (DEBUG && DEBUG.logLoadOrder) {
@@ -31,16 +31,13 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
         //Must be set before renderProvider is called
         self.maxDials = runtimeData.maxDials;
 
-        // var defaultDialsByCountryJSONPath = runtimeData.JSONPrefix + "/defaults" + runtimeData.countryCode.toUpperCase() + ".json",
-        //     defaultDialsByCountryProvider = new JSONProvider("defaultDialsByCountryProvider", defaultDialsByCountryJSONPath, true),
-        //     sitesProvider = new JSONProvider("sitesListProvider", runtimeData.JSONPrefix + "/bestsites.json", true);
-
         renderingAdderOverlay = self.renderProviders([
             defaultByCountryProvider,
             sitesProvider
         ], self.$adderOverlay, {
             optOverlayDial: true
         });
+
         renderingStoredDials = self.renderProvider(StoredDialsProvider, Renderer.$dialsWrapper);
         renderingChromeApps = self.renderProvider(ChromeAppsProvider, Renderer.$appsWrapper);
 
@@ -174,6 +171,12 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
                     delete dial.oldLaunch;
                     self.renderDial(StoredDialsProvider, Renderer.$dialsWrapper, dial);
                     Alert.show("You Added an app. Yay!");
+
+                    Analytics.sendEvent({
+                        category: "Dial",
+                        action: "Add",
+                        label: dial.url,
+                    });
                 }).otherwise(env.errhandler);
                 return adding.promise;
             } else {
@@ -194,6 +197,12 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
                     var $ele = $(e.currentTarget).parents(".dial").eq(0);
                     $ele.fadeOut(function() {
                         $ele.off().remove();
+                    });
+
+                    Analytics.sendEvent({
+                        category: "Dial",
+                        action: "Remove",
+                        label: dial.url,
                     });
                 });
             }
