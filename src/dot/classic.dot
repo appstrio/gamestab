@@ -12,7 +12,7 @@
         <div class="buttons">
             <a id="webapps-overlay-btn" href="#" class="btn"> + </a>
             <a id="dials-switch" href="#" class="switch"> Home </a>
-            <a id="apps-switch" href="#" class="switch"> Apps </a>
+            <a id="apps-switch" href="#" class="hide switch"> Apps </a>
             <!--<a id="android-switch" href="#" class="switch"> android </a>-->
         </div>
     </div>

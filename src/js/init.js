@@ -74,7 +74,7 @@ define(function initWINT(require) {
         var useBooster = configData && configData.runtime && configData.runtime.useBooster,
             BrandNewPage = document.URL.indexOf("#newtab") === -1,
             NotOnBackgroundPage = document.URL.indexOf("background") === -1,
-             isChromeApp = window.isChromeApp = chrome && chrome.tabs; //TODO: dont use global for this
+             isChromeApp = window.isChromeApp;
 
         if(!isChromeApp){
             $('title').text('Games Tab!'); //TODO: hard coded

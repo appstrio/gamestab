@@ -43,9 +43,9 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
 
         //TODO hardcoded
         if(!window.isChromeApp){
-            $('#apps-switch').hide();
+            $('#apps-switch').addClass('hide');
         }else{
-            $('#apps-switch').hide();
+            $('#apps-switch').removeClass('hide');
         }
         $("#dials-wrapper").show();
 

@@ -26,6 +26,8 @@ define(["env", "jquery", "Storage", "when"], function Config(env, $, storage, wh
         },
         defaultValues;
 
+    window.isChromeApp = chrome && chrome.tabs; //TODO: dont use global for this
+
     if(DEBUG && DEBUG.exposeModules) window.Config = self;
 
     /**
