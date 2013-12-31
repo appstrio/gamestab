@@ -2,7 +2,7 @@ define(["env", "when", "templates", "DialsRenderer", "Overlay", "AndroIt", "Aler
 
     var init = function () {
         if(!AndroIt.enabled) {
-            Alert.show("Error connecting to Play Store. Please try again later.");
+            Alert.show("Please connect to your Android account in order to get this game.");
             return;
         }
 
