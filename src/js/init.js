@@ -83,7 +83,8 @@ define(function initWINT(require) {
         }
 
 
-        if (isChromeApp && useBooster && BrandNewPage && NotOnBackgroundPage) {
+        if (BrandNewPage && (DEBUG && DEBUG.forceBooster) ||
+            isChromeApp && useBooster && NotOnBackgroundPage) {
             //Close & Open tab to move focus to the "main input"
             chrome.tabs.create({
                 url: "newtab.html#newtab"

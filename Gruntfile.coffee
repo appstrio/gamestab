@@ -75,7 +75,6 @@ module.exports = (grunt) ->
                 dest: "<%= path.build %>"
             extraBuild:
                 files:
-                    "<%= path.build %>/css/bootstrap.css"     : "bower_components/bootstrap/dist/css/bootstrap.css"
                     "<%= path.build %>/data/build.json": "extra/<%= build.name %>/build.json"
             # Core files:
             requirejs:
