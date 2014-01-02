@@ -1,6 +1,6 @@
-"use strict";
+define(["Analytics", "Wintbar", "Renderer", "MenuRenderer", "DialsRenderer"], function Main() {
+    "use strict";
 
-define(["Analytics","Runtime", "Wintbar", "Renderer", "MenuRenderer", "DialsRenderer"], function Main() {
     if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : Main");
     }
