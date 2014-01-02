@@ -1,8 +1,9 @@
-define(["env", "when", "templates", "DialsRenderer", "Overlay", "AndroIt", "Alert"], function AndroidOverlayModule(env, when, Template, DialsRenderer, Overlay, AndroIt, Alert) {
+define(["env", "when", "templates", "DialsRenderer", "Overlay", "Alert"], function AndroidOverlayModule(env, when, Template, DialsRenderer, Overlay, Alert) {
 
     var init = function () {
+        //TODO lazyload androit here when first clicking androiddial
         console.log(AndroIt);
-        if(!AndroIt.devicesList || AndroIt.devicesList.length <= 0) {
+        if(!AndroIt || !AndroIt.devicesList || AndroIt.devicesList.length <= 0) {
             Alert.show("Please connect to your Android account in order to get this game.");
             return;
         }

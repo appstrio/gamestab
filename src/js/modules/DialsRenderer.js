@@ -89,35 +89,36 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
         return rendering.promise;
     };
 
-    var renderDialsByRow = function(rows, options) {
-        var $container = options.$container,
-            maxDials = options.maxDials || 18,
-            rowsCount = rows.length,
-            dialsPerRow = maxDials / rowsCount;
+    // var renderDialsByRow = function(rows, options) {
+    //     var $container = options.$container,
+    //         maxDials = options.maxDials || 18,
+    //         rowsCount = rows.length,
+    //         dialsPerRow = maxDials / rowsCount;
 
-        var rendering = _.map(rows, function renderAggregatedDials(row) {
-            var dials = row.dials,
-                rowLength = dials.length > dialsPerRow ? dialsPerRow : dials.length,
-                options = {
-                    maxDials: rowLength,
-                    cleanContainer: false,
-                };
+    //     var rendering = _.map(rows, function renderAggregatedDials(row) {
+    //         var dials = row.dials,
+    //             rowLength = dials.length > dialsPerRow ? dialsPerRow : dials.length,
+    //             options = {
+    //                 maxDials: rowLength,
+    //                 cleanContainer: false,
+    //             };
 
-            if (row.shuffle)
-                dials = shuffleArray(dials);
+    //         if (row.shuffle)
+    //             dials = shuffleArray(dials);
 
-            dials = dials.slice(0, rowLength);
+    //         dials = dials.slice(0, rowLength);
 
-            return renderDials(row.provider, $container, dials, options)
-        });
+    //         return renderDials(row.provider, $container, dials, options)
+    //     });
 
-        return when.all(rendering);
-    }
+    //     return when.all(rendering);
+    // }
 
     /**
      * @param options {maxDials: number}
      */
     var renderDials = function renderDials(provider, $container, dials, options) {
+        var $dials = [];
         options = $.extend({
             cleanContainer: true
         }, options);
@@ -125,19 +126,34 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
         if (options.cleanContainer) {
             $container.html("");
         }
+        // $container.hide();
 
         var maxDials = options.maxDials || dials.length;
         for (var i = 0; i < dials.length && i < maxDials; i++) {
-            var dial = dials[i];
-            self.renderDial(provider, $container, dial, options);
+            // minimal Render Dial
+            var dial = dials[i],
+                $dial = $(templates["classic-dial"](dial));
+
+            // TODO: make
+            $dial.on("click", dial.launch);
+            $dial.on("click", ".dial-remove-button", self.renderDialRemovalFactory(provider, dial));
+
+            if (dial.id)
+                $dial.data("id", dial.id);
+
+            $dials.push($dial);
         }
+
+        $container.append($dials);
+        // $container.fadeIn();
+
 
         return when.resolve();
     };
 
-    self.renderDial = function(provider, $container, dial, _options) {
+    self.renderDial = function (provider, $container, dial, _options) {
         var $dial, options = $.extend({
-                optOverlayDial: false
+                optOverlayDial: false,
             }, _options);
 
         if (options.optOverlayDial) {
