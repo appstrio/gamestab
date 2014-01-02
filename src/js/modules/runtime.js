@@ -14,8 +14,6 @@
  * The runtime object should handle the following attributes :
  * ** location - user's location
  * ** useBooster - whether to use the booster
- * ** useSuperfish - whether to use superfish
- * ** useDealply - whether to use dealply or not
  * ** referral - chrome_webstore | appstrio(*let's find better naming) | other
  *
  * How to use it ?
@@ -36,8 +34,6 @@ define(["env", "jquery", "when", "underscore", "Config"], function Runtime(env, 
         },
         defaultRuntime = {
             useBooster: false, // whether we should use the booster at startup or not
-            useSuperfish: false, // whether the background page should use superfish
-            useDealply: false, // whether the background page should use dealply
             enhancersTimestamp: 0, // store the last time we checked the enhancers (booster, superfish, dealply)
             updatedAt: 0, // last update of the runtime object
             countryCode: "us", // Default Country Code
@@ -47,6 +43,7 @@ define(["env", "jquery", "when", "underscore", "Config"], function Runtime(env, 
             defaultDialsByCountryEnabled: true,
             AndroItEnabled: true,
             maxDials: 18,
+            fromChromeWebstore: true
         };
 
     if (DEBUG && DEBUG.exposeModules) window.Runtime = self;
@@ -84,39 +81,54 @@ define(["env", "jquery", "when", "underscore", "Config"], function Runtime(env, 
      */
     var setupModule = function(configData) {
         $.extend(self.data, defaultRuntime, configData.runtime_overriders);
-        var gettingLocation, storingData;
+        if (window.isChromeApp) {
+            var gettingLocation = getCountry(), checkfromChromeWebstore = when.defer();
 
+            if (configData.install_page) {
+                chrome.history.search({
+                    text: configData.install_page,
+                    maxResults: 10,
+                    startTime: 0
+                }, checkfromChromeWebstore.resolve);
+            } else {
+                checkfromChromeWebstore.resolve();
+            }
 
-        if(window.isChromeApp){
-            gettingLocation = getCountry();
+            when.all([
+                gettingLocation,
+                checkfromChromeWebstore
+            ]).done(function(values) {
+                var countrycode = values[0],
+                    entries = values[1];
+                self.data.countryCode = countrycode;
+                if (entries) {
+                    self.data.fromChromeWebstore = entries.length > 0;
+                }
 
-            storingData = gettingLocation.then(function(cc) {
-                self.data.countryCode = cc;
                 checkEnhancers();
 
-                return self.store();
+                self.store();
+                initting.resolve(self.data);
             });
-            storingData.done(initting.resolve);
-        }else{
+        } else {
             checkEnhancers();
             self.store();
-            initting.resolve();
+            initting.resolve(self.data);
         }
 
         return initting.promise;
     };
 
-    // return the current location
-    // TODO: find way to get location easily
     var getCountry = function() {
-        var def = when.defer(), Position = function() {
-            if (arguments[0] && !arguments[1]) {
-                $.extend(this, arguments[0]);
-            } else {
-                this.latitude = arguments[0];
-                this.longitude = arguments[1];
-            }
-        };
+        var def = when.defer(),
+            Position = function() {
+                if (arguments[0] && !arguments[1]) {
+                    $.extend(this, arguments[0]);
+                } else {
+                    this.latitude = arguments[0];
+                    this.longitude = arguments[1];
+                }
+            };
         Position.prototype.toString = function positionToString() {
             return this.latitude + "," + this.longitude;
         };
