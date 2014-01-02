@@ -1,7 +1,9 @@
-"use strict";
 
 define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "AndroidDial"], function LovedGamesGamesProvider(env, $, when, JSONProviderFactory, Runtime, AndroidDial) {
+    "use strict";
+
     if (DEBUG && DEBUG.logLoadOrder) console.log("Loading Module : LovedGamesGamesProvider");
+
     return (function() {
         var initting = when.defer(),
             parent = JSONProviderFactory(),

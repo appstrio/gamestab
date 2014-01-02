@@ -113,8 +113,14 @@ module.exports = (grunt) ->
                 cwd: "<%= path.src %>/js/modules/UI"
                 src: "*.js*"
                 dest: "<%= path.build %>/js/modules/UI"
+            providers:
+                flatten: true
+                expand: true
+                cwd: "<%= path.src %>/js/modules/Providers"
+                src: "*.js*"
+                dest: "<%= path.build %>/js/modules/Providers"
 
-    baseJSCopyTasks = ["copy:js", "copy:modules", "copy:ui"]
+    baseJSCopyTasks = ["copy:js", "copy:modules", "copy:ui", "copy:providers"]
 
     # Development Tasks
 

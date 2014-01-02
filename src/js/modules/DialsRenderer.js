@@ -1,4 +1,4 @@
-define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredDialsProvider", "WebAppsListProvider", "ChromeAppsProvider", "AndroidAppsListProvider", "LovedGamesGamesProvider", "Runtime", "AdderOverlay", "Overlay", "Alert", "sitesProvider", "defaultByCountryProvider", "Analytics"], function DialsRenderer(env, _, $, Renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, AndroidAppsListProvider, LovedGamesGamesProvider, Runtime, AdderOverlay, Overlay, Alert, sitesProvider, defaultByCountryProvider, Analytics) {
+define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredDialsProvider", "WebAppsListProvider", "ChromeAppsProvider", "Runtime", "AdderOverlay", "Overlay", "Alert", "sitesProvider", "defaultByCountryProvider", "Analytics"], function DialsRenderer(env, _, $, Renderer, templates, when, StoredDialsProvider, WebAppsListProvider, ChromeAppsProvider, Runtime, AdderOverlay, Overlay, Alert, sitesProvider, defaultByCountryProvider, Analytics) {
     "use strict";
 
     if (DEBUG && DEBUG.logLoadOrder) {
@@ -38,8 +38,8 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
             optOverlayDial: true
         });
 
-        renderingStoredDials = self.renderProvider(StoredDialsProvider, Renderer.$dialsWrapper);
-        renderingChromeApps = self.renderProvider(ChromeAppsProvider, Renderer.$appsWrapper);
+        renderingStoredDials = self.renderProviders(StoredDialsProvider, Renderer.$dialsWrapper);
+        renderingChromeApps = self.renderProviders(ChromeAppsProvider, Renderer.$appsWrapper);
 
         //TODO hardcoded
         if(!window.isChromeApp){
@@ -58,27 +58,17 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
         ], initting.resolve, initting.reject);
     };
 
-    self.renderProvider = function(provider, $container, options) {
-        var rendering = when.defer();
-
-        provider.promise.then(function(dials) {
-            renderDials(provider, $container, dials, options);
-            setTimeout(function() {
-                rendering.resolve();
-            }, 0);
-        });
-
-        return rendering.promise;
-    };
-
-    self.renderProviders = function(providers, $container, _options) {
-        var rendering = when.defer(),
+    self.renderProviders = function(_providers, $container, _options) {
+        var renderingProviders = [],
             options = $.extend({
                 cleanContainer: false,
-            }, _options);
+            }, _options),
+            providers = !_.isArray(_providers) ? [_providers] : _providers;
 
         _.each(providers, function(provider) {
             provider.promise.then(function(dials) {
+                var rendering = when.defer();
+                renderingProviders.push(rendering);
                 renderDials(provider, $container, dials, options);
                 setTimeout(function() {
                     rendering.resolve();
@@ -86,7 +76,7 @@ define(["env", "underscore", "jquery", "Renderer", "templates", "when", "StoredD
             });
         });
 
-        return rendering.promise;
+        return when.all(renderingProviders);
     };
 
     // var renderDialsByRow = function(rows, options) {

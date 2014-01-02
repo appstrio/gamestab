@@ -1,5 +1,5 @@
 
-define(["env", "jquery", "Renderer", "when", "AndroIt","AndroidOverlay"], function AndroidDial(env, $, renderer, when, AndroIt,AndroidOverlay) {
+define(["env", "jquery", "Renderer", "when","AndroidOverlay"], function AndroidDial(env, $, renderer, when,AndroidOverlay) {
     "use strict";
 
     if (DEBUG && DEBUG.logLoadOrder) console.log("Loading Module : AndroidDial");
