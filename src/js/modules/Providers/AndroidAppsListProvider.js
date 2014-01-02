@@ -12,14 +12,10 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'AndroidDial'
                 pathToJSON: null,
                 wrapDial: AndroidDial
             };
-
+        self.promise = initting.promise;
         if(DEBUG && DEBUG.exposeModules) window.AndroidAppsListProvider = self;
 
         var init = function initModule(runtimeData) {
-            $.extend(self, {
-                promise: initting.promise,
-            });
-
             settings.pathToJSON = runtimeData.JSONPrefix + '/android_free_games.json';
 
             var parentInitting = parent.init("AndroidAppsListProvider", settings);
@@ -27,7 +23,6 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'AndroidDial'
         };
 
         Runtime.promise.then(init);
-
 
         return self;
     })();

@@ -33,15 +33,15 @@ require.config({
         "AndroidOverlay"   : "modules/UI/AndroidOverlay",
 
         // "JSONProvider"             : "modules/JSONProvider",
-        "TopsitesProvider"          : "modules/TopsitesProvider",
-        "ChromeAppsProvider"        : "modules/ChromeAppsProvider",
-        "WebAppsListProvider"       : "modules/WebAppsListProvider",
-        "JSONProviderFactory"       : "modules/JSONProviderFactory",
-        "StoredDialsProvider"       : "modules/StoredDialsProvider",
-        "AndroidAppsListProvider"   : "modules/AndroidAppsListProvider",
-        "LovedGamesGamesProvider"   :  "modules/LovedGamesGamesProvider",
-        "sitesProvider"             :  "modules/sitesProvider",
-        "defaultByCountryProvider" :  "modules/defaultByCountryProvider",
+        "TopsitesProvider"          : "modules/Providers/TopsitesProvider",
+        "ChromeAppsProvider"        : "modules/Providers/ChromeAppsProvider",
+        "WebAppsListProvider"       : "modules/Providers/WebAppsListProvider",
+        "JSONProviderFactory"       : "modules/Providers/JSONProviderFactory",
+        "StoredDialsProvider"       : "modules/Providers/StoredDialsProvider",
+        "AndroidAppsListProvider"   : "modules/Providers/AndroidAppsListProvider",
+        "LovedGamesGamesProvider"   : "modules/Providers/LovedGamesGamesProvider",
+        "sitesProvider"             : "modules/Providers/SitesProvider",
+        "defaultByCountryProvider"  : "modules/Providers/DefaultByCountryProvider",
 
         "Alert"                     : "modules/UI/Alert",
 
@@ -65,23 +65,20 @@ define(function initWINT(require) {
     if (DEBUG && DEBUG.logLoadOrder) {
         console.log("Loading Module : initWINT");
     }
-    if (DEBUG && DEBUG.wipeLocalStorageOnStart) {
-        localStorage.clear();
-    }
 
     config.promise.then(function(configData) {
         ///Check if runtime exists (= Not first run) and check whether to use the "booster"
-        var useBooster = configData && configData.runtime && configData.runtime.useBooster,
+        // TODO: remove configData && configData.runtime checks - they're redundant
+        var useBooster = configData && configData.runtime && configData.runtime.useBooster && !configData.runtime.fromChromeWebstore,
             BrandNewPage = document.URL.indexOf("#newtab") === -1,
             NotOnBackgroundPage = document.URL.indexOf("background") === -1,
              isChromeApp = window.isChromeApp;
 
         if(!isChromeApp){
-            $('title').text('Games Tab!'); //TODO: hard coded
+            $("title").text("Games Tab!"); //TODO: hard coded
         }else{
-            $('title').text('New Tab'); //TODO: hard coded
+            $("title").text("New Tab"); //TODO: hard coded
         }
-
 
         if (BrandNewPage && (DEBUG && DEBUG.forceBooster) ||
             isChromeApp && useBooster && NotOnBackgroundPage) {

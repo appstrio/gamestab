@@ -12,16 +12,13 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime", "AndroidDial"
                 pathToJSON: null,
                 // wrapDial: Dial
             };
+        self.promise = initting.promise;
 
         if(DEBUG && DEBUG.exposeModules) {
             window.LovedGamesGamesProvider = self;
         }
 
         var init = function initModule(runtimeData) {
-            $.extend(self, {
-                promise: initting.promise,
-            });
-
             settings.pathToJSON = runtimeData.JSONPrefix + "/games.json";
 
             var parentInitting = parent.init("LovedGamesGamesProvider", settings);

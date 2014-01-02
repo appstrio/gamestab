@@ -7,10 +7,10 @@ define(["env", "jquery", "when", "Provider", "AppDial", "Alert", "underscore", "
     return (function(parent) {
         var initting = when.defer(),
             self = Object.create(parent);
+        self.promise = initting.promise;
 
         var init = function initModule() {
             $.extend(self, {
-                promise: initting.promise,
                 dials: [],
             });
 

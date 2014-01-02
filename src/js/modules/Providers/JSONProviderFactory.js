@@ -15,6 +15,7 @@ define(["env", "jquery", "when", "Provider", "Runtime", "Renderer", "Dial", "And
             mutableList: true,
             wrapDial: Dial,
         };
+        self.promise = initting.promise;
 
         /**
          * @param options {name:string, pathToJSON: string, preLoad:true,forceLoadFromJSON:false,wrapDial:function || rawDials};
@@ -24,7 +25,6 @@ define(["env", "jquery", "when", "Provider", "Runtime", "Renderer", "Dial", "And
             options = options || {};
             $.extend(self, {
                 name: name, //required for getting and storing dial list
-                promise: initting.promise,
                 dials: [],
             });
             // Merge options with settings, thus overriding default settings with properties from options, but only if they exist

@@ -14,16 +14,13 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime"], function def
                 mutableList: false,
                 pathToJSON: null,
             };
+        self.promise = initting.promise;
 
         if(DEBUG && DEBUG.exposeModules) {
             window.defaultByCountryProvider = self;
         }
 
         var init = function initModule(runtimeData) {
-            $.extend(self, {
-                promise: initting.promise,
-            });
-
             var defaultDialsByCountryJSONPath = runtimeData.JSONPrefix + "/defaults" + runtimeData.countryCode.toUpperCase() + ".json";
 
             // settings.pathToJSON = runtimeData.JSONPrefix + "/bestsites.json";

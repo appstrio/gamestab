@@ -14,16 +14,13 @@ define(["env", "jquery", "when", "JSONProviderFactory", "Runtime"], function sit
                 mutableList: false,
                 pathToJSON: null,
             };
+        self.promise = initting.promise;
 
         if(DEBUG && DEBUG.exposeModules) {
             window.sitesProvider = self;
         }
 
         var init = function initModule(runtimeData) {
-            $.extend(self, {
-                promise: initting.promise,
-            });
-
             settings.pathToJSON = runtimeData.JSONPrefix + "/bestsites.json";
 
             var parentInitting = parent.init("sitesProvider", settings);

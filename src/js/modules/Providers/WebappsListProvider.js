@@ -11,14 +11,11 @@ define(['env', 'jquery', 'when', 'JSONProviderFactory', 'Runtime', 'Renderer', '
                 mutableList: false,
                 pathToJSON: null,
             };
+        self.promise = initting.promise;
 
         if(DEBUG && DEBUG.exposeModules) window.WebAppsListProvider = self;
 
         var init = function initModule(runtimeData) {
-            $.extend(self, {
-                promise: initting.promise,
-            });
-
             settings.pathToJSON = runtimeData.JSONPrefix + '/webapps.json';
 
             var parentInitting = parent.init("WebAppsListProvider", settings);
