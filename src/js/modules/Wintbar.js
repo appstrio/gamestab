@@ -190,7 +190,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
         var datumUrl = null;
 
         _.each(self.datums, function(datum) {
-            if (query == datum.value) {
+            if (query === datum.value) {
                 datumUrl = datum.url;
             }
         });
@@ -200,6 +200,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
         var value = Analytics.getValByCC(runtimeData.countryCode);
 
         if (datumUrl) {
+            datumUrl = encodeURI(datumUrl);
             Analytics.sendEvent({
                 category: "Search",
                 action: datumUrl,
@@ -209,6 +210,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
                 redirectToUrl(datumUrl);
             });
         } else {
+            query = encodeURI(query);
             Analytics.sendEvent({
                 category: "Search",
                 action: "Search",
