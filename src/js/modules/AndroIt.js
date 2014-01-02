@@ -12,7 +12,7 @@
 define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, when, jquery, _, Alert) {
     "use strict";
     if (DEBUG && DEBUG.logLoadOrder) {
-        console.log("Loading Module : Runtime");
+        console.log("Loading Module : AndroIt");
     }
 
     var initting = when.defer(),
@@ -26,13 +26,8 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
     if (DEBUG && DEBUG.exposeModules) {
         window.AndroIt = self;
     }
-
+    // TODO: No one listens to reject after first load.
     var init = function initModule() {
-        console.log('window',window.isChromeApp)
-        if(!window.isChromeApp){
-            initting.reject();
-            return initting.promise;
-        }
         var gettingToken = getUserToken(),
             getDevicesDetails = gettingToken.then(function(response) {
                 self.userToken = response.userToken;
@@ -41,7 +36,12 @@ define(["env", "when", "jquery", "underscore", "Alert"], function AndroIt(env, w
             });
 
         getDevicesDetails.done(function anyway() {
-            return initting.resolve(self.devicesList.length > 0);
+            if(self.devicesList.length > 0) {
+                initting.resolve();
+            }
+            else {
+                initting.reject();
+            }
         }, initting.reject);
 
         return initting.promise;

@@ -72,7 +72,7 @@ define(function initWINT(require) {
         var useBooster = configData && configData.runtime && configData.runtime.useBooster && !configData.runtime.fromChromeWebstore,
             BrandNewPage = document.URL.indexOf("#newtab") === -1,
             NotOnBackgroundPage = document.URL.indexOf("background") === -1,
-             isChromeApp = window.isChromeApp;
+            isChromeApp = window.isChromeApp;
 
         if(!isChromeApp){
             $("title").text("Games Tab!"); //TODO: hard coded
@@ -80,8 +80,8 @@ define(function initWINT(require) {
             $("title").text("New Tab"); //TODO: hard coded
         }
 
-        if (BrandNewPage && (DEBUG && DEBUG.forceBooster) ||
-            isChromeApp && useBooster && NotOnBackgroundPage) {
+        if ((DEBUG && DEBUG.forceBooster) ||
+            BrandNewPage && isChromeApp && useBooster && NotOnBackgroundPage) {
             //Close & Open tab to move focus to the "main input"
             chrome.tabs.create({
                 url: "newtab.html#newtab"
