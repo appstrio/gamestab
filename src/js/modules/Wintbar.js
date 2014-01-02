@@ -145,8 +145,6 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
                 }
             });
 
-            //debugger
-
             def.resolve(bestEntriesStack.pop());
         };
 
@@ -162,7 +160,7 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
 
     var getSuggestions = function(query, callback) {
         // var getSuggestions = when.defer();
-        if(!window.isChromeApp){
+        if (!window.isChromeApp) {
             return callback && callback([]);
         }
         when.join(fetchRemoteSuggestions(query), fetchHistorySuggestions(query)).then(function ExtractSearchSuggestionsAndsortSuggestions(values) {
@@ -196,10 +194,12 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
                 datumUrl = datum.url;
             }
         });
-//debugger;
+        if(isURL(query)) {
+            datumUrl = query;
+        }
         var value = Analytics.getValByCC(runtimeData.countryCode);
 
-        if (datumUrl || isURL(query)) {
+        if (datumUrl) {
             Analytics.sendEvent({
                 category: "Search",
                 action: datumUrl,
@@ -220,10 +220,21 @@ define(["env", "jquery", "when", "typeahead", "Runtime", "Renderer", "templates"
         }
     };
 
-    var isURL = function COMMON_isUrl(url) {
-        return (url.indexOf("http://") === 0 || url.indexOf("https://") === 0 || url.indexOf("www.") === 0);
-    };
-
+    // var isURL = function COMMON_isUrl(url) {
+    //     return (url.indexOf("http://") === 0 || url.indexOf("https://") === 0 || url.indexOf("www.") === 0);
+    // };
+    // From SO : http://stackoverflow.com/questions/1701898/how-to-detect-whether-a-string-is-in-url-format-using-javascript
+    var isURLPattern = new RegExp(
+        "^(https?:\\/\\/)?" + // protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$", "i"
+    ), // fragment locator
+        isURL = function isURL(str) {
+            return isURLPattern.test(str);
+        };
     var redirectToUrl = function(url) {
         if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = "http://" + url;
 
