@@ -23,6 +23,9 @@
     "requirejs": "~2.1.9",
     "requirejs-promise": "*",
     "typeahead.js": "~0.9.3",
-    "when": "~2.7.0"
+    "when": "~2.7.0",
+    "angular": "~1.2.6",
+    "jquery-ui": "~1.10.3",
+    "angular-ui-sortable": "https://github.com/hlandao/ui-sortable.git#~0.10.0"
   }
 }

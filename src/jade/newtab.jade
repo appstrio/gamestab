@@ -1,12 +1,32 @@
 doctype 5
 html(ng-csp='ng-csp')
     head
-        link(href='img/favicons/favicongray16.png', rel='shortcut icon')
         link(href='css/style.css', rel='stylesheet')
         meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
         meta(name='google', content='notranslate')
-        script(src='./js/libs/require.js', data-main='js/init')
-        title
+        script(src='./js/libs/jquery.js')
+        script(src='./js/libs/jquery.ui.js')
+        script(src='./js/libs/angular.js')
+        script(src='./js/vendor/sortable.js')
+        script(src='./js/app.js')
+        script(src='./js/controllers.js')
+        title GamesTab
         //----------------
     body(ng-controller='MainCtrl')
-        div#wrapper
+
+    #wrapper
+        section
+            .arrows()
+                .inner
+                    .arrow-left(ng-mouseenter="isDragging && movePreviousScreenWhileDragging()")
+                        i.icon-left-open-big(ng-click="movePreviousScreen()")
+                    .arrow-right(ng-mouseenter="isDragging && moveNextScreenWhileDragging()")
+                        i.icon-right-open-big(ng-click="moveNextScreen()")
+            .inner
+                .viewport
+                    .apps-container.screen(ui-sortable="sortableOptions", ng-model="screen", ng-repeat="screen in rawScreens")
+                        .app(ng-repeat="app in screen", data-title="{{app.title}}")
+                            .wrapper
+                                .remove-button
+                                .icon(style="background-image: url('{{app.icon}}')")
+                                .title {{app.title}} ({{screen.length}}) ({{$index}})

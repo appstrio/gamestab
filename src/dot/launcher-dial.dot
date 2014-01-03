@@ -1,9 +1,0 @@
-<div class="dial launchable" data-url="{{=it.url}}">
-    <div class="inner">
-        <div style="background-image : url({{=it.screenshot}})"  class="thumbnail screenshot"></div>
-        <div class="title">
-            <span class="dial-remove-button remove-button">x</span>
-            {{=it.title}}
-        </div>
-    </div>
-</div>
