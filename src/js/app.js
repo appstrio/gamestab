@@ -23,11 +23,16 @@ app.directive('hlLauncher', [function(){
         };
 
         var checkArrows = function(){
+            if(!scope.rawScreens){
+                return;
+            }
+
             if(scope.curScreen > 0){
                 $arrowLeft.show();
             }else{
                 $arrowLeft.hide();
             }
+
 
             if(scope.curScreen < scope.rawScreens.length - 1){
                 $arrowRight.show();
@@ -63,23 +68,19 @@ app.directive('hlLauncher', [function(){
 
         });
 
-
+        // watch the current screen to move the viewport
         scope.$watch('curScreen', function(newVal){
             newVal = newVal || 0;
             $viewport.css({left : getScreenPosition(newVal)});
             checkArrows();
         });
 
-
+        // watch the number of screens to set the width of the viewport
         scope.$watch('rawScreens', function(newVal){
             if(newVal && newVal.length)
                 $viewport.css({width : getScreenWidth(newVal.length)});
             checkArrows();
         });
-
-
-
-
     }
 }]);
 
