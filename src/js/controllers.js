@@ -1,4 +1,4 @@
-app.controller('MainCtrl', ['$scope', function($scope){
+app.controller('MainCtrl', ['$scope', '$http', function($scope, $http){
     var $draggingHelper;
 
     $scope.sortableOptions = {
@@ -62,43 +62,48 @@ app.controller('MainCtrl', ['$scope', function($scope){
 
     };
 
-    $scope.rawScreens = [
-        [
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
-            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'}
-        ],
-        [
-            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
-            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
-            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
-            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
-            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
-            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
-            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
-            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
-            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
-            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'}
-        ],
-        [
-            {icon : './img/icons/twitter.jpg', title: 'Twitter', link : 'http://www.twitter.com'},
-            {icon : './img/icons/twitter.jpg', title: 'Twitter', link : 'http://www.twitter.com'},
-            {icon : './img/icons/twitter.jpg', title: 'Twitter', link : 'http://www.twitter.com'},
-            {icon : './img/icons/twitter.jpg', title: 'Twitter', link : 'http://www.twitter.com'},
-            {icon : './img/icons/twitter.jpg', title: 'Twitter', link : 'http://www.twitter.com'}
-        ]
-    ];
+    $http.get('./data/defaultDials.json').success(function(responseDials){
+        console.log('responseDials',responseDials);
+        $scope.rawScreens = [responseDials];
+    });
+
+//    $scope.rawScreens = [
+//        [
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'},
+//            {icon : './img/icons/facebook.jpg', title: 'Facebook', link : 'http://www.facebook.com'}
+//        ],
+//        [
+//            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
+//            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
+//            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
+//            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
+//            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
+//            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
+//            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
+//            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
+//            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'},
+//            {icon : './img/icons/youtube.jpg', title: 'Youtube', link : 'http://www.youtube.com'}
+//        ],
+//        [
+//            {icon : './img/icons/twitter.jpg', title: 'Twitter', link : 'http://www.twitter.com'},
+//            {icon : './img/icons/twitter.jpg', title: 'Twitter', link : 'http://www.twitter.com'},
+//            {icon : './img/icons/twitter.jpg', title: 'Twitter', link : 'http://www.twitter.com'},
+//            {icon : './img/icons/twitter.jpg', title: 'Twitter', link : 'http://www.twitter.com'},
+//            {icon : './img/icons/twitter.jpg', title: 'Twitter', link : 'http://www.twitter.com'}
+//        ]
+//    ];
 
 }]);
