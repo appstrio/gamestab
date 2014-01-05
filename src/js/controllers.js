@@ -2,7 +2,7 @@ app.controller('MainCtrl', ['$scope', function($scope){
     var $draggingHelper;
 
     $scope.sortableOptions = {
-//        tolerance : 'pointer',
+        tolerance : 'pointer',
         disabled: false,
         start: function (e, u) {
             $draggingItem = $(u.item);

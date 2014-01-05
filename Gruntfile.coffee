@@ -85,7 +85,7 @@ module.exports = (grunt) ->
                     "<%= path.build %>/js/libs/require.js"    : "bower_components/requirejs/require.js"
                     "<%= path.build %>/js/libs/when.js"       : "bower_components/when/when.js"
                     "<%= path.build %>/js/libs/jquery.js"     : "bower_components/jquery/jquery.min.js"
-                    "<%= path.build %>/js/libs/jquery.ui.js"  : "bower_components/jquery-ui/ui/jquery-ui.js"
+                    "<%= path.build %>/js/libs/jquery.ui.js"  : "<%= path.src %>/js/vendor/jquery-ui.js"
 
                     "<%= path.build %>/js/libs/angular.js"    : "bower_components/angular/angular.min.js"
 
