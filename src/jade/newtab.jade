@@ -1,6 +1,7 @@
 doctype 5
 html(ng-csp='ng-csp')
     head
+        link(href='fonts/fontello/css/fontello.css', rel='stylesheet')
         link(href='css/style.css', rel='stylesheet')
         meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
         meta(name='google', content='notranslate')
@@ -15,15 +16,15 @@ html(ng-csp='ng-csp')
     body(ng-controller='MainCtrl')
 
     #wrapper
-        section
-            .arrows()
+        section(hl-launcher)
+            .arrows
                 .inner
-                    .arrow-left(ng-mouseenter="isDragging && movePreviousScreenWhileDragging()")
-                        i.icon-left-open-big(ng-click="movePreviousScreen()")
-                    .arrow-right(ng-mouseenter="isDragging && moveNextScreenWhileDragging()")
-                        i.icon-right-open-big(ng-click="moveNextScreen()")
+                    .arrow-left
+                        i.icon-left-open-big
+                    .arrow-right
+                        i.icon-right-open-big
             .inner
-                .viewport
+                .viewport(hl-viewport)
                     .apps-container.screen(ui-sortable="sortableOptions", ng-model="screen", ng-repeat="screen in rawScreens")
                         .app(ng-repeat="app in screen", data-title="{{app.title}}")
                             .wrapper
