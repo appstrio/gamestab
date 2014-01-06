@@ -3509,6 +3509,7 @@ function isOverAxis( x, reference, size ) {
 }
 
 function isFloating(item) {
+    return true;
 	return (/left|right/).test(item.css("float")) || (/inline-block|inline|table-cell/).test(item.css("display"));
 }
 

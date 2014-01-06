@@ -89,7 +89,6 @@ angular.module('ui.sortable', [])
               };
 
             callbacks.over = function(e, ui){
-                console.log(ui.item);
             }
 
 
