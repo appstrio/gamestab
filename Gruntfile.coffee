@@ -93,6 +93,7 @@ module.exports = (grunt) ->
                     "<%= path.build %>/js/libs/moment.js"     : "bower_components/moment/min/moment.min.js"
                     "<%= path.build %>/js/libs/underscore.js" : "bower_components/underscore/underscore-min.js"
                     "<%= path.build %>/js/libs/uri.js"        : "bower_components/uri.js/src/URI.min.js",
+                    "<%= path.build %>/js/libs/jcrop.js"        : "bower_components/jcrop/js/jquery.Jcrop.js",
                     "<%= path.build %>/js/vendor/sortable.js" : "<%= path.src %>/js/vendor/sortable.js"
             assets:
                 expand: true

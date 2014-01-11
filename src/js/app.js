@@ -182,7 +182,7 @@ app.directive('hlLauncher', ['Apps', function(Apps){
             })
         }
     }
-}]).directive('hlBackgroundLocalImage', [function(){
+}]).directive('hlBackgroundLocalImage', ['Background','$rootScope', function(Background,$rootScope){
     return function (scope, element, attrs){
       var $preview = element.parent().siblings('.preview').eq(0),
           $previewIMG = $preview.children().eq(0);
@@ -191,10 +191,22 @@ app.directive('hlLauncher', ['Apps', function(Apps){
           oFReader.readAsDataURL(element[0].files[0]);
 
           oFReader.onload = function (oFREvent) {
+//              $rootScope.$apply(function(){
+//                  scope.cropperOptions = {
+//                      dataURL : oFREvent.target.result
+//                  };
+//              });
               $previewIMG[0].src = oFREvent.target.result;
               $preview.show();
+              Background.uploadNewLocalImage(oFREvent.target.result);
           };
       });
+
+      // on init, check if the current background is local image, if yes, preview it
+      if(Background.background.isLocalBackground){
+          $previewIMG[0].src = Background.background.image;
+          $preview.show();
+      }
     };
 }]).directive('hlBackground', ['Background', function(Background){
     return function(scope, element, attrs){
@@ -202,7 +214,6 @@ app.directive('hlLauncher', ['Apps', function(Apps){
             scope.$watch(function(){
                 return Background.background;
             }, function(newVal){
-                console.log('BG newVal',newVal);
                 if(newVal){
                     setBackground(newVal);
                 }
@@ -213,6 +224,31 @@ app.directive('hlLauncher', ['Apps', function(Apps){
             element.css({backgroundImage : "url(" + background.image + ")"});
         };
 
+    }
+}]).directive('hlCropper', [function(){
+    return function(scope, element, attrs){
+        scope.$watch(attrs.cropperOptions, function(newVal){
+           if(newVal){
+                init(newVal);
+           }
+        });
+
+        var cropperOptions,
+            $editorImage = element.find('.original-image').children('img').eq(0),
+            $previewImage = element.find('.preview-image').children('img').eq(0);
+
+        var init = function(_cropperOptions){
+            cropperOptions = _cropperOptions;
+            element.addClass('showed');
+            $editorImage[0].src = cropperOptions.dataURL;
+            $editorImage.Jcrop();
+            $previewImage[0].src = cropperOptions.dataURL;
+        }
+
+        var clear = function(){
+           delete cropperOptions.dataURL;
+            cropperOptions = null;
+        }
     }
 }]);
 

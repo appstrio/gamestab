@@ -39,7 +39,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, A
 
         $scope.isSelected = function(bg){
             return bg.image == Background.background.image;
-        }
+        };
 
 }]);
 

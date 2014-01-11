@@ -17,4 +17,18 @@
                         input(type="file", id="localImageFile", hl-background-local-image)
                     .preview
                         img
+                .cropper(hl-cropper, cropper-options="cropperOptions")
+                    .header Crop the image you uploaded
+                    .editor
+                        .left
+                            h2 Edit The Image
+                            .original-image
+                                img
+                        .right
+                            h2 Preview
+                            .preview-image
+                                img
+                    .footer
+                        button Cancel
+                        button OK
 
