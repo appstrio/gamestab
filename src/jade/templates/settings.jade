@@ -1,0 +1,20 @@
+#settings.inner(ng-controller="SettingsCtrl")
+    .header Settings
+    .main
+        .left
+            ul
+                li(ng-repeat="pane in panes", ng-class="{selected : (selectedPane == pane)}", ng-click="selectPane(pane, $event)") {{pane}}
+
+        .right(ng-switch="selectedPane")
+            .settings-general(ng-switch-default) General
+            .settings-background(ng-switch-when="Background", ng-controller="BackgroundCtrl")
+                .bg-explorer
+                    .bg-sample(ng-repeat="bg in backgrounds", ng-style="{backgroundImage : 'url(' + bg.image+ ')'}", ng-class="{selected : isSelected(bg)}", ng-click="selectBackground(bg, $event)")
+
+                .bg-upload
+                    .image-selector
+                        h2 Select your own image
+                        input(type="file", id="localImageFile", hl-background-local-image)
+                    .preview
+                        img
+

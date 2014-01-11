@@ -16,8 +16,7 @@ html(ng-csp='ng-csp')
         title GamesTab
         //----------------
     body(ng-controller='MainCtrl')
-
-    #wrapper
+    #wrapper(hl-background)
         section(hl-launcher)
             .arrows
                 .inner
@@ -28,8 +27,9 @@ html(ng-csp='ng-csp')
             .inner
                 .viewport(hl-viewport)
                     .apps-container.screen(ui-sortable="sortableOptions", ng-model="screen", ng-repeat="screen in rawScreens")
-                        .app(ng-repeat="app in screen", data-title="{{app.title}}")
+                        .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)")
                             .wrapper
                                 .remove-button
                                 .icon(style="background-image: url('{{app.icon}}')")
-                                .title {{app.title}} ({{screen.length}}) ({{$index}})
+                                .title {{app.title}}
+    #overlay(hl-overlay, overlay-options="overlay", ng-include="templateURL")

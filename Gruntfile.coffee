@@ -40,7 +40,7 @@ module.exports = (grunt) ->
                 flatten:true
                 cwd:  "src/jade/"
                 dest: "<%= path.build %>"
-                src : "*.jade"
+                src : "**/*.jade"
                 ext : ".html"
         less:
             compile:

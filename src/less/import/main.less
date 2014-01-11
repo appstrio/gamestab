@@ -12,10 +12,15 @@ body,html{
   width: 100%;
   height: 100%;
   overflow:hidden;
-  background: url('../img/wallpapers/bg.jpg');
+  //background: url('../img/wallpapers/bg.jpg');
   background-size:  cover;
   display: -webkit-box;
   -webkit-box-align:center;
+  -webkit-transition: all 0.1 ease 0.2s;
+  &.blurred{
+    -webkit-filter: blur(40px);
+  }
+
 }
 
 
@@ -28,7 +33,7 @@ section{
     width:100%;
     height:100%;
     position: absolute;
-    height: 570px;
+    height: 610px;
 
     > .inner{
       position:relative;
@@ -40,7 +45,7 @@ section{
     }
     .arrow-left{
       position: absolute;
-      height: 570px;
+      height: 610px;
       display: -webkit-box;
       -webkit-box-pack: center;
       -webkit-box-align: center;
@@ -63,7 +68,7 @@ section{
     .arrow-right{
       position: absolute;
       right: 0;
-      height: 570px;
+      height: 610px;
       display: -webkit-box;
       -webkit-box-pack: center;
       -webkit-box-align: center;
@@ -87,7 +92,7 @@ section{
 
   > .inner{
     width:900px;
-    height: 570px;
+    height: 610px;
     overflow:hidden;
     margin: 0 auto;
     position: relative;
@@ -142,13 +147,13 @@ section{
   width: 900px;
   margin:auto;
   position: relative;
-  height: 570px;
+  height: 610px;
   float:left;
 
   .app{
     width:110px;
     height: 140px;
-    padding: 25px 60px;
+    padding: 25px 60px 45px;
     position: absolute;
     float:left;
     display: inline-block;
@@ -218,14 +223,16 @@ section{
 
       }
       .title{
-        margin-top:9px;
+        margin-top:20px;
         color:white;
         font-family: 'Helvetica Neue';
         white-space: nowrap;
         cursor:pointer;
-        font-size: 14px;
-        font-weight: 200;
-
+        font-size: 18px;
+        font-weight: 100;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
+        text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
       }
 
     }
@@ -248,3 +255,137 @@ footer{
   -webkit-filter: blur(0px) contrast(0.8) brightness(1.4);
 }
 
+#overlay{
+  width:0;
+  height: 0;
+  position: absolute;
+  bottom:50%;
+  left:50%;
+  z-index:10;
+  background:rgba(255,255,255,0.6);
+  display:none;
+  bottom:0;
+  left:0;
+  width:100%;
+  height: 100%;
+
+  &.showed{
+    display: -webkit-box;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+  }
+  &.enlarged{
+    .inner{
+      width:750px;
+      height:500px;
+
+    }
+  }
+
+  .inner{
+    width:0;
+    height: 0;
+    border-radius: 40px;
+    position:relative;
+    display: -webkit-box;
+    -webkit-transition: all 0.4s ease;
+    -webkit-box-orient : vertical;
+
+    .header{
+      font-size: 37px;
+      font-family: 'Helvetica Neue';
+      font-weight: 200;
+      text-align: center;
+      vertical-align: bottom;
+      padding-bottom: 12px;
+      color: rgba(0,0,0,0.8);
+    }
+
+    .main{
+      background: rgba(255,255,255,1);
+      -webkit-box-orient:horizontal;
+      -webkit-box-flex:1;
+      border-radius: 40px;
+      display: -webkit-box;
+      overflow:hidden;
+      .left{
+        padding: 35px 0px;
+        width:150px;
+        ul{
+          list-style:none;
+          margin:0;
+          padding:0;
+          li{
+            font-family: 'Helvetica Neue';
+            font-weight: 100;
+            padding: 10px 20px;
+            cursor:pointer;
+            &.selected, &:hover{
+              font-weight: 200;
+            }
+          }
+        }
+      }
+      .right{
+        padding: 35px 0px;
+        -webkit-box-flex:1;
+        background: #F8F8F8;
+      }
+    }
+  }
+
+  #settings{
+    .settings-background{
+      .bg-explorer{
+        width:100%;
+        height: 302px;
+        overflow-y: auto;
+        border-bottom: 1px solid rgb(234,234,234);
+      }
+      .bg-sample{
+        width:80px;
+        height:80px;
+        float:left;
+        background-size:cover;
+        margin:9px;
+        border-radius:10px;
+        overflow:hidden;
+        border: 1px solid rgba(0,0,0,0.2);
+        cursor:pointer;
+        &.selected{
+          margin:8px;
+          border: 2px solid rgb(255, 221, 0);
+        }
+      }
+      .bg-upload{
+        border-top: 1px solid rgb(255,255,255);
+        height: 115px;
+        width:100%;
+        padding: 12px;
+        .image-selector{
+          float:left;
+          width:460px;
+          h2{
+            font-family: 'Helvetica Neue';
+            font-size: 16px;
+            font-weight: 200;
+            margin: 0 0 19px 0;
+          }
+
+        }
+        .preview{
+          width:80px;
+          height:80px;
+          border-radius:10px;
+          overflow:hidden;
+          border: 2px solid rgb(255, 221, 0);
+          display: none;
+          img{
+            width:100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+}

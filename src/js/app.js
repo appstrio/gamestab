@@ -4,7 +4,7 @@ angular.element(document).ready(function() {
     angular.bootstrap(document, ['myApp']);
 });
 
-app.directive('hlLauncher', [function(){
+app.directive('hlLauncher', ['Apps', function(Apps){
     return function(scope, element){
 
         scope.curScreen = 0;
@@ -113,6 +113,9 @@ app.directive('hlLauncher', [function(){
                 $draggingHelper = null;
                 $draggingItem = null;
                 $draggingPlaceholder = null;
+                scope.$apply(function(){
+                    Apps.store();
+                });
             },
             placeholder: "app",
             revert: 500,
@@ -127,6 +130,89 @@ app.directive('hlLauncher', [function(){
             connectWith: ".apps-container"
 
         };
+    }
+}]).directive('hlOverlay',[function(){
+    return {
+        scope : {
+            overlayOptions : "="
+        },
+        link : function(scope, element, attrs){
+
+            var $overlay = element;
+
+            scope.$watch('overlayOptions', function(newVal){
+                if(!newVal || !newVal.name){
+                    hide();
+                }else{
+                    scope.templateURL = newVal.name + '.html';
+                    setTimeout(show, 0);
+                }
+            });
+
+
+            var hide = function(done){
+                $overlay.removeClass('showed');
+                $('#wrapper').removeClass('blurred');
+                $overlay.removeClass('enlarged');
+                setTimeout(function(){
+                    scope.templateURL = '';
+                    scope.overlayOptions = null;
+                    done && done();
+                },0);
+            };
+            var show = function(done){
+                $overlay.addClass('showed');
+                $('#wrapper').addClass('blurred');
+                setTimeout(function(){
+                    $overlay.addClass('enlarged');
+                    setTimeout(function(){
+                        done && done();
+                    },0);
+                },0);
+            };
+
+            element.on('click', function(e){
+               hide();
+            }).on('click','.main', function(e){
+                e.stopPropagation();
+            });
+
+            scope.$on('$destroy', function(){
+                element.off();
+            })
+        }
+    }
+}]).directive('hlBackgroundLocalImage', [function(){
+    return function (scope, element, attrs){
+      var $preview = element.parent().siblings('.preview').eq(0),
+          $previewIMG = $preview.children().eq(0);
+      element.on('change', function(){
+          var oFReader = new FileReader();
+          oFReader.readAsDataURL(element[0].files[0]);
+
+          oFReader.onload = function (oFREvent) {
+              $previewIMG[0].src = oFREvent.target.result;
+              $preview.show();
+          };
+      });
+    };
+}]).directive('hlBackground', ['Background', function(Background){
+    return function(scope, element, attrs){
+        Background.promise.then(function(_background){
+            scope.$watch(function(){
+                return Background.background;
+            }, function(newVal){
+                console.log('BG newVal',newVal);
+                if(newVal){
+                    setBackground(newVal);
+                }
+            }, 1);
+        });
+
+        var setBackground = function(background){
+            element.css({backgroundImage : "url(" + background.image + ")"});
+        };
+
     }
 }]);
 
