@@ -4,8 +4,8 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
         apps;
 
     var systemApps = [
-        {title : "Settings", icon :  '/img/logo_icons/target.png', overlay:'settings'},
-        {title : "Web Apps Store", icon : '/img/logo_icons/thumblr.png', overlay:'store'}
+        {title : "Settings", icon :  '/img/logo_icons/settings175x175.jpg', overlay:'settings', permanent : true},
+        {title : "Web Apps Store", icon : '/img/logo_icons/appstore175x175.jpg', overlay:'store', permanent : true}
     ];
     var init = function(){
         Storage.get(storageKey, function(items){
@@ -14,6 +14,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
                 initting.resolve(apps);
             }else{
                 firstTimeSetup(function(){
+                    console.log('apps',apps);
                     initting.resolve(apps);
                 });
             }
@@ -21,27 +22,48 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
     };
 
     var firstTimeSetup = function (cb){
-        $http.get('./data/defaultDials.json').success(function(responseApps){
-            responseApps = responseApps.slice(0,10);
-            responseApps.push(systemApps[0]);
-            responseApps.push(systemApps[1]);
+        $http.get('./data/webAppsDB.json').success(function(appsDB){
+            var allTheApps = [];
 
-            $http.get('./data/games.json').success(function(responseGames){
-                chrome.management.getAll(function(chromeApps){
-                    $rootScope.$apply(function(){
-                        var onlyAppsArr = [];
-                        angular.forEach(chromeApps, function(appOrExtension){
-                            if(appOrExtension.isApp){
-                                onlyAppsArr.push(chromeAppToObject(appOrExtension));
-                            }
-                        });
+            var all = _.filter(appsDB, function(app){
+               return (app.default && app.default.indexOf('ALL') > -1);
+            });
 
-                        apps = [responseApps.slice(0,12),responseGames.slice(0,12),onlyAppsArr.slice(0,12)];
-                        store(cb);
 
+
+            var games =  _.filter(appsDB, function(app){
+                return (app.tags && app.tags.indexOf('games') > -1);
+            });
+
+            games = _.shuffle(games).slice(0, 5);
+
+            allTheApps = allTheApps.concat(all);
+            allTheApps = allTheApps.concat(games);
+            allTheApps = allTheApps.concat(systemApps);
+
+            chrome.management.getAll(function(chromeApps){
+                $rootScope.$apply(function(){
+                    var onlyAppsArr = [];
+                    angular.forEach(chromeApps, function(appOrExtension){
+                        if(appOrExtension.isApp && appOrExtension.enabled){
+                            allTheApps.push(chromeAppToObject(appOrExtension));
+                        }
                     });
+
+                    var output = [], j = 0;
+                    for(var i = 0; i < allTheApps.length; ++i){
+                        if(i != 0 && i % 12 == 0) ++j;
+                        output[j] = output[j] || [];
+                        output[j].push(allTheApps[i]);
+                    }
+
+                    apps = output;
+
+                    store(cb);
+
                 });
             });
+
         });
     };
 
@@ -55,7 +77,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
             homepageUrl: app.homepageUrl,
             hostPermissions: app.hostPermissions,
             icons: app.icons,
-            icon: getLargestIcon(app.icons).url,
+            icon: getLargestIconChromeApp(app.icons).url,
             id: app.id,
             chromeId: app.id,
             installType: app.installType,
@@ -72,7 +94,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
         }
     }
 
-    var getLargestIcon = function(iconsArr){
+    var getLargestIconChromeApp = function(iconsArr){
         var selected;
        for ( var i = 0 ; i < iconsArr.length; ++i){
            if(!selected){
@@ -228,7 +250,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
         var fs = null,
             fsReady = false,
             initting = $q.defer();
-console.log('$log',$log);
+
         //file system error handler
         var errorHandler = function(defer){
             return function filesStorageService_errorHandler(e) {

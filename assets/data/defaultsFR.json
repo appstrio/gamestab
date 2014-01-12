@@ -1,53 +1,53 @@
 [{
     "title": "Facebook",
     "url": "http://www.facebook.com",
-    "icon": "/img/logo_icons/facebook.jpg"
+    "icon": "/img/logo_icons/country/fr/facebook.jpg"
 }, {
     "title": "Youtube",
     "url": "http://www.youtube.com",
-    "icon": "/img/logo_icons/youtube.jpg"
+    "icon": "/img/logo_icons/country/fr/youtube.jpg"
 }, {
     "title": "Amazon",
     "url": "http://www.amazon.fr",
-    "icon": "/img/logo_icons/amazon.jpg"
+    "icon": "/img/logo_icons/country/fr/amazon.jpg"
 }, {
     "title": "Ebay",
     "url": "http://www.ebay.fr",
-    "icon": "/img/logo_icons/ebay.jpg"
+    "icon": "/img/logo_icons/country/fr/ebay.jpg"
 }, {
     "title": "Google Maps",
     "url": "http://www.maps.google.com",
-    "icon": "/img/logo_icons/googlemaps.jpg"
+    "icon": "/img/logo_icons/country/fr/googlemaps.jpg"
 }, {
     "title": "L'Equipe",
     "url": "http://www.lequipe.fr",
-    "icon": "/img/logo_icons/lequipe.jpg"
+    "icon": "/img/logo_icons/country/fr/lequipe.jpg"
 }, {
     "title": "Le Monde",
     "url": "http://www.lemonde.fr",
-    "icon": "/img/logo_icons/lemonde.fr.jpg"
+    "icon": "/img/logo_icons/country/fr/lemonde.fr.jpg"
 }, {
     "title": "Gmail",
     "url": "http://mail.google.com",
-    "icon": "/img/logo_icons/gmail.jpg"
+    "icon": "/img/logo_icons/country/fr/gmail.jpg"
 }, {
     "title": "Outlook",
     "url": "http://www.outlook.com",
-    "icon": "/img/logo_icons/outlook.jpg"
+    "icon": "/img/logo_icons/country/fr/outlook.jpg"
 }, {
     "title": "Twitter",
     "url": "http://www.twitter.com",
-    "icon": "/img/logo_icons/twitter.jpg"
+    "icon": "/img/logo_icons/country/fr/twitter.jpg"
 }, {
     "title": "Dailymotion",
     "url": "http://www.dailymotion.com",
-    "icon": "/img/logo_icons/dailymotion.jpg"
+    "icon": "/img/logo_icons/country/fr/dailymotion.jpg"
 }, {
     "title": "Leboncoin",
     "url": "http://www.leboncoin.fr",
-    "icon": "/img/logo_icons/leboncoin.fr.jpg"
+    "icon": "/img/logo_icons/country/fr/leboncoin.fr.jpg"
 }, {
     "title": "Programme TV",
     "url": "http://www.programme-tv.net",
-    "icon": "/img/logo_icons/programme-tv.net.jpg"
+    "icon": "/img/logo_icons/country/fr/programme-tv.net.jpg"
 }]

@@ -1,61 +1,61 @@
 [{
     "title": "Facebook",
     "url": "http://www.facebook.com",
-    "icon": "/img/logo_icons/facebook.jpg"
+    "icon": "/img/logo_icons/country/tr/facebook.jpg"
 }, {
     "title": "Youtube",
     "url": "http://www.youtube.com",
-    "icon": "/img/logo_icons/youtube.jpg"
+    "icon": "/img/logo_icons/country/tr/youtube.jpg"
 }, {
     "title": "Gmail",
     "url": "http://mail.google.com",
-    "icon": "/img/logo_icons/gmail.jpg"
+    "icon": "/img/logo_icons/country/tr/gmail.jpg"
 }, {
     "title": "Outlook",
     "url": "http://www.outlook.com",
-    "icon": "/img/logo_icons/outlook.jpg"
+    "icon": "/img/logo_icons/country/tr/outlook.jpg"
 }, {
     "title": "Google Maps",
     "url": "http://www.maps.google.com",
-    "icon": "/img/logo_icons/googlemaps.jpg"
+    "icon": "/img/logo_icons/country/tr/googlemaps.jpg"
 }, {
     "title": "Milliyet",
     "url": "http://www.milliyet.com.tr",
-    "icon": "/img/logo_icons/milliyet.com.tr.jpg"
+    "icon": "/img/logo_icons/country/tr/milliyet.com.tr.jpg"
 }, {
     "title": "Sahibinden",
     "url": "http://www.sahibinden.com",
-    "icon": "/img/logo_icons/sahibinden.com.jpg"
+    "icon": "/img/logo_icons/country/tr/sahibinden.com.jpg"
 }, {
     "title": "Hurriyet",
     "url": "http://www. hurriyet.com.tr",
-    "icon": "/img/logo_icons/hurriyet.com.tr.jpg"
+    "icon": "/img/logo_icons/country/tr/hurriyet.com.tr.jpg"
 }, {
     "title": "Twitter",
     "url": "http://www.twitter.com",
-    "icon": "/img/logo_icons/twitter.jpg"
+    "icon": "/img/logo_icons/country/tr/twitter.jpg"
 }, {
     "title": "Mynet",
     "url": "http://www.mynet.com",
-    "icon": "/img/logo_icons/mynet.com.jpg"
+    "icon": "/img/logo_icons/country/tr/mynet.com.jpg"
 }, {
     "title": "Sahadan",
     "url": "http://www.sahadan.com",
-    "icon": "/img/logo_icons/sahadan.com"
+    "icon": "/img/logo_icons/country/tr/sahadan.com"
 }, {
     "title": "Mackolik",
     "url": "http://www.mackolik.com",
-    "icon": "/img/logo_icons/mackolik.com.jpg"
+    "icon": "/img/logo_icons/country/tr/mackolik.com.jpg"
 }, {
     "title": "Haber7",
     "url": "http://www.haber7.com",
-    "icon": "/img/logo_icons/haber7.com.jpg"
+    "icon": "/img/logo_icons/country/tr/haber7.com.jpg"
 }, {
     "title": "Haberturk",
     "url": "http://www.haberturk.com",
-    "icon": "/img/logo_icons/haberturk.com.jpg"
+    "icon": "/img/logo_icons/country/tr/haberturk.com.jpg"
 }, {
     "title": "Sporx",
     "url": "http://www2.sporx.com",
-    "icon": "/img/logo_icons/sporx.com.jpg"
+    "icon": "/img/logo_icons/country/tr/sporx.com.jpg"
 }]

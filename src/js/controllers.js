@@ -1,6 +1,7 @@
 app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, Apps){
 
     Apps.promise.then(function(apps){
+        console.log('controller',apps);
         $scope.rawScreens = apps;
     }, function(){
         alert('Cannot run without apps :(');
@@ -10,9 +11,13 @@ app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, A
         if(app.url){
             return window.location = app.url;
         }else if(app.chromeId){
-            chrome.management.get(app.chromeId, function(chromeApp){
-                chromeApp.launch();
+            chrome.management.launchApp(app.chromeId, function (){
+
             });
+//            chrome.management.get(, function(chromeApp){
+//                console.log('chromeApp',chromeApp);
+//                chromeApp.launch();
+//            });
         }else if(app.overlay){
             console.log('app.overlay',app.overlay,'$scope.overlay',$scope.overlay);
             $scope.overlay = {name : app.overlay};

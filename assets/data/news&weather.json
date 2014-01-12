@@ -1,0 +1,131 @@
+//news&weather
+
+[ {
+    "title": "CNN",
+    "url": "http://www.cnn.com",
+    "icon": "img/logo_icons/news&weather/cnn.png"
+} , {
+    "title": "CBS",
+    "url": "http://www.CBS.com",
+    "icon": "img/logo_icons/news&weather/CBS.png"
+} , {
+    "title": "ABC News",
+    "url": "http://www.abc.com",
+    "icon": "img/logo_icons/news&weather/abcnews.png"
+} , {
+    "title": "Google News",
+    "url": "http://news.google.com",
+    "icon": "img/logo_icons/news&weather/googlenews.png"
+} , {
+    "title": "ABC News",
+    "url": "http://www.abc.com",
+    "icon": "img/logo_icons/news&weather/abcnews.png"
+} , {
+    "title": "Reuters",
+    "url": "http://www.Reuters.com",
+    "icon": "img/logo_icons/news&weather/reuters.png"
+} , {
+    "title": "Yahoo! News",
+    "url": "http://news.yahoo.com",
+    "icon": "img/logo_icons/yahoonews/.png"
+} , {
+    "title": "BBC News",
+    "url": "http://www.bbc.com",
+    "icon": "img/logo_icons/news&weather/bbc.png"
+} , {
+    "title": "MSNBC News",
+    "url": "http://www.msnbc.com",
+    "icon": "img/logo_icons/news&weather/msnbc.png"
+} , {
+    "title": "Fox News",
+    "url": "http://www.foxnews.com",
+    "icon": "img/logo_icons/news&weather/foxnews.png"
+} , {
+    "title": "USA Today",
+    "url": "http://www.usatoday.com",
+    "icon": "img/logo_icons/news&weather/usatoday.png"
+} , {
+    "title": "CBC News",
+    "url": "http://www.cbc.ca/news",
+    "icon": "img/logo_icons/news&weather/cbcnews.png"
+} , {
+    "title": "Time News",
+    "url": "http://www.time.com",
+    "icon": "img/logo_icons/news&weather/time.png"
+} , {
+    "title": "The Associated Press",
+    "url": "http://www.ap.org",
+    "icon": "img/logo_icons/news&weather/ap.png"
+} , {
+    "title": "The Guardian",
+    "url": "http://www.theguardian.com",
+    "icon": "img/logo_icons/news&weather/guardian.png"
+} , {
+    "title": "The New York Times",
+    "url": "http://www.nytimes.com",
+    "icon": "img/logo_icons/news&weather/nytimes.png"
+} , {
+    "title": "Forbes",
+    "url": "http://www.forbes.com",
+    "icon": "img/logo_icons/news&weather/forbes.png"
+} , {
+    "title": "The Huffington Post",
+    "url": "http://www.huffingtonpost.com",
+    "icon": "img/logo_icons/news&weather/huffingtonpost.png"
+} , {
+    "title": "The L.A Times",
+    "url": "http://www.latimes.com",
+    "icon": "img/logo_icons/news&weather/latimes.png"
+} , {
+    "title": "AOL",
+    "url": "http://www.aol.com",
+    "icon": "img/logo_icons/news&weather/aol.png"
+} , {
+    "title": "The Weather Channel",
+    "url": "http://www.weather.com",
+    "icon": "img/logo_icons/news&weather/theweatherchannel.png"
+} , {
+    "title": "Weather Underground",
+    "url": "http://www.weatherunderground.com",
+    "icon": "img/logo_icons/news&weather/weatherunderground.png"
+} , {
+    "title": "",
+    "url": "http://www.theweathernetwork.com",
+    "icon": "img/logo_icons/news&weather/.jpg"
+} , {
+    "title": "The Weather Network",
+    "url": "http://www.theweathernetwork.com",
+    "icon": "img/logo_icons/news&weather/theweathernetwork.png"
+} , {
+    "title": "National Weather Service",
+    "url": "http://www.weather.gov",
+    "icon": "img/logo_icons/news&weather/noaa.jpg"
+} ,  {
+    "title": "Accuweather",
+    "url": "http://www.accuweather.com",
+    "icon": "img/logo_icons/news&weather/accuweather.jpg"
+} ,  {
+    "title": "The Washington Post",
+    "url": "http://www.washingtonpost.com",
+    "icon": "img/logo_icons/news&weather/washingtonpost.png"
+} ,  {
+    "title": "The Onion News",
+    "url": "http://www.theonion.com",
+    "icon": "img/logo_icons/news&weather/theonion.jpg"
+} ,  {
+    "title": "Bloomberg",
+    "url": "http://www.Bloomberg.com",
+    "icon": "img/logo_icons/news&weather/Bloomberg.jpg"
+} ,  {
+    "title": "The Wall Street Journal",
+    "url": "http://www.wsj.com",
+    "icon": "img/logo_icons/news&weather/wsj.jpg"
+} ,  {
+    "title": "The Economist",
+    "url": "http://www.economist.com",
+    "icon": "img/logo_icons/news&weather/economist.png"
+} ,  {
+    "title": "Sky News",
+    "url": "http://www.news.sky.com/",
+    "icon": "img/logo_icons/news&weather/skynews.jpg"
+}] 
