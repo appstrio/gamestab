@@ -1,7 +1,6 @@
 app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, Apps){
 
     Apps.promise.then(function(apps){
-        console.log('controller',apps);
         $scope.rawScreens = apps;
     }, function(){
         alert('Cannot run without apps :(');
@@ -19,7 +18,6 @@ app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, A
 //                chromeApp.launch();
 //            });
         }else if(app.overlay){
-            console.log('app.overlay',app.overlay,'$scope.overlay',$scope.overlay);
             $scope.overlay = {name : app.overlay};
         }
     }
@@ -46,13 +44,50 @@ app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, A
             return bg.image == Background.background.image;
         };
 
-}]);
+}]).controller('StoreCtrl', ['$scope', 'Apps', function($scope, Apps){
+        var db, byTags={}, flattenedApps, allInstalledApps;
+        Apps.appsDB().success(function(appsDB){
+            db = appsDB;
+            var current;
+            for(var i = 0; i < $scope.tags.length; ++i){
+                current = $scope.tags[i];
+                byTags[current] = _.filter(db, function(app){
+                    return (app.tags && app.tags.indexOf(current) > -1);
+                });
+            }
+            $scope.selectedTagApps = byTags[$scope.selectedTag];
+        });
 
-var h = function Do(){
-    $('#overlay').addClass('showed');
-    $('#wrapper').addClass('blurred');
-    setTimeout(function(){
-        $('#overlay').addClass('enlarged');
-    },0);
+        Apps.promise.then(function(_installedApps){
+            allInstalledApps = _installedApps;
+            setFlattenedApps();
+        });
 
-}
+        var setFlattenedApps = function(){
+            flattenedApps = _.flatten(allInstalledApps, true);
+        }
+
+        $scope.tags = ['Featured', 'Games', 'Social'];
+        $scope.selectedTag = 'Featured';
+
+        $scope.selectTag = function(tag, e){
+            e.stopPropagation();
+            $scope.selectedTag = tag;
+            $scope.selectedTagApps = byTags[$scope.selectedTag];
+        };
+
+        $scope.isInstalled = function(app){
+            return _.find(flattenedApps, function(_app){
+                return _app && _app.url && _app.url == app.url;
+            });
+        };
+
+
+
+        $scope.install = function(app, e){
+            e.stopPropagation();
+            Apps.addNewApp(app);
+            setFlattenedApps();
+        }
+
+    }]);

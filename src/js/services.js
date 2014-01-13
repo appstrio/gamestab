@@ -5,7 +5,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
 
     var systemApps = [
         {title : "Settings", icon :  '/img/logo_icons/settings175x175.jpg', overlay:'settings', permanent : true},
-        {title : "Web Apps Store", icon : '/img/logo_icons/appstore175x175.jpg', overlay:'store', permanent : true}
+        {title : "Apps Store", icon : '/img/logo_icons/appstore175x175.jpg', overlay:'store', permanent : true}
     ];
     var init = function(){
         Storage.get(storageKey, function(items){
@@ -14,7 +14,6 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
                 initting.resolve(apps);
             }else{
                 firstTimeSetup(function(){
-                    console.log('apps',apps);
                     initting.resolve(apps);
                 });
             }
@@ -22,7 +21,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
     };
 
     var firstTimeSetup = function (cb){
-        $http.get('./data/webAppsDB.json').success(function(appsDB){
+        appsDB().success(function(appsDB){
             var allTheApps = [];
 
             var all = _.filter(appsDB, function(app){
@@ -66,6 +65,12 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
 
         });
     };
+
+
+
+    var appsDB = function(){
+        return $http.get('./data/webAppsDB.json');
+    }
 
 
 
@@ -116,6 +121,25 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
         Storage.set(obj, cb);
     };
 
+    var addNewApp = function(app, cb){
+        console.log('addNewApp',app);
+        var lastAvailablePage = getLastAvailablePage();
+        lastAvailablePage.push(app);
+        store(cb);
+    };
+
+    var getLastAvailablePage = function(){
+        var lastPage = apps[apps.length-1];
+        if(lastPage.length < 12){
+            return lastPage;
+        }else{
+            var newPage = [];
+            apps.push(newPage);
+            store();
+            return newPage;
+        }
+    }
+
     init();
 
     return {
@@ -123,7 +147,9 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
         apps : function(){
             return apps;
         },
-        store : store
+        store : store,
+        appsDB : appsDB,
+        addNewApp : addNewApp
     };
 
 
