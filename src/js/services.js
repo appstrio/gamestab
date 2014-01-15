@@ -4,8 +4,8 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
         apps;
 
     var systemApps = [
-        {title : "Settings", icon :  '/img/logo_icons/settings175x175.jpg', overlay:'settings', permanent : true},
-        {title : "Apps Store", icon : '/img/logo_icons/appstore175x175.jpg', overlay:'store', permanent : true}
+        {title : "Settings", icon :  '/img/logo_icons/settings175x175.png', overlay:'settings', permanent : true},
+        {title : "Apps Store", icon : '/img/logo_icons/appstore175x175.png', overlay:'store', permanent : true}
     ];
     var init = function(){
         Storage.get(storageKey, function(items){

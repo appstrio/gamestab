@@ -90,7 +90,7 @@ app.directive('hlLauncher', ['Apps', function(Apps){
 
         var $draggingItem, $draggingHelper, $draggingPlaceholder;
         scope.sortableOptions = {
-           // tolerance : 'pointer',
+            tolerance : 'pointer',
             disabled: false,
             start: function (e, u) {
                 $draggingItem = $(u.item);
