@@ -54,7 +54,12 @@ app.directive('hlLauncher', ['Apps', function(Apps){
             }
         }).mouseover(function(){
                 if(!scope.isDragging) return;
-                $(this).trigger('click');
+                if(scope.curScreen > 0){
+                    --scope.curScreen;
+                    moveViewport();
+                    console.log('screenWidth',screenWidth);
+                    $draggingHelper.animate({left : "-=" + screenWidth + "px"}, 1300);
+                }
         });
 
 
@@ -70,8 +75,11 @@ app.directive('hlLauncher', ['Apps', function(Apps){
 
         }).mouseover(function(){
                 if(!scope.isDragging) return;
-                $(this).trigger('click');
-                //$draggingHelper.animate({left : "=+" + screenWidth + "px"}, 1000);
+                if(scope.curScreen < scope.rawScreens.length - 1){
+                    ++scope.curScreen;
+                    $draggingHelper.animate({left : "+=" + screenWidth + "px"}, 1300);
+                    moveViewport();
+                }
         });
 
 
@@ -90,7 +98,7 @@ app.directive('hlLauncher', ['Apps', function(Apps){
 
         var $draggingItem, $draggingHelper, $draggingPlaceholder;
         scope.sortableOptions = {
-            tolerance : 'pointer',
+            //tolerance : 'pointer',
             disabled: false,
             start: function (e, u) {
                 $draggingItem = $(u.item);
@@ -126,10 +134,36 @@ app.directive('hlLauncher', ['Apps', function(Apps){
             sort: function (e, u) {
             },
             receive: function (e, u) {
+                angular.forEach(scope.rawScreens, function(screen, index){
+                   if(screen.length > 12){
+                       var lastApp = screen.pop();
+                       moveLastAppToNewScreen(lastApp, index);
+                   }
+                });
             },
             connectWith: ".apps-container"
 
         };
+
+        var moveLastAppToNewScreen = function(app, startIndex){
+            var foundNewScreen = false, screen;
+            for (var i = startIndex; i<scope.rawScreens.length; ++i){
+                screen = scope.rawScreens[i];
+                if(screen.length < 12){
+                    screen.push(app);
+                    Apps.store();
+                    foundNewScreen = true;
+                    break;
+                }
+            }
+
+            if(!foundNewScreen){
+                var newScreen = [app];
+                scope.rawScreens.push(newScreen);
+                Apps.store();
+            }
+
+        }
     }
 }]).directive('hlOverlay',[function(){
     return {
@@ -210,6 +244,27 @@ app.directive('hlLauncher', ['Apps', function(Apps){
     };
 }]).directive('hlBackground', ['Background', function(Background){
     return function(scope, element, attrs){
+//            var $iframe = $('iframe.blurred-background'),
+//                bodyCss = {
+//                    margin : "0",
+//                    padding : "0"
+//                },
+//                divCss = {
+//                    position:"fixed",
+//                    top:"-20%",
+//                    left:"-20%",
+//                    width:"150%",
+//                    height:"150%",
+//                    backgroundPosition: "center calc(50% - 101px)",
+//                    backgroundRepeat : "no-repeat",
+//                    backgroundSize: "cover",
+//                    "webkitFilter": "blur(17px) contrast(0.8) brightness(1.2)",
+//                },
+//
+//                docHeight = $(document).height();
+//
+//            var $div = $iframe.contents().find('body').css(bodyCss).append('<div></div>').children().eq(0).css(divCss);
+
         Background.promise.then(function(_background){
             scope.$watch(function(){
                 return Background.background;
@@ -221,7 +276,9 @@ app.directive('hlLauncher', ['Apps', function(Apps){
         });
 
         var setBackground = function(background){
+            var url = background.image.indexOf('chrome') === -1 ? chrome.extension.getURL(background.image) : background.image;
             element.css({backgroundImage : "url(" + background.image + ")"});
+//            $div.css({backgroundImage : "url('" + url + "')"});
         };
 
     }

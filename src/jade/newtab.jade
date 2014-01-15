@@ -18,19 +18,25 @@ html(ng-csp='ng-csp')
         //----------------
     body(ng-controller='MainCtrl')
     #wrapper(hl-background)
-        section(hl-launcher)
-            .arrows
+
+        .search1
+            iframe.blurred-background
+            .search-input
+                input(placeholder="Web Search...")
+        .main
+            section(hl-launcher)
+                .arrows
+                    .inner
+                        .arrow-left
+                            i.icon-left-open-big
+                        .arrow-right
+                            i.icon-right-open-big
                 .inner
-                    .arrow-left
-                        i.icon-left-open-big
-                    .arrow-right
-                        i.icon-right-open-big
-            .inner
-                .viewport(hl-viewport)
-                    .apps-container.screen(ui-sortable="sortableOptions", ng-model="screen", ng-repeat="screen in rawScreens")
-                        .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)")
-                            .wrapper
-                                .remove-button
-                                .icon(style="background-image: url('{{app.icon}}')")
-                                .title {{app.title}}
+                    .viewport(hl-viewport)
+                        .apps-container.screen(ui-sortable="sortableOptions", ng-model="screen", ng-repeat="screen in rawScreens")
+                            .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)")
+                                .wrapper
+                                    .remove-button
+                                    .icon(style="background-image: url('{{app.icon}}')")
+                                    .title {{app.title}}
     #overlay(hl-overlay, overlay-options="overlay", ng-include="templateURL")
