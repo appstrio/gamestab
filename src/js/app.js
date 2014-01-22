@@ -57,7 +57,6 @@ app.directive('hlLauncher', ['Apps', function(Apps){
                 if(scope.curScreen > 0){
                     --scope.curScreen;
                     moveViewport();
-                    console.log('screenWidth',screenWidth);
                     $draggingHelper.animate({left : "-=" + screenWidth + "px"}, 1300);
                 }
         });
@@ -135,6 +134,7 @@ app.directive('hlLauncher', ['Apps', function(Apps){
             },
             receive: function (e, u) {
                 angular.forEach(scope.rawScreens, function(screen, index){
+
                    if(screen.length > 12){
                        var lastApp = screen.pop();
                        moveLastAppToNewScreen(lastApp, index);
@@ -164,6 +164,26 @@ app.directive('hlLauncher', ['Apps', function(Apps){
             }
 
         }
+
+        scope.longPress = function(app, e){
+            if(app.permanent){
+                return;
+            };
+
+            app.isEditing = true;
+            scope.isEditing = true;
+        }
+
+        $(document).click(function(){
+            scope.$apply(function(){
+                angular.forEach(scope.rawScreens, function(screen){
+                    angular.forEach(screen, function(app){
+                        app.isEditing = false;
+                    });
+                });
+                scope.isEditing = false;
+            });
+        });
     }
 }]).directive('hlOverlay',[function(){
     return {
@@ -307,6 +327,39 @@ app.directive('hlLauncher', ['Apps', function(Apps){
             cropperOptions = null;
         }
     }
+}]).directive('hlLongPress',['$parse', function($parse) {
+        return function(scope, element, attr) {
+            var fn = $parse(attr['hlLongPress']);
+            element.longPress(function(event){
+                scope.$apply(function() {
+                    fn(scope, {$event:event});
+                });
+            }, 800);
+        };
 }]);
 
 
+
+(function($) {
+    $.fn.longPress = function(callback, timeout) {
+        var timer, isLongPress = false;
+        timeout = timeout || 500;
+        $(this).mousedown(function(e) {
+            isLongPress = false;
+            timer = setTimeout(function() {callback(e); isLongPress = true;}, timeout);
+        }).click(function(e){
+              if(isLongPress){
+                  e.preventDefault();
+                  e.stopPropagation();
+              }
+        });
+        $(document).mouseup(function(e) {
+            if(isLongPress){
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            clearTimeout(timer);
+        });
+    };
+
+})(jQuery);

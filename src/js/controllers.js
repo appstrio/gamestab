@@ -7,6 +7,9 @@ app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, A
     });
 
     $scope.launchApp = function(app, e){
+        if($scope.isEditing){
+            return false;
+        }
         if(app.url){
             return window.location = app.url;
         }else if(app.chromeId){
@@ -22,12 +25,15 @@ app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, A
         }
     }
 
+    $scope.uninstallApp = function(app, e){
+        Apps.uninstallApp(app);
+    }
+
 }]).controller('SettingsCtrl', ['$scope', function($scope){
     $scope.panes = ["General", "Background", "Notifications", "Restore", "About"];
     $scope.selectedPane = "General";
 
     $scope.selectPane = function(pane, e){
-        console.log('pane',pane);
         e.stopPropagation();
         $scope.selectedPane = pane;
     };

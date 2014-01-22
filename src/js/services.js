@@ -122,10 +122,26 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
     };
 
     var addNewApp = function(app, cb){
-        console.log('addNewApp',app);
         var lastAvailablePage = getLastAvailablePage();
+        app.installTimestamp = Date.now();
         lastAvailablePage.push(app);
         store(cb);
+    };
+
+    var uninstallApp = function(app, cb){
+        var found = false;
+        angular.forEach(apps, function(page){
+           angular.forEach(page, function(_app, index){
+              if(app.url === _app.url){
+                page.splice(index,1);
+                store(cb);
+                  found = true;
+              }
+           });
+        });
+        if(!found){
+            cb && cb();
+        }
     };
 
     var getLastAvailablePage = function(){
@@ -149,7 +165,8 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
         },
         store : store,
         appsDB : appsDB,
-        addNewApp : addNewApp
+        addNewApp : addNewApp,
+        uninstallApp : uninstallApp
     };
 
 

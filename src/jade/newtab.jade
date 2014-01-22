@@ -38,9 +38,9 @@ html(ng-csp='ng-csp')
                 .inner
                     .viewport(hl-viewport)
                         .apps-container.screen(ui-sortable="sortableOptions", ng-model="screen", ng-repeat="screen in rawScreens")
-                            .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)")
-                                .wrapper
-                                    .remove-button
+                            .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)", hl-long-press="longPress(app, $event)")
+                                .wrapper(ng-class="{pulse : app.isEditing}")
+                                    .remove-button(ng-click="uninstallApp(app, $event)") X
                                     .icon(style="background-image: url('{{app.icon}}')")
                                     .title {{app.title}}
     #overlay(hl-overlay, overlay-options="overlay", ng-include="templateURL")
