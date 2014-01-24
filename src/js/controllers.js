@@ -1,5 +1,6 @@
 app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, Apps){
 
+    $scope.displayTopSearchBox = 1;
     Apps.promise.then(function(apps){
         $scope.rawScreens = apps;
     }, function(){
@@ -23,16 +24,25 @@ app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, A
         }else if(app.overlay){
             $scope.overlay = {name : app.overlay};
         }
-    }
+    };
 
     $scope.uninstallApp = function(app, e){
         Apps.uninstallApp(app);
-    }
+    };
 
-}]).controller('SettingsCtrl', ['$scope', function($scope){
-    $scope.panes = ["General", "Background", "Notifications", "Restore", "About"];
+    $scope.goSearch = function(e){
+        if(e.keyCode === 13){
+            window.location = "http://www.google.com/search?q=" + $scope.searchQuery;
+        }
+    };
+
+    $('#search-input').keypress($scope.goSearch); //TODO:
+
+
+    }]).controller('SettingsCtrl', ['$scope', function($scope){
+    $scope.panes = ["General", "Background", "Account", "About"];
     $scope.selectedPane = "General";
-
+    $scope.clientVersion = chrome.app.getDetails().version;
     $scope.selectPane = function(pane, e){
         e.stopPropagation();
         $scope.selectedPane = pane;
@@ -73,7 +83,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, A
             flattenedApps = _.flatten(allInstalledApps, true);
         }
 
-        $scope.tags = ['Featured', 'Games', 'Social'];
+        $scope.tags = ['Featured', 'Games', 'Social','News & Weather','Shopping','Productivity'];
         $scope.selectedTag = 'Featured';
 
         $scope.selectTag = function(tag, e){

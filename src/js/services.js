@@ -28,17 +28,18 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
                return (app.default && app.default.indexOf('ALL') > -1);
             });
 
+            all = all.slice(0,6);
 
 
             var games =  _.filter(appsDB, function(app){
-                return (app.tags && app.tags.indexOf('games') > -1);
+                return (app.tags && app.tags.indexOf('Games') > -1);
             });
 
-            games = _.shuffle(games).slice(0, 5);
+            games = _.shuffle(games).slice(0, 12);
 
+            allTheApps = allTheApps.concat(systemApps);
             allTheApps = allTheApps.concat(all);
             allTheApps = allTheApps.concat(games);
-            allTheApps = allTheApps.concat(systemApps);
 
             chrome.management.getAll(function(chromeApps){
                 $rootScope.$apply(function(){
@@ -69,7 +70,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
 
 
     var appsDB = function(){
-        return $http.get('./data/webAppsDB.json');
+        return $http.get('./data/webAppsDB1.json');
     }
 
 
@@ -177,14 +178,17 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
             backgrounds = [
                 {image : '/img/wallpapers/bg.jpg', isLocalBackground : false},
                 {image : '/img/wallpapers/bg1.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg2.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg3.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg4.jpg', isLocalBackground : false},
                 {image : '/img/wallpapers/bg6.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bike_unsplash.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/farm_unsplash.jpg', isLocalBackground : false},
                 {image : '/img/wallpapers/lake_unsplash.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/rail_unsplash.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/Elegant_Background-4.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/Elegant_Background-5.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/abstract_0010.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/abstract_0015.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/abstract_0017.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/abstract_0023.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/abstract_0034.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/abstract_0035.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/abstract_0036.jpg', isLocalBackground : false},
             ],
             defaultBackground = backgrounds[0],
             localBackgroundFileName = 'myBackground.png';

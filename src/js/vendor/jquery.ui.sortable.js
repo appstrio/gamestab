@@ -362,7 +362,6 @@ $.widget("ui.sortable", $.ui.mouse, {
 			item = this.items[i];
 			itemElement = item.item[0];
 			intersection = this._intersectsWithPointer(item);
-            console.log('intersection',intersection);
 			if (!intersection) {
 				continue;
 			}

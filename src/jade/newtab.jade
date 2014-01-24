@@ -17,16 +17,23 @@ html(ng-csp='ng-csp')
         script(src='./js/app.js')
         script(src='./js/controllers.js')
         script(src='./js/services.js')
+        script(src='./js/directives.js')
+
 
         title GamesTab
         //----------------
     body(ng-controller='MainCtrl')
     #wrapper(hl-background)
+        span.alpha(style="position:absolute; color:white;top:0;left:0;font-size:12px;")
+            | Alpha Version
+            br
+            span(style="font-size:11px") Shall be used for internal usages only.
 
-        .search1
+
+        .search2(ng-show="displayTopSearchBox")
             iframe.blurred-background
             .search-input
-                input(placeholder="Web Search...")
+                input(placeholder="Web Search...", ng-keypress="goSearch($event)", ng-model="searchQuery", id="search-input")
         .main
             section(hl-launcher)
                 .arrows
@@ -36,10 +43,10 @@ html(ng-csp='ng-csp')
                         .arrow-right
                             i.icon-right-open-big
                 .inner
-                    .viewport(hl-viewport)
+                    .viewport(hl-viewport, ng-class="{editing : isEditing}")
                         .apps-container.screen(ui-sortable="sortableOptions", ng-model="screen", ng-repeat="screen in rawScreens")
-                            .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)", hl-long-press="longPress(app, $event)")
-                                .wrapper(ng-class="{pulse : app.isEditing}")
+                            .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)", hl-long-press="longPress(app, $event)", ng-class="{permanent : app.permanent}")
+                                .wrapper
                                     .remove-button(ng-click="uninstallApp(app, $event)") X
                                     .icon(style="background-image: url('{{app.icon}}')")
                                     .title {{app.title}}

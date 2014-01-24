@@ -6,7 +6,17 @@
                 li(ng-repeat="pane in panes", ng-class="{selected : (selectedPane == pane)}", ng-click="selectPane(pane, $event)") {{pane}}
 
         .right(ng-switch="selectedPane")
-            .settings-general(ng-switch-default) General
+            .settings-general(ng-switch-default)
+                ul.controls
+                    li
+                        .control
+                            .squaredFour
+                                input#squaredFour(name="check", checked, value="None", type="checkbox")
+                                label(for="squaredFour")
+                        .details
+                            .label Show Search Box
+                            .more-details Use our smart search box to search the web and launch your favorite web apps
+
             .settings-background(ng-switch-when="Background", ng-controller="BackgroundCtrl")
                 .bg-explorer
                     .bg-sample(ng-repeat="bg in backgrounds", ng-style="{backgroundImage : 'url(' + bg.image+ ')'}", ng-class="{selected : isSelected(bg)}", ng-click="selectBackground(bg, $event)")
@@ -31,4 +41,14 @@
                     .footer
                         button Cancel
                         button OK
+            .settings-about(ng-switch-when="About")
+                .logo(style="width:134px;margin:0 auto;")
+                    img(src="/img/favicons/128x128.png")
+                .details(style="width:134px;margin:0 auto;text-align:center;")
+                    h2 GamesTab
+                    p Version : {{clientVersion}}
+                    p
+                        a(href="http://www.gamestab.me/privacy.html", style="color:black;text-decoration:none;font-size:12px;") Privacy Policy
+                    p
+                        a(href="http://www.gamestab.me/tos.html", style="color:black;text-decoration:none;font-size:12px;") Terms of Use
 
