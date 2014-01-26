@@ -6,7 +6,7 @@ app.directive('hlLauncher', ['Apps', function(Apps){
             var $viewport = element.find('.viewport').eq(0);
             var $arrowLeft = element.find('.icon-left-open-big').eq(0);
             var $arrowRight = element.find('.icon-right-open-big').eq(0);
-            var screenWidth = 900;
+            var screenWidth = 880;
             scope.isDragging = false;
 
             var getScreenWidth = function(numberOfScreen){

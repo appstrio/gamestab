@@ -1,7 +1,65 @@
 @font-face {
-  font-family: 'Helvetica Neue';
-  src: url('../fonts/HelveticaNeue-UltraLight.otf');
-  font-weight: normal;
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto/Roboto-Thin.ttf');
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto/Roboto-Light.ttf');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto/Roboto-Medium.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/Open_Sans/OpenSans-Light.ttf');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/Open_Sans/OpenSans-Regular.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/Open_Sans/OpenSans-Bold.ttf');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('../fonts/Source_Sans_Pro/SourceSansPro-ExtraLight.ttf');
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('../fonts/Source_Sans_Pro/SourceSansPro-Light.ttf');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('../fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('../fonts/Source_Sans_Pro/SourceSansPro-SemiBold.ttf');
+  font-weight: 500;
   font-style: normal;
 }
 
@@ -20,6 +78,7 @@ body,html{
   -moz-user-select: none;
   user-select: none;
   cursor:default;
+  font-family: "Source Sans Pro";
 }
 
 #wrapper{
@@ -120,7 +179,7 @@ section{
   }
 
   > .inner{
-    width:900px;
+    width:880px;
     height: 585px;
     overflow:hidden;
     margin: 0 auto;
@@ -213,7 +272,7 @@ section{
 }
 
 .apps-container{
-  width: 900px;
+  width: 880px;
   margin:auto;
   position: relative;
   height: 585px;
@@ -221,8 +280,8 @@ section{
 
 
   .app{
-    width:110px;
-    height: 130px;
+    width:100px;
+    height: 120px;
     padding: 25px 60px 45px;
     position: absolute;
     float:left;
@@ -304,8 +363,8 @@ section{
       .icon{
         background: white;
         border-radius: 15px;
-        width:110px;
-        height: 110px;
+        width:100px;
+        height: 100px;
         cursor:pointer;
         background-size: cover;
 
@@ -313,11 +372,10 @@ section{
       .title{
         margin-top:20px;
         color:white;
-        font-family: 'Helvetica Neue';
         white-space: nowrap;
         cursor:pointer;
         font-size: 15px;
-        font-weight: 200;
+        font-weight: 400;
         text-overflow: ellipsis;
         overflow-x: hidden;
         text-shadow: rgba(0, 0, 0, 0.247059) 0px 7px 15px;
@@ -380,8 +438,7 @@ footer{
     -webkit-box-orient : vertical;
     .header{
       font-size: 37px;
-      font-family: 'Helvetica Neue';
-      font-weight: 200;
+      font-weight: 400;
       text-align: center;
       vertical-align: bottom;
       padding-bottom: 12px;
@@ -405,7 +462,7 @@ footer{
           padding:0;
           li{
             //font-family: 'Helvetica Neue';
-            font-weight: 100;
+            font-weight: 400;
             padding: 10px 17px;
             font-size: 13px;
             cursor:pointer;
@@ -482,9 +539,8 @@ footer{
           float:left;
           width:460px;
           h2{
-            font-family: 'Helvetica Neue';
             font-size: 16px;
-            font-weight: 200;
+            font-weight: 400;
             margin: 0 0 19px 0;
           }
 
@@ -527,9 +583,8 @@ footer{
             width:auto;
             padding:4px 0;
             h2{
-              font-family: 'Helvetica Neue';
               font-size: 16px;
-              font-weight: 100;
+              font-weight: 400;
               text-align:center;
             }
             .original-image{
@@ -548,9 +603,8 @@ footer{
             padding:4px 0;
             background:none;
             h2{
-              font-family: 'Helvetica Neue';
               font-size: 16px;
-              font-weight: 100;
+              font-weight: 400;
               text-align:center;
             }
             .preview-image{
@@ -617,7 +671,9 @@ footer{
               .tag{
                 //font-family: 'Helvetica Neue';
                 font-size: 12px;
-                font-weight: 100;
+                font-weight: 400;
+                color: #999;
+                margin-top: 5px;
               }
               .is-installed{
                 margin-top:5px;
