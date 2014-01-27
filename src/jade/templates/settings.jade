@@ -21,26 +21,31 @@
                 .bg-explorer
                     .bg-sample(ng-repeat="bg in backgrounds", ng-style="{backgroundImage : 'url(' + bg.image+ ')'}", ng-class="{selected : isSelected(bg)}", ng-click="selectBackground(bg, $event)")
 
-                .bg-upload
+                .bg-upload(hl-background-local-image)
                     .image-selector
                         h2 Select your own image
-                        input(type="file", id="localImageFile", hl-background-local-image)
+                        input(type="file", id="localImageFile")
+                        h2 Enter image url
+                        input(type="text", id="remoteImageUrl", ng-keypress="remoteUrlKeyPress($event)")
                     .preview
                         img
-                .cropper(hl-cropper, cropper-options="cropperOptions")
-                    .header Crop the image you uploaded
-                    .editor
-                        .left
-                            h2 Edit The Image
-                            .original-image
-                                img
-                        .right
-                            h2 Preview
-                            .preview-image
-                                img
-                    .footer
-                        button Cancel
-                        button OK
+                        .loader
+                            img(src="./img/loader.gif")
+
+                //.cropper(hl-cropper, cropper-options="cropperOptions")
+                //    .header Crop the image you uploaded
+                //    .editor
+                //        .left
+                //            h2 Edit The Image
+                //            .original-image
+                //                img
+                //        .right
+                //            h2 Preview
+                //            .preview-image
+                //                img
+                //    .footer
+                //        button Cancel
+                //        button OK
             .settings-about(ng-switch-when="About")
                 .logo(style="width:134px;margin:0 auto;")
                     img(src="/img/favicons/128x128.png")

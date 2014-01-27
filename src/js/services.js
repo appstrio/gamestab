@@ -102,6 +102,8 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
 
     var getLargestIconChromeApp = function(iconsArr){
         var selected;
+        if(!iconsArr.length) return null;
+
        for ( var i = 0 ; i < iconsArr.length; ++i){
            if(!selected){
                selected = iconsArr[i];
@@ -191,7 +193,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
                 {image : '/img/wallpapers/abstract_0036.jpg', isLocalBackground : false},
             ],
             defaultBackground = backgrounds[0],
-            localBackgroundFileName = 'myBackground.png';
+            localBackgroundFileName = 'myBackground';
 
         // intializes the service, fetch the background from localStorage or use default
         var init = function(){
@@ -226,7 +228,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
             var uploading = $q.defer();
 
             Image.getBase64Image(dataURL, {maxWidth:1024}).then(function(newDataURL){
-                saveImageToFileSystem(newDataURL,localBackgroundFileName).then(function(url){
+                saveImageToFileSystem(newDataURL,localBackgroundFileName+Date.now()+".png").then(function(url){
                     background.image = url;
                     background.isLocalBackground = true;
                     background.timestamp = Date.now();
@@ -239,7 +241,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
                 });
             }, function(e){
                 uploading.reject(e);
-            })
+            });
 
 
             return uploading.promise;

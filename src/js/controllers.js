@@ -49,6 +49,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, A
     };
 
 }]).controller('BackgroundCtrl', ['$scope','Background', function($scope, Background){
+        console.log('Background',Background);
         $scope.backgrounds = Background.backgrounds();
 
         $scope.selectBackground = function(bg, e){

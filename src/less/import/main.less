@@ -378,7 +378,7 @@ section{
         font-weight: 400;
         text-overflow: ellipsis;
         overflow-x: hidden;
-        text-shadow: rgba(0, 0, 0, 0.247059) 0px 7px 15px;
+        text-shadow: 1px 1px 1px black;
       }
 
     }
@@ -454,7 +454,7 @@ footer{
       overflow:hidden;
       position:relative;
       .left{
-        padding: 35px 0px;
+        padding: 20px 0px;
         width:150px;
         ul{
           list-style:none;
@@ -473,7 +473,7 @@ footer{
         }
       }
       .right{
-        padding: 35px 0px;
+        padding: 20px 0px;
         -webkit-box-flex:1;
         background: #F8F8F8;
       }
@@ -534,14 +534,22 @@ footer{
         border-top: 1px solid rgb(255,255,255);
         height: 115px;
         width:100%;
-        padding: 12px;
+        padding: 8px 12px;
         .image-selector{
           float:left;
           width:460px;
           h2{
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 400;
-            margin: 0 0 19px 0;
+            margin: 0 0 0px 0;
+            font-weight: bold;
+          }
+          input{
+            margin: 7px 0 9px;
+            &[type=text]{
+              width:310px;
+              outline:none;
+            }
           }
 
         }
@@ -552,9 +560,28 @@ footer{
           overflow:hidden;
           border: 2px solid rgb(255, 221, 0);
           display: none;
-          img{
+          position:relative;
+          > img{
             width:100%;
             height: 100%;
+          }
+          .loader{
+            position: absolute;
+            top: 0;
+            background: rgba(255,255,255,0.95);
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            -webkit-box-align: center;
+            -webkit-box-pack: center;
+            &.showed{
+              display: -webkit-box;
+            }
+            img{
+              width:32px;
+              height:32px;
+            }
           }
         }
       }

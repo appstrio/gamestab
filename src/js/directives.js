@@ -224,11 +224,15 @@ app.directive('hlLauncher', ['Apps', function(Apps){
         }
     }]).directive('hlBackgroundLocalImage', ['Background','$rootScope', function(Background,$rootScope){
         return function (scope, element, attrs){
-            var $preview = element.parent().siblings('.preview').eq(0),
-                $previewIMG = $preview.children().eq(0);
-            element.on('change', function(){
+            var $preview = element.find('.preview').eq(0),
+                $loader = $preview.find('.loader').eq(0),
+                $previewIMG = $preview.children().eq(0),
+                $file = element.find('input[type=file]').eq(0),
+                $remoteUrl = element.find('input[type=text]').eq(0);
+
+            $file.on('change', function(){
                 var oFReader = new FileReader();
-                oFReader.readAsDataURL(element[0].files[0]);
+                oFReader.readAsDataURL($file[0].files[0]);
 
                 oFReader.onload = function (oFREvent) {
 //              $rootScope.$apply(function(){
@@ -238,14 +242,47 @@ app.directive('hlLauncher', ['Apps', function(Apps){
 //              });
                     $previewIMG[0].src = oFREvent.target.result;
                     $preview.show();
-                    Background.uploadNewLocalImage(oFREvent.target.result);
+                    $loader.addClass('showed');
+                    Background.uploadNewLocalImage(oFREvent.target.result).then(function(){
+                        $loader.removeClass('showed');
+                    }, function(e){
+                        $loader.removeClass('showed');
+                        console.error('error:',e);
+                    });
                 };
             });
+
+            $remoteUrl.on('keyup', function(e){
+                if(e.keyCode === 13 && $(this).val()){
+                    $previewIMG[0].src = $(this).val();
+                    $preview.show();
+                    $loader.addClass('showed');
+                    Background.uploadNewLocalImage($(this).val()).then(function(){
+                        $loader.removeClass('showed');
+                    }, function(e){
+                        $loader.removeClass('showed');
+                        console.error('error:',e);
+                    });
+                }
+            });
+
+            scope.$watch(function(){
+                return Background.background;
+            }, function(newVal){
+                console.log('newVal',newVal);
+                if (!newVal.isLocalBackground){
+                    $preview.hide();
+                }
+            }, true);
 
             // on init, check if the current background is local image, if yes, preview it
             if(Background.background.isLocalBackground){
                 $previewIMG[0].src = Background.background.image;
                 $preview.show();
+            }
+
+            scope.isSelectedLocal = function(){
+                return Background.background.isLocalBackground;
             }
         };
     }]).directive('hlBackground', ['Background', function(Background){
