@@ -206,7 +206,7 @@
     {
         "title": "BBC",
         "url": "http://www.bbc.co.uk",
-        "icon": "/img/logo_icons/bbc.jpg",
+        "icon": "/img/logo_icons/bbc.png",
         "default" : ["GB"]
     
     },
@@ -501,7 +501,7 @@
     {
         "title": "VK",
         "url": "http://www.vk.com",
-        "icon": "img/logo_icons/vk.jpg",
+        "icon": "img/logo_icons/vk.com.jpg",
         "tags" : ["Social"],
         "default" : ["ru"]
     },
@@ -539,7 +539,7 @@
     {
         "title": "Cafe Mom",
         "url": "http://www.cafemom.com",
-        "icon": "img/logo_icons/cafemom.png",
+        "icon": "img/logo_icons/cafemom.gif",
         "tags" : ["Social"]
     },
     {
@@ -649,14 +649,14 @@
     {
         "title": "github",
         "url": "http://www.github.com",
-        "icon": "img/logo_icons/github.jpg",
+        "icon": "img/logo_icons/github.png",
         "tags" : ["Social"]
         
     },
     {
         "title": "Meetup",
-        "url": "http://www.Meetup.com",
-        "icon": "img/logo_icons/Meetup.jpg",
+        "url": "http://www.meetup.com",
+        "icon": "img/logo_icons/meetup.png",
         "tags" : ["Social"]
         
     },
@@ -690,8 +690,8 @@
     },
     {
         "title": "BBC News",
-        "url": "http://www.BBCNews.com",
-        "icon": "img/logo_icons/BBCNews.png",
+        "url": "http://www.bbcnews.com",
+        "icon": "img/logo_icons/bbc.png",
         "tags" : ["News & Weather"]
         
     },
@@ -720,13 +720,6 @@
         "title": "CNN",
         "url": "http://www.CNN.com",
         "icon": "img/logo_icons/CNN.png",
-        "tags" : ["News & Weather"]
-        
-    },
-    {
-        "title": "",
-        "url": "http://www..com",
-        "icon": "img/logo_icons/.jpg",
         "tags" : ["News & Weather"]
         
     },
@@ -796,7 +789,7 @@
     {
         "title": "Rueters",
         "url": "http://www.Rueters.com",
-        "icon": "img/logo_icons/Rueters.png",
+        "icon": "img/logo_icons/reuters.png",
         "tags" : ["News & Weather"]
         
     },
@@ -840,7 +833,7 @@
     },{
         "title": "The Washington Post",
         "url": "http://www.TheWashingtonPost.com",
-        "icon": "img/logo_icons/TheWashingtonPost.png",
+        "icon": "img/logo_icons/washingtonpost.png",
         "tags" : ["News & Weather"]
         
     },{
@@ -1166,7 +1159,7 @@
 
     "title": "Coupons.com",
     "url": "http://www.Coupons.com",
-    "icon": "img/logo_icons/Coupons.jpg",
+    "icon": "img/logo_icons/coupons.com.jpg",
     "tags" : ["Shopping"]
 
     },{
@@ -1201,7 +1194,7 @@
 
     "title": "Groupon",
     "url": "http://www.Groupon.com",
-    "icon": "img/logo_icons/Groupon.jpg",
+    "icon": "img/logo_icons/groupon.png",
     "tags" : ["Shopping"]
 
     },{
@@ -1285,7 +1278,7 @@
     
     "title": "Bing",
     "url": "http://www.bing.com",
-    "icon": "img/logo_icons/bing.jpg",
+    "icon": "img/logo_icons/bing.com.jpg",
     "tags" : ["Productivity"]
 
     },{
@@ -1369,7 +1362,7 @@
     
     "title": "Wolfram Alpha",
     "url": "http://www.wolframalpha.com",
-    "icon": "img/logo_icons/wofrlam.jpg",
+    "icon": "img/logo_icons/wolfram.jpg",
     "tags" : ["Productivity"]
 
     },{
@@ -1460,7 +1453,7 @@
     
     "title": "Instapaper",
     "url": "http://www.instapaper.com",
-    "icon": "img/logo_icons/productivity/instapaper.jpg",
+    "icon": "img/logo_icons/instapaper.jpg",
     "tags" : ["Productivity"]
     
     }

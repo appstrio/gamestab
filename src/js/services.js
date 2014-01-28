@@ -191,6 +191,17 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
                 {image : '/img/wallpapers/abstract_0034.jpg', isLocalBackground : false},
                 {image : '/img/wallpapers/abstract_0035.jpg', isLocalBackground : false},
                 {image : '/img/wallpapers/abstract_0036.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/bg100.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/bg102.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/bg103.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/bg104.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/bg105.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/bg106.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/bg107.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/bg108.jpg', isLocalBackground : false},
+                {image : '/img/wallpapers/bg109.jpg', isLocalBackground : false},
+
+
             ],
             defaultBackground = backgrounds[0],
             localBackgroundFileName = 'myBackground';
