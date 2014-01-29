@@ -319,7 +319,8 @@ app.directive('hlLauncher', ['Apps', function(Apps){
             });
 
             var setBackground = function(background){
-                var url = background.image.indexOf('chrome') === -1 ? chrome.extension.getURL(background.image) : background.image;
+                //var url = background.image.indexOf('chrome') === -1 ? chrome.extension.getURL(background.image) : background.image;
+                var url = background.image;
                 element.css({backgroundImage : "url(" + background.image + ")"});
 //            $div.css({backgroundImage : "url('" + url + "')"});
             };

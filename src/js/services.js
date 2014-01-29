@@ -1,4 +1,4 @@
-app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope, $http,Storage,$q){
+app.factory('Apps', ['$rootScope', '$http','Storage', '$q','ChromeApps', function($rootScope, $http,Storage,$q,ChromeApps){
     var initting = $q.defer(),
         storageKey = 'gt.apps',
         apps;
@@ -41,7 +41,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
             allTheApps = allTheApps.concat(all);
             allTheApps = allTheApps.concat(games);
 
-            chrome.management.getAll(function(chromeApps){
+            ChromeApps.getAll(function(chromeApps){
                 $rootScope.$apply(function(){
                     var onlyAppsArr = [];
                     angular.forEach(chromeApps, function(appOrExtension){
@@ -711,4 +711,16 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
             getBase64Image : getBase64Image,
             urlToFile : urlToFile
         }
-    }]);
+}]).factory('ChromeApps', [function(){
+    return {
+        getAll : function(cb){
+            if(chrome && chrome.management && chrome.management.getAll){
+                return chrome.management.getAll.apply(arguments);
+            }else{
+                setTimeout(function(){
+                   cb && cb();
+                },0);
+            }
+        }
+    }
+}]);
