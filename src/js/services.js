@@ -279,7 +279,46 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q', function($rootScope,
 
 
 }]).factory('Storage', ['$rootScope', function($rootScope){
-    var StorageArea = chrome.storage.local;
+        var localStorageAbstraction = {
+            get : function(key, cb){
+                var raw = localStorage.getItem(key);
+                setTimeout(function(){
+                    try{
+                        var output = JSON.parse(raw);
+                        cb && cb(output);
+                    }catch(e){
+                        cb && cb();
+                    }
+                },0);
+            },
+            set : function(items, cb){
+                var item, stringified;
+                setTimeout(function(){
+                    try{
+                        for (var i in items){
+                            item = items[i];
+                            stringified = JSON.stringify(item);
+                            lcoalStorage.setItem(i, stringified);
+                        }
+                        cb && cb(1);
+                    }catch(e){
+                        cb && cb();
+                    }
+                });
+            },
+            remove : function(key, cb){
+                setTimeout(function(){
+                    try{
+                        localStorage.removeItem(key);
+                        cb && cb(1);
+                    }catch(e){
+                        cb && cb();
+                    }
+                },0);
+            }
+        };
+
+    var StorageArea = localStorageAbstraction || chrome.storage.local;
     return {
         get : function(keys, cb){
             StorageArea.get(keys, function(items){
