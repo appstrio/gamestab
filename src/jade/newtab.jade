@@ -24,12 +24,6 @@ html(ng-csp='ng-csp')
         //----------------
     body(ng-controller='MainCtrl')
     #wrapper(hl-background)
-        span.alpha(style="display:none;position:absolute; color:white;top:0;left:0;font-size:12px;")
-            | Alpha Version
-            br
-            span(style="font-size:11px") Shall be used for internal usages only.
-
-
         .search2(ng-show="displayTopSearchBox")
             iframe.blurred-background
             .search-input
