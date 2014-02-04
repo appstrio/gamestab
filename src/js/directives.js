@@ -360,6 +360,10 @@ app.directive('hlLauncher', ['Apps', function(Apps){
                 });
             }, 200);
         };
+    }]).directive('hlSearchBox', [function(){
+        return function(scope,element,attrs){
+            element.focus();
+        }
     }]);
 
 

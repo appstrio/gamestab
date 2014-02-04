@@ -1,11 +1,11 @@
-app.factory('Apps', ['$rootScope', '$http','Storage', '$q','ChromeApps', function($rootScope, $http,Storage,$q,ChromeApps){
+app.factory('Apps', ['$rootScope', '$http','Storage', '$q','Chrome', function($rootScope, $http,Storage,$q,Chrome){
     var initting = $q.defer(),
         storageKey = 'gt.apps',
         apps;
 
     var systemApps = [
-        {title : "Settings", icon :  '/img/logo_icons/settings175x175.png', overlay:'settings', permanent : true},
-        {title : "Apps Store", icon : '/img/logo_icons/appstore175x175.png', overlay:'store', permanent : true}
+        {title : "Settings", icon :  './img/logo_icons/settings175x175.png', overlay:'settings', permanent : true},
+        {title : "Apps Store", icon : './img/logo_icons/appstore175x175.png', overlay:'store', permanent : true}
     ];
     var init = function(){
         Storage.get(storageKey, function(items){
@@ -41,7 +41,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q','ChromeApps', functio
             allTheApps = allTheApps.concat(all);
             allTheApps = allTheApps.concat(games);
 
-            ChromeApps.getAll(function(chromeApps){
+            Chrome.management.getAll(function(chromeApps){
                 $rootScope.$apply(function(){
                     var onlyAppsArr = [];
                     angular.forEach(chromeApps, function(appOrExtension){
@@ -178,28 +178,28 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q','ChromeApps', functio
             storageKey = 'gt.background',
             background = {},
             backgrounds = [
-                {image : '/img/wallpapers/bg.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg1.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg6.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/lake_unsplash.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/Elegant_Background-4.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/Elegant_Background-5.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/abstract_0010.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/abstract_0015.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/abstract_0017.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/abstract_0023.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/abstract_0034.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/abstract_0035.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/abstract_0036.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg100.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg102.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg103.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg104.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg105.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg106.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg107.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg108.jpg', isLocalBackground : false},
-                {image : '/img/wallpapers/bg109.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg1.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg6.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/lake_unsplash.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/Elegant_Background-4.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/Elegant_Background-5.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/abstract_0010.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/abstract_0015.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/abstract_0017.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/abstract_0023.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/abstract_0034.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/abstract_0035.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/abstract_0036.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg100.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg102.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg103.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg104.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg105.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg106.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg107.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg108.jpg', isLocalBackground : false},
+                {image : './img/wallpapers/bg109.jpg', isLocalBackground : false},
 
 
             ],
@@ -284,9 +284,11 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q','ChromeApps', functio
                 var raw = localStorage.getItem(key);
                 setTimeout(function(){
                     try{
-                        var output = JSON.parse(raw);
+                        var output = {};
+                        output[key] = JSON.parse(raw);
                         cb && cb(output);
                     }catch(e){
+                        console.error('Uncaught error:', e);
                         cb && cb();
                     }
                 },0);
@@ -298,10 +300,12 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q','ChromeApps', functio
                         for (var i in items){
                             item = items[i];
                             stringified = JSON.stringify(item);
-                            lcoalStorage.setItem(i, stringified);
+                            console.log(i, stringified);
+                            localStorage.setItem(i, stringified);
                         }
                         cb && cb(1);
                     }catch(e){
+                        console.error('Uncaught error:', e);
                         cb && cb();
                     }
                 });
@@ -312,6 +316,7 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q','ChromeApps', functio
                         localStorage.removeItem(key);
                         cb && cb(1);
                     }catch(e){
+                        console.error('Uncaught error:', e);
                         cb && cb();
                     }
                 },0);
@@ -711,16 +716,19 @@ app.factory('Apps', ['$rootScope', '$http','Storage', '$q','ChromeApps', functio
             getBase64Image : getBase64Image,
             urlToFile : urlToFile
         }
-}]).factory('ChromeApps', [function(){
+}]).factory('Chrome', [function(){
     return {
-        getAll : function(cb){
-            if(chrome && chrome.management && chrome.management.getAll){
-                return chrome.management.getAll.apply(arguments);
-            }else{
-                setTimeout(function(){
-                   cb && cb();
-                },0);
+        management : {
+            getAll : function(cb){
+                if(chrome && chrome.management && chrome.management.getAll){
+                    return chrome.management.getAll.apply(arguments);
+                }else{
+                    setTimeout(function(){
+                        cb && cb();
+                    },0);
+                }
             }
         }
+
     }
 }]);
