@@ -20,6 +20,7 @@
     - Any async service should have local initting defer and should return the initting promise
 
 ## App Structure - Modularized File Organization
+- Structure :
     - jade : app-level jade files
         - jade/templates : sub-templates for different angular components
     - js : app-level js files
