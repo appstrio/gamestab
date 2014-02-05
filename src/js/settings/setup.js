@@ -1,25 +1,25 @@
 var settingsModule = settingsModule || angular.module('aio.settings', []);
 
-settingsModule.factory('Setup', ['$rootScope', 'Constants','$q','$http','Apps','Config', 'Storage', function($rootScope, C, $q,$http, Apps, Config, Storage){
+settingsModule.factory('Setup', ['$rootScope', 'Constants', '$q', '$http', 'Apps', 'Config', 'Storage',
+    function($rootScope, C, $q, $http, Apps, Config, Storage) {
 
-    /**
-     * Initiates Setup
-     * @returns {promise}
-     */
-    var startSetup = function(){
-        var setupping = $q.defer();
+        /**
+         * Initiates Setup
+         * @returns {promise}
+         */
+        var startSetup = function() {
 
-        // SETUP CONFIG
-        Config.setup().then(function(_config){
-            Preferences.setup();
-        }, function(){
-            setupping.reject();
-        });
+            // SETUP CONFIG
+            return Config.setup()
+                .then(Preferences.setup)
+                .then(angular.noop,
+                    function(e) {
+                        return e;
+                    });
+        };
 
-        return setupping.promise;
-    };
-
-
-
-
-}]);
+        return {
+            startSetup: startSetup
+        };
+    }
+]);

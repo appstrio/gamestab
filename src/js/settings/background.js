@@ -28,7 +28,6 @@ settingsModule.factory('Background', ['$rootScope', '$http','Storage', '$q','Fil
             {image : './img/wallpapers/bg108.jpg', isLocalBackground : false},
             {image : './img/wallpapers/bg109.jpg', isLocalBackground : false},
 
-
         ],
         defaultBackground = backgrounds[0],
         localBackgroundFileName = 'myBackground';
