@@ -28,19 +28,6 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
          * @returns {promise}
          */
         var setup = function() {
-            /*
-             * // get partners.json from remote
-             * partnersJSONUrl().success(function(gamestabJSON) {
-             *     // decide which partner
-             *     decidePartner(gamestabJSON.partners).then(function(partnerObject) {
-             *         loadPartnerJSON.then(partnerObject, function(partnerJSON) {
-             *             // finish setup as partner
-             *             finishSetup(deferred, partnerJSON)();
-             *         }, finishSetup(deferred));
-             *     }, finishSetup(deferred));
-             * }).error(finishSetup(deferred));
-             */
-
             $log.log('[Config] - starting setup');
 
             return partnersJSONUrl()
@@ -120,6 +107,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
         var store = function() {
             var deferred = $q.defer();
             Storage.setItem(storageKey, data, function() {
+                console.log('here');
                 deferred.resolve();
             });
             return deferred.promise;
