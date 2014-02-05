@@ -13,7 +13,7 @@ longKeyPressModule.directive('hlLongPress', ['$parse',
             }, 200);
         };
     }
-])
+]);
 
 (function($) {
     $.fn.longPress = function(callback, timeout) {
@@ -39,5 +39,4 @@ longKeyPressModule.directive('hlLongPress', ['$parse',
             clearTimeout(timer);
         });
     };
-
 })(jQuery);
