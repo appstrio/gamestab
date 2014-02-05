@@ -205,7 +205,7 @@ module.exports = (grunt) ->
       srcPath = grunt.config "path.src"
       buildPath = grunt.config "path.build"
 
-      overridingManifestPath = "./extra/" + buildName  + "/manifest.json";
+      overridingManifestPath = "./extra/" + buildName  + "/manifest.json"
       oldManifestPath = "./#{srcPath}/manifest.json"
       buildManifsetPath = "./#{buildPath}/manifest.json"
       console.log overridingManifestPath,oldManifestPath
