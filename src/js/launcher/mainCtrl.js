@@ -1,4 +1,6 @@
-app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, Apps){
+var launcherModule = launcherModule || angular.module('aio.launcher', []);
+
+launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, Apps){
 
         $scope.displayTopSearchBox = 1;
         Apps.promise.then(function(apps){
