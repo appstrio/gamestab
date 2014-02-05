@@ -51,7 +51,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          * @param type
          * @return
          */
-        var write = function filesStorageService_write(fileName, content, type) {
+        var write = function(fileName, content, type) {
             var deferred = $q.defer();
             try {
                 fs.root.getFile(fileName, {
