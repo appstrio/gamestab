@@ -61,6 +61,8 @@
         }
         ...
     ]
+```
+```
 - partner_config_XXX.json
     {
         "partner_id" : "XXX",
@@ -74,6 +76,8 @@
         },
         "config_update_url" : "XXX"
     }
+```
+```
 - web_apps_db.json
     [
         {
