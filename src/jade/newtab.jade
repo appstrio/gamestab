@@ -70,6 +70,6 @@ html(ng-csp='ng-csp')
                             .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)", hl-long-press="longPress(app, $event)", ng-class="{permanent : app.permanent}")
                                 .wrapper
                                     .remove-button(ng-click="uninstallApp(app, $event)") X
-                                    .icon(style="background-image: url('{{app.icon}}')")
+                                    .icon(ng-style="{'background-image': 'url(' + app.icon + ')'}")
                                     .title {{app.title}}
     #overlay(hl-overlay, overlay-options="overlay", ng-include="templateURL")
