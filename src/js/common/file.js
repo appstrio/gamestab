@@ -81,19 +81,21 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                             // splittedContent = ['', 'image/png', 'asdflkjdfdkfjsdfsdflksdfjksdf']
                             //get type
                             type = 'image/' + splittedContent[1];
-                            //get content
-                            content = splittedContent[2];
+                            //get content and convert to binary
+                            content = atob(splittedContent[2]);
                         }
 
-                        if (type === 'image/jpeg' || type === 'image/png') {
-                            var binaryImg = atob(content);
-                            var length = binaryImg.length;
-                            content = new ArrayBuffer(length);
-                            var ua = new Uint8Array(content);
-                            for (var i = 0; i < length; i++) {
-                                ua[i] = binaryImg.charCodeAt(i);
-                            }
-                        }
+                        /*
+                         * if (type === 'image/jpeg' || type === 'image/png') {
+                         *     var binaryImg = atob(content);
+                         *     var length = binaryImg.length;
+                         *     content = new ArrayBuffer(length);
+                         *     var ua = new Uint8Array(content);
+                         *     for (var i = 0; i < length; i++) {
+                         *         ua[i] = binaryImg.charCodeAt(i);
+                         *     }
+                         * }
+                         */
 
                         // Create a new Blob and write it to log.txt.
                         var blob = new Blob([content], {
