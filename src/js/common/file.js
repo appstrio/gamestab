@@ -14,7 +14,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          * @param defer
          * @return
          */
-        var errorHandler = function(defer) {
+        var errorHandler = function(deferred) {
             return function filesStorageService_errorHandler(e) {
                 var msg = '';
                 switch (e.code) {
@@ -39,9 +39,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 }
 
                 $log.info('Filesystem error: ' + msg);
-                if (defer) {
-                    defer.reject(msg);
-                }
+                deferred.reject(msg);
             };
         };
 
@@ -54,7 +52,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          * @return
          */
         var write = function filesStorageService_write(fileName, content, type) {
-            var writing = $q.defer();
+            var deferred = $q.defer();
             try {
                 fs.root.getFile(fileName, {
                     create: true
@@ -66,13 +64,13 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                         fileWriter.onwriteend = function() {
                             $log.info('Write completed. ', fileEntry.toURL());
                             $rootScope.$apply(function() {
-                                writing.resolve(fileEntry.toURL());
+                                deferred.resolve(fileEntry.toURL());
                             });
                         };
 
                         fileWriter.onerror = function(e) {
                             $log.info('Write failed: ' + e.toString());
-                            writing.reject(e);
+                            deferred.reject(e);
                         };
 
                         //assign base64 regex to check & split
@@ -105,15 +103,15 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
 
                         fileWriter.write(blob);
 
-                    }, errorHandler(writing));
+                    }, errorHandler(deferred));
 
-                }, errorHandler(writing));
+                }, errorHandler(deferred));
             } catch (e) {
-                writing.reject(e);
+                deferred.reject(e);
                 $log.info('Error', e);
             }
 
-            return writing.promise;
+            return deferred.promise;
         };
 
         /**
@@ -123,7 +121,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          * @return
          */
         var read = function filesStorageService_read(fileName) {
-            var reading = $q.defer();
+            var deferred = $q.defer();
             try {
                 fs.root.getFile(fileName, {}, function filesStorageService_read_getFile(fileEntry) {
                     // Get a File object representing the file,
@@ -132,18 +130,18 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                         var reader = new FileReader();
 
                         reader.onloadend = function() {
-                            reading.resolve(this.result);
+                            deferred.resolve(this.result);
                         };
 
                         reader.readAsText(file);
-                    }, errorHandler(reading));
-                }, errorHandler(reading));
+                    }, errorHandler(deferred));
+                }, errorHandler(deferred));
             } catch (e) {
                 $log.info('Error reading file', e);
-                reading.reject(e);
+                deferred.reject(e);
             }
 
-            return reading.promise;
+            return deferred.promise;
         };
 
         /**
@@ -155,7 +153,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          * @return
          */
         var append = function filesStorageService_append(fileName, type, content) {
-            var appending = $q.defer();
+            var deferred = $q.defer();
             try {
                 fs.root.getFile(fileName, {
                     create: false
@@ -172,16 +170,16 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                         });
 
                         fileWriter.write(blob);
-                        appending.resolve(fileEntry.toURL());
+                        deferred.resolve(fileEntry.toURL());
 
-                    }, errorHandler(appending));
+                    }, errorHandler(deferred));
 
-                }, errorHandler(appending));
+                }, errorHandler(deferred));
             } catch (e) {
                 $log.info('Error', e);
             }
 
-            return appending.promise;
+            return deferred.promise;
         };
 
         /**
@@ -191,7 +189,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          * @return
          */
         var remove = function filesStorageService_remove(fileName) {
-            var removing = $q.defer();
+            var deferred = $q.defer();
 
             try {
                 fs.root.getFile(fileName, {
@@ -200,15 +198,15 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
 
                     fileEntry.remove(function filesStorageService_remove_getFile_remove() {
                         $log.info('File removed.');
-                        removing.resolve();
-                    }, errorHandler(removing));
+                        deferred.resolve();
+                    }, errorHandler(deferred));
 
-                }, errorHandler(removing));
+                }, errorHandler(deferred));
             } catch (e) {
                 $log.info('Error', e);
             }
 
-            return removing.promise;
+            return deferred.promise;
         };
 
         /**
@@ -218,20 +216,20 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          * @return
          */
         var removeByPath = function filesStorageService_removeByPath(path) {
-            var removing = $q.defer();
+            var deferred = $q.defer();
 
             if (path) {
                 var split = path.split('/');
                 if (split.length > 0) {
                     return remove(split[split.length - 1]);
                 } else {
-                    removing.reject('not a valid path');
+                    deferred.reject('not a valid path');
                 }
             } else {
-                removing.reject('not a valid path');
+                deferred.reject('not a valid path');
             }
 
-            return removing.promise;
+            return deferred.promise;
         };
 
         /**
@@ -241,7 +239,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          * @return
          */
         var getFileUrlByFileName = function filesStorageService_getFileUrlByFileName(fileName) {
-            var getting = $q.defer();
+            var deferred = $q.defer();
 
             var createObject = {
                 create: false
@@ -252,13 +250,13 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 if (fileEntry) {
                     url = fileEntry.toURL();
                 }
-                getting.resolve(url);
+                deferred.resolve(url);
             }, function filesStorageService_getFileUrlByFileName_second_param(e) {
-                getting.reject(e);
+                deferred.reject(e);
                 errorHandler(e);
             });
 
-            return getting.promise;
+            return deferred.promise;
         };
 
         /**
