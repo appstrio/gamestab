@@ -1,7 +1,7 @@
 var settingsModule = settingsModule || angular.module('aio.settings', []);
 
-settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q',
-    function(C, Storage, $http, $q) {
+settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
+    function(C, Storage, $http, $q, $log) {
         var data = {},
             storageKey = C.STORAGE_KEYS.CONFIG;
 
@@ -41,12 +41,14 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q',
              * }).error(finishSetup(deferred));
              */
 
+            $log.log('[Config] - starting setup');
+
             return partnersJSONUrl()
                 .then(decidePartner)
                 .then(loadPartnerJSON)
                 .then(finishSetup, function(e) {
                     //final error handling
-                    console.warn('Got error', e);
+                    $log.warn('[Config] - could not get partnerJSON, using default', e);
                     return finishSetup();
                 });
         };
@@ -56,6 +58,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q',
          * @returns {$http promise}
          */
         var partnersJSONUrl = function() {
+            $log.log('[Config] - starting partnersJSONUrl');
             return $http.get(C.PARTNERS_JSON_URL);
         };
 
@@ -64,6 +67,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q',
          * @returns {promise(PARTNER_SETUP_OBJECT)}
          */
         var decidePartner = function(partnersList) {
+            $log.log('[Config] - starting decidePartner');
             var deferred = $q.defer();
             if (!partnersList || !partnersList.length) {
                 return deferred.reject(C.ERRORS.SETUP.PARTNER_NOT_FOUND);
@@ -92,6 +96,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q',
          * @returns {$http promise}
          */
         var loadPartnerJSON = function(partnerObject) {
+            $log.log('[Config] - starting loadPartnerJSON');
             return $http.get(partnerObject.partner_config_json_url);
         };
 
@@ -102,6 +107,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q',
          * @return promise
          */
         var finishSetup = function(partnerJSON) {
+            $log.log('[Config] - finishing setup with PartnerJSON - ', partnerJSON);
             data = angular.extend(C.CONFIG, partnerJSON || {});
             return store();
         };
