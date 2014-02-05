@@ -1,39 +1,42 @@
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
-launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, Apps){
+launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps',
+    function($scope, $http, Apps) {
 
         $scope.displayTopSearchBox = 1;
-        Apps.promise.then(function(apps){
+        Apps.promise.then(function(apps) {
             $scope.rawScreens = apps;
-        }, function(){
+        }, function() {
             alert('Cannot run without apps :(');
         });
 
-        $scope.launchApp = function(app, e){
-            if($scope.isEditing){
+        $scope.launchApp = function(app, e) {
+            if ($scope.isEditing) {
                 return false;
             }
-            if(app.url){
+            if (app.url) {
                 return window.location = app.url;
-            }else if(app.chromeId){
-                chrome.management.launchApp(app.chromeId, function (){
+            } else if (app.chromeId) {
+                chrome.management.launchApp(app.chromeId, function() {
 
                 });
-//            chrome.management.get(, function(chromeApp){
-//                console.log('chromeApp',chromeApp);
-//                chromeApp.launch();
-//            });
-            }else if(app.overlay){
-                $scope.overlay = {name : app.overlay};
+                //            chrome.management.get(, function(chromeApp){
+                //                console.log('chromeApp',chromeApp);
+                //                chromeApp.launch();
+                //            });
+            } else if (app.overlay) {
+                $scope.overlay = {
+                    name: app.overlay
+                };
             }
         };
 
-        $scope.uninstallApp = function(app, e){
+        $scope.uninstallApp = function(app, e) {
             Apps.uninstallApp(app);
         };
 
-        $scope.goSearch = function(e){
-            if(e.keyCode === 13){
+        $scope.goSearch = function(e) {
+            if (e.keyCode === 13) {
                 window.location = "http://www.google.com/search?q=" + $scope.searchQuery;
             }
         };
@@ -41,72 +44,76 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scop
         $('#search-input').keypress($scope.goSearch); //TODO:
 
 
-    }]).controller('SettingsCtrl', ['$scope', function($scope){
+    }
+]).controller('SettingsCtrl', ['$scope',
+    function($scope) {
         $scope.panes = ["General", "Background", "Account", "About"];
         $scope.selectedPane = "General";
         $scope.clientVersion = chrome.app.getDetails().version;
-        $scope.selectPane = function(pane, e){
+        $scope.selectPane = function(pane, e) {
             e.stopPropagation();
             $scope.selectedPane = pane;
         };
 
-    }]).controller('BackgroundCtrl', ['$scope','Background', function($scope, Background){
-        console.log('Background',Background);
+    }
+]).controller('BackgroundCtrl', ['$scope', 'Background',
+    function($scope, Background) {
+        console.log('Background', Background);
         $scope.backgrounds = Background.backgrounds();
 
-        $scope.selectBackground = function(bg, e){
+        $scope.selectBackground = function(bg, e) {
             e.stopPropagation();
             Background.selectBackground(bg);
         };
 
-        $scope.isSelected = function(bg){
+        $scope.isSelected = function(bg) {
             return bg.image == Background.background.image;
         };
 
-    }]).controller('StoreCtrl', ['$scope', 'Apps', function($scope, Apps){
-        var db, byTags={}, flattenedApps, allInstalledApps;
-        Apps.appsDB().success(function(appsDB){
+    }
+]).controller('StoreCtrl', ['$scope', 'Apps',
+    function($scope, Apps) {
+        var db, byTags = {}, flattenedApps, allInstalledApps;
+        Apps.appsDB().success(function(appsDB) {
             db = appsDB;
             var current;
-            for(var i = 0; i < $scope.tags.length; ++i){
+            for (var i = 0; i < $scope.tags.length; ++i) {
                 current = $scope.tags[i];
-                byTags[current] = _.filter(db, function(app){
+                byTags[current] = _.filter(db, function(app) {
                     return (app.tags && app.tags.indexOf(current) > -1);
                 });
             }
             $scope.selectedTagApps = byTags[$scope.selectedTag];
         });
 
-        Apps.promise.then(function(_installedApps){
+        Apps.promise.then(function(_installedApps) {
             allInstalledApps = _installedApps;
             setFlattenedApps();
         });
 
-        var setFlattenedApps = function(){
+        var setFlattenedApps = function() {
             flattenedApps = _.flatten(allInstalledApps, true);
-        }
+        };
 
-        $scope.tags = ['Featured', 'Games', 'Social','News & Weather','Shopping','Productivity'];
+        $scope.tags = ['Featured', 'Games', 'Social', 'News & Weather', 'Shopping', 'Productivity'];
         $scope.selectedTag = 'Featured';
 
-        $scope.selectTag = function(tag, e){
+        $scope.selectTag = function(tag, e) {
             e.stopPropagation();
             $scope.selectedTag = tag;
             $scope.selectedTagApps = byTags[$scope.selectedTag];
         };
 
-        $scope.isInstalled = function(app){
-            return _.find(flattenedApps, function(_app){
+        $scope.isInstalled = function(app) {
+            return _.find(flattenedApps, function(_app) {
                 return _app && _app.url && _app.url == app.url;
             });
         };
 
-
-
-        $scope.install = function(app, e){
+        $scope.install = function(app, e) {
             e.stopPropagation();
             Apps.addNewApp(app);
             setFlattenedApps();
         }
-
-    }]);
+    }
+]);
