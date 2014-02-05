@@ -80,6 +80,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                         if (base64Regex.test(content)) {
                             //split image by regex
                             var splittedContent = content.split(base64Regex);
+                            // splittedContent = ['', 'image/png', 'asdflkjdfdkfjsdfsdflksdfjksdf']
                             //get type
                             type = 'image/' + splittedContent[1];
                             //get content
