@@ -7,17 +7,16 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             apps;
 
         var systemApps = [{
-            title: "Settings",
+            title: 'Settings',
             icon: './img/logo_icons/settings175x175.png',
             overlay: 'settings',
             permanent: true
         }, {
-            title: "Apps Store",
+            title: 'Apps Store',
             icon: './img/logo_icons/appstore175x175.png',
             overlay: 'store',
             permanent: true
         }];
-
 
         /**
          *
@@ -113,8 +112,8 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 shortName: app.shortName,
                 type: app.type,
                 version: app.version
-            }
-        }
+            };
+        };
 
         var getLargestIconChromeApp = function(iconsArr) {
             var selected;
@@ -131,7 +130,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             }
 
             return selected;
-        }
+        };
 
 
         var store = function(cb) {
@@ -171,7 +170,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 store();
                 return newPage;
             }
-        }
+        };
 
         init();
 
@@ -225,7 +224,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 } else {
                     $arrowRight.hide();
                 }
-            }
+            };
 
 
             $arrowLeft.click(function() {
@@ -243,7 +242,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                     --scope.curScreen;
                     moveViewport();
                     $draggingHelper.animate({
-                        left: "-=" + screenWidth + "px"
+                        left: '-=' + screenWidth + 'px'
                     }, 1300);
                 }
             });
@@ -264,7 +263,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 if (scope.curScreen < scope.rawScreens.length - 1) {
                     ++scope.curScreen;
                     $draggingHelper.animate({
-                        left: "+=" + screenWidth + "px"
+                        left: '+=' + screenWidth + 'px'
                     }, 1300);
                     moveViewport();
                 }
@@ -277,7 +276,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                     left: getScreenPosition(newVal)
                 });
                 checkArrows();
-            }
+            };
 
             // watch the number of screens to set the width of the viewport
             scope.$watch('rawScreens', function(newVal) {
@@ -294,10 +293,10 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 disabled: true,
                 start: function(e, u) {
                     $draggingItem = $(u.item);
-                    $draggingHelper = $(u.helper)
+                    $draggingHelper = $(u.helper);
                     $draggingPlaceholder = $(u.placeholder);
                     $draggingItem.appendTo($draggingItem.parent());
-                    $draggingHelper.addClass("dragging");
+                    $draggingHelper.addClass('dragging');
                     setTimeout(function() {
                         $draggingHelper.parent().parent().addClass('edit');
                     }, 0);
@@ -306,7 +305,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 },
                 stop: function(e, u) {
                     // remove unnecessary classes
-                    $draggingHelper.removeClass("dragging");
+                    $draggingHelper.removeClass('dragging');
                     $draggingHelper.parent().parent().removeClass('edit');
                     // clean variables
                     scope.isDragging = false;
@@ -317,10 +316,10 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                         Apps.store();
                     });
                 },
-                placeholder: "app",
+                placeholder: 'app',
                 revert: 500,
                 opacity: .75,
-                helper: "clone",
+                helper: 'clone',
                 over: function(e, u) {},
                 sort: function(e, u) {},
                 receive: function(e, u) {
@@ -332,8 +331,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                         }
                     });
                 },
-                connectWith: ".apps-container"
-
+                connectWith: '.apps-container'
             };
 
             var moveLastAppToNewScreen = function(app, startIndex) {
@@ -355,12 +353,12 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                     Apps.store();
                 }
 
-            }
+            };
 
             scope.longPress = function(app, e) {
                 scope.isEditing = true;
                 scope.sortableOptions.disabled = false;
-            }
+            };
 
             $(document).click(function() {
                 scope.$apply(function() {
@@ -368,6 +366,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                     scope.sortableOptions.disabled = true;
                 });
             });
-        }
+        };
     }
 ]);
