@@ -1,175 +1,181 @@
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
-launcherModule.factory('Apps', ['$rootScope', '$http','Storage', '$q','Chrome','Constants', function($rootScope, $http,Storage,$q,Chrome,C){
-    var initting = $q.defer(),
-        storageKey = C.STORAGE_KEYS.APPS,
-        apps;
+launcherModule.factory('Apps', ['$rootScope', '$http','Storage', '$q','Chrome','Constants','Config', function($rootScope, $http,Storage,$q,Chrome,C,Config){
+        var initting = $q.defer(),
+            storageKey = C.STORAGE_KEYS.APPS,
+            apps;
 
-    var systemApps = [
-        {title : "Settings", icon :  './img/logo_icons/settings175x175.png', overlay:'settings', permanent : true},
-        {title : "Apps Store", icon : './img/logo_icons/appstore175x175.png', overlay:'store', permanent : true}
-    ];
-    var init = function(){
-        Storage.get(storageKey, function(items){
-            if(items && items[storageKey] && angular.isArray(items[storageKey])){
-                apps = items[storageKey];
-                initting.resolve(apps);
-            }else{
-                firstTimeSetup(function(){
+        var systemApps = [
+            {title : "Settings", icon :  './img/logo_icons/settings175x175.png', overlay:'settings', permanent : true},
+            {title : "Apps Store", icon : './img/logo_icons/appstore175x175.png', overlay:'store', permanent : true}
+        ];
+
+
+        /**
+         *
+         */
+        var init = function(){
+            Storage.get(storageKey, function(items){
+                if(items && items[storageKey] && angular.isArray(items[storageKey])){
+                    apps = items[storageKey];
                     initting.resolve(apps);
+                }else{
+                    setup(function(){
+                        initting.resolve(apps);
+                    });
+                }
+            });
+        };
+
+
+        var setup = function (cb){
+            var config = Config.get();
+
+            var partnerWebApps = config.web_apps_db;
+            localAppsDB().success(function(_appsDB){
+                var output = [];
+
+                var all = _.filter(_appsDB, function(app){
+                    return (app.default && app.default.indexOf('ALL') > -1);
                 });
+
+                all = all.slice(0,4);
+
+
+                var games =  _.filter(_appsDB, function(app){
+                    return (app.tags && app.tags.indexOf('Games') > -1);
+                });
+
+                games = _.shuffle(games).slice(0, 12);
+
+                output = output.concat(systemApps);
+                output = output.concat(all);
+                output = output.concat(games);
+
+                Chrome.management.getAll(function(chromeApps){
+                    angular.forEach(chromeApps, function(appOrExtension){
+                        if(appOrExtension.isApp && appOrExtension.enabled){
+                            output.push(chromeAppToObject(appOrExtension));
+                        }
+                    });
+
+                    var output = [], j = 0;
+                    for(var i = 0; i < output.length; ++i){
+                        if(i != 0 && i % 12 == 0) ++j;
+                        output[j] = output[j] || [];
+                        output[j].push(output[i]);
+                    }
+
+                    apps = output;
+
+                    store(cb);
+                });
+
+            });
+        };
+
+
+
+        var localAppsDB = function(){
+            return $http.get('./data/webAppsDB1.json');
+        };
+
+
+
+        var chromeAppToObject = function(app){
+            return {
+                appLaunchUrl: app.appLaunchUrl,
+                description: app.description,
+                enabled: app.enabled,
+                homepageUrl: app.homepageUrl,
+                hostPermissions: app.hostPermissions,
+                icons: app.icons,
+                icon: getLargestIconChromeApp(app.icons).url,
+                id: app.id,
+                chromeId: app.id,
+                installType: app.installType,
+                isApp: app.isApp,
+                mayDisable: app.mayDisable,
+                name: app.name,
+                title: app.name,
+                offlineEnabled: app.offlineEnabled,
+                optionsUrl: app.optionsUrl,
+                permissions: app.permissions,
+                shortName: app.shortName,
+                type: app.type,
+                version: app.version
             }
-        });
-    };
+        }
 
-    var firstTimeSetup = function (cb){
-        appsDB().success(function(_appsDB){
-            console.log('_appsDB',_appsDB);
-            var allTheApps = [];
+        var getLargestIconChromeApp = function(iconsArr){
+            var selected;
+            if(!iconsArr.length) return null;
 
-            var all = _.filter(_appsDB, function(app){
-                return (app.default && app.default.indexOf('ALL') > -1);
-            });
+            for ( var i = 0 ; i < iconsArr.length; ++i){
+                if(!selected){
+                    selected = iconsArr[i];
+                }else{
+                    if(selected.size<iconsArr[i].size){
+                        selected = iconsArr[i];
+                    }
+                }
+            }
 
-            all = all.slice(0,6);
+            return selected;
+        }
 
 
-            var games =  _.filter(_appsDB, function(app){
-                return (app.tags && app.tags.indexOf('Games') > -1);
-            });
+        var store = function(cb){
+            Storage.setItem(storageKey, apps, cb);
+        };
 
-            games = _.shuffle(games).slice(0, 12);
+        var addNewApp = function(app, cb){
+            var lastAvailablePage = getLastAvailablePage();
+            app.installTimestamp = Date.now();
+            lastAvailablePage.push(app);
+            store(cb);
+        };
 
-            allTheApps = allTheApps.concat(systemApps);
-            allTheApps = allTheApps.concat(all);
-            allTheApps = allTheApps.concat(games);
-
-            Chrome.management.getAll(function(chromeApps){
-                console.log('chromeApps',chromeApps);
-                var onlyAppsArr = [];
-                angular.forEach(chromeApps, function(appOrExtension){
-                    if(appOrExtension.isApp && appOrExtension.enabled){
-                        allTheApps.push(chromeAppToObject(appOrExtension));
+        var uninstallApp = function(app, cb){
+            var found = false;
+            angular.forEach(apps, function(page){
+                angular.forEach(page, function(_app, index){
+                    if(app.url === _app.url){
+                        page.splice(index,1);
+                        store(cb);
+                        found = true;
                     }
                 });
-
-                var output = [], j = 0;
-                for(var i = 0; i < allTheApps.length; ++i){
-                    if(i != 0 && i % 12 == 0) ++j;
-                    output[j] = output[j] || [];
-                    output[j].push(allTheApps[i]);
-                }
-
-                apps = output;
-
-                store(cb);
             });
+            if(!found){
+                cb && cb();
+            }
+        };
 
-        });
-    };
-
-
-
-    var appsDB = function(){
-        return $http.get('./data/webAppsDB1.json');
-    }
-
-
-
-    var chromeAppToObject = function(app){
-        return {
-            appLaunchUrl: app.appLaunchUrl,
-            description: app.description,
-            enabled: app.enabled,
-            homepageUrl: app.homepageUrl,
-            hostPermissions: app.hostPermissions,
-            icons: app.icons,
-            icon: getLargestIconChromeApp(app.icons).url,
-            id: app.id,
-            chromeId: app.id,
-            installType: app.installType,
-            isApp: app.isApp,
-            mayDisable: app.mayDisable,
-            name: app.name,
-            title: app.name,
-            offlineEnabled: app.offlineEnabled,
-            optionsUrl: app.optionsUrl,
-            permissions: app.permissions,
-            shortName: app.shortName,
-            type: app.type,
-            version: app.version
-        }
-    }
-
-    var getLargestIconChromeApp = function(iconsArr){
-        var selected;
-        if(!iconsArr.length) return null;
-
-        for ( var i = 0 ; i < iconsArr.length; ++i){
-            if(!selected){
-                selected = iconsArr[i];
+        var getLastAvailablePage = function(){
+            var lastPage = apps[apps.length-1];
+            if(lastPage.length < 12){
+                return lastPage;
             }else{
-                if(selected.size<iconsArr[i].size){
-                    selected = iconsArr[i];
-                }
+                var newPage = [];
+                apps.push(newPage);
+                store();
+                return newPage;
             }
         }
 
-        return selected;
-    }
+        init();
 
-
-    var store = function(cb){
-        Storage.setItem(storageKey, apps, cb);
-    };
-
-    var addNewApp = function(app, cb){
-        var lastAvailablePage = getLastAvailablePage();
-        app.installTimestamp = Date.now();
-        lastAvailablePage.push(app);
-        store(cb);
-    };
-
-    var uninstallApp = function(app, cb){
-        var found = false;
-        angular.forEach(apps, function(page){
-            angular.forEach(page, function(_app, index){
-                if(app.url === _app.url){
-                    page.splice(index,1);
-                    store(cb);
-                    found = true;
-                }
-            });
-        });
-        if(!found){
-            cb && cb();
-        }
-    };
-
-    var getLastAvailablePage = function(){
-        var lastPage = apps[apps.length-1];
-        if(lastPage.length < 12){
-            return lastPage;
-        }else{
-            var newPage = [];
-            apps.push(newPage);
-            store();
-            return newPage;
-        }
-    }
-
-    init();
-
-    return {
-        promise : initting.promise,
-        apps : function(){
-            return apps;
-        },
-        store : store,
-        appsDB : appsDB,
-        addNewApp : addNewApp,
-        uninstallApp : uninstallApp
-    };
+        return {
+            promise : initting.promise,
+            apps : function(){
+                return apps;
+            },
+            store : store,
+            appsDB : localAppsDB,
+            addNewApp : addNewApp,
+            uninstallApp : uninstallApp
+        };
 
 
 }]).directive('hlLauncher', ['Apps', function(Apps){
@@ -345,4 +351,4 @@ launcherModule.factory('Apps', ['$rootScope', '$http','Storage', '$q','Chrome','
             });
         });
     }
-}])
+}]);

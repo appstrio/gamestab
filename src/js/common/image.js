@@ -1,6 +1,6 @@
-var imageModule = angular.module('aio.image', []);
+var imageModule = angular.module('aio.image', ['aio.file']);
 
-imageModule.factory('Image', ['$q','$rootScope', function($q,$rootScope){
+imageModule.factory('Image', ['$q','$rootScope','file', function($q,$rootScope){
     var getBase64Image = function imageService_getBase64Image (url,options) {
 
         options = angular.extend({

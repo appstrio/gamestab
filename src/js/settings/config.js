@@ -36,11 +36,12 @@ settingsModule.factory('Config', [ 'Constants', 'Storage', function(C, Storage){
             decidePartner(gamestabJSON.partners).then(function(partnerObject){
                 loadPartnerJSON.then(partnerObject, function(partnerJSON){
                     // finish setup as partner
-                    finishSetup(setupping, partnerJSON).call();
+                    finishSetup(setupping, partnerJSON)();
                 }, finishSetup(setupping));
             }, finishSetup(setupping));
         }).error(finishSetup(setupping));
 
+       // partnersJSONUrl().then(decidePartner).then().then(function(){}, finishSetup(setupping));
         return setupping.promise;
     };
 

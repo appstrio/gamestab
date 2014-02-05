@@ -11,7 +11,7 @@ settingsModule.factory('Setup', ['$rootScope', 'Constants','$q','$http','Apps','
 
         // SETUP CONFIG
         Config.setup().then(function(_config){
-            Apps.setup();
+            Preferences.setup();
         }, function(){
             setupping.reject();
         });

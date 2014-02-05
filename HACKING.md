@@ -74,7 +74,8 @@
         "user_preferences": {
             "show_search_box" : TRUE|FALSE
         },
-        "config_update_url" : "XXX"
+        "config_update_url" : "XXX",
+        "search_url" : "XXX"
     }
 ```
 - web_apps_db.json
@@ -91,5 +92,16 @@
         ...
     ]
 ```
+
+## Config Service
+- Handles the partner's config json file
+- Update the config file
+- ...
+
+## Preferences Service
+- Handles all the user's preferences : settings, background, apps
+- Depends on the Config - need the config to setup the background, apps, settings...
+
+
 
 

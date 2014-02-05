@@ -1,6 +1,6 @@
 var fileModule = angular.module('aio.file', []);
 
-fileModule.factory('FileSystem', ['$rootScope', '$log','$q', function filesStorageService_Main($rootScope, $log, $q) {
+fileModule.factory('file', ['$rootScope', '$log','$q', function filesStorageService_Main($rootScope, $log, $q) {
     //vars
     var fs = null,
         fsReady = false,

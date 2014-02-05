@@ -14,8 +14,10 @@ settingsModule.factory('Constants', [function(){
         },
         CONFIG : {
             search_url : "",
-            show_search_box : true,
-            config_update_url : ""
+            config_update_url : "",
+            user_preferences : {
+                show_search_box : true
+            }
         },
         DEBUG : {
 
