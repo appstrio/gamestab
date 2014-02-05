@@ -174,10 +174,10 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                         deferred.resolve(fileEntry.toURL());
 
                     }, errorHandler(deferred));
-
                 }, errorHandler(deferred));
             } catch (e) {
                 $log.info('Error', e);
+                deferred.reject(e);
             }
 
             return deferred.promise;
@@ -197,14 +197,14 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                     create: false
                 }, function filesStorageService_remove_getFile(fileEntry) {
 
-                    fileEntry.remove(function filesStorageService_remove_getFile_remove() {
+                    fileEntry.remove(function() {
                         $log.info('File removed.');
                         deferred.resolve();
                     }, errorHandler(deferred));
-
                 }, errorHandler(deferred));
             } catch (e) {
                 $log.info('Error', e);
+                deferred.reject(e);
             }
 
             return deferred.promise;
@@ -251,11 +251,9 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 if (fileEntry) {
                     url = fileEntry.toURL();
                 }
+
                 deferred.resolve(url);
-            }, function filesStorageService_getFileUrlByFileName_second_param(e) {
-                deferred.reject(e);
-                errorHandler(e);
-            });
+            }, errorHandler(deferred));
 
             return deferred.promise;
         };
