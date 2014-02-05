@@ -105,4 +105,14 @@ imageModule.factory('Image', ['$q','$rootScope', function($q,$rootScope){
         getBase64Image : getBase64Image,
         urlToFile : urlToFile
     }
-}])
+}]);
+
+
+/**
+ * PRIVATE API
+ * ...
+ ** resize utility...
+ * PUBLIC API
+ ** urlToBase64  @params(url), @returns(promise(base64_image, resize_options))
+ ** urlToLocalFile @params(params --> {url : XXX, filename : XXX, resize_options...}, #returns(promise(localfile_url)
+ */

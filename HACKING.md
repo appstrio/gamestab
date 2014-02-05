@@ -51,6 +51,7 @@
     - Finish Setup
 
 ## JSON Files Schemas
+```
 - partners.json
     [
         {
@@ -82,9 +83,9 @@
             "default" : ["ALL"||COUNTRY_CC],
             "tags" : ["XXX","XXX"],
             "owner_partner_id" : "XXX" | OPTIONAL
-            "overlay" : "XXX" | OPTIONAL
         }
         ...
     ]
+```
 
 
