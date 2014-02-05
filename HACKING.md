@@ -21,15 +21,30 @@
 
 ## App Structure - Modularized File Organization
 - Structure :
-    - jade : app-level jade files
-        - jade/templates : sub-templates for different angular components
-    - js : app-level js files
-        - js/common : common utilities, services, directives
-        - js/launcher : main launcher business-logic, controllers, directives, everything related to apps
-        - js/search : search box logic including auto complete
-        - js/settings : setup, config, settings logics, including appearance, customization of the UI and remote update
-        - js/vendor : modified 3rd party libs
-    - less : less files to be compiled to css
-    - less/import : less files to be included in the compiled less files.
+    - jade/ : app-level jade files
+        - jade/templates/ : sub-templates for different angular components
+    - js/ : app-level js files
+        - js/common/ : common utilities, services, directives
+        - js/launcher/ : main launcher business-logic, controllers, directives, everything related to apps
+        - js/search/ : search box logic including auto complete
+        - js/settings/ : setup, config, settings logics, including appearance, customization of the UI and remote update
+        - js/vendor/ : modified 3rd party libs
+    - less/ : less files to be compiled to css
+    - less/import/ : less files to be included in the compiled less files.
+
+## Setup Process
+- Setup Service
+    - Run startSetup() : return setup promise
+    - Run Config Setup
+    - Download partners.json
+    - Run decidePartner()
+        - Found partner
+            - Download partner_config_XXX.json
+        - Didn't find partner : run generic setup
+    - Create config object based on defaults + partner config
+    - Store config
+    - Set default background image
+    - Run Apps Config
+    - finish Setup
 
 
