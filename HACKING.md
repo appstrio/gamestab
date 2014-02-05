@@ -32,19 +32,59 @@
     - less/ : less files to be compiled to css
     - less/import/ : less files to be included in the compiled less files.
 
+## Libs and Common Components
+
 ## Setup Process
 - Setup Service
     - Run startSetup() : return setup promise
     - Run Config Setup
     - Download partners.json
     - Run decidePartner()
-        - Found partner
-            - Download partner_config_XXX.json
-        - Didn't find partner : run generic setup
+        - Run history check for each partner, look for the install_url_snippit in the chrome.history
+            - Found partner
+                - Download partner_config_XXX.json
+            - Didn't find partner : run generic setup
     - Create config object based on defaults + partner config
     - Store config
     - Set default background image
     - Run Apps Config
-    - finish Setup
+    - Finish Setup
+
+## JSON Files Schemas
+- partners.json
+    [
+        {
+            "partner_id" : "",
+            "partner_install_url_snippit" : "XXX",
+            "partner_config_json_url" : ""
+        }
+        ...
+    ]
+- partner_config_XXX.json
+    {
+        "partner_id" : "XXX",
+        "partner_name" : "XXX",
+        "partner_website_url" : "XXX",
+        "partner_logo" : "XXX",
+        "default_background_url" : "XXX",
+        "web_apps_db" : [WEB_APP_SCHEMA],
+        "user_preferences": {
+            "show_search_box" : TRUE|FALSE
+        },
+        "config_update_url" : "XXX"
+    }
+- web_apps_db.json
+    [
+        {
+            "title" : "XXX",
+            "url" : "XXX",
+            "icon" : "XXX",
+            "default" : ["ALL"||COUNTRY_CC],
+            "tags" : ["XXX","XXX"],
+            "owner_partner_id" : "XXX" | OPTIONAL
+            "overlay" : "XXX" | OPTIONAL
+        }
+        ...
+    ]
 
 
