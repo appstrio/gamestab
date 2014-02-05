@@ -22,7 +22,6 @@ storageModule.factory('Storage', ['$rootScope', function($rootScope){
                     for (var i in items){
                         item = items[i];
                         stringified = JSON.stringify(item);
-                        console.log(i, stringified);
                         localStorage.setItem(i, stringified);
                     }
                     cb && cb(1);
