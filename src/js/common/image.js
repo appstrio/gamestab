@@ -8,9 +8,10 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
          *
          * @param params
          * @param params.url
-         * @param [params.maxWidth]
-         * @param [params.maxHeight]
-         * @param [params.fixedSize]
+         * @param params.resizeOptions
+         * @config maxWidth
+         * @config maxHeight
+         * @config fixedSize
          * @return
          */
         var urlToBase64 = function(params) {
@@ -36,7 +37,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
                 maxWidth: 0,
                 maxHeight: 0,
                 fixedSize: 0
-            }, params);
+            }, params.resizeOptions);
 
             //img load event
             img.onload = function() {
@@ -137,8 +138,9 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
                         deferred.resolve(file);
                     });
                 });
-            }).
-            catch (function(e) {
+            })
+            //error handling
+            .then(angular.noop, function(e) {
                 $rootScope.$apply(function() {
                     deferred.reject(e);
                 });
@@ -146,7 +148,6 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
 
             return deferred.promise;
         };
-
 
         /**
          * _getHashFromName
@@ -166,7 +167,6 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
             }
 
             prefix = prefix || '';
-            type = type;
             return prefix + url.hashCode() + '.' + type;
         };
 

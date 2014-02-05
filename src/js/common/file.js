@@ -39,7 +39,9 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 }
 
                 $log.info('Filesystem error: ' + msg);
-                deferred.reject(msg);
+                $rootScope.$apply(function() {
+                    deferred.reject(msg);
+                });
             };
         };
 
@@ -60,7 +62,6 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
 
                     // Create a FileWriter object for our FileEntry (log.txt).
                     fileEntry.createWriter(function(fileWriter) {
-
                         fileWriter.onwriteend = function() {
                             $log.info('Write completed. ', fileEntry.toURL());
                             $rootScope.$apply(function() {
@@ -85,18 +86,6 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                             content = atob(splittedContent[2]);
                         }
 
-                        /*
-                         * if (type === 'image/jpeg' || type === 'image/png') {
-                         *     var binaryImg = atob(content);
-                         *     var length = binaryImg.length;
-                         *     content = new ArrayBuffer(length);
-                         *     var ua = new Uint8Array(content);
-                         *     for (var i = 0; i < length; i++) {
-                         *         ua[i] = binaryImg.charCodeAt(i);
-                         *     }
-                         * }
-                         */
-
                         // Create a new Blob and write it to log.txt.
                         var blob = new Blob([content], {
                             type: type
@@ -107,8 +96,10 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                     }, errorHandler(deferred));
                 }, errorHandler(deferred));
             } catch (e) {
-                deferred.reject(e);
                 $log.info('Error', e);
+                $rootScope.$apply(function() {
+                    deferred.reject(e);
+                });
             }
 
             return deferred.promise;
@@ -130,7 +121,9 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                         var reader = new FileReader();
 
                         reader.onloadend = function() {
-                            deferred.resolve(this.result);
+                            $rootScope.$apply(function() {
+                                deferred.resolve(this.result);
+                            });
                         };
 
                         reader.readAsText(file);
@@ -138,7 +131,9 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 }, errorHandler(deferred));
             } catch (e) {
                 $log.info('Error reading file', e);
-                deferred.reject(e);
+                $rootScope.$apply(function() {
+                    deferred.reject(e);
+                });
             }
 
             return deferred.promise;
@@ -170,13 +165,17 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                         });
 
                         fileWriter.write(blob);
-                        deferred.resolve(fileEntry.toURL());
+                        $rootScope.$apply(function() {
+                            deferred.resolve(fileEntry.toURL());
+                        });
 
                     }, errorHandler(deferred));
                 }, errorHandler(deferred));
             } catch (e) {
                 $log.info('Error', e);
-                deferred.reject(e);
+                $rootScope.$apply(function() {
+                    deferred.reject(e);
+                });
             }
 
             return deferred.promise;
@@ -197,12 +196,16 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 }, function filesStorageService_remove_getFile(fileEntry) {
                     fileEntry.remove(function() {
                         $log.info('File removed.');
-                        deferred.resolve();
+                        $rootScope.$apply(function() {
+                            deferred.resolve();
+                        });
                     }, errorHandler(deferred));
                 }, errorHandler(deferred));
             } catch (e) {
                 $log.info('Error', e);
-                deferred.reject(e);
+                $rootScope.$apply(function() {
+                    deferred.reject(e);
+                });
             }
 
             return deferred.promise;
@@ -220,14 +223,20 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
             if (path) {
                 var split = path.split('/');
                 if (split.length > 0) {
-                    deferred.resolve();
+                    $rootScope.$apply(function() {
+                        deferred.resolve();
+                    });
                     //returns a promise as well
                     return remove(split[split.length - 1]);
                 } else {
-                    deferred.reject('not a valid path');
+                    $rootScope.$apply(function() {
+                        deferred.reject('not a valid path');
+                    });
                 }
             } else {
-                deferred.reject('not a valid path');
+                $rootScope.$apply(function() {
+                    deferred.reject('not a valid path');
+                });
             }
 
             return deferred.promise;
@@ -251,7 +260,9 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 if (fileEntry) {
                     url = fileEntry.toURL();
                 }
-                deferred.resolve(url);
+                $rootScope.$apply(function() {
+                    deferred.resolve(url);
+                });
             }, errorHandler(deferred));
 
             return deferred.promise;
