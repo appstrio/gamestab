@@ -45,7 +45,6 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
             };
         };
 
-
         /**
          * filesStorageService_write
          *
@@ -98,6 +97,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                                 ua[i] = binaryImg.charCodeAt(i);
                             }
                         }
+
                         // Create a new Blob and write it to log.txt.
                         var blob = new Blob([content], {
                             type: type
@@ -131,7 +131,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                     fileEntry.file(function filesStorageService_read_getFile_file(file) {
                         var reader = new FileReader();
 
-                        reader.onloadend = function(e) {
+                        reader.onloadend = function() {
                             reading.resolve(this.result);
                         };
 
@@ -246,7 +246,8 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
             var createObject = {
                 create: false
             };
-            return fs.root.getFile(fileName, createObject, function(fileEntry) {
+
+            fs.root.getFile(fileName, createObject, function(fileEntry) {
                 var url;
                 if (fileEntry) {
                     url = fileEntry.toURL();
@@ -282,7 +283,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 /**
                  * New Version
                  */
-                navigator[storageType.persistent].requestQuota(fileSystemSize, function filesStorageService_init_requestQuota(grantedBytes) {
+                navigator[storageType.persistent].requestQuota(fileSystemSize, function(grantedBytes) {
                     window.requestFileSystem(apiType, grantedBytes, function(fileSystem) {
                         $rootScope.$apply(function() {
                             fs = fileSystem;
