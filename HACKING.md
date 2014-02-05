@@ -51,45 +51,45 @@
     - Finish Setup
 
 ## JSON Files Schemas
-```
 - partners.json
-    [
-        {
-            "partner_id" : "",
-            "partner_install_url_snippit" : "XXX",
-            "partner_config_json_url" : ""
-        }
-        ...
-    ]
-```
-```
+    ```
+        [
+            {
+                "partner_id" : "",
+                "partner_install_url_snippit" : "XXX",
+                "partner_config_json_url" : ""
+            }
+            ...
+        ]
+    ```
 - partner_config_XXX.json
-    {
-        "partner_id" : "XXX",
-        "partner_name" : "XXX",
-        "partner_website_url" : "XXX",
-        "partner_logo" : "XXX",
-        "default_background_url" : "XXX",
-        "web_apps_db" : [WEB_APP_SCHEMA],
-        "user_preferences": {
-            "show_search_box" : TRUE|FALSE
-        },
-        "config_update_url" : "XXX"
-    }
-```
-```
-- web_apps_db.json
-    [
+    ```
         {
-            "title" : "XXX",
-            "url" : "XXX",
-            "icon" : "XXX",
-            "default" : ["ALL"||COUNTRY_CC],
-            "tags" : ["XXX","XXX"],
-            "owner_partner_id" : "XXX" | OPTIONAL
+            "partner_id" : "XXX",
+            "partner_name" : "XXX",
+            "partner_website_url" : "XXX",
+            "partner_logo" : "XXX",
+            "default_background_url" : "XXX",
+            "web_apps_db" : [WEB_APP_SCHEMA],
+            "user_preferences": {
+                "show_search_box" : TRUE|FALSE
+            },
+            "config_update_url" : "XXX"
         }
-        ...
-    ]
-```
+    ```
+- web_apps_db.json
+    ```
+        [
+            {
+                "title" : "XXX",
+                "url" : "XXX",
+                "icon" : "XXX",
+                "default" : ["ALL"||COUNTRY_CC],
+                "tags" : ["XXX","XXX"],
+                "owner_partner_id" : "XXX" | OPTIONAL
+            }
+            ...
+        ]
+    ```
 
 
