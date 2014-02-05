@@ -68,10 +68,8 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                             });
                         };
 
-                        fileWriter.onerror = function(e) {
-                            $log.info('Write failed: ' + e.toString());
-                            deferred.reject(e);
-                        };
+                        //use handler on error
+                        fileWriter.onerror = errorHandler(deferred);
 
                         //assign base64 regex to check & split
                         var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
@@ -102,10 +100,9 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                             type: type
                         });
 
+                        //actually write file
                         fileWriter.write(blob);
-
                     }, errorHandler(deferred));
-
                 }, errorHandler(deferred));
             } catch (e) {
                 deferred.reject(e);
@@ -196,7 +193,6 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 fs.root.getFile(fileName, {
                     create: false
                 }, function filesStorageService_remove_getFile(fileEntry) {
-
                     fileEntry.remove(function() {
                         $log.info('File removed.');
                         deferred.resolve();
@@ -222,6 +218,8 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
             if (path) {
                 var split = path.split('/');
                 if (split.length > 0) {
+                    deferred.resolve();
+                    //returns a promise as well
                     return remove(split[split.length - 1]);
                 } else {
                     deferred.reject('not a valid path');
@@ -251,7 +249,6 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 if (fileEntry) {
                     url = fileEntry.toURL();
                 }
-
                 deferred.resolve(url);
             }, errorHandler(deferred));
 
