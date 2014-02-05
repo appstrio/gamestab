@@ -62,49 +62,34 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 }, function filesStorageService_write_getFile(fileEntry) {
 
                     // Create a FileWriter object for our FileEntry (log.txt).
-                    fileEntry.createWriter(function filesStorageService_write_getFile_createWriter(fileWriter) {
+                    fileEntry.createWriter(function(fileWriter) {
 
-                        fileWriter.onwriteend = function filesStorageService_write_getFile_createWriter_onwriteend(e) {
+                        fileWriter.onwriteend = function() {
+                            $log.info('Write completed. ', fileEntry.toURL());
                             $rootScope.$apply(function() {
                                 writing.resolve(fileEntry.toURL());
                             });
-                            $log.info('Write completed. ', fileEntry.toURL());
-
                         };
 
-                        fileWriter.onerror = function filesStorageService_write_getFile_createWriter_onerror(e) {
+                        fileWriter.onerror = function(e) {
                             $log.info('Write failed: ' + e.toString());
                             writing.reject(e);
                         };
 
-                        //if base 64 image  so extract only the data
-                        if (content.indexOf('image/jpeg') > -1) {
-                            type = "image/jpeg";
-                            try {
-                                content = content.split('data:image/jpeg;base64,')[1];
-                            } catch (e) {
-                                console.log('Error parsing base 64');
-                            }
+                        //assign base64 regex to check & split
+                        var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
 
-                        } else if (content.indexOf('image/jpg') > -1) {
-                            type = "image/jpeg";
-                            try {
-                                content = content.split('data:image/jpg;base64,')[1];
-                            } catch (e) {
-                                console.log('Error parsing base 64');
-                            }
-
-                        } else if (content.indexOf('image/png') > -1) {
-                            type = "image/png";
-                            try {
-                                content = content.split('data:image/png;base64,')[1];
-                            } catch (e) {
-                                console.log('Error parsing base 64');
-                            }
-
+                        //if base 64 image so extract only the data
+                        if (base64Regex.test(content)) {
+                            //split image by regex
+                            var splittedContent = content.split(base64Regex);
+                            //get type
+                            type = 'image/' + splittedContent[1];
+                            //get content
+                            content = splittedContent[2];
                         }
 
-                        if (type == "image/jpeg" || type == "image/png") {
+                        if (type === 'image/jpeg' || type === 'image/png') {
                             var binaryImg = atob(content);
                             var length = binaryImg.length;
                             content = new ArrayBuffer(length);
@@ -152,11 +137,10 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
 
                         reader.readAsText(file);
                     }, errorHandler(reading));
-
                 }, errorHandler(reading));
             } catch (e) {
-                reading.reject(e);
                 $log.info('Error reading file', e);
+                reading.reject(e);
             }
 
             return reading.promise;
