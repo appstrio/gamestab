@@ -57,7 +57,7 @@ app.directive('hlLauncher', ['Apps', function(Apps){
 
 
             $arrowRight.click(function(){
-                if(scope.curScreen < scope.rawScreens.length - 1){
+                if(scope.rawScreens && scope.rawScreens.length && scope.curScreen < scope.rawScreens.length - 1){
                     ++scope.curScreen;
                     moveViewport();
                 }else if(scope.curScreen === scope.rawScreens.length){

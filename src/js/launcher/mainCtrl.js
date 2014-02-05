@@ -1,54 +1,54 @@
 app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, Apps){
 
-    $scope.displayTopSearchBox = 1;
-    Apps.promise.then(function(apps){
-        $scope.rawScreens = apps;
-    }, function(){
-        alert('Cannot run without apps :(');
-    });
+        $scope.displayTopSearchBox = 1;
+        Apps.promise.then(function(apps){
+            $scope.rawScreens = apps;
+        }, function(){
+            alert('Cannot run without apps :(');
+        });
 
-    $scope.launchApp = function(app, e){
-        if($scope.isEditing){
-            return false;
-        }
-        if(app.url){
-            return window.location = app.url;
-        }else if(app.chromeId){
-            chrome.management.launchApp(app.chromeId, function (){
+        $scope.launchApp = function(app, e){
+            if($scope.isEditing){
+                return false;
+            }
+            if(app.url){
+                return window.location = app.url;
+            }else if(app.chromeId){
+                chrome.management.launchApp(app.chromeId, function (){
 
-            });
+                });
 //            chrome.management.get(, function(chromeApp){
 //                console.log('chromeApp',chromeApp);
 //                chromeApp.launch();
 //            });
-        }else if(app.overlay){
-            $scope.overlay = {name : app.overlay};
-        }
-    };
+            }else if(app.overlay){
+                $scope.overlay = {name : app.overlay};
+            }
+        };
 
-    $scope.uninstallApp = function(app, e){
-        Apps.uninstallApp(app);
-    };
+        $scope.uninstallApp = function(app, e){
+            Apps.uninstallApp(app);
+        };
 
-    $scope.goSearch = function(e){
-        if(e.keyCode === 13){
-            window.location = "http://www.google.com/search?q=" + $scope.searchQuery;
-        }
-    };
+        $scope.goSearch = function(e){
+            if(e.keyCode === 13){
+                window.location = "http://www.google.com/search?q=" + $scope.searchQuery;
+            }
+        };
 
-    $('#search-input').keypress($scope.goSearch); //TODO:
+        $('#search-input').keypress($scope.goSearch); //TODO:
 
 
     }]).controller('SettingsCtrl', ['$scope', function($scope){
-    $scope.panes = ["General", "Background", "Account", "About"];
-    $scope.selectedPane = "General";
-    $scope.clientVersion = chrome.app.getDetails().version;
-    $scope.selectPane = function(pane, e){
-        e.stopPropagation();
-        $scope.selectedPane = pane;
-    };
+        $scope.panes = ["General", "Background", "Account", "About"];
+        $scope.selectedPane = "General";
+        $scope.clientVersion = chrome.app.getDetails().version;
+        $scope.selectPane = function(pane, e){
+            e.stopPropagation();
+            $scope.selectedPane = pane;
+        };
 
-}]).controller('BackgroundCtrl', ['$scope','Background', function($scope, Background){
+    }]).controller('BackgroundCtrl', ['$scope','Background', function($scope, Background){
         console.log('Background',Background);
         $scope.backgrounds = Background.backgrounds();
 
@@ -61,7 +61,7 @@ app.controller('MainCtrl', ['$scope', '$http', 'Apps', function($scope, $http, A
             return bg.image == Background.background.image;
         };
 
-}]).controller('StoreCtrl', ['$scope', 'Apps', function($scope, Apps){
+    }]).controller('StoreCtrl', ['$scope', 'Apps', function($scope, Apps){
         var db, byTags={}, flattenedApps, allInstalledApps;
         Apps.appsDB().success(function(appsDB){
             db = appsDB;
