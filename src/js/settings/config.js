@@ -107,7 +107,6 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
         var store = function() {
             var deferred = $q.defer();
             Storage.setItem(storageKey, data, function() {
-                console.log('here');
                 deferred.resolve();
             });
             return deferred.promise;

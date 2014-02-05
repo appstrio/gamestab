@@ -10,11 +10,15 @@ settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Apps', 'Config', '$
         var startSetup = function() {
             $log.log('[Setup] - starting setup');
 
+
+            //TODO if setup alreadyh ran - return that
+
             // SETUP CONFIG
             return Config.setup()
                 // .then(Preferences.setup)
                 .then(angular.noop,
                     function(e) {
+                        $log.warn('[Setup] - finished setup with error', e);
                         return e;
                     });
         };
