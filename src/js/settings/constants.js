@@ -1,6 +1,7 @@
 var settingsModule = settingsModule || angular.module('aio.settings', []);
 
 settingsModule.factory('Constants', [
+
     function() {
         return {
             PARTNERS_JSON_URL: '/data/partners.json',

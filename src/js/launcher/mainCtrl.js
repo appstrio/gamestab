@@ -114,6 +114,6 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps',
             e.stopPropagation();
             Apps.addNewApp(app);
             setFlattenedApps();
-        }
+        };
     }
 ]);
