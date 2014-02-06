@@ -55,52 +55,49 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          */
         var write = function(fileName, content, type) {
             var deferred = $q.defer();
-            try {
-                fs.root.getFile(fileName, {
-                    create: true
-                }, function filesStorageService_write_getFile(fileEntry) {
 
-                    // Create a FileWriter object for our FileEntry (log.txt).
-                    fileEntry.createWriter(function(fileWriter) {
-                        fileWriter.onwriteend = function() {
-                            $log.info('Write completed. ', fileEntry.toURL());
-                            $rootScope.$apply(function() {
-                                deferred.resolve(fileEntry.toURL());
-                            });
-                        };
-
-                        //use handler on error
-                        fileWriter.onerror = errorHandler(deferred);
-
-                        //assign base64 regex to check & split
-                        var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
-
-                        //if base 64 image so extract only the data
-                        if (base64Regex.test(content)) {
-                            //split image by regex
-                            var splittedContent = content.split(base64Regex);
-                            // splittedContent = ['', 'image/png', 'asdflkjdfdkfjsdfsdflksdfjksdf']
-                            //get type
-                            type = 'image/' + splittedContent[1];
-                            //get content and convert to binary
-                            content = atob(splittedContent[2]);
-                        }
-
-                        // Create a new Blob and write it to log.txt.
-                        var blob = new Blob([content], {
-                            type: type
+            fs.root.getFile(fileName, {
+                create: true
+            }, function(fileEntry) {
+                // Create a FileWriter object for our FileEntry (log.txt).
+                fileEntry.createWriter(function(fileWriter) {
+                    fileWriter.onwriteend = function() {
+                        $log.info('Write completed. ', fileEntry.toURL());
+                        $rootScope.$apply(function() {
+                            deferred.resolve(fileEntry.toURL());
                         });
+                    };
 
-                        //actually write file
-                        fileWriter.write(blob);
-                    }, errorHandler(deferred));
+                    //use handler on error
+                    fileWriter.onerror = errorHandler(deferred);
+
+                    //assign base64 regex to check & split
+                    var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
+                    var uIntBinaryArray;
+
+                    //if base 64 image so extract only the data
+                    if (base64Regex.test(content)) {
+                        //split image by regex
+                        var splittedContent = content.split(base64Regex);
+                        // splittedContent = ['', 'image/png', 'asdflkjdfdkfjsdfsdflksdfjksdf']
+                        //get type
+                        type = 'image/' + splittedContent[1];
+                        //get content and convert to binary
+                        content = atob(splittedContent[2]);
+                        uIntBinaryArray = new Uint8Array(new ArrayBuffer(content.length));
+                        for (var i = 0; i < content.length; i++) {
+                            uIntBinaryArray[i] = content.charCodeAt(i);
+                        }
+                    }
+
+                    var blob = new Blob([uIntBinaryArray], {
+                        type: type
+                    });
+
+                    //actually write file
+                    fileWriter.write(blob);
                 }, errorHandler(deferred));
-            } catch (e) {
-                $log.info('Error', e);
-                $rootScope.$apply(function() {
-                    deferred.reject(e);
-                });
-            }
+            }, errorHandler(deferred));
 
             return deferred.promise;
         };

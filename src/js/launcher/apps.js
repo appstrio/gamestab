@@ -1,8 +1,8 @@
-/* global _ */
+/* global _,async */
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
-launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Setup',
-    function($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Setup) {
+launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Setup', 'Image',
+    function($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Setup, Image) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
             apps;
@@ -59,6 +59,22 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          */
         var setApps = function(_apps) {
             apps = _apps;
+        };
+
+
+        var convertToLocalFiles = function(output) {
+            var deferred = $q.defer();
+            async.eachSeries(output, function(item, callback) {
+                Image.urlToLocalFile({
+                    url: item.icon
+                }).then(function(file) {
+                    item.icon = file;
+                    callback();
+                });
+            }, function() {
+                deferred.resolve(output);
+            });
+            return deferred.promise;
         };
 
         /**
@@ -126,16 +142,19 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                         }
                     });
 
-                    for (i = 0; i < output.length; ++i) {
-                        if (i !== 0 && i % 12 === 0) {
-                            ++j;
+                    //convert all icons to local file system
+                    convertToLocalFiles(output).then(function(_output) {
+                        for (i = 0; i < _output.length; ++i) {
+                            if (i !== 0 && i % 12 === 0) {
+                                ++j;
+                            }
+                            newOutput[j] = newOutput[j] || [];
+                            newOutput[j].push(_output[i]);
                         }
-                        newOutput[j] = newOutput[j] || [];
-                        newOutput[j].push(output[i]);
-                    }
 
-                    setApps(newOutput);
-                    deferred.resolve(newOutput);
+                        setApps(newOutput);
+                        deferred.resolve(newOutput);
+                    });
                 });
 
                 return deferred.promise;

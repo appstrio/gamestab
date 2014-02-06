@@ -39,6 +39,9 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
                 fixedSize: 0
             }, params.resizeOptions);
 
+            // Create original image
+            img = new Image();
+
             //img load event
             img.onload = function() {
                 // Draw original image in second canvas
@@ -90,8 +93,6 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
                 }
             };
 
-            // Create original image
-            img = new Image();
             img.src = url;
 
             return deferred.promise;
@@ -109,13 +110,20 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
             var deferred = $q.defer();
             params = params || {};
 
-            //TODO verify if file exists first
+            //get unique hash
+            var fileName = _getHashFromUrl(params.url);
+
+            //check if file exists in file system
+            /*
+             * if (FileSystem.get(fileName))  {
+             *     default.resolve(oldfile);
+             * }
+             */
 
             //file doesn't exist, generate it as base64
             urlToBase64(params).then(function(base64) {
                 //default type
                 var type = 'image/jpeg';
-                var fileName, typeForFileName;
 
                 //assign base64 regex to check & split
                 var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
@@ -129,14 +137,9 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
                     type = 'image/' + splittedContent[1];
                 }
 
-                typeForFileName = type.split('/')[1];
-                fileName = _getHashFromUrl(params.prefix, params.url, typeForFileName);
-
                 //generate unique name to each thumbnail
-                FileSystem.write(fileName, type, base64, function(file) {
-                    $rootScope.$apply(function() {
-                        deferred.resolve(file);
-                    });
+                return FileSystem.write(fileName, base64, type).then(function(file) {
+                    deferred.resolve(file);
                 });
             })
             //error handling
@@ -155,12 +158,17 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
          * using a simple hash function to run on the url.
          * The url is either the url of the image or the url of the page being captured
          *
+         * Needs Unit Test
+         *
          * @see http://stackoverflow.com/q/7616461/940217
          * @private
          * @param url
          * @return {number}
          */
         var _getHashFromUrl = function(url) {
+            if (typeof url !== 'string') {
+                url = String(url);
+            }
             return url.split('').reduce(function(a, b) {
                 //jshint bitwise:false
                 a = ((a << 5) - a) + b.charCodeAt(0);
