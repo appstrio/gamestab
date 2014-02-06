@@ -27,13 +27,13 @@
     "url": "http://www.maps.google.com",
     "icon": "./img/logo_icons/googlemaps.jpg",
     "default": ["ALL"],
-    "tags": ["Productivity"]
+    "tags": ["Productivity", "Featured"]
 }, {
     "title": "Amazon",
     "url": "http://www.amazon.com",
     "icon": "./img/logo_icons/amazon.jpg",
     "default": ["ALL"],
-    "tags": ["Shopping"]
+    "tags": ["Shopping", "Featured"]
 }, {
     "title": "Outlook",
     "url": "http://www.outlook.com",
@@ -45,7 +45,7 @@
     "url": "http://www.linkedin.com",
     "icon": "./img/logo_icons/linkedin.jpg",
     "default": ["US", "BR"],
-    "tags": ["Social"]
+    "tags": ["Social", "Featured"]
 }, {
     "title": "Tumblr",
     "url": "http://www.tumblr.com",
@@ -57,7 +57,7 @@
     "url": "http://www.instagram.com",
     "icon": "./img/logo_icons/instagram.jpg",
     "default": ["ALL"],
-    "tags": ["Social"]
+    "tags": ["Social", "Featured"]
 }, {
     "title": "Web.de",
     "url": "http://www.web.de",
@@ -73,7 +73,7 @@
     "url": "http://www.ebay.com",
     "icon": "./img/logo_icons/ebay.jpg",
     "default": ["ALL"],
-    "tags": ["Shopping"]
+    "tags": ["Shopping", "Featured"]
 }, {
     "title": "Bild.de",
     "url": "http://www.bild.de",
@@ -388,7 +388,7 @@
     "title": "Google Plus",
     "url": "http://plus.google.com",
     "icon": "./img/logo_icons/plus.jpg",
-    "tags": ["Social"]
+    "tags": ["Social", "Featured"]
 }, {
     "title": "Flickr",
     "url": "http://www.flickr.com",
@@ -398,7 +398,7 @@
     "title": "Pinterest",
     "url": "http://www.Pinterest.com",
     "icon": "./img/logo_icons/Pinterest.jpg",
-    "tags": ["Social"]
+    "tags": ["Social", "Featured"]
 }, {
     "title": "VK",
     "url": "http://www.vk.com",
@@ -470,7 +470,7 @@
     "title": "Reddit",
     "url": "http://www.reddit.com",
     "icon": "./img/logo_icons/reddit.jpg",
-    "tags": ["Social"]
+    "tags": ["Social", "Featured"]
 }, {
     "title": "Haber7",
     "url": "http://www.Haber7.com",

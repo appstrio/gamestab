@@ -68,9 +68,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                     .filter(function(app) {
                         return _.has(app, 'default') &&
                             _.contains(app.
-                                default, 'ALL') &&
-                            _.has(app, 'tags') &&
-                            _.contains(app.tags, 'Featured');
+                                default, 'ALL');
                     })
                     .first(4)
                     .value();

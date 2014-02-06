@@ -64,6 +64,7 @@ html(ng-csp='ng-csp')
                                     .remove-button(ng-click="uninstallApp(app, $event)") X
                                     .icon(ng-style="{'background-image': 'url(' + app.icon + ')'}")
                                     .title {{app.title}}
-            section.partner-logo
-                img(ng-src="{{config.partner_logo}}")
+            .partner-logo
+                a(ng-href="{{config.partner_url}}", target="_self", title="{{config.partner_name}}")
+                    img(ng-src="{{config.partner_logo}}", style="cursor:pointer;")
     #overlay(aio-overlay, overlay-options="overlay", ng-include="templateURL")

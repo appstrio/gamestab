@@ -16,28 +16,24 @@
     font-weight: 400;
     font-style: normal;
 }
-
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/Open_Sans/OpenSans-Light.ttf');
     font-weight: 100;
     font-style: normal;
 }
-
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/Open_Sans/OpenSans-Regular.ttf');
     font-weight: 400;
     font-style: normal;
 }
-
 @font-face {
     font-family: 'Open Sans';
     src: url('../fonts/Open_Sans/OpenSans-Bold.ttf');
     font-weight: 600;
     font-style: normal;
 }
-
 @font-face {
     font-family: 'Source Sans Pro';
     src: url('../fonts/Source_Sans_Pro/SourceSansPro-ExtraLight.ttf');
@@ -62,7 +58,6 @@
     font-weight: 500;
     font-style: normal;
 }
-
 body,html{
     margin: 0;
     padding: 0;
@@ -71,7 +66,6 @@ body,html{
     overflow:hidden;
     font-family: sans-serif, Arial, Verdana;
 }
-
 *{
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -80,7 +74,6 @@ body,html{
     cursor:default;
     font-family: "Source Sans Pro";
 }
-
 #wrapper{
     margin: 0;
     padding: 0;
@@ -96,7 +89,6 @@ body,html{
     &.blurred{
         -webkit-filter: blur(40px);
     }
-
     > .main{
         width:100%;
         -webkit-box-flex:1;
@@ -104,37 +96,33 @@ body,html{
         -webkit-box-align: center;
         //  -webkit-box-align:center;
     }
-
 }
-
-
-
-
-
+.partner-logo {
+    img {
+        max-width:150px;
+        max-height:150px;
+        position:absolute;
+        left:18px;
+        bottom:0;
+    }
+}
 section{
     width:100%;
     overflow:hidden;
     margin: 0 auto;
     position: relative;
     height:585px;
-    &.partner-logo {
-        position:absolute;
-        left:18px;
-        top:88%;
-    }
     .arrows{
         width:100%;
         height:100%;
         position: absolute;
         height: 585px;
-
         > .inner{
             position:relative;
             width:100%;
             height:100%;
             width: 1010px;
             margin:0 auto;
-
         }
         .arrow-left{
             position: absolute;
@@ -149,14 +137,12 @@ section{
                 opacity: 0.5;
                 -webkit-transition: opacity 0.5s ease;
                 cursor:pointer;
-
             }
             &:hover{
                 i{
                     opacity:1;
                 }
             }
-
         }
         .arrow-right{
             position: absolute;
@@ -171,49 +157,38 @@ section{
                 opacity:0.5;
                 -webkit-transition: opacity 0.5s ease;
                 cursor:pointer;
-
             }
             &:hover{
                 i{
                     opacity:1;
                 }
             }
-
         }
-
     }
-
     > .inner{
         width:880px;
         height: 585px;
         overflow:hidden;
         margin: 0 auto;
         position: relative;
-
-
     }
     .viewport{
         position: absolute;
         left:0;
         -webkit-transition: all 1.1s cubic-bezier(.54,.24,.59,1.34);
-
         &.last-page-left{
             //-webkit-transition: all 0.5s cubic-bezier(.54,.24,.59,1.34);
         }
         &.last-page-left.last-page-left-add,
         &.last-page-left.last-page-left-remove {
             //-webkit-transform: translate(500px, 0%) !important;
-
         }
-
         &.last-page-left.last-page-left-add-active,
         &.last-page-left.last-page-left-remove-active {
             //-webkit-transform: translate(0px, 0%) !important;
         }
-
         &.editing{
             .apps-container{
-
             }
             .app{
                 .wrapper{
@@ -227,9 +202,7 @@ section{
                             display: none;
                         }
                     }
-
                 }
-
                 &:nth-child(odd) {
                     .wrapper{
                         -webkit-animation-name: tossing1;
@@ -244,30 +217,21 @@ section{
                         -webkit-animation-iteration-count: infinite;
                     }
                 }
-
             }
         }
-
-
-
-
     }
 }
-
 @-webkit-keyframes last-page-left-animation {
     0%{
         -webkit-transform: translate(0px, 0%);
     }
-
     50%{
         -webkit-transform: translate(500px, 0%);
     }
-
     100%{
         -webkit-transform: translate(0, 0%);
     }
 }
-
 .viewport.edit{
     .apps-container{
         .app{
@@ -275,15 +239,12 @@ section{
         }
     }
 }
-
 .apps-container{
     width: 880px;
     margin:auto;
     position: relative;
     height: 585px;
     float:left;
-
-
     .app{
         width:100px;
         height: 120px;
@@ -302,11 +263,9 @@ section{
         &:nth-child(3){
             -webkit-transform: translate3d(200% , 0, 0);
         }
-
         &:nth-child(4){
             -webkit-transform: translate3d(300% , 0, 0);
         }
-
         &:nth-child(5){
             -webkit-transform: translate3d(0% , 100%, 0);
         }
@@ -316,11 +275,9 @@ section{
         &:nth-child(7){
             -webkit-transform: translate3d(200% , 100%, 0);
         }
-
         &:nth-child(8){
             -webkit-transform: translate3d(300% , 100%, 0);
         }
-
         &:nth-child(9){
             -webkit-transform: translate3d(0% , 200%, 0);
         }
@@ -330,17 +287,12 @@ section{
         &:nth-child(11){
             -webkit-transform: translate3d(200% , 200%, 0);
         }
-
         &:nth-child(12){
             -webkit-transform: translate3d(300% , 200%, 0);
         }
-
         &:nth-child(13){
             -webkit-transform: translate3d(400% , 300%, 0);
         }
-
-
-
         &.dragging{
             -webkit-transform: none !important;
             -webkit-transition: none !important;
@@ -372,7 +324,6 @@ section{
                 height: 100px;
                 cursor:pointer;
                 background-size: cover;
-
             }
             .title{
                 margin-top:20px;
@@ -385,15 +336,12 @@ section{
                 overflow-x: hidden;
                 text-shadow: 1px 1px 1px black;
             }
-
         }
     }
 }
-
 footer{
     position: fixed;
     box-sizing: border-box;
-
     bottom:0;
     width:100%;
     height: 120px;
@@ -405,7 +353,6 @@ footer{
     background-size:  cover;
     -webkit-filter: blur(0px) contrast(0.8) brightness(1.4);
 }
-
 #overlay{
     width:0;
     height: 0;
@@ -419,7 +366,6 @@ footer{
     left:0;
     width:100%;
     height: 100%;
-
     &.showed{
         display: -webkit-box;
         -webkit-box-align: center;
@@ -429,10 +375,8 @@ footer{
         .inner{
             width:750px;
             height:500px;
-
         }
     }
-
     .inner{
         width:0;
         height: 0;
@@ -449,7 +393,6 @@ footer{
             padding-bottom: 12px;
             color: rgba(0,0,0,0.8);
         }
-
         > .main{
             background: rgba(255,255,255,1);
             -webkit-box-orient:horizontal;
@@ -484,7 +427,6 @@ footer{
             }
         }
     }
-
     #settings{
         .settings-general{
             ul.controls{
@@ -494,7 +436,6 @@ footer{
                 li{
                     padding: 10px;
                     border-bottom:1px solid #e4e4e4;
-
                     .control{
                         display: inline-block;
                         margin-right:10px;
@@ -556,7 +497,6 @@ footer{
                             outline:none;
                         }
                     }
-
                 }
                 .preview{
                     width:80px;
@@ -662,7 +602,6 @@ footer{
     #store{
         .main{
             .left{
-
             }
             .right{
                 .store-explorer{
@@ -698,7 +637,6 @@ footer{
                                 font-family: sans-serif;
                                 font-size: 13px;
                                 font-weight: bold;
-
                             }
                             .tag{
                                 //font-family: 'Helvetica Neue';
@@ -736,7 +674,6 @@ footer{
                                     font-family: sans-serif;
                                     color: white;
                                     cursor:pointer;
-
                                 }
                                 span.install{
                                     display: none;
@@ -749,7 +686,6 @@ footer{
                                     cursor:pointer;
                                 }
                                 span.installing{
-
                                 }
                             }
                         }
@@ -759,4 +695,3 @@ footer{
         }
     }
 }
-

@@ -215,7 +215,6 @@ settingsModule.factory('Background', ['$rootScope', '$http','Storage', '$q','Fil
             scope.$watch(function(){
                 return Background.background;
             }, function(newVal){
-                console.log('newVal',newVal);
                 if (!newVal.isLocalBackground){
                     $preview.hide();
                 }
