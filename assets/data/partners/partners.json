@@ -1,6 +1,21 @@
-{
-    "PARTNER_APPSTR_ID" : {
-        "partner_id" : "",
-        "partner_config_json" : ""
+[{
+        "partner_id": "myplayyard",
+        "partner_install_url_snippit": "myplayyard.com",
+        "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/partner_config_myplayyard.json"
+    },
+    {
+        "partner_id": "gameoff",
+        "partner_install_url_snippit": "XXX",
+        "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/gameoff.com/partner_config_gameoff.json"
+    },
+    {
+        "partner_id": "lovedgames",
+        "partner_install_url_snippit": "XXX",
+        "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/partner_config_lovedgames.json"
+    },
+    {
+        "partner_id": "gamestab",
+        "partner_install_url_snippit": "XXX",
+        "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/gamestab/partner_config_gamestab.json"
     }
-}
+]

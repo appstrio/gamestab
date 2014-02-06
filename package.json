@@ -26,7 +26,9 @@
     "install": "~0.1.7",
     "grunt-contrib-requirejs": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-dot-compiler": "~0.5.10"
+    "grunt-dot-compiler": "~0.5.10",
+    "gulp": "~3.5.2",
+    "gulp-util": "~2.2.14"
   },
   "engines": {
     "node": ">=0.8.0"

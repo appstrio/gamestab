@@ -1,7 +1,8 @@
+/* global async */
 var settingsModule = settingsModule || angular.module('aio.settings', []);
 
-settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
-    function(C, Storage, $http, $q, $log) {
+settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log', '$rootScope',
+    function(C, Storage, $http, $q, $log, $rootScope) {
         var data = {},
             storageKey = C.STORAGE_KEYS.CONFIG;
 
@@ -11,6 +12,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
          * @return
          */
         var init = function() {
+            $log.log('[Config] - init');
             Storage.get(storageKey);
         };
 
@@ -45,7 +47,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
          * @returns {$http promise}
          */
         var partnersJSONUrl = function() {
-            $log.log('[Config] - starting partnersJSONUrl');
+            $log.log('[Config] - getting partners json', C.PARTNERS_JSON_URL);
             return $http.get(C.PARTNERS_JSON_URL);
         };
 
@@ -54,27 +56,40 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
          * @returns {promise(PARTNER_SETUP_OBJECT)}
          */
         var decidePartner = function(partnersList) {
-            $log.log('[Config] - starting decidePartner');
             var deferred = $q.defer();
+            partnersList = partnersList.data;
+            $log.log('[Config] - got the partnersList', partnersList);
             if (!partnersList || !partnersList.length) {
-                return deferred.reject(C.ERRORS.SETUP.PARTNER_NOT_FOUND);
+                $rootScope.$apply(function() {
+                    deferred.reject(C.ERRORS.SETUP.PARTNER_NOT_FOUND);
+                });
             } else {
                 async.detect(partnersList, function(partner, cb) {
                     chrome.history.search({
                         text: partner.partner_install_url_snippit
                     }, function(found) {
-                        if (found.length) {
-                            cb(partner);
+                        if (!found || !found.length) {
+                            return cb();
                         }
+
+                        //found
+                        $log.log('[Config] - found a matching partner', partner, partner.partner_install_url_snippit);
+                        return cb(partner);
                     });
                 }, function(partner) {
-                    if (partner) {
-                        deferred.resolve(partner);
-                    } else {
-                        deferred.reject();
+                    if (!partner) {
+                        $log.warn('[Config] - Did not find a matching partner');
+                        $rootScope.$apply(function() {
+                            return deferred.reject();
+                        });
                     }
+
+                    $rootScope.$apply(function() {
+                        return deferred.resolve(partner);
+                    });
                 });
             }
+
             return deferred.promise;
         };
 
@@ -83,7 +98,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
          * @returns {$http promise}
          */
         var loadPartnerJSON = function(partnerObject) {
-            $log.log('[Config] - starting loadPartnerJSON');
+            $log.log('[Config] - getting remote partner json', partnerObject.partner_config_json_url);
             return $http.get(partnerObject.partner_config_json_url);
         };
 
@@ -94,7 +109,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
          * @return promise
          */
         var finishSetup = function(partnerJSON) {
-            $log.log('[Config] - finishing setup with PartnerJSON - ', partnerJSON);
+            $log.log('[Config] - finishing setup with PartnerJSON - ', partnerJSON || 'default');
             data = angular.extend(C.CONFIG, partnerJSON || {});
             return store();
         };
@@ -107,7 +122,9 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
         var store = function() {
             var deferred = $q.defer();
             Storage.setItem(storageKey, data, function() {
-                deferred.resolve();
+                $rootScope.$apply(function() {
+                    deferred.resolve();
+                });
             });
             return deferred.promise;
         };

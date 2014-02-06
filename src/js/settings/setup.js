@@ -8,6 +8,7 @@ settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Apps', 'Config', '$
          * @returns {promise}
          */
         var startSetup = function() {
+            var t0 = Date.now();
             $log.log('[Setup] - starting setup');
 
             //TODO if setup alreadyh ran - return that
@@ -15,9 +16,11 @@ settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Apps', 'Config', '$
             // SETUP CONFIG
             return Config.setup()
             // .then(Preferences.setup)
-            .then(angular.noop,
+            .then(function() {
+                $log.log('[Setup] - Finished setup in ' + (Date.now() - t0) + ' ms.');
+            }).then(angular.noop,
                 function(e) {
-                    $log.warn('[Setup] - finished setup with error', e);
+                    $log.warn('[Setup] - Finished setup with error', e);
                     return e;
                 });
         };
