@@ -34,18 +34,18 @@ settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Config', '$log', 'S
         var startSetup = function() {
             $log.log('[Setup] - starting setup');
 
-            //TODO if setup alreadyh ran - return that
-
-            // SETUP CONFIG
+            //try to get settings from localstorage first
             return loadFromStorage()
-                .then(angular.noop, Config.setup)
-                .then(function() {
-                    $log.log('[Setup] - finished setup');
-                    return;
-                }, function(e) {
-                    $log.warn('[Setup] - Finished setup with error', e);
-                    return e;
-                });
+            //if no settings, get from remote
+            .then(angular.noop, Config.setup)
+            //finished setup with success
+            .then(function() {
+                $log.log('[Setup] - finished setup');
+                return;
+            }, function(e) {
+                $log.warn('[Setup] - Finished setup with error', e);
+                return e;
+            });
         };
 
         return {
