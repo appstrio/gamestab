@@ -270,8 +270,8 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             uninstallApp: uninstallApp
         };
     }
-]).directive('hlLauncher', ['Apps', '$log',
-    function(Apps, $log) {
+]).directive('hlLauncher', ['Apps', '$log', '$timeout',
+    function(Apps, $log, $timeout) {
         return function(scope, element) {
 
             scope.curScreen = 0;
@@ -379,7 +379,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                     $draggingPlaceholder = $(u.placeholder);
                     $draggingItem.appendTo($draggingItem.parent());
                     $draggingHelper.addClass('dragging');
-                    setTimeout(function() {
+                    $timeout(function() {
                         $draggingHelper.parent().parent().addClass('edit');
                     }, 0);
 
@@ -419,6 +419,8 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             var moveLastAppToNewScreen = function(app, startIndex) {
                 var foundNewScreen = false,
                     screen;
+
+                $log.log('[hlLauncher] - moveLastAppToNewScreen');
                 for (var i = startIndex; i < scope.rawScreens.length; ++i) {
                     screen = scope.rawScreens[i];
                     if (screen.length < 12) {
