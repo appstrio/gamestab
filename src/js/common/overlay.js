@@ -7,7 +7,6 @@ overlayModule.directive('aioOverlay', ['$timeout',
                 overlayOptions: '='
             },
             link: function(scope, element, attrs) {
-
                 var $overlay = element;
                 scope.$watch('overlayOptions', function(newVal) {
                     if (!newVal || !newVal.name) {
