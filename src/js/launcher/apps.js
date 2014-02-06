@@ -3,7 +3,7 @@ var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
 launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Setup',
     function($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Setup) {
-        var initting = $q.defer(),
+        var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
             apps;
 
@@ -30,13 +30,13 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 Storage.get(storageKey, function(items) {
                     if (items && items[storageKey] && angular.isArray(items[storageKey])) {
                         apps = items[storageKey];
-                        initting.resolve(apps);
+                        isReady.resolve(apps);
                         return;
                     }
 
                     setup().then(function(_apps) {
                         apps = _apps;
-                        initting.resolve(apps);
+                        isReady.resolve(apps);
                     });
                 });
             });
@@ -49,8 +49,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @return
          */
         var setup = function() {
-            var config = Config.get();
-            var partnerWebApps = config.web_apps_db;
 
             $log.log('[Apps] - starting setup');
 
@@ -262,7 +260,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         init();
 
         return {
-            promise: initting.promise,
+            promise: isReady.promise,
             apps: function() {
                 return apps;
             },

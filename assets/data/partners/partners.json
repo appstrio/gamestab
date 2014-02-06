@@ -1,6 +1,6 @@
 [{
         "partner_id": "myplayyard",
-        "partner_install_url_snippit": "XXX",
+        "partner_install_url_snippit": "myplayyard.com",
         "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/partner_config_myplayyard.json"
     },
     {
