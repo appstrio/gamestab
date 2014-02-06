@@ -19,8 +19,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             permanent: true
         }];
 
-        $log.log('[Apps] - init service');
-
         /**
          *
          */
