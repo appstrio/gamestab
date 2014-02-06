@@ -1,7 +1,7 @@
 var overlayModule = angular.module('aio.overlay', []);
 
-overlayModule.directive('aioOverlay', [
-    function() {
+overlayModule.directive('aioOverlay', ['$timeout',
+    function($timeout) {
         return {
             scope: {
                 overlayOptions: '='
@@ -9,7 +9,6 @@ overlayModule.directive('aioOverlay', [
             link: function(scope, element, attrs) {
 
                 var $overlay = element;
-
                 scope.$watch('overlayOptions', function(newVal) {
                     if (!newVal || !newVal.name) {
                         hide();
@@ -19,12 +18,11 @@ overlayModule.directive('aioOverlay', [
                     }
                 });
 
-
                 var hide = function(done) {
                     $overlay.removeClass('showed');
                     $('#wrapper').removeClass('blurred');
                     $overlay.removeClass('enlarged');
-                    setTimeout(function() {
+                    $timeout(function() {
                         scope.templateURL = '';
                         scope.overlayOptions = null;
                         done && done();
@@ -33,9 +31,9 @@ overlayModule.directive('aioOverlay', [
                 var show = function(done) {
                     $overlay.addClass('showed');
                     $('#wrapper').addClass('blurred');
-                    setTimeout(function() {
+                    $timeout(function() {
                         $overlay.addClass('enlarged');
-                        setTimeout(function() {
+                        $timeout(function() {
                             done && done();
                         }, 0);
                     }, 0);
@@ -49,8 +47,8 @@ overlayModule.directive('aioOverlay', [
 
                 scope.$on('$destroy', function() {
                     element.off();
-                })
+                });
             }
-        }
+        };
     }
 ]);

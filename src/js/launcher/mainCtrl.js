@@ -1,11 +1,12 @@
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
-launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps',
-    function($scope, $http, Apps) {
+launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config',
+    function($scope, $http, Apps, Config) {
 
         $scope.displayTopSearchBox = 1;
         Apps.promise.then(function(apps) {
             $scope.rawScreens = apps;
+            $scope.config = Config.get();
         }, function() {
             alert('Cannot run without apps :(');
         });
@@ -15,7 +16,8 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps',
                 return false;
             }
             if (app.url) {
-                return window.location = app.url;
+                window.location = app.url;
+                return;
             } else if (app.chromeId) {
                 chrome.management.launchApp(app.chromeId, function() {
 
