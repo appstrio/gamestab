@@ -130,7 +130,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
                 }
 
                 typeForFileName = type.split('/')[1];
-                fileName = _getHashFromName(params.prefix, params.url, typeForFileName);
+                fileName = _getHashFromUrl(params.prefix, params.url, typeForFileName);
 
                 //generate unique name to each thumbnail
                 FileSystem.write(fileName, type, base64, function(file) {
@@ -150,24 +150,22 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
         };
 
         /**
-         * _getHashFromName
+         * _getHashFromUrl
          * generate filename before saving in the filesystem,
          * using a simple hash function to run on the url.
          * The url is either the url of the image or the url of the page being captured
          *
+         * @see http://stackoverflow.com/q/7616461/940217
          * @private
-         * @param prefix
          * @param url
-         * @param type
-         * @return
+         * @return {number}
          */
-        var _getHashFromName = function(prefix, url, type) {
-            if (!url) {
-                return null;
-            }
-
-            prefix = prefix || '';
-            return prefix + url.hashCode() + '.' + type;
+        var _getHashFromUrl = function(url) {
+            return url.split('').reduce(function(a, b) {
+                //jshint bitwise:false
+                a = ((a << 5) - a) + b.charCodeAt(0);
+                return a & a;
+            }, 0);
         };
 
         return {

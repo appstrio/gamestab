@@ -20,7 +20,9 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         }];
 
         /**
+         * init
          *
+         * @return
          */
         var init = function() {
             var t0 = Date.now();
@@ -48,7 +50,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             });
         };
 
-
         /**
          * setApps
          * setter
@@ -69,7 +70,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         var setup = function() {
 
             $log.log('[Apps] - starting setup');
-
             return localAppsDB().then(function(_appsDB) {
                 var output, deferred, maxDials = 24;
 
