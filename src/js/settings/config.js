@@ -71,7 +71,6 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
                         if (!found || !found.length) {
                             return cb();
                         }
-
                         //found
                         $log.log('[Config] - found a matching partner', partner, partner.partner_install_url_snippit);
                         return cb(partner);
@@ -82,6 +81,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
                         $rootScope.$apply(function() {
                             return deferred.reject();
                         });
+                        return;
                     }
 
                     $rootScope.$apply(function() {
@@ -109,8 +109,9 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
          * @return promise
          */
         var finishSetup = function(partnerJSON) {
-            $log.log('[Config] - finishing setup with PartnerJSON - ', partnerJSON || 'default');
-            data = angular.extend(C.CONFIG, partnerJSON || {});
+            var _partnersJSON = partnerJSON && partnerJSON.data || {};
+            $log.log('[Config] - finishing setup with PartnerJSON - ', _partnersJSON);
+            data = angular.extend(C.CONFIG, _partnersJSON);
             return store();
         };
 

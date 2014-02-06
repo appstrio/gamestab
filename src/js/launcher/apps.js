@@ -1,3 +1,4 @@
+/* global _ */
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
 launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config',
@@ -34,7 +35,12 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             });
         };
 
-
+        /**
+         * setup
+         *
+         * @param cb
+         * @return
+         */
         var setup = function(cb) {
             var config = Config.get();
 
@@ -86,10 +92,21 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             });
         };
 
+        /**
+         * localAppsDB
+         *
+         * @return
+         */
         var localAppsDB = function() {
             return $http.get('./data/webAppsDB1.json');
         };
 
+        /**
+         * chromeAppToObject
+         *
+         * @param app
+         * @return
+         */
         var chromeAppToObject = function(app) {
             return {
                 appLaunchUrl: app.appLaunchUrl,
@@ -115,9 +132,17 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             };
         };
 
+        /**
+         * getLargestIconChromeApp
+         *
+         * @param iconsArr
+         * @return
+         */
         var getLargestIconChromeApp = function(iconsArr) {
             var selected;
-            if (!iconsArr.length) return null;
+            if (!iconsArr.length) {
+                return null;
+            }
 
             for (var i = 0; i < iconsArr.length; ++i) {
                 if (!selected) {
@@ -132,11 +157,23 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             return selected;
         };
 
-
+        /**
+         * store
+         *
+         * @param cb
+         * @return
+         */
         var store = function(cb) {
             Storage.setItem(storageKey, apps, cb);
         };
 
+        /**
+         * addNewApp
+         *
+         * @param app
+         * @param cb
+         * @return
+         */
         var addNewApp = function(app, cb) {
             var lastAvailablePage = getLastAvailablePage();
             app.installTimestamp = Date.now();
@@ -144,6 +181,13 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             store(cb);
         };
 
+        /**
+         * uninstallApp
+         *
+         * @param app
+         * @param cb
+         * @return
+         */
         var uninstallApp = function(app, cb) {
             var found = false;
             angular.forEach(apps, function(page) {
@@ -160,6 +204,11 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             }
         };
 
+        /**
+         * getLastAvailablePage
+         *
+         * @return
+         */
         var getLastAvailablePage = function() {
             var lastPage = apps[apps.length - 1];
             if (lastPage.length < 12) {
@@ -184,8 +233,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             addNewApp: addNewApp,
             uninstallApp: uninstallApp
         };
-
-
     }
 ]).directive('hlLauncher', ['Apps',
     function(Apps) {
@@ -259,7 +306,9 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 }
 
             }).mouseover(function() {
-                if (!scope.isDragging) return;
+                if (!scope.isDragging) {
+                    return;
+                }
                 if (scope.curScreen < scope.rawScreens.length - 1) {
                     ++scope.curScreen;
                     $draggingHelper.animate({
@@ -268,7 +317,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                     moveViewport();
                 }
             });
-
 
             var moveViewport = function() {
                 var newVal = scope.curScreen || 0;
@@ -280,10 +328,11 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
 
             // watch the number of screens to set the width of the viewport
             scope.$watch('rawScreens', function(newVal) {
-                if (newVal && newVal.length)
+                if (newVal && newVal.length) {
                     $viewport.css({
                         width: getScreenWidth(newVal.length)
                     });
+                }
                 checkArrows();
             });
 
