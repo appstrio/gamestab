@@ -11,11 +11,10 @@ overlayModule.directive('aioOverlay', ['$timeout',
                 var $overlay = element;
                 scope.$watch('overlayOptions', function(newVal) {
                     if (!newVal || !newVal.name) {
-                        hide();
-                    } else {
-                        scope.templateURL = newVal.name + '.html';
-                        $timeout(show, 0);
+                        return hide();
                     }
+                    scope.templateURL = newVal.name + '.html';
+                    $timeout(show, 0);
                 });
 
                 /**
