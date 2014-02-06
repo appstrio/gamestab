@@ -305,7 +305,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                     $arrowLeft.hide();
                 }
 
-
                 if (scope.curScreen < scope.rawScreens.length - 1) {
                     $arrowRight.show();
                 } else {

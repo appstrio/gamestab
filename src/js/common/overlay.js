@@ -14,10 +14,16 @@ overlayModule.directive('aioOverlay', ['$timeout',
                         hide();
                     } else {
                         scope.templateURL = newVal.name + '.html';
-                        setTimeout(show, 0);
+                        $timeout(show, 0);
                     }
                 });
 
+                /**
+                 * hide
+                 *
+                 * @param done
+                 * @return
+                 */
                 var hide = function(done) {
                     $overlay.removeClass('showed');
                     $('#wrapper').removeClass('blurred');
@@ -28,14 +34,18 @@ overlayModule.directive('aioOverlay', ['$timeout',
                         done && done();
                     }, 0);
                 };
+                /**
+                 * show
+                 *
+                 * @param done
+                 * @return
+                 */
                 var show = function(done) {
                     $overlay.addClass('showed');
                     $('#wrapper').addClass('blurred');
                     $timeout(function() {
                         $overlay.addClass('enlarged');
-                        $timeout(function() {
-                            done && done();
-                        }, 0);
+                        $timeout(done, 0);
                     }, 0);
                 };
 
