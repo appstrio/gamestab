@@ -5,41 +5,46 @@ storageModule.factory('Storage', ['$rootScope',
         var localStorageAbstraction = {
             get: function(key, cb) {
                 var raw = localStorage.getItem(key);
+                cb = cb || angular.noop;
                 setTimeout(function() {
                     try {
                         var output = {};
                         output[key] = JSON.parse(raw);
-                        cb && cb(output);
+                        cb(output);
                     } catch (e) {
                         console.error('Uncaught error:', e);
-                        cb && cb();
+                        cb();
                     }
                 }, 0);
             },
             set: function(items, cb) {
                 var item, stringified;
+                cb = cb || angular.noop;
                 setTimeout(function() {
                     try {
                         for (var i in items) {
-                            item = items[i];
-                            stringified = JSON.stringify(item);
-                            localStorage.setItem(i, stringified);
+                            if (items.hasOwnProperty(i)) {
+                                item = items[i];
+                                stringified = JSON.stringify(item);
+                                localStorage.setItem(i, stringified);
+                            }
                         }
-                        cb && cb(1);
+                        cb(1);
                     } catch (e) {
                         console.error('Uncaught error:', e);
-                        cb && cb();
+                        cb();
                     }
                 });
             },
             remove: function(key, cb) {
+                cb = cb || angular.noop;
                 setTimeout(function() {
                     try {
                         localStorage.removeItem(key);
-                        cb && cb(1);
+                        cb(1);
                     } catch (e) {
                         console.error('Uncaught error:', e);
-                        cb && cb();
+                        cb();
                     }
                 }, 0);
             }
@@ -48,17 +53,19 @@ storageModule.factory('Storage', ['$rootScope',
         var StorageArea = localStorageAbstraction || chrome.storage.local;
         return {
             get: function(keys, cb) {
+                cb = cb || angular.noop();
                 StorageArea.get(keys, function(items) {
                     $rootScope.$apply(function() {
-                        cb && cb(items);
+                        cb(items);
                     });
                 });
             },
 
             set: function(items, cb) {
+                cb = cb || angular.noop;
                 StorageArea.set(items, function() {
                     $rootScope.$apply(function() {
-                        cb && cb();
+                        cb();
                     });
                 });
             },
@@ -66,13 +73,14 @@ storageModule.factory('Storage', ['$rootScope',
             setItem: function(key, item, cb) {
                 var objToStore = {};
                 objToStore[key] = item;
-                StorageArea.set(item, cb);
+                StorageArea.set(objToStore, cb);
             },
 
             remove: function(keys, cb) {
+                cb = cb || angular.noop;
                 StorageArea.remove(keys, function() {
                     $rootScope.$apply(function() {
-                        cb && cb();
+                        cb();
                     });
                 });
             }

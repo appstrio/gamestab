@@ -25,22 +25,41 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          *
          */
         var init = function() {
+            var t0 = Date.now();
             $log.log('[Apps] - starting init');
             Setup.startSetup().then(function() {
+                $log.log('[Apps] - getting apps from local storage', storageKey);
                 Storage.get(storageKey, function(items) {
-                    console.log(items);
                     if (items && items[storageKey] && angular.isArray(items[storageKey])) {
-                        apps = items[storageKey];
+                        setApps(items[storageKey]);
+                        $log.log('[Apps] - got apps from localStorage in ' + (Date.now() - t0) + ' ms.');
                         isReady.resolve(apps);
                         return;
                     }
 
-                    setup().then(function(_apps) {
-                        apps = _apps;
-                        isReady.resolve(apps);
+                    $log.log('[Apps] - did not find apps in localStorage, getting from remote');
+                    setup().then(function() {
+                        $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0));
+                        store(function() {
+                            $rootScope.$apply(function() {
+                                isReady.resolve(apps);
+                            });
+                        });
                     });
                 });
             });
+        };
+
+
+        /**
+         * setApps
+         * setter
+         *
+         * @param _apps
+         * @return
+         */
+        var setApps = function(_apps) {
+            apps = _apps;
         };
 
         /**
@@ -117,11 +136,8 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                         newOutput[j].push(output[i]);
                     }
 
-                    store(function() {
-                        $rootScope.$apply(function() {
-                            deferred.resolve(newOutput);
-                        });
-                    });
+                    setApps(newOutput);
+                    deferred.resolve(newOutput);
                 });
 
                 return deferred.promise;
@@ -197,11 +213,14 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         /**
          * store
          *
-         * @param cb
-         * @return
+         * @return promise
          */
         var store = function(cb) {
-            Storage.setItem(storageKey, apps, cb);
+            //enforce function type
+            cb = cb || angular.noop;
+            Storage.setItem(storageKey, apps, function() {
+                cb();
+            });
         };
 
         /**
@@ -227,6 +246,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          */
         var uninstallApp = function(app, cb) {
             var found = false;
+            cb = cb || angular.noop;
             angular.forEach(apps, function(page) {
                 angular.forEach(page, function(_app, index) {
                     if (app.url === _app.url) {
@@ -237,7 +257,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 });
             });
             if (!found) {
-                cb && cb();
+                cb();
             }
         };
 

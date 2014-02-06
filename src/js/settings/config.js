@@ -25,6 +25,18 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
             return data;
         };
 
+
+        /**
+         * setter
+         *
+         * @param _data
+         * @return
+         */
+        var setter = function(_data) {
+            data = _data;
+        };
+
+
         /**
          * Setup config for the first time
          * @returns {promise}
@@ -133,6 +145,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
         return {
             init: init,
             get: getter,
+            set: setter,
             setup: setup
         };
     }

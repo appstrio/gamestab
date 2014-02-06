@@ -7,6 +7,7 @@ settingsModule.factory('Constants', [
             PARTNERS_JSON_URL: 'data/partners/partners.json',
             STORAGE_KEYS: {
                 CONFIG: 'gt.config',
+                APPS: 'gt.apps',
                 ACCOUNT: 'gt.account'
             },
             ERRORS: {
