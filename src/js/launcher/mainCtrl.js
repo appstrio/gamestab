@@ -1,3 +1,4 @@
+/* global _ */
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
 launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config',
@@ -39,7 +40,7 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config',
 
         $scope.goSearch = function(e) {
             if (e.keyCode === 13) {
-                window.location = "http://www.google.com/search?q=" + $scope.searchQuery;
+                window.location = 'http://www.google.com/search?q=' + $scope.searchQuery;
             }
         };
 
@@ -49,8 +50,8 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config',
     }
 ]).controller('SettingsCtrl', ['$scope',
     function($scope) {
-        $scope.panes = ["General", "Background", "Account", "About"];
-        $scope.selectedPane = "General";
+        $scope.panes = ['General', 'Background', 'Account', 'About'];
+        $scope.selectedPane = 'General';
         $scope.clientVersion = chrome.app.getDetails().version;
         $scope.selectPane = function(pane, e) {
             e.stopPropagation();

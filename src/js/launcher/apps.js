@@ -308,18 +308,18 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 }
             };
 
-
             $arrowLeft.click(function() {
                 if (scope.curScreen > 0) {
                     --scope.curScreen;
                     moveViewport();
-                } else if (scope.curScreen === 0) {
-
-                } else {
-
+                } else if (scope.curScreen <= 0) {
+                    //user on first screen and clicked left
+                    return;
                 }
             }).mouseover(function() {
-                if (!scope.isDragging) return;
+                if (!scope.isDragging) {
+                    return;
+                }
                 if (scope.curScreen > 0) {
                     --scope.curScreen;
                     moveViewport();
@@ -329,17 +329,14 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 }
             });
 
-
             $arrowRight.click(function() {
                 if (scope.rawScreens && scope.rawScreens.length && scope.curScreen < scope.rawScreens.length - 1) {
                     ++scope.curScreen;
                     moveViewport();
-                } else if (scope.curScreen === scope.rawScreens.length) {
-
-                } else {
-
+                } else if (scope.curScreen >= scope.rawScreens.length) {
+                    //user clicked on right arrow and is on top right screen
+                    return;
                 }
-
             }).mouseover(function() {
                 if (!scope.isDragging) {
                     return;
@@ -368,6 +365,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                         width: getScreenWidth(newVal.length)
                     });
                 }
+
                 checkArrows();
             });
 
@@ -436,7 +434,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                     scope.rawScreens.push(newScreen);
                     Apps.store();
                 }
-
             };
 
             scope.longPress = function(app, e) {
