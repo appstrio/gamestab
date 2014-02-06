@@ -270,8 +270,8 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             uninstallApp: uninstallApp
         };
     }
-]).directive('hlLauncher', ['Apps',
-    function(Apps) {
+]).directive('hlLauncher', ['Apps', '$log',
+    function(Apps, $log) {
         return function(scope, element) {
 
             scope.curScreen = 0;
@@ -437,16 +437,19 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             };
 
             scope.longPress = function(app, e) {
+                $log.log('[hlLauncher] - starting drag');
                 scope.isEditing = true;
                 scope.sortableOptions.disabled = false;
-            };
 
-            $(document).click(function() {
-                scope.$apply(function() {
-                    scope.isEditing = false;
-                    scope.sortableOptions.disabled = true;
+                $(document).one('click', function() {
+                    $log.log('[hlLauncher] - ended drag');
+                    scope.$apply(function() {
+                        //turn editing off
+                        scope.isEditing = false;
+                        scope.sortableOptions.disabled = true;
+                    });
                 });
-            });
+            };
         };
     }
 ]);
