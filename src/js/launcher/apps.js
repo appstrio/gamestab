@@ -1,8 +1,8 @@
 /* global _ */
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
-launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config',
-    function($rootScope, $http, Storage, $q, Chrome, C, Config) {
+launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Setup',
+    function($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Setup) {
         var initting = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
             apps;
@@ -19,19 +19,26 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             permanent: true
         }];
 
+        $log.log('[Apps] - init service');
+
         /**
          *
          */
         var init = function() {
-            Storage.get(storageKey, function(items) {
-                if (items && items[storageKey] && angular.isArray(items[storageKey])) {
-                    apps = items[storageKey];
-                    initting.resolve(apps);
-                } else {
-                    setup(function() {
+            $log.log('[Apps] - starting init');
+            Setup.startSetup().then(function() {
+                Storage.get(storageKey, function(items) {
+                    if (items && items[storageKey] && angular.isArray(items[storageKey])) {
+                        apps = items[storageKey];
+                        initting.resolve(apps);
+                        return;
+                    }
+
+                    setup().then(function(_apps) {
+                        apps = _apps;
                         initting.resolve(apps);
                     });
-                }
+                });
             });
         };
 
@@ -41,30 +48,58 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @param cb
          * @return
          */
-        var setup = function(cb) {
+        var setup = function() {
             var config = Config.get();
-
             var partnerWebApps = config.web_apps_db;
-            localAppsDB().success(function(_appsDB) {
-                var output = [];
 
-                var all = _.filter(_appsDB, function(app) {
-                    return (app.
-                        default && app.
-                        default.indexOf('ALL') > -1);
-                });
+            $log.log('[Apps] - starting setup');
 
-                all = all.slice(0, 4);
+            return localAppsDB().then(function(_appsDB) {
+                var output, deferred, maxDials = 24;
 
-                var games = _.filter(_appsDB, function(app) {
-                    return (app.tags && app.tags.indexOf('Games') > -1);
-                });
+                deferred = $q.defer();
 
-                games = _.shuffle(games).slice(0, 12);
+                //get only data, as we got an xhr object {config, data, header}
+                _appsDB = _appsDB && _appsDB.data || {};
+                $log.log('[Apps] - got the localAppsDb');
 
-                output = output.concat(systemApps);
-                output = output.concat(all);
-                output = output.concat(games);
+                //default=>All, tags=>Featured
+                var all = _.chain(_appsDB)
+                    .filter(function(app) {
+                        return _.has(app, 'default') &&
+                            _.contains(app.
+                                default, 'ALL') &&
+                            _.has(app, 'tags') &&
+                            _.contains(app.tags, 'Featured');
+                    })
+                    .first(4)
+                    .value();
+
+                $log.log('[Apps] - got all dials', all);
+
+                var partnerApps = Config.get().web_apps_db || [];
+                $log.log('[Apps] - got partnersApps dials', partnerApps);
+                //calculate the number of games to add
+                var numOfGames = maxDials - systemApps.length - all.length - partnerApps.length;
+                if (numOfGames < 0) {
+                    numOfGames = 0;
+                }
+
+                var games = _.chain(_appsDB)
+                    .filter(function(app) {
+                        return _.has(app, 'tags') && _.contains(app.tags, 'Games');
+                    })
+                    .shuffle()
+                    .first(numOfGames)
+                    .value();
+
+                $log.log('[Apps] - got game dials', games);
+
+                output = []
+                    .concat(systemApps)
+                    .concat(all)
+                    .concat(partnerApps)
+                    .concat(games);
 
                 Chrome.management.getAll(function(chromeApps) {
                     var j = 0,
@@ -85,10 +120,14 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                         newOutput[j].push(output[i]);
                     }
 
-                    apps = newOutput;
-
-                    store(cb);
+                    store(function() {
+                        $rootScope.$apply(function() {
+                            deferred.resolve(newOutput);
+                        });
+                    });
                 });
+
+                return deferred.promise;
             });
         };
 
@@ -98,6 +137,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @return
          */
         var localAppsDB = function() {
+            $log.log('[Apps] - getting localWebAppsDb');
             return $http.get('./data/webAppsDB1.json');
         };
 

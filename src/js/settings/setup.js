@@ -1,7 +1,7 @@
 var settingsModule = settingsModule || angular.module('aio.settings', []);
 
-settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Apps', 'Config', '$log',
-    function($rootScope, C, Apps, Config, $log) {
+settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Config', '$log',
+    function($rootScope, C, Config, $log) {
 
         /**
          * Initiates Setup

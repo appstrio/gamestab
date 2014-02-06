@@ -64,4 +64,6 @@ html(ng-csp='ng-csp')
                                     .remove-button(ng-click="uninstallApp(app, $event)") X
                                     .icon(ng-style="{'background-image': 'url(' + app.icon + ')'}")
                                     .title {{app.title}}
+            section.partner-logo
+                img(src="https://s3.amazonaws.com/Gamestab/partners/myplayyard.com/myplayyard_logo.png")
     #overlay(hl-overlay, overlay-options="overlay", ng-include="templateURL")
