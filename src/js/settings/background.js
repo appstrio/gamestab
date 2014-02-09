@@ -16,7 +16,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
             Storage.get(storageKey, function(items) {
                 var _backgrounds = items && items[storageKey];
                 if (_backgrounds && angular.isArray(_backgrounds)) {
-                    $log.log('[Background] - Found backgrounds in localStorage', _backgrounds.length);
+                    $log.log('[Background] - Found backgrounds in localStorage', _backgrounds);
                     background = getActiveBackground(_backgrounds);
                     backgrounds = _backgrounds;
                     $log.log('[Background] - finished init in ' + (Date.now() - t0) + ' ms.');
@@ -50,13 +50,14 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
          * @return
          */
         var setDefaultBackground = function() {
-            backgrounds.push({
+            var newBackground = {
                 image: C.DEFAULT_BACKGROUND_IMG,
                 isLocalBackground: true,
                 isActive: true
-            });
+            };
 
-            getActiveBackground(backgrounds);
+            backgrounds.push(newBackground);
+            broadcastNewBackground(newBackground);
         };
 
         /**
@@ -77,13 +78,42 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
                 _background.isActive = true;
             }
 
-            $rootScope.$broadcast('setBackgroundImage', _background);
+            broadcastNewBackground(_background);
             return _background;
         };
 
+        /**
+         * broadcastNewBackground
+         * Broadcast that background has changed
+         *
+         * @param _background
+         * @return
+         */
+        var broadcastNewBackground = function(_background) {
+            $rootScope.$broadcast('setBackgroundImage', _background);
+        };
+
+        /**
+         * getBackgroundsJson
+         * do a http.GET request to backgrounds json
+         *
+         * @return
+         */
         var getBackgroundsJson = function() {
             $log.log('[Background] - getting backgrounds json', C.BACKGROUNDS_JSON_URL);
             return $http.get(C.BACKGROUNDS_JSON_URL);
+        };
+
+        /**
+         * findActiveBackground
+         * returns an array of all items that have isActive:true
+         *
+         * @return
+         */
+        var findActiveBackground = function() {
+            return _.where(backgrounds, {
+                isActive: true
+            });
         };
 
         /**
@@ -113,8 +143,16 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
 
         // select and store new background selected by user
         var selectBackground = function(newBackground) {
-            angular.extend(background, newBackground);
-            background.timestamp = Date.now();
+            $log.log('[Background] - changing to new background', newBackground.image);
+            //turn off all active
+            _.each(findActiveBackground(), function(item) {
+                item.isActive = false;
+            });
+
+            newBackground.isActive = true;
+            newBackground.timestamp = Date.now();
+
+            broadcastNewBackground(newBackground);
             store();
         };
 

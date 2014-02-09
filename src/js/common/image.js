@@ -167,11 +167,12 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
          * converts all the relevant fields to local images
          *
          * @param fieldToConvert
-         * @param arr
+         * @param {Object[]} arr
          * @return
          */
         var convertFieldToLocalFile = function(fieldToConvert, arr) {
             var deferred = $q.defer();
+
             async.eachSeries(arr, function(item, callback) {
                 //if field is local, don't change it
                 if (isFieldLocal(item[fieldToConvert])) {
