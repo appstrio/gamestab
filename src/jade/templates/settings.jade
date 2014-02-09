@@ -19,7 +19,9 @@
 
             .settings-background(ng-switch-when="Background", ng-controller="BackgroundCtrl")
                 .bg-explorer
-                    .bg-sample(ng-repeat="bg in backgrounds", ng-style="{'background-image':'url(' + bg.image + ')'}", ng-class="{selected : isSelected(bg)}", ng-click="selectBackground(bg, $event)")
+                    .bg-sample(ng-repeat="bg in backgrounds", ng-style="{'background-image':'url(' + bg.image + ')'}", ng-class="{selected : bg.isActive}", ng-click="selectBackground(bg, $event)")
+                        //- custom user image
+                        img(src="./img/custom_user.png", style="width:30px;height:30px;float:left;", ng-show="bg.isLocalBackground")
                 .bg-upload(hl-background-local-image)
                     .image-selector
                         h2 Select your own image
@@ -27,7 +29,6 @@
                         h2 Enter image url
                         input(type="text", id="remoteImageUrl", ng-keypress="remoteUrlKeyPress($event)")
                     .preview
-                        img
                         .loader
                             img(src="./img/loader.gif")
 

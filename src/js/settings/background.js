@@ -51,7 +51,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
         var setDefaultBackground = function() {
             var newBackground = {
                 image: C.DEFAULT_BACKGROUND_IMG,
-                isLocalBackground: true,
+                isLocalBackground: false,
                 isActive: true
             };
 
@@ -196,10 +196,14 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
                 broadcastNewBackground(newBackground);
 
                 store(function() {
-                    uploading.resolve(file);
+                    $rootScope.$apply(function() {
+                        uploading.resolve(file);
+                    });
                 });
             }, function(e) {
-                uploading.reject(e);
+                $rootScope.$apply(function() {
+                    uploading.reject(e);
+                });
             });
 
             return uploading.promise;
@@ -279,9 +283,12 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
                     $preview.show();
                     $loader.addClass('showed');
                     Background.uploadNewLocalImage(oFREvent.target.result).then(function() {
+                        console.log('finished uploading');
                         $loader.removeClass('showed');
+                        $preview.hide();
                     }, function(e) {
                         $loader.removeClass('showed');
+                        $preview.hide();
                         console.error('error:', e);
                     });
                 };
@@ -294,8 +301,10 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
                     $loader.addClass('showed');
                     Background.uploadNewLocalImage($(this).val()).then(function() {
                         $loader.removeClass('showed');
+                        $preview.hide();
                     }, function(e) {
                         $loader.removeClass('showed');
+                        $preview.hide();
                         console.error('error:', e);
                     });
                 }
