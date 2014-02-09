@@ -1,19 +1,26 @@
 var chromeModule = angular.module('aio.chrome', []);
 
-chromeModule.factory('Chrome', ['$rootScope', '$timeout',
-    function($rootScope, $timeout) {
+chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
+    function($rootScope, $timeout, $q, $log) {
         return {
             management: {
-                getAll: function(cb) {
+                getAll: function() {
+                    var deferred = $q.defer();
                     if (chrome && chrome.management && chrome.management.getAll) {
-                        return chrome.management.getAll(function(results) {
+                        chrome.management.getAll(function(results) {
+                            $log.log('[Chrome] - got # chrome apps using management', results.length);
                             $rootScope.$apply(function() {
-                                cb && cb(results);
+                                deferred.resolve(results);
                             });
                         });
                     } else {
-                        $timeout(cb, 0);
+                        $log.log('[Chrome] - no permission for chrome management');
+                        $rootScope.$apply(function() {
+                            deferred.resolve();
+                        });
                     }
+
+                    return deferred.promise;
                 }
             }
         };

@@ -30,17 +30,17 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             Setup.startSetup().then(function() {
                 $log.log('[Apps] - getting apps from local storage', storageKey);
                 Storage.get(storageKey, function(items) {
-                    if (items && items[storageKey] && angular.isArray(items[storageKey])) {
-                        setApps(items[storageKey]);
-                        $log.log('[Apps] - got apps from localStorage in ' + (Date.now() - t0) + ' ms.');
-                        isReady.resolve(apps);
-                        return;
+                    var _apps = items && items[storageKey];
+                    if (_apps && angular.isArray(_apps)) {
+                        setApps(_apps);
+                        $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0), ' ms.');
+                        return isReady.resolve(_apps);
                     }
 
                     $log.log('[Apps] - did not find apps in localStorage, getting from remote');
                     setup().then(function() {
-                        $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0));
                         store(function() {
+                            $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0), ' ms.');
                             $rootScope.$apply(function() {
                                 isReady.resolve(apps);
                             });
@@ -59,22 +59,169 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          */
         var setApps = function(_apps) {
             apps = _apps;
+            return apps;
+        };
+
+        /**
+         * isAppEnabled
+         * Checks if chrome app is an app and enabled
+         *
+         * @param chromeApp
+         * @return
+         */
+        var isAppEnabled = function(chromeApp) {
+            return chromeApp.isApp && chromeApp.enabled;
+        };
+
+        /**
+         * getAppsFromAppsDb
+         * Extracts the First apps from the apps db
+         *
+         * @param _appsDb
+         * @return
+         */
+        var getAppsFromAppsDb = function(_appsDb) {
+            //default=>All, tags=>Featured
+            return _.chain(_appsDb)
+                .filter(function(app) {
+                    return _.has(app, 'default') &&
+                        _.contains(app.
+                            default, 'ALL');
+                })
+                .first(4)
+                .value();
+        };
+
+        /**
+         * getGamesFromAppsDb
+         *
+         * @param _appsDb
+         * @param gamesToAdd Number of games to add
+         * @return
+         */
+        var getGamesFromAppsDb = function(_appsDb, gamesToAdd) {
+            return _.chain(_appsDb)
+                .filter(function(app) {
+                    return _.has(app, 'tags') && _.contains(app.tags, 'Games');
+                })
+                .shuffle()
+                .first(gamesToAdd)
+                .value();
+        };
+
+        /**
+         * isFieldLocal
+         * Checks if field is local
+         * local field has 'filesystem:chrome-extension' or doesn't beging with http/https
+         *
+         * @param field
+         * @return
+         */
+        var isFieldLocal = function(field) {
+            if (/filesystem:chrome-extension/.test(field)) {
+                return true;
+            }
+            if (/^https?/.test(field)) {
+                return false;
+            }
+
+            return true;
+        };
+
+        /**
+         * convertFieldToLocalFile
+         * Converts all the icons to local file
+         *
+         * @param fieldToConvert
+         * @param arr
+         * @return
+         */
+        var convertFieldToLocalFile = function(fieldToConvert, arr) {
+            var deferred = $q.defer();
+            async.eachSeries(arr, function(item, callback) {
+                //if field is local, don't change it
+                if (isFieldLocal(item[fieldToConvert])) {
+                    return callback();
+                }
+
+                Image.urlToLocalFile({
+                    url: item[fieldToConvert]
+                }).then(function(file) {
+                    item[fieldToConvert] = file;
+                    return callback();
+                });
+            }, function() {
+                $rootScope.$apply(function() {
+                    deferred.resolve(arr);
+                });
+            });
+            return deferred.promise;
         };
 
 
-        var convertToLocalFiles = function(output) {
-            var deferred = $q.defer();
-            async.eachSeries(output, function(item, callback) {
-                Image.urlToLocalFile({
-                    url: item.icon
-                }).then(function(file) {
-                    item.icon = file;
-                    callback();
-                });
-            }, function() {
-                deferred.resolve(output);
-            });
-            return deferred.promise;
+        /**
+         * organizeAppsAsDials
+         * Get the webAppsDb and ChromeApps and organizes them into an array
+         *
+         * @param results
+         * @return output
+         */
+        var organizeAppsAsDials = function(results) {
+            var games, maxDials = C.CONFIG.initial_dials_size;
+            var _appsDb, chromeApps, returnArr;
+
+            _appsDb = results[0] && results[0].data || {};
+            chromeApps = results[1] || [];
+
+            var firstApps = getAppsFromAppsDb(_appsDb);
+            $log.log('[Apps] - got # first apps', firstApps.length);
+            var partnerApps = Config.get().web_apps_db || [];
+            $log.log('[Apps] - got # partner apps', partnerApps.length);
+
+            //calculate the number of games to add
+            var numOfGamesToAdd = maxDials - systemApps.length - firstApps.length - partnerApps.length;
+            //add the required number of games
+            games = numOfGamesToAdd > 0 ? games = getGamesFromAppsDb(_appsDb, numOfGamesToAdd) : [];
+            $log.log('[Apps] - got # game dials', games.length);
+
+            if (chromeApps && chromeApps.length) {
+                //filter apps & convert to object
+                chromeApps = _.chain(chromeApps)
+                    .filter(isAppEnabled)
+                    .map(chromeAppToObject)
+                    .value();
+            }
+            $log.log('[Apps] - got # chromeApps', chromeApps.length);
+
+            returnArr = [].concat(systemApps)
+                .concat(firstApps)
+                .concat(partnerApps)
+                .concat(games)
+                .concat(chromeApps);
+
+            $log.log('[Apps] - added a total of # initial dials', returnArr.length);
+            return returnArr;
+        };
+
+
+        /**
+         * organizeAsPages
+         * Get dials and returns pages with dials grouped in arrays
+         *
+         * @param dials
+         * @return
+         */
+        var organizeAsPages = function(dials) {
+            var count = 0,
+                dialsPerPage = C.CONFIG.dials_per_page;
+
+            //have only 12 dials in a page
+            var getPageIndex = function() {
+                return Math.floor((count++) / dialsPerPage);
+            };
+
+            //split to arrays of 12, groupBy creates an object of {0:..., 1:..., 2:...}
+            return _.values(_.groupBy(dials, getPageIndex));
         };
 
         /**
@@ -84,89 +231,26 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @return
          */
         var setup = function() {
+            var getDials = [getLocalAppsDb(), Chrome.management.getAll()];
 
             $log.log('[Apps] - starting setup');
-            return localAppsDB().then(function(_appsDB) {
-                var output, deferred, maxDials = 24;
-
-                deferred = $q.defer();
-
-                //get only data, as we got an xhr object {config, data, header}
-                _appsDB = _appsDB && _appsDB.data || {};
-                $log.log('[Apps] - got the localAppsDb');
-
-                //default=>All, tags=>Featured
-                var all = _.chain(_appsDB)
-                    .filter(function(app) {
-                        return _.has(app, 'default') &&
-                            _.contains(app.
-                                default, 'ALL');
-                    })
-                    .first(4)
-                    .value();
-
-                $log.log('[Apps] - got all dials', all);
-
-                var partnerApps = Config.get().web_apps_db || [];
-                $log.log('[Apps] - got partnersApps dials', partnerApps);
-                //calculate the number of games to add
-                var numOfGames = maxDials - systemApps.length - all.length - partnerApps.length;
-                if (numOfGames < 0) {
-                    numOfGames = 0;
-                }
-
-                var games = _.chain(_appsDB)
-                    .filter(function(app) {
-                        return _.has(app, 'tags') && _.contains(app.tags, 'Games');
-                    })
-                    .shuffle()
-                    .first(numOfGames)
-                    .value();
-
-                $log.log('[Apps] - got game dials', games);
-
-                output = []
-                    .concat(systemApps)
-                    .concat(all)
-                    .concat(partnerApps)
-                    .concat(games);
-
-                Chrome.management.getAll(function(chromeApps) {
-                    var j = 0,
-                        i,
-                        newOutput = [];
-
-                    angular.forEach(chromeApps, function(appOrExtension) {
-                        if (appOrExtension.isApp && appOrExtension.enabled) {
-                            output.push(chromeAppToObject(appOrExtension));
-                        }
-                    });
-
-                    //convert all icons to local file system
-                    convertToLocalFiles(output).then(function(_output) {
-                        for (i = 0; i < _output.length; ++i) {
-                            if (i !== 0 && i % 12 === 0) {
-                                ++j;
-                            }
-                            newOutput[j] = newOutput[j] || [];
-                            newOutput[j].push(_output[i]);
-                        }
-
-                        setApps(newOutput);
-                        deferred.resolve(newOutput);
-                    });
-                });
-
-                return deferred.promise;
-            });
+            return $q.all(getDials)
+            //organize apps as dials
+            .then(organizeAppsAsDials)
+            //convert all icons to local file system
+            .then(convertFieldToLocalFile.bind(null, 'icon'))
+            //organize apps as pages
+            .then(organizeAsPages)
+            //save apps to local object
+            .then(setApps);
         };
 
         /**
-         * localAppsDB
+         * getLocalAppsDb
          *
          * @return
          */
-        var localAppsDB = function() {
+        var getLocalAppsDb = function() {
             $log.log('[Apps] - getting localWebAppsDb');
             return $http.get('./data/webAppsDB1.json');
         };
@@ -303,7 +387,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 return apps;
             },
             store: store,
-            appsDB: localAppsDB,
+            appsDB: getLocalAppsDb,
             addNewApp: addNewApp,
             uninstallApp: uninstallApp
         };
