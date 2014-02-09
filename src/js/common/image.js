@@ -1,7 +1,8 @@
+/* global async */
 var imageModule = angular.module('aio.image', []);
 
-imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
-    function($q, $rootScope, FileSystem) {
+imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
+    function($q, $rootScope, FileSystem, $log) {
 
         /**
          * urlToBase64
@@ -45,52 +46,51 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
             //img load event
             img.onload = function() {
                 // Draw original image in second canvas
-                try {
-                    canvasCopy.width = img.width;
-                    canvasCopy.height = img.height;
+                canvasCopy.width = img.width;
+                canvasCopy.height = img.height;
 
-                    ctxCopy.drawImage(img, 0, 0);
+                ctxCopy.drawImage(img, 0, 0);
 
-                    //check if resize is not needed
-                    if (!options.maxWidth && !options.maxHeight && !options.fixedHeight && !options.fixedWidth) {
-                        $rootScope.$apply(function() {
-                            deferred.resolve(canvasCopy.toDataURL());
-                        });
-                        return;
-                    }
-
-                    //resize is needed
-
-                    if (options.fixedSize) {
-                        canvas.width = options.fixedSize.width || img.width;
-                        canvas.width = options.fixedSize.height || img.height;
-                    } else {
-                        options.maxWidth = options.maxWidth || img.width;
-                        options.maxHeight = options.maxHeight || img.height;
-
-                        // Determine new ratio based on max size
-                        var ratio = 1;
-                        if (img.width > options.maxWidth) {
-                            ratio = options.maxWidth / img.width;
-                        } else if (img.height > options.maxHeight) {
-                            ratio = options.maxHeight / img.height;
-                        }
-
-                        // Copy and resize second canvas to first canvas
-                        canvas.width = img.width * ratio;
-                        canvas.height = img.height * ratio;
-                    }
-
-                    ctx.drawImage(canvasCopy, 0, 0, canvasCopy.width,
-                        canvasCopy.height, 0, 0, canvas.width, canvas.height);
+                //check if resize is not needed
+                if (!options.maxWidth && !options.maxHeight && !options.fixedHeight && !options.fixedWidth) {
                     $rootScope.$apply(function() {
-                        deferred.resolve(canvas.toDataURL());
+                        deferred.resolve(canvasCopy.toDataURL());
                     });
-                } catch (e) {
-                    $rootScope.$apply(function() {
-                        deferred.reject(e);
-                    });
+                    return;
                 }
+
+                //resize is needed
+
+                if (options.fixedSize) {
+                    canvas.width = options.fixedSize.width || img.width;
+                    canvas.width = options.fixedSize.height || img.height;
+                } else {
+                    options.maxWidth = options.maxWidth || img.width;
+                    options.maxHeight = options.maxHeight || img.height;
+
+                    // Determine new ratio based on max size
+                    var ratio = 1;
+                    if (img.width > options.maxWidth) {
+                        ratio = options.maxWidth / img.width;
+                    } else if (img.height > options.maxHeight) {
+                        ratio = options.maxHeight / img.height;
+                    }
+
+                    // Copy and resize second canvas to first canvas
+                    canvas.width = img.width * ratio;
+                    canvas.height = img.height * ratio;
+                }
+
+                ctx.drawImage(canvasCopy, 0, 0, canvasCopy.width,
+                    canvasCopy.height, 0, 0, canvas.width, canvas.height);
+                $rootScope.$apply(function() {
+                    deferred.resolve(canvas.toDataURL());
+                });
+            };
+            img.onerror = function(e) {
+                $rootScope.$apply(function() {
+                    deferred.reject(e);
+                });
             };
 
             img.src = url;
@@ -113,13 +113,6 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
             //get unique hash
             var fileName = _getHashFromUrl(params.url);
 
-            //check if file exists in file system
-            /*
-             * if (FileSystem.get(fileName))  {
-             *     default.resolve(oldfile);
-             * }
-             */
-
             //file doesn't exist, generate it as base64
             urlToBase64(params).then(function(base64) {
                 //default type
@@ -141,14 +134,63 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
                 return FileSystem.write(fileName, base64, type).then(function(file) {
                     deferred.resolve(file);
                 });
-            })
-            //error handling
-            .then(angular.noop, function(e) {
-                $rootScope.$apply(function() {
-                    deferred.reject(e);
-                });
+            }).then(angular.noop, function(e) {
+                //error handling
+                $log.log('[Image] - error saving remote image', e);
+                deferred.reject(e);
             });
 
+            return deferred.promise;
+        };
+
+        /**
+         * isFieldLocal
+         * Checks if field is local
+         * local field has 'filesystem:chrome-extension' or doesn't beging with http/https
+         *
+         * @param field
+         * @return
+         */
+        var isFieldLocal = function(field) {
+            if (/filesystem:chrome-extension/.test(field)) {
+                return true;
+            }
+            if (/^https?/.test(field)) {
+                return false;
+            }
+
+            return true;
+        };
+
+        /**
+         * convertFieldToLocalFile
+         * converts all the relevant fields to local images
+         *
+         * @param fieldToConvert
+         * @param arr
+         * @return
+         */
+        var convertFieldToLocalFile = function(fieldToConvert, arr) {
+            var deferred = $q.defer();
+            async.eachSeries(arr, function(item, callback) {
+                //if field is local, don't change it
+                if (isFieldLocal(item[fieldToConvert])) {
+                    return callback();
+                }
+
+                urlToLocalFile({
+                    url: item[fieldToConvert]
+                }).then(function(file) {
+                    //on success
+                    item[fieldToConvert] = file;
+                    return callback();
+                }, function() {
+                    //on error
+                    return callback();
+                });
+            }, function() {
+                deferred.resolve(arr);
+            });
             return deferred.promise;
         };
 
@@ -190,7 +232,8 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem',
             // urlToBase64  @params(url), @returns(promise(base64_image, resize_options))
             urlToBase64: urlToBase64,
             // urlToLocalFile @params({url:XXX,filename :XXX, resize_options}, #returns(promise(localfile_url)
-            urlToLocalFile: urlToLocalFile
+            urlToLocalFile: urlToLocalFile,
+            convertFieldToLocalFile: convertFieldToLocalFile
         };
     }
 ]);

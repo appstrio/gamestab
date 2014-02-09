@@ -31,6 +31,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
                 //local backgrounds not found.
                 getBackgroundsJson()
                     .then(parseBackgrounds)
+                    .then(Image.convertFieldToLocalFile.bind(null, 'image'))
                     .then(function() {
                         store(function() {
                             $log.log('[Background] - finished init in ' + (Date.now() - t0) + ' ms.');

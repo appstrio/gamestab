@@ -110,56 +110,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         };
 
         /**
-         * isFieldLocal
-         * Checks if field is local
-         * local field has 'filesystem:chrome-extension' or doesn't beging with http/https
-         *
-         * @param field
-         * @return
-         */
-        var isFieldLocal = function(field) {
-            if (/filesystem:chrome-extension/.test(field)) {
-                return true;
-            }
-            if (/^https?/.test(field)) {
-                return false;
-            }
-
-            return true;
-        };
-
-        /**
-         * convertFieldToLocalFile
-         * Converts all the icons to local file
-         *
-         * @param fieldToConvert
-         * @param arr
-         * @return
-         */
-        var convertFieldToLocalFile = function(fieldToConvert, arr) {
-            var deferred = $q.defer();
-            async.eachSeries(arr, function(item, callback) {
-                //if field is local, don't change it
-                if (isFieldLocal(item[fieldToConvert])) {
-                    return callback();
-                }
-
-                Image.urlToLocalFile({
-                    url: item[fieldToConvert]
-                }).then(function(file) {
-                    item[fieldToConvert] = file;
-                    return callback();
-                });
-            }, function() {
-                $rootScope.$apply(function() {
-                    deferred.resolve(arr);
-                });
-            });
-            return deferred.promise;
-        };
-
-
-        /**
          * organizeAppsAsDials
          * Get the webAppsDb and ChromeApps and organizes them into an array
          *
@@ -238,7 +188,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             //organize apps as dials
             .then(organizeAppsAsDials)
             //convert all icons to local file system
-            .then(convertFieldToLocalFile.bind(null, 'icon'))
+            .then(Image.convertFieldToLocalFile.bind(null, 'icon'))
             //organize apps as pages
             .then(organizeAsPages)
             //save apps to local object
@@ -262,28 +212,9 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @return
          */
         var chromeAppToObject = function(app) {
-            return {
-                appLaunchUrl: app.appLaunchUrl,
-                description: app.description,
-                enabled: app.enabled,
-                homepageUrl: app.homepageUrl,
-                hostPermissions: app.hostPermissions,
-                icons: app.icons,
-                icon: getLargestIconChromeApp(app.icons).url,
-                id: app.id,
-                chromeId: app.id,
-                installType: app.installType,
-                isApp: app.isApp,
-                mayDisable: app.mayDisable,
-                name: app.name,
-                title: app.name,
-                offlineEnabled: app.offlineEnabled,
-                optionsUrl: app.optionsUrl,
-                permissions: app.permissions,
-                shortName: app.shortName,
-                type: app.type,
-                version: app.version
-            };
+            var _app = angular.copy(app);
+            _app.icon = getLargestIconChromeApp(app.icons).url;
+            return _app;
         };
 
         /**
