@@ -19,8 +19,7 @@
 
             .settings-background(ng-switch-when="Background", ng-controller="BackgroundCtrl")
                 .bg-explorer
-                    .bg-sample(ng-repeat="bg in backgrounds", ng-style="{backgroundImage : 'url(' + bg.image+ ')'}", ng-class="{selected : isSelected(bg)}", ng-click="selectBackground(bg, $event)")
-
+                    .bg-sample(ng-repeat="bg in backgrounds", ng-style="{'background-image':'url(' + bg.image + ')'}", ng-class="{selected : isSelected(bg)}", ng-click="selectBackground(bg, $event)")
                 .bg-upload(hl-background-local-image)
                     .image-selector
                         h2 Select your own image

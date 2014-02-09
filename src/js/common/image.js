@@ -4,6 +4,7 @@ var imageModule = angular.module('aio.image', []);
 imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
     function($q, $rootScope, FileSystem, $log) {
 
+        var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
         /**
          * urlToBase64
          *
@@ -98,6 +99,19 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
             return deferred.promise;
         };
 
+
+        var isBase64 = function(data) {
+            return base64Regex.test(data);
+        };
+
+        var getTypeFromBase64 = function(base64) {
+            //split image by regex
+            var splittedContent = base64.split(base64Regex);
+            // splittedContent = ['', 'image/png', 'asdflkjdfdkfjsdfsdflksdfjksdf']
+            //get type
+            return 'image/' + splittedContent[1];
+        };
+
         /**
          * imageService_urlToFile
          * save url or base64 string to the file system
@@ -109,49 +123,46 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
         var urlToLocalFile = function(params) {
             var deferred = $q.defer();
             params = params || {};
+            var type;
 
             //get unique hash
             var fileName = _getHashFromUrl(params.url);
 
-            //file doesn't exist, generate it as base64
-            urlToBase64(params).then(function(base64) {
-                //default type
-                var type = 'image/jpeg';
-
-                //assign base64 regex to check & split
-                var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
-
-                //if base 64 image so extract only the data
-                if (base64Regex.test(base64)) {
-                    //split image by regex
-                    var splittedContent = base64.split(base64Regex);
-                    // splittedContent = ['', 'image/png', 'asdflkjdfdkfjsdfsdflksdfjksdf']
-                    //get type
-                    type = 'image/' + splittedContent[1];
-                }
+            //if url is already base64
+            if (isBase64(params.url)) {
+                type = getTypeFromBase64(params.url);
 
                 //generate unique name to each thumbnail
-                return FileSystem.write(fileName, base64, type).then(function(file) {
+                FileSystem.write(fileName, params.url, type).then(function(file) {
                     deferred.resolve(file);
                 });
-            }).then(angular.noop, function(e) {
-                //error handling
-                $log.log('[Image] - error saving remote image', e);
-                deferred.reject(e);
-            });
+            } else {
+                //file doesn't exist, generate it as base64
+                urlToBase64(params).then(function(base64) {
+                    type = getTypeFromBase64(base64);
+                    //generate unique name to each thumbnail
+                    FileSystem.write(fileName, base64, type).then(function(file) {
+                        deferred.resolve(file);
+                    });
+                }).then(angular.noop, function(e) {
+                    //error handling
+                    $log.log('[Image] - error saving remote image', e);
+                    deferred.reject(e);
+                });
+            }
 
             return deferred.promise;
         };
 
         /**
-         * isFieldLocal
+         * isPathLocal
          * Checks if field is local
          * local field has 'filesystem:chrome-extension' or doesn't beging with http/https
          *
          * @param field
          * @return
          */
-        var isFieldLocal = function(field) {
+        var isPathLocal = function(field) {
             if (/filesystem:chrome-extension/.test(field)) {
                 return true;
             }
@@ -175,7 +186,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
 
             async.eachSeries(arr, function(item, callback) {
                 //if field is local, don't change it
-                if (isFieldLocal(item[fieldToConvert])) {
+                if (isPathLocal(item[fieldToConvert])) {
                     return callback();
                 }
 

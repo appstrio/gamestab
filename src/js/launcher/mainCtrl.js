@@ -45,8 +45,6 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config',
         };
 
         $('#search-input').keypress($scope.goSearch); //TODO:
-
-
     }
 ]).controller('SettingsCtrl', ['$scope',
     function($scope) {
@@ -61,7 +59,6 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config',
     }
 ]).controller('BackgroundCtrl', ['$scope', 'Background',
     function($scope, Background) {
-        console.log('Background', Background);
         $scope.backgrounds = Background.backgrounds();
 
         $scope.selectBackground = function(bg, e) {
@@ -70,7 +67,7 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config',
         };
 
         $scope.isSelected = function(bg) {
-            return bg.image == Background.background.image;
+            return bg.isActive;
         };
 
     }

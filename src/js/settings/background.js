@@ -6,8 +6,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
         var initting = $q.defer(),
             storageKey = C.STORAGE_KEYS.BACKGROUNDS,
             background = {},
-            backgrounds = [],
-            localBackgroundFileName = 'myBackground';
+            backgrounds = [];
 
         // intializes the service, fetch the background from localStorage or use default
         var init = function() {
@@ -16,8 +15,8 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
             Storage.get(storageKey, function(items) {
                 var _backgrounds = items && items[storageKey];
                 if (_backgrounds && angular.isArray(_backgrounds)) {
-                    $log.log('[Background] - Found backgrounds in localStorage', _backgrounds);
-                    background = getActiveBackground(_backgrounds);
+                    $log.log('[Background] - Found backgrounds in localStorage', _backgrounds.length);
+                    getActiveBackground(_backgrounds);
                     backgrounds = _backgrounds;
                     $log.log('[Background] - finished init in ' + (Date.now() - t0) + ' ms.');
                     return initting.resolve(background);
@@ -69,6 +68,12 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
          */
         var getActiveBackground = function(_backgrounds) {
             var _background;
+
+            //error validation
+            if (!_backgrounds || !_backgrounds.length) {
+                return;
+            }
+
             _background = _.findWhere(_backgrounds, {
                 isActive: true
             });
@@ -90,6 +95,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
          * @return
          */
         var broadcastNewBackground = function(_background) {
+            background = _background;
             $rootScope.$broadcast('setBackgroundImage', _background);
         };
 
@@ -105,15 +111,20 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
         };
 
         /**
-         * findActiveBackground
+         * turnOffActiveBackgrounds
          * returns an array of all items that have isActive:true
          *
          * @return
          */
-        var findActiveBackground = function() {
-            return _.where(backgrounds, {
-                isActive: true
-            });
+        var turnOffActiveBackgrounds = function() {
+            _.chain(backgrounds)
+                .where({
+                    isActive: true
+                })
+                .each(function(item) {
+                    item.isActive = false;
+                })
+                .value();
         };
 
         /**
@@ -145,9 +156,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
         var selectBackground = function(newBackground) {
             $log.log('[Background] - changing to new background', newBackground.image);
             //turn off all active
-            _.each(findActiveBackground(), function(item) {
-                item.isActive = false;
-            });
+            turnOffActiveBackgrounds();
 
             newBackground.isActive = true;
             newBackground.timestamp = Date.now();
@@ -167,30 +176,33 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
         var uploadNewLocalImage = function(dataURL) {
             var uploading = $q.defer();
 
-            Image.getBase64Image(dataURL, {
-                maxWidth: 1024
-            }).then(function(newDataURL) {
-                saveImageToFileSystem(newDataURL, localBackgroundFileName + Date.now() + '.png').then(function(url) {
-                    background.image = url;
-                    background.isLocalBackground = true;
-                    background.timestamp = Date.now();
+            Image.urlToLocalFile({
+                url: dataURL,
+                resizeOptions: {
+                    maxWidth: 1024
+                }
+            }).then(function(file) {
 
-                    store(function() {
-                        uploading.resolve(url);
-                    });
-                }, function(e) {
-                    uploading.reject(e);
+                turnOffActiveBackgrounds();
+
+                var newBackground = {
+                    image: file,
+                    isLocalBackground: true,
+                    timestamp: Date.now(),
+                    isActive: true
+                };
+
+                backgrounds.push(newBackground);
+                broadcastNewBackground(newBackground);
+
+                store(function() {
+                    uploading.resolve(file);
                 });
             }, function(e) {
                 uploading.reject(e);
             });
 
             return uploading.promise;
-        };
-
-        // store image (dataURL) in the file system
-        var saveImageToFileSystem = function(dataURL, fileName) {
-            return FileSystem.write(fileName, dataURL);
         };
 
         init();
@@ -297,15 +309,15 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
                 }
             }, true);
 
-            // on init, check if the current background is local image, if yes, preview it
-            if (Background.background.isLocalBackground) {
-                $previewIMG[0].src = Background.background.image;
-                $preview.show();
-            }
-
             scope.isSelectedLocal = function() {
                 return Background.background.isLocalBackground;
             };
+
+            // on init, check if the current background is local image, if yes, preview it
+            if (scope.isSelectedLocal()) {
+                $previewIMG[0].src = Background.background.image;
+                $preview.show();
+            }
         };
     }
 ]);
