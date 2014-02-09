@@ -14,6 +14,7 @@ module.exports = (grunt) ->
         path:
             build: "build"
             src: "src"
+            bower: "src/bower_components"
             tmp: "tmp-build"
             builds: "builds/build-<%= build.name %>-<%= build.version %>"
         # Production Only Tasks
@@ -79,22 +80,20 @@ module.exports = (grunt) ->
             # Core files:
             requirejs:
                 files:
-                    "<%= path.build %>/js/libs/require.js"    : "bower_components/requirejs/require.js"
+                    "<%= path.build %>/js/vendor/require.js"    : "<%= path.bower %>/requirejs/require.js"
             libs:
                 files:
-                    "<%= path.build %>/js/libs/require.js"    : "bower_components/requirejs/require.js"
-                    "<%= path.build %>/js/libs/when.js"       : "bower_components/when/when.js"
-                    "<%= path.build %>/js/libs/jquery.js"     : "bower_components/jquery/jquery.min.js"
-                    "<%= path.build %>/js/libs/jquery.ui.js"  : "<%= path.src %>/js/vendor/jquery-ui.js"
+                    "<%= path.build %>/js/vendor/require.js"    : "<%= path.bower %>/requirejs/require.js"
+                    "<%= path.build %>/js/vendor/when.js"       : "<%= path.bower %>/when/when.js"
+                    "<%= path.build %>/js/vendor/jquery.js"     : "<%= path.bower %>/jquery/jquery.min.js"
+                    "<%= path.build %>/js/vendor/angular.js"    : "<%= path.bower %>/angular/angular.min.js"
+                    "<%= path.build %>/js/vendor/jfeed.js"      : "<%= path.bower %>/jfeed/build/dist/jquery.jfeed.pack.js"
+                    "<%= path.build %>/js/vendor/moment.js"     : "<%= path.bower %>/moment/min/moment.min.js"
+                    "<%= path.build %>/js/vendor/underscore.js" : "<%= path.bower %>/underscore/underscore-min.js"
+                    "<%= path.build %>/js/vendor/uri.js"        : "<%= path.bower %>/uri.js/src/URI.min.js",
+                    "<%= path.build %>/js/vendor/async.js"      : "<%= path.bower %>/async/lib/async.js",
 
-                    "<%= path.build %>/js/libs/angular.js"    : "bower_components/angular/angular.min.js"
-
-                    "<%= path.build %>/js/libs/jfeed.js"      : "bower_components/jfeed/build/dist/jquery.jfeed.pack.js"
-                    "<%= path.build %>/js/libs/moment.js"     : "bower_components/moment/min/moment.min.js"
-                    "<%= path.build %>/js/libs/underscore.js" : "bower_components/underscore/underscore-min.js"
-                    "<%= path.build %>/js/libs/uri.js"        : "bower_components/uri.js/src/URI.min.js",
-                    "<%= path.build %>/js/libs/jcrop.js"      : "bower_components/jcrop/js/jquery.Jcrop.js",
-                    "<%= path.build %>/js/libs/async.js"      : "bower_components/async/lib/async.js",
+                    "<%= path.build %>/js/vendor/jquery.ui.js"  : "<%= path.src %>/js/vendor/jquery-ui/.js"
                     "<%= path.build %>/js/vendor/jquery.ui.core.js" : "<%= path.src %>/js/vendor/jquery.ui.core.js",
                     "<%= path.build %>/js/vendor/jquery.ui.widget.js" : "<%= path.src %>/js/vendor/jquery.ui.widget.js",
                     "<%= path.build %>/js/vendor/jquery.ui.mouse.js" : "<%= path.src %>/js/vendor/jquery.ui.mouse.js",

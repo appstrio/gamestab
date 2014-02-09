@@ -1,0 +1,51 @@
+ [{
+   "title": "Facebook",
+   "url": "http://www.facebook.com",
+   "icon": "img/logo_icons/country/de/facebook.jpg"
+}, {
+   "title": "Youtube",
+   "url": "http://www.youtube.com",
+   "icon": "img/logo_icons/country/de/youtube.jpg"
+}, {
+   "title": "Amazon",
+   "url": "http://www.amazon.de,
+   "icon": "img/logo_icons/country/de/amazon.jpg"
+}, {
+
+   "title": "Ebay",
+   "url": "http://www.ebay.de,
+   "icon": "img/logo_icons/country/de/ebay.jpg"
+}, {
+  "title": "Web.de"
+  "url": "http://www.web.de"
+   "icon": "img/logo_icons/country/de/web.de.jpg"
+}, {
+  "title": "GMX"
+  "url": "http://www.gmx.com"
+  "icon": "img/logo_icons/country/de/gmx.jpg"
+}, {
+  "title": "Bild.de"
+  "url": "http://www.bild.de"
+  "icon": "img/logo_icons/country/de/bild.de.jpg"
+}, {
+  "title": "Spiegel"
+  "url": "http://www.spiegel.de"
+  "icon": "img/logo_icons/country/de/spiegel.jpg"
+}, {
+  "title": "Gmail"
+  "url": "http://mail.google.com"
+  "icon": "img/logo_icons/country/de/gmail.jpg"
+}, {
+  "title": "Outlook"
+  "url": "http://www.outlook.com"
+  "icon": "img/logo_icons/country/de/outlook.jpg"
+}, {
+  "title": "Tumblr"
+  "url": "http://www.tumblr.com"
+  "icon": "img/logo_icons/country/de/tumblr.jpg"
+}, {
+  "title": "Wetter"
+  "url": "http://www.wetter.de"
+  "icon": "img/logo_icons/country/de/wetter.de.jpg"
+}]
+

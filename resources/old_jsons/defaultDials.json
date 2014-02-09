@@ -1,0 +1,45 @@
+[{
+    "title": "Facebook",
+    "url": "http://www.facebook.com",
+    "icon": "/img/logo_icons/country/defaultdials/facebook.jpg"
+}, {
+    "title": "Youtube",
+    "url": "http://www.youtube.com",
+    "icon": "/img/logo_icons/country/defaultdials/youtube.jpg"
+}, {
+    "title": "Twitter",
+    "url": "http://www.twitter.com",
+    "icon": "/img/logo_icons/country/defaultdials/twitter.jpg"
+}, {
+    "title": "Amazon",
+    "url": "http://www.amazon.com",
+    "icon": "/img/logo_icons/country/defaultdials/amazon.jpg"
+}, {
+    "title": "Ebay",
+    "url": "http://www.ebay.com",
+    "icon": "/img/logo_icons/country/defaultdials/ebay.jpg"
+}, {
+    "title": "Google Maps",
+    "url": "http://www.maps.google.com",
+    "icon": "/img/logo_icons/country/defaultdials/googlemaps.jpg"
+}, {
+    "title": "Gmail",
+    "url": "http://www.gmail.com",
+    "icon": "/img/logo_icons/country/defaultdials/gmail.jpg"
+}, {
+     "title": "Outlook",
+    "url": "http://www.outlook.com",
+    "icon": "/img/logo_icons/country/defaultdials/outlook.jpg"
+}, {
+     "title": "LinkedIn",
+    "url": "http://www.linkedin.com",
+    "icon": "/img/logo_icons/country/defaultdials/linkedin.jpg"
+}, {
+     "title": "Tumblr",
+    "url": "http://www.tumblr.com",
+    "icon": "/img/logo_icons/country/defaultdials/tumblr.jpg"
+}, {
+     "title": "Instagram",
+    "url": "http://www.instagram.com",
+    "icon": "/img/logo_icons/country/defaultdials/instagram.jpg"
+}]

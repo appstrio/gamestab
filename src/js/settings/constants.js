@@ -6,10 +6,12 @@ settingsModule.factory('Constants', [
         return {
             PARTNERS_JSON_URL: 'data/partners/partners.json',
             BACKGROUNDS_JSON_URL: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
+            DEFAULT_BACKGROUND_IMG: 'img/wallpapers/default.jpg',
             STORAGE_KEYS: {
                 CONFIG: 'gt.config',
                 APPS: 'gt.apps',
-                ACCOUNT: 'gt.account'
+                ACCOUNT: 'gt.account',
+                BACKGROUNDS: 'gt.backgrounds'
             },
             ERRORS: {
                 SETUP: {

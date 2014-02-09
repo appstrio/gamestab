@@ -53,7 +53,7 @@ storageModule.factory('Storage', ['$rootScope',
         var StorageArea = localStorageAbstraction || chrome.storage.local;
         return {
             get: function(keys, cb) {
-                cb = cb || angular.noop();
+                cb = cb || angular.noop;
                 StorageArea.get(keys, function(items) {
                     $rootScope.$apply(function() {
                         cb(items);

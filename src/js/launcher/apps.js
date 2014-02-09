@@ -319,9 +319,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         var store = function(cb) {
             //enforce function type
             cb = cb || angular.noop;
-            Storage.setItem(storageKey, apps, function() {
-                cb();
-            });
+            Storage.setItem(storageKey, apps, cb);
         };
 
         /**
