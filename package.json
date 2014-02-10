@@ -34,7 +34,8 @@
     "gulp-jade": "~0.4.1",
     "gulp-flatten": "0.0.2",
     "gulp-less": "~1.2.1",
-    "gulp-watch": "~0.5.0"
+    "gulp-watch": "~0.5.0",
+    "gulp-open": "~0.2.8"
   },
   "engines": {
     "node": ">=0.8.0"

@@ -3,6 +3,7 @@ var path = require('path');
 var clean = require('gulp-clean');
 var jade = require('gulp-jade');
 var flatten = require('gulp-flatten');
+var gulpOpen = require('gulp-open');
 // var watch = require('gulp-watch');
 var less = require('gulp-less');
 
@@ -61,7 +62,7 @@ var libs = bowerPackages.map(function (item) {
 }));
 
 gulp.task('default', ['clean'], function () {
-    gulp.start('assets', 'jade', 'libs', 'less', 'scripts', 'manifest', 'watch');
+    gulp.start('assets', 'jade', 'libs', 'less', 'scripts', 'manifest', 'reloadExtension', 'watch');
 });
 
 gulp.task('jade', function () {
@@ -114,10 +115,18 @@ gulp.task('libs', function () {
         .pipe(gulp.dest(paths.dist.libs));
 });
 
+gulp.task('reloadExtension', function () {
+    gulp.src('README.md')
+        .pipe(gulpOpen('', {
+            url: 'http://reload.extensions',
+            app: 'chrome'
+        }));
+});
+
 gulp.task('watch', function () {
-    gulp.watch(libs, ['libs']);
-    gulp.watch(paths.assets + '**/*', ['assets']);
-    gulp.watch(paths.origin.js, ['scripts']);
-    gulp.watch(paths.src + paths.less + '*.less', ['less']);
-    gulp.watch(paths.src + paths.jade + '**/*.jade', ['jade']);
+    gulp.watch(libs, ['libs', 'reloadExtension']);
+    gulp.watch(paths.assets + '**/*', ['assets', 'reloadExtension']);
+    gulp.watch(paths.origin.js, ['scripts', 'reloadExtension']);
+    gulp.watch(paths.src + paths.less + '*.less', ['less', 'reloadExtension']);
+    gulp.watch(paths.src + paths.jade + '**/*.jade', ['jade', 'reloadExtension']);
 });
