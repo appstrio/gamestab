@@ -88,9 +88,7 @@ gulp.task('less', function () {
 });
 
 gulp.task('zip', function () {
-    gulp.src('build/**/*', {
-        cwd: 'build/'
-    })
+    gulp.src('build/**/*')
         .pipe(zip('gamesTab.' + pkg.version + '.zip'))
         .pipe(gulp.dest('builds'));
 });
