@@ -1,9 +1,11 @@
 var gulp = require('gulp');
 var path = require('path');
+var gutil = require('gulp-util');
 var clean = require('gulp-clean');
 var jade = require('gulp-jade');
 var flatten = require('gulp-flatten');
 var gulpOpen = require('gulp-open');
+var semver = require('semver');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 var bump = require('gulp-bump');
@@ -70,7 +72,7 @@ paths.dist = {
 };
 
 gulp.task('default', ['clean'], function () {
-    gulp.start('assets', 'jade', 'libs', 'less', 'manifest', 'scripts', 'reloadExtension', 'watch');
+    gulp.start('bump', 'assets', 'jade', 'libs', 'less', 'manifest', 'scripts', 'reloadExtension', 'watch');
 });
 
 gulp.task('jade', function () {
@@ -112,11 +114,19 @@ gulp.task('clean', function () {
 });
 
 gulp.task('bump', function () {
-    gulp.src(['./bower.json', './package.json', 'src/manifest.json'])
+    var newVer = semver.inc(pkg.version, 'patch');
+    gutil.log('Bumping version', gutil.colors.cyan(pkg.version), '=>', gutil.colors.blue(newVer));
+    gulp.src(['./bower.json', './package.json'])
         .pipe(bump({
-            type: 'path'
+            version: newVer
         }))
         .pipe(gulp.dest('./'));
+
+    gulp.src('./src/manifest.json')
+        .pipe(bump({
+            version: newVer
+        }))
+        .pipe(gulp.dest('./src'));
 });
 
 gulp.task('assets', function () {
@@ -149,10 +159,15 @@ gulp.task('reloadExtension', function () {
         }));
 });
 
+//all tasks are watch -> bump patch version -> reload extension (globally enabled)
 gulp.task('watch', function () {
-    gulp.watch(libs, ['libs', 'reloadExtension']);
-    gulp.watch([paths.origin.assets, paths.origin.extraAssets, paths.origin.extraBuild], ['assets', 'reloadExtension']);
-    gulp.watch(paths.origin.js, ['scripts', 'reloadExtension']);
-    gulp.watch(paths.origin.less, ['less', 'reloadExtension']);
-    gulp.watch(paths.origin.jade, ['jade', 'reloadExtension']);
+    gulp.watch(libs, ['libs', 'bump', 'reloadExtension']);
+    gulp.watch([
+        paths.origin.assets,
+        paths.origin.extraAssets,
+        paths.origin.extraBuild
+    ], ['assets', 'bump', 'reloadExtension']);
+    gulp.watch(paths.origin.js, ['scripts', 'bump', 'reloadExtension']);
+    gulp.watch(paths.origin.less, ['less', 'bump', 'reloadExtension']);
+    gulp.watch(paths.origin.jade, ['jade', 'bump', 'reloadExtension']);
 });

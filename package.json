@@ -1,6 +1,6 @@
 {
   "name": "whitelabelnewtab",
-  "version": "1.0.1",
+  "version": "1.0.10",
   "description": "Generic template (hopefuly) to whitelabel the internet's new tab.",
   "dependencies": {},
   "repository": "https://github.com/hlandao/whiteLabelNewTab",
@@ -39,7 +39,8 @@
     "gulp-jsvalidate": "~0.1.1",
     "gulp-uglify": "~0.2.1",
     "gulp-zip": "~0.1.2",
-    "gulp-bump": "~0.1.4"
+    "gulp-bump": "~0.1.4",
+    "semver": "~2.2.1"
   },
   "engines": {
     "node": ">=0.8.0"
