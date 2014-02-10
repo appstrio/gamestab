@@ -93,7 +93,7 @@ module.exports = (grunt) ->
                     "<%= path.build %>/js/vendor/uri.js"        : "<%= path.bower %>/uri.js/src/URI.min.js",
                     "<%= path.build %>/js/vendor/async.js"      : "<%= path.bower %>/async/lib/async.js",
 
-                    "<%= path.build %>/js/vendor/jquery.ui.js"  : "<%= path.src %>/js/vendor/jquery-ui/.js"
+                    "<%= path.build %>/js/vendor/jquery.ui.js"  : "<%= path.src %>/js/vendor/jquery-ui/jquery-ui.js"
                     "<%= path.build %>/js/vendor/jquery.ui.core.js" : "<%= path.src %>/js/vendor/jquery.ui.core.js",
                     "<%= path.build %>/js/vendor/jquery.ui.widget.js" : "<%= path.src %>/js/vendor/jquery.ui.widget.js",
                     "<%= path.build %>/js/vendor/jquery.ui.mouse.js" : "<%= path.src %>/js/vendor/jquery.ui.mouse.js",
