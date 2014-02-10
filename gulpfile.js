@@ -4,6 +4,8 @@ var clean = require('gulp-clean');
 var jade = require('gulp-jade');
 var flatten = require('gulp-flatten');
 var gulpOpen = require('gulp-open');
+var uglify = require('gulp-uglify');
+// var jsValidate = require('gulp-jsvalidate');
 // var watch = require('gulp-watch');
 var less = require('gulp-less');
 
@@ -54,7 +56,7 @@ paths.origin = {
     extraAssets: 'extra/lovedGames/assets/**/*',
     extraBuild: 'extra/lovedGames/build.json',
     manifest: path.join(paths.src, 'manifest.json'),
-    js: path.join(paths.src, 'js/**/*.js')
+    js: [path.join(paths.src, 'js') + '/**/*.js', '!' + path.join(paths.src, 'js') + '/vendor/**/*.js']
 };
 
 paths.dist = {
@@ -65,7 +67,7 @@ paths.dist = {
 };
 
 gulp.task('default', ['clean'], function () {
-    gulp.start('assets', 'jade', 'libs', 'less', 'scripts', 'manifest', 'reloadExtension', 'watch');
+    gulp.start('assets', 'jade', 'libs', 'less', 'manifest', 'scripts', 'reloadExtension', 'watch');
 });
 
 gulp.task('jade', function () {
@@ -85,6 +87,7 @@ gulp.task('less', function () {
 
 gulp.task('scripts', function () {
     return gulp.src(paths.origin.js)
+        .pipe(uglify())
         .pipe(gulp.dest(paths.dist.js));
 });
 

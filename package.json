@@ -35,7 +35,9 @@
     "gulp-flatten": "0.0.2",
     "gulp-less": "~1.2.1",
     "gulp-watch": "~0.5.0",
-    "gulp-open": "~0.2.8"
+    "gulp-open": "~0.2.8",
+    "gulp-jsvalidate": "~0.1.1",
+    "gulp-uglify": "~0.2.1"
   },
   "engines": {
     "node": ">=0.8.0"
