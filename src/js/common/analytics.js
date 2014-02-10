@@ -1,7 +1,34 @@
 var analyticsModule = angular.module('aio.analytics', []);
 
-analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q',
-    function ($rootScope, $log, $q) {
+//global
+var _gaq = _gaq || [];
+
+analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants',
+    function ($rootScope, $log, $q, C) {
+        /**
+         * init
+         * Load the analytics script
+         *
+         * @return
+         */
+        var init = function () {
+            $log.log('[Analytics] - loading analytics script with Account: ' + C.ANALYTICS_UA_ACCOUNT);
+            //init account
+            (function () {
+                var ga = document.createElement('script');
+                ga.type = 'text/javascript';
+                ga.async = true;
+                ga.src = 'https://ssl.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(ga, s);
+            })();
+
+            _gaq.push(['_setAccount', C.ANALYTICS_UA_ACCOUNT]);
+            _gaq.push(['_setDomainName', 'none']);
+            //track pageview
+            _gaq.push(['_trackPageview']);
+            $log.log('[Analytics] - done loading...');
+        };
 
         var events = {
             101: {
@@ -70,11 +97,11 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q',
             }
         };
 
-        var getEventArray = function (eventId, params) {
-            
+        var getEventArray = function (eventId, params) {};
 
-            return ['event']
 
+        return {
+            init: init
         };
     }
 ]);

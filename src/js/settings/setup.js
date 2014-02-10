@@ -1,7 +1,7 @@
 var settingsModule = settingsModule || angular.module('aio.settings', []);
 
-settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Config', '$log', 'Storage', '$q',
-    function ($rootScope, C, Config, $log, Storage, $q) {
+settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Config', '$log', 'Storage', '$q', 'Analytics',
+    function ($rootScope, C, Config, $log, Storage, $q, Analytics) {
         var storageKey = C.STORAGE_KEYS.CONFIG;
 
         /**
@@ -34,8 +34,10 @@ settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Config', '$log', 'S
         var startSetup = function () {
             $log.log('[Setup] - starting setup');
 
+            //init analytics module
+            return $q.when(Analytics.init())
             //try to get settings from localstorage first
-            return loadFromStorage()
+            .then(loadFromStorage)
             //if no settings, get from remote
             .then(angular.noop, Config.setup)
             //finished setup with success

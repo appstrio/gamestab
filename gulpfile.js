@@ -6,6 +6,7 @@ var flatten = require('gulp-flatten');
 var gulpOpen = require('gulp-open');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
+var bump = require('gulp-bump');
 // var jsValidate = require('gulp-jsvalidate');
 // var watch = require('gulp-watch');
 var less = require('gulp-less');
@@ -108,6 +109,14 @@ gulp.task('clean', function () {
     return gulp.src(paths.build, {
         read: false
     }).pipe(clean());
+});
+
+gulp.task('bump', function () {
+    gulp.src(['./bower.json', './package.json', 'src/manifest.json'])
+        .pipe(bump({
+            type: 'path'
+        }))
+        .pipe(gulp.dest('./'));
 });
 
 gulp.task('assets', function () {
