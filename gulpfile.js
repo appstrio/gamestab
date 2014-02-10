@@ -125,8 +125,8 @@ gulp.task('reloadExtension', function () {
 
 gulp.task('watch', function () {
     gulp.watch(libs, ['libs', 'reloadExtension']);
-    gulp.watch(paths.assets + '**/*', ['assets', 'reloadExtension']);
+    gulp.watch([paths.origin.assets, paths.origin.extraAssets, paths.origin.extraBuild], ['assets', 'reloadExtension']);
     gulp.watch(paths.origin.js, ['scripts', 'reloadExtension']);
-    gulp.watch(paths.src + paths.less + '*.less', ['less', 'reloadExtension']);
-    gulp.watch(paths.src + paths.jade + '**/*.jade', ['jade', 'reloadExtension']);
+    gulp.watch(paths.origin.less, ['less', 'reloadExtension']);
+    gulp.watch(paths.origin.jade, ['jade', 'reloadExtension']);
 });
