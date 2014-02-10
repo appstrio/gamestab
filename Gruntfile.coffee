@@ -105,7 +105,6 @@ module.exports = (grunt) ->
                 src: "**/*"
                 dest: "<%= path.build %>"
             js:
-#                flatten: true
                 expand: true
                 cwd: "<%= path.src %>/js"
                 src: ["**/*.js","!debug*.js"]
