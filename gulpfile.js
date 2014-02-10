@@ -1,10 +1,15 @@
 var gulp = require('gulp');
+var clean = require('clean');
+
 
 var paths = {
-  scripts: ['client/js/**/*.coffee', '!client/external/**/*.coffee'],
-  images: 'client/img/**/*'
+    build: 'build',
+    src: 'src',
+    bower: 'src/bower_components'
 };
 
-
-// The default task (called when you run `gulp` from cli)
-gulp.task('default', ['scripts', 'images', 'watch']);
+gulp.task('clean', function () {
+    gulp.src(paths.build, {
+        read: false
+    }).pipe(clean());
+});
