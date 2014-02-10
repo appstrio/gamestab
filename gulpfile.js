@@ -5,9 +5,11 @@ var jade = require('gulp-jade');
 var flatten = require('gulp-flatten');
 var gulpOpen = require('gulp-open');
 var uglify = require('gulp-uglify');
+var zip = require('gulp-zip');
 // var jsValidate = require('gulp-jsvalidate');
 // var watch = require('gulp-watch');
 var less = require('gulp-less');
+var pkg = require('./package.json');
 
 var paths = {
     build: 'build',
@@ -32,11 +34,11 @@ var bowerPackages = [
     'async/lib/async.js'
 ];
 var vendorPackages = [
-    'jquery-ui/jquery-ui.js',
+    'jquery-ui.js',
     'jquery.ui.core.js',
     'jquery.ui.widget.js',
     'jquery.ui.mouse.js',
-    'jquery.ui.sortable.j',
+    'jquery.ui.sortable.js',
     'sortable.js'
 ];
 
@@ -83,6 +85,14 @@ gulp.task('less', function () {
     return gulp.src(paths.origin.less)
         .pipe(less())
         .pipe(gulp.dest(paths.dist.less));
+});
+
+gulp.task('zip', function () {
+    gulp.src('build/**/*', {
+        cwd: 'build/'
+    })
+        .pipe(zip('gamesTab.' + pkg.version + '.zip'))
+        .pipe(gulp.dest('builds'));
 });
 
 gulp.task('scripts', function () {

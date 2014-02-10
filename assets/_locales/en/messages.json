@@ -1,14 +1,14 @@
 {
-   "appDescription": {
-      "description": "",
-      "message": "This description should be replaced"
-   },
-   "appName": {
-      "description": "",
-      "message": "WhiteLabeled NewTab"
-   },
-   "extVersion": {
-      "dscription": "",
-      "message": "1"
-   }
+    "appDescription": {
+        "description": "",
+        "message": "This description should be replaced"
+    },
+    "appName": {
+        "description": "",
+        "message": "WhiteLabeled NewTab"
+    },
+    "extVersion": {
+        "dscription": "",
+        "message": "1"
+    }
 }
