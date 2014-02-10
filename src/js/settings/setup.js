@@ -1,7 +1,7 @@
 var settingsModule = settingsModule || angular.module('aio.settings', []);
 
 settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Config', '$log', 'Storage', '$q',
-    function($rootScope, C, Config, $log, Storage, $q) {
+    function ($rootScope, C, Config, $log, Storage, $q) {
         var storageKey = C.STORAGE_KEYS.CONFIG;
 
         /**
@@ -10,10 +10,10 @@ settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Config', '$log', 'S
          *
          * @return promise
          */
-        var loadFromStorage = function() {
+        var loadFromStorage = function () {
             var deferred = $q.defer();
 
-            Storage.get(storageKey, function(items) {
+            Storage.get(storageKey, function (items) {
                 if (items && items[storageKey]) {
                     $log.log('[Config] - got settings from localstorage');
                     Config.set(items[storageKey]);
@@ -31,7 +31,7 @@ settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Config', '$log', 'S
          * Initiates Setup
          * @returns {promise}
          */
-        var startSetup = function() {
+        var startSetup = function () {
             $log.log('[Setup] - starting setup');
 
             //try to get settings from localstorage first
@@ -39,10 +39,10 @@ settingsModule.factory('Setup', ['$rootScope', 'Constants', 'Config', '$log', 'S
             //if no settings, get from remote
             .then(angular.noop, Config.setup)
             //finished setup with success
-            .then(function() {
+            .then(function () {
                 $log.log('[Setup] - finished setup');
                 return;
-            }, function(e) {
+            }, function (e) {
                 $log.warn('[Setup] - Finished setup with error', e);
                 return e;
             });

@@ -14,32 +14,32 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          * @param defer
          * @return
          */
-        var errorHandler = function(deferred) {
+        var errorHandler = function (deferred) {
             return function filesStorageService_errorHandler(e) {
                 var msg = '';
                 switch (e.code) {
-                    case FileError.QUOTA_EXCEEDED_ERR:
-                        msg = 'QUOTA_EXCEEDED_ERR';
-                        break;
-                    case FileError.NOT_FOUND_ERR:
-                        msg = 'NOT_FOUND_ERR';
-                        break;
-                    case FileError.SECURITY_ERR:
-                        msg = 'SECURITY_ERR';
-                        break;
-                    case FileError.INVALID_MODIFICATION_ERR:
-                        msg = 'INVALID_MODIFICATION_ERR';
-                        break;
-                    case FileError.INVALID_STATE_ERR:
-                        msg = 'INVALID_STATE_ERR';
-                        break;
-                    default:
-                        msg = 'Unknown Error';
-                        break;
+                case FileError.QUOTA_EXCEEDED_ERR:
+                    msg = 'QUOTA_EXCEEDED_ERR';
+                    break;
+                case FileError.NOT_FOUND_ERR:
+                    msg = 'NOT_FOUND_ERR';
+                    break;
+                case FileError.SECURITY_ERR:
+                    msg = 'SECURITY_ERR';
+                    break;
+                case FileError.INVALID_MODIFICATION_ERR:
+                    msg = 'INVALID_MODIFICATION_ERR';
+                    break;
+                case FileError.INVALID_STATE_ERR:
+                    msg = 'INVALID_STATE_ERR';
+                    break;
+                default:
+                    msg = 'Unknown Error';
+                    break;
                 }
 
                 $log.info('Filesystem error: ' + msg);
-                $rootScope.$apply(function() {
+                $rootScope.$apply(function () {
                     deferred.reject(msg);
                 });
             };
@@ -53,17 +53,17 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          * @param type
          * @return
          */
-        var write = function(fileName, content, type) {
+        var write = function (fileName, content, type) {
             var deferred = $q.defer();
 
             fs.root.getFile(fileName, {
                 create: true
-            }, function(fileEntry) {
+            }, function (fileEntry) {
                 // Create a FileWriter object for our FileEntry (log.txt).
-                fileEntry.createWriter(function(fileWriter) {
-                    fileWriter.onwriteend = function() {
+                fileEntry.createWriter(function (fileWriter) {
+                    fileWriter.onwriteend = function () {
                         $log.info('Write completed. ', fileEntry.toURL());
-                        $rootScope.$apply(function() {
+                        $rootScope.$apply(function () {
                             deferred.resolve(fileEntry.toURL());
                         });
                     };
@@ -117,8 +117,8 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                     fileEntry.file(function filesStorageService_read_getFile_file(file) {
                         var reader = new FileReader();
 
-                        reader.onloadend = function() {
-                            $rootScope.$apply(function() {
+                        reader.onloadend = function () {
+                            $rootScope.$apply(function () {
                                 deferred.resolve(this.result);
                             });
                         };
@@ -128,7 +128,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 }, errorHandler(deferred));
             } catch (e) {
                 $log.info('Error reading file', e);
-                $rootScope.$apply(function() {
+                $rootScope.$apply(function () {
                     deferred.reject(e);
                 });
             }
@@ -149,10 +149,10 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
             try {
                 fs.root.getFile(fileName, {
                     create: false
-                }, function(fileEntry) {
+                }, function (fileEntry) {
 
                     // Create a FileWriter object for our FileEntry (log.txt).
-                    fileEntry.createWriter(function(fileWriter) {
+                    fileEntry.createWriter(function (fileWriter) {
 
                         fileWriter.seek(fileWriter.length); // Start write position at EOF.
 
@@ -162,7 +162,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                         });
 
                         fileWriter.write(blob);
-                        $rootScope.$apply(function() {
+                        $rootScope.$apply(function () {
                             deferred.resolve(fileEntry.toURL());
                         });
 
@@ -170,7 +170,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 }, errorHandler(deferred));
             } catch (e) {
                 $log.info('Error', e);
-                $rootScope.$apply(function() {
+                $rootScope.$apply(function () {
                     deferred.reject(e);
                 });
             }
@@ -191,16 +191,16 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 fs.root.getFile(fileName, {
                     create: false
                 }, function filesStorageService_remove_getFile(fileEntry) {
-                    fileEntry.remove(function() {
+                    fileEntry.remove(function () {
                         $log.info('File removed.');
-                        $rootScope.$apply(function() {
+                        $rootScope.$apply(function () {
                             deferred.resolve();
                         });
                     }, errorHandler(deferred));
                 }, errorHandler(deferred));
             } catch (e) {
                 $log.info('Error', e);
-                $rootScope.$apply(function() {
+                $rootScope.$apply(function () {
                     deferred.reject(e);
                 });
             }
@@ -220,18 +220,18 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
             if (path) {
                 var split = path.split('/');
                 if (split.length > 0) {
-                    $rootScope.$apply(function() {
+                    $rootScope.$apply(function () {
                         deferred.resolve();
                     });
                     //returns a promise as well
                     return remove(split[split.length - 1]);
                 } else {
-                    $rootScope.$apply(function() {
+                    $rootScope.$apply(function () {
                         deferred.reject('not a valid path');
                     });
                 }
             } else {
-                $rootScope.$apply(function() {
+                $rootScope.$apply(function () {
                     deferred.reject('not a valid path');
                 });
             }
@@ -252,12 +252,12 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 create: false
             };
 
-            fs.root.getFile(fileName, createObject, function(fileEntry) {
+            fs.root.getFile(fileName, createObject, function (fileEntry) {
                 var url;
                 if (fileEntry) {
                     url = fileEntry.toURL();
                 }
-                $rootScope.$apply(function() {
+                $rootScope.$apply(function () {
                     deferred.resolve(url);
                 });
             }, errorHandler(deferred));
@@ -287,9 +287,9 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 /**
                  * New Version
                  */
-                navigator[storageType.persistent].requestQuota(fileSystemSize, function(grantedBytes) {
-                    window.requestFileSystem(apiType, grantedBytes, function(fileSystem) {
-                        $rootScope.$apply(function() {
+                navigator[storageType.persistent].requestQuota(fileSystemSize, function (grantedBytes) {
+                    window.requestFileSystem(apiType, grantedBytes, function (fileSystem) {
+                        $rootScope.$apply(function () {
                             fs = fileSystem;
                             fsReady = true;
                             initting.resolve();

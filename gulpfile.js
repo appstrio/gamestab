@@ -18,23 +18,6 @@ var paths = {
     src: 'src',
 };
 
-paths.origin = {
-    jade: path.join(paths.src, paths.jade, '**/*.jade'),
-    less: path.join(paths.src, paths.less, '*.less'),
-    assets: path.join(paths.assets, '**/*'),
-    extraAssets: 'extra/lovedGames/assets/**/*',
-    extraBuild: 'extra/lovedGames/build.json',
-    manifest: path.join(paths.src, 'manifest.json'),
-    js: path.join(paths.src, 'js/**/*.js')
-};
-
-paths.dist = {
-    less: path.join(paths.build, paths.css),
-    libs: path.join(paths.build, paths.vendor),
-    extraBuild: path.join(paths.build, 'data'),
-    js: path.join(paths.build, 'js')
-};
-
 var bowerPackages = [
     'requirejs/require.js',
     'when/when.js',
@@ -55,11 +38,31 @@ var vendorPackages = [
     'sortable.js'
 ];
 
+var shouldReload = false;
+
+//generate libs combined packages
 var libs = bowerPackages.map(function (item) {
     return path.join(paths.bower, item);
 }).concat(vendorPackages.map(function (item) {
     return path.join(paths.src, paths.vendor, item);
 }));
+
+paths.origin = {
+    jade: path.join(paths.src, paths.jade, '**/*.jade'),
+    less: path.join(paths.src, paths.less, '*.less'),
+    assets: path.join(paths.assets, '**/*'),
+    extraAssets: 'extra/lovedGames/assets/**/*',
+    extraBuild: 'extra/lovedGames/build.json',
+    manifest: path.join(paths.src, 'manifest.json'),
+    js: path.join(paths.src, 'js/**/*.js')
+};
+
+paths.dist = {
+    less: path.join(paths.build, paths.css),
+    libs: path.join(paths.build, paths.vendor),
+    extraBuild: path.join(paths.build, 'data'),
+    js: path.join(paths.build, 'js')
+};
 
 gulp.task('default', ['clean'], function () {
     gulp.start('assets', 'jade', 'libs', 'less', 'scripts', 'manifest', 'reloadExtension', 'watch');
@@ -116,6 +119,9 @@ gulp.task('libs', function () {
 });
 
 gulp.task('reloadExtension', function () {
+    if (!shouldReload) {
+        return;
+    }
     gulp.src('README.md')
         .pipe(gulpOpen('', {
             url: 'http://reload.extensions',

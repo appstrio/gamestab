@@ -1,14 +1,14 @@
 var overlayModule = angular.module('aio.overlay', []);
 
 overlayModule.directive('aioOverlay', ['$timeout', '$log',
-    function($timeout, $log) {
+    function ($timeout, $log) {
         return {
             scope: {
                 overlayOptions: '='
             },
-            link: function(scope, element, attrs) {
+            link: function (scope, element, attrs) {
                 var $overlay = element;
-                scope.$watch('overlayOptions', function(newVal) {
+                scope.$watch('overlayOptions', function (newVal) {
                     if (!newVal || !newVal.name) {
                         return hide();
                     }
@@ -25,7 +25,7 @@ overlayModule.directive('aioOverlay', ['$timeout', '$log',
                  * @param done
                  * @return
                  */
-                var hide = function(done) {
+                var hide = function (done) {
                     $overlay.removeClass('showed');
                     $('#wrapper').removeClass('blurred');
                     $overlay.removeClass('enlarged');
@@ -38,19 +38,19 @@ overlayModule.directive('aioOverlay', ['$timeout', '$log',
                  * @param done
                  * @return
                  */
-                var show = function(done) {
+                var show = function (done) {
                     $overlay.addClass('showed');
                     $('#wrapper').addClass('blurred');
                     $overlay.addClass('enlarged');
                 };
 
-                element.on('click', function(e) {
+                element.on('click', function (e) {
                     hide();
-                }).on('click', '.main', function(e) {
+                }).on('click', '.main', function (e) {
                     e.stopPropagation();
                 });
 
-                scope.$on('$destroy', function() {
+                scope.$on('$destroy', function () {
                     element.off();
                 });
             }

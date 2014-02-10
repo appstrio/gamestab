@@ -2,7 +2,7 @@
 var imageModule = angular.module('aio.image', []);
 
 imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
-    function($q, $rootScope, FileSystem, $log) {
+    function ($q, $rootScope, FileSystem, $log) {
 
         var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
         /**
@@ -16,7 +16,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
          * @config fixedSize
          * @return
          */
-        var urlToBase64 = function(params) {
+        var urlToBase64 = function (params) {
             var options = params.options || {};
             var url = params.url;
 
@@ -29,7 +29,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
 
             //exit nicely
             if (!url) {
-                $rootScope.$apply(function() {
+                $rootScope.$apply(function () {
                     deferred.reject('Missing url to convert to base64');
                 });
                 return deferred.promise;
@@ -45,7 +45,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
             img = new Image();
 
             //img load event
-            img.onload = function() {
+            img.onload = function () {
                 // Draw original image in second canvas
                 canvasCopy.width = img.width;
                 canvasCopy.height = img.height;
@@ -54,7 +54,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
 
                 //check if resize is not needed
                 if (!options.maxWidth && !options.maxHeight && !options.fixedHeight && !options.fixedWidth) {
-                    $rootScope.$apply(function() {
+                    $rootScope.$apply(function () {
                         deferred.resolve(canvasCopy.toDataURL());
                     });
                     return;
@@ -84,12 +84,12 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
 
                 ctx.drawImage(canvasCopy, 0, 0, canvasCopy.width,
                     canvasCopy.height, 0, 0, canvas.width, canvas.height);
-                $rootScope.$apply(function() {
+                $rootScope.$apply(function () {
                     deferred.resolve(canvas.toDataURL());
                 });
             };
-            img.onerror = function(e) {
-                $rootScope.$apply(function() {
+            img.onerror = function (e) {
+                $rootScope.$apply(function () {
                     deferred.reject(e);
                 });
             };
@@ -100,11 +100,11 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
         };
 
 
-        var isBase64 = function(data) {
+        var isBase64 = function (data) {
             return base64Regex.test(data);
         };
 
-        var getTypeFromBase64 = function(base64) {
+        var getTypeFromBase64 = function (base64) {
             //split image by regex
             var splittedContent = base64.split(base64Regex);
             // splittedContent = ['', 'image/png', 'asdflkjdfdkfjsdfsdflksdfjksdf']
@@ -120,7 +120,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
          * @param params.resizeOptions
          * @return promise
          */
-        var urlToLocalFile = function(params) {
+        var urlToLocalFile = function (params) {
             var deferred = $q.defer();
             params = params || {};
             var type;
@@ -133,18 +133,18 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
                 type = getTypeFromBase64(params.url);
 
                 //generate unique name to each thumbnail
-                FileSystem.write(fileName, params.url, type).then(function(file) {
+                FileSystem.write(fileName, params.url, type).then(function (file) {
                     deferred.resolve(file);
                 });
             } else {
                 //file doesn't exist, generate it as base64
-                urlToBase64(params).then(function(base64) {
+                urlToBase64(params).then(function (base64) {
                     type = getTypeFromBase64(base64);
                     //generate unique name to each thumbnail
-                    FileSystem.write(fileName, base64, type).then(function(file) {
+                    FileSystem.write(fileName, base64, type).then(function (file) {
                         deferred.resolve(file);
                     });
-                }).then(angular.noop, function(e) {
+                }).then(angular.noop, function (e) {
                     //error handling
                     $log.log('[Image] - error saving remote image', e);
                     deferred.reject(e);
@@ -162,7 +162,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
          * @param field
          * @return
          */
-        var isPathLocal = function(field) {
+        var isPathLocal = function (field) {
             if (/filesystem:chrome-extension/.test(field)) {
                 return true;
             }
@@ -181,10 +181,10 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
          * @param {Object[]} arr
          * @return
          */
-        var convertFieldToLocalFile = function(fieldToConvert, arr) {
+        var convertFieldToLocalFile = function (fieldToConvert, arr) {
             var deferred = $q.defer();
 
-            async.eachSeries(arr, function(item, callback) {
+            async.eachSeries(arr, function (item, callback) {
                 //if field is local, don't change it
                 if (isPathLocal(item[fieldToConvert])) {
                     return callback();
@@ -192,15 +192,15 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
 
                 urlToLocalFile({
                     url: item[fieldToConvert]
-                }).then(function(file) {
+                }).then(function (file) {
                     //on success
                     item[fieldToConvert] = file;
                     return callback();
-                }, function() {
+                }, function () {
                     //on error
                     return callback();
                 });
-            }, function() {
+            }, function () {
                 deferred.resolve(arr);
             });
             return deferred.promise;
@@ -219,11 +219,11 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
          * @param url
          * @return {number}
          */
-        var _getHashFromUrl = function(url) {
+        var _getHashFromUrl = function (url) {
             if (typeof url !== 'string') {
                 url = String(url);
             }
-            return url.split('').reduce(function(a, b) {
+            return url.split('').reduce(function (a, b) {
                 //jshint bitwise:false
                 a = ((a << 5) - a) + b.charCodeAt(0);
                 return a & a;

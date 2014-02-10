@@ -1,12 +1,12 @@
 var storageModule = angular.module('aio.storage', []);
 
 storageModule.factory('Storage', ['$rootScope',
-    function($rootScope) {
+    function ($rootScope) {
         var localStorageAbstraction = {
-            get: function(key, cb) {
+            get: function (key, cb) {
                 var raw = localStorage.getItem(key);
                 cb = cb || angular.noop;
-                setTimeout(function() {
+                setTimeout(function () {
                     try {
                         var output = {};
                         output[key] = JSON.parse(raw);
@@ -17,10 +17,10 @@ storageModule.factory('Storage', ['$rootScope',
                     }
                 }, 0);
             },
-            set: function(items, cb) {
+            set: function (items, cb) {
                 var item, stringified;
                 cb = cb || angular.noop;
-                setTimeout(function() {
+                setTimeout(function () {
                     try {
                         for (var i in items) {
                             if (items.hasOwnProperty(i)) {
@@ -36,9 +36,9 @@ storageModule.factory('Storage', ['$rootScope',
                     }
                 });
             },
-            remove: function(key, cb) {
+            remove: function (key, cb) {
                 cb = cb || angular.noop;
-                setTimeout(function() {
+                setTimeout(function () {
                     try {
                         localStorage.removeItem(key);
                         cb(1);
@@ -52,34 +52,34 @@ storageModule.factory('Storage', ['$rootScope',
 
         var StorageArea = localStorageAbstraction || chrome.storage.local;
         return {
-            get: function(keys, cb) {
+            get: function (keys, cb) {
                 cb = cb || angular.noop;
-                StorageArea.get(keys, function(items) {
-                    $rootScope.$apply(function() {
+                StorageArea.get(keys, function (items) {
+                    $rootScope.$apply(function () {
                         cb(items);
                     });
                 });
             },
 
-            set: function(items, cb) {
+            set: function (items, cb) {
                 cb = cb || angular.noop;
-                StorageArea.set(items, function() {
-                    $rootScope.$apply(function() {
+                StorageArea.set(items, function () {
+                    $rootScope.$apply(function () {
                         cb();
                     });
                 });
             },
 
-            setItem: function(key, item, cb) {
+            setItem: function (key, item, cb) {
                 var objToStore = {};
                 objToStore[key] = item;
                 StorageArea.set(objToStore, cb);
             },
 
-            remove: function(keys, cb) {
+            remove: function (keys, cb) {
                 cb = cb || angular.noop;
-                StorageArea.remove(keys, function() {
-                    $rootScope.$apply(function() {
+                StorageArea.remove(keys, function () {
+                    $rootScope.$apply(function () {
                         cb();
                     });
                 });

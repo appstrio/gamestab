@@ -2,7 +2,7 @@ var settingsModule = settingsModule || angular.module('aio.settings', []);
 
 settingsModule.factory('Constants', [
 
-    function() {
+    function () {
         return {
             PARTNERS_JSON_URL: 'data/partners/partners.json',
             BACKGROUNDS_JSON_URL: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
