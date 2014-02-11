@@ -161,7 +161,7 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
          * @return {Promise|Boolean}
          */
         var reportEvent = function (eventId, params) {
-            var deferred;
+            var deferred = $q.defer();
             //max delay in hit callback
             var hitCallbackMaxDelay = 400;
             params = params || {};
@@ -174,7 +174,6 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
 
             //if needing to wait for finish, such as when tracking outbound links
             if (params.waitForFinish) {
-                deferred = $q.defer();
                 _gaq.push(['_set', 'hitCallback',
                     function () {
                         $rootScope.$apply(function () {
@@ -193,12 +192,7 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
                 _event.label, _event.value, _event.opt_noninteraction
             ]);
 
-            //return promise
-            if (params.waitForFinish) {
-                return deferred.promise;
-            }
-
-            return true;
+            return deferred.promise;
         };
 
         return {

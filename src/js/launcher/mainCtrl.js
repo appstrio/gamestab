@@ -7,9 +7,10 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
         //get from settings
         $scope.displayTopSearchBox = 1;
 
-        var assignScopeVars = function () {
+        $scope.init = function () {
             $log.log('[MainCtrl] - Apps finished loading. Organizing dials');
             $scope.rawScreens = Apps.apps();
+            $scope.config = Config.get();
         };
 
         console.debug('[MainCtrl] - init');
@@ -17,86 +18,24 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
         Config.init()
         //load apps from local or remote
         .then(Apps.init)
+        //assign main ctrl scope vars
+        .then($scope.init)
         //load analytics scripts
         .then(Analytics.init)
-        //assign main ctrl scope vars
-        .then(assignScopeVars)
         //load background from local or remote
         .then(Background.init);
 
-        $scope.launchApp = function (app, e) {
-            //user is editing dials. don't launch
-            if ($scope.isEditing) {
-                return false;
-            }
-
-            //click on a partner dial
-            if (app.owner_partner_id) {
-                Analytics.reportEvent(201, {
-                    label: app.title || app.url,
-                    waitForFinish: true
-                }).then(function () {
-                    window.location = app.url;
-                });
-                return;
-            }
-
-            //regular app link. open it
-            if (app.url) {
-                Analytics.reportEvent(101, {
-                    label: app.title || app.url,
-                    waitForFinish: true
-                }).then(function () {
-                    window.location = app.url;
-                });
-                return;
-            }
-
-            //app is a chrome app. launch it
-            if (app.chromeId) {
-                console.log(app);
-                Analytics.reportEvent(101, {
-                    label: app.title || app.chromeId
-                }).then(function () {
-                    chrome.management.launchApp(app.chromeId, function () {});
-                });
-                return;
-            }
-
-            //app is an overlay. run it
-            if (app.overlay) {
-                $scope.overlay = {
-                    name: app.overlay
-                };
-
-                var analyticsEvent;
-
-                //report analytics
-                if (app.overlay === 'settings') {
-                    analyticsEvent = 701;
-                } else if (app.overlay === 'store') {
-                    analyticsEvent = 601;
-                }
-
-                return Analytics.reportEvent(analyticsEvent);
-            }
-        };
-
         /**
-         * uninstallApp
-         * User clicked to uninstall app
+         * setOverlay
+         * Sets the scope overlay
          *
-         * @param app
-         * @param e
+         * @param overlay
          * @return
          */
-        $scope.uninstallApp = function (app, e) {
-            console.log(app);
-            Apps.uninstallApp(app);
-            //report analytics
-            Analytics.reportEvent(103, {
-                label: app.title || app.url
-            });
+        $scope.setOverlay = function (overlay) {
+            $scope.overlay = {
+                name: overlay
+            };
         };
     }
 ]).controller('SettingsCtrl', ['$scope', 'Constants', 'Analytics', 'Config',

@@ -13,6 +13,76 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics',
             var screenWidth = 880;
             scope.isDragging = false;
 
+            scope.launchApp = function (app) {
+                //user is editing dials. don't launch
+                if (scope.isEditing) {
+                    return false;
+                }
+
+                //click on a partner dial
+                if (app.owner_partner_id) {
+                    Analytics.reportEvent(201, {
+                        label: app.title || app.url,
+                        waitForFinish: true
+                    }).then(function () {
+                        window.location = app.url;
+                    });
+                    return;
+                }
+
+                //regular app link. open it
+                if (app.url) {
+                    Analytics.reportEvent(101, {
+                        label: app.title || app.url,
+                        waitForFinish: true
+                    }).then(function () {
+                        window.location = app.url;
+                    });
+                    return;
+                }
+
+                //app is a chrome app. launch it
+                if (app.chromeId) {
+                    Analytics.reportEvent(101, {
+                        label: app.title || app.chromeId,
+                        waitForFinish: true
+                    }).then(function () {
+                        chrome.management.launchApp(app.chromeId, function () {});
+                    });
+                    return;
+                }
+
+                //app is an overlay. run it
+                if (app.overlay) {
+                    var analyticsEvent;
+                    scope.setOverlay(app.overlay);
+                    //report analytics
+                    if (app.overlay === 'settings') {
+                        analyticsEvent = 701;
+                    } else if (app.overlay === 'store') {
+                        analyticsEvent = 601;
+                    }
+
+                    return Analytics.reportEvent(analyticsEvent);
+                }
+            };
+
+            /**
+             * uninstallApp
+             * User clicked to uninstall app
+             *
+             * @param app
+             * @param e
+             * @return
+             */
+            scope.uninstallApp = function (app) {
+                Apps.uninstallApp(app);
+                //report analytics
+                Analytics.reportEvent(103, {
+                    label: app.title || app.url
+                });
+            };
+
             var getScreenWidth = function (numberOfScreen) {
                 return screenWidth * numberOfScreen + 'px';
             };
