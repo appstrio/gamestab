@@ -1,13 +1,9 @@
 {
   "name": "whitelabelnewtab",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "description": "Generic template (hopefuly) to whitelabel the internet's new tab.",
   "dependencies": {},
-  "repository": "https://github.com/hlandao/whiteLabelNewTab",
-  "scripts": {
-    "start": "npm i && grunt build && grunt",
-    "postinstall": "bower i && grunt build"
-  },
+  "repository": "https://github.com/appstrio/wint",
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-watch": "~0.5.3",
