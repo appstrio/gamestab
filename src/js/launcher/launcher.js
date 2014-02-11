@@ -1,7 +1,7 @@
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
 launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics',
-    function (Apps, $log, $timeout, GA) {
+    function (Apps, $log, $timeout, Analytics) {
         return function (scope, element) {
             //jshint unused:false
 
@@ -47,7 +47,7 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics',
 
                 --scope.curScreen;
                 moveViewport();
-                GA.reportEvent(401, {
+                Analytics.reportEvent(401, {
                     label: 'left'
                 });
             }).mouseover(function () {
@@ -71,7 +71,7 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics',
                 if (scope.rawScreens && scope.rawScreens.length && scope.curScreen < scope.rawScreens.length - 1) {
                     ++scope.curScreen;
                     moveViewport();
-                    GA.reportEvent(401, {
+                    Analytics.reportEvent(401, {
                         label: 'right'
                     });
                 } else if (scope.curScreen >= scope.rawScreens.length) {
@@ -127,6 +127,11 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics',
                     }, 0);
 
                     scope.isDragging = true;
+
+                    scope.activeApp = scope.activeApp || {};
+                    Analytics.reportEvent(102, {
+                        label: scope.activeApp.title || scope.activeApp.url
+                    });
                 },
                 stop: function (e, u) {
                     // remove unnecessary classes
@@ -184,6 +189,7 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics',
                 $log.log('[hlLauncher] - starting drag');
                 scope.isEditing = true;
                 scope.sortableOptions.disabled = false;
+                scope.activeApp = app;
 
                 //track only once - since this turns off dragging
                 $(document).one('click', function () {
