@@ -32,13 +32,24 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
 
             //app is a link. run it
             if (app.url) {
-                window.location = app.url;
+                Analytics.reportEvent(101, {
+                    label: app.title || app.url,
+                    waitForFinish: true
+                }).then(function () {
+                    window.location = app.url;
+                });
                 return;
             }
 
             //app is a chrome app. launch it
             if (app.chromeId) {
-                chrome.management.launchApp(app.chromeId, function () {});
+                console.log(app);
+                Analytics.reportEvent(101, {
+                    label: app.title || app.chromeId
+                }).then(function () {
+                    chrome.management.launchApp(app.chromeId, function () {});
+                });
+                return;
             }
 
             //app is an overlay. run it

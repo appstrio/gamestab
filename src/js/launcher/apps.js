@@ -232,6 +232,9 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         var chromeAppToObject = function (app) {
             var _app = angular.copy(app);
             _app.icon = getLargestIconChromeApp(app.icons).url;
+            _app.chromeId = app.id;
+            _app.title = app.shortName || app.name;
+            delete _app.id;
             return _app;
         };
 
