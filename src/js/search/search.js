@@ -1,17 +1,16 @@
 /* global _ */
 var searchModule = angular.module('aio.search', []);
 
-searchModule.directive('aioSearchBox', ['Analytics',
+searchModule.directive('aioSearchBox', ['Analytics', 'Constants',
 
-    function (Analytics) {
+    function (Analytics, C) {
         return function (scope, element) {
-            var throttleLimit = 100;
+            var throttleLimit = C.CONFIG.search_throttle_limit;
             element.focus();
-
 
             // get the results using a throttled function
             var getResults = _.throttle(function (val) {
-                //build a list of recommended search results
+                //TODO build a list of recommended search results
                 console.debug('typeahead guess', val);
             }, throttleLimit);
 

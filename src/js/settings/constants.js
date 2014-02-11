@@ -26,6 +26,7 @@ settingsModule.factory('Constants', [
                 config_update_url: '',
                 dials_per_page: 12,
                 initial_dials_size: 26,
+                search_throttle_limit: 100,
                 user_preferences: {
                     show_search_box: true
                 }
