@@ -76,21 +76,6 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
                 label: app.title || app.url
             });
         };
-
-        /**
-         * goSearch
-         * activated every time a user presses a key in the search
-         *
-         * @param e
-         * @return
-         */
-        $scope.goSearch = function (e) {
-            if (e.keyCode === 13) {
-                window.location = 'http://www.google.com/search?q=' + $scope.searchQuery;
-            }
-        };
-
-        $('#search-input').keypress($scope.goSearch); //TODO:
     }
 ]).controller('SettingsCtrl', ['$scope', 'Constants', 'Analytics', 'Config',
     function ($scope, C, Analytics, Config) {
