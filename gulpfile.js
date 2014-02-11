@@ -12,7 +12,7 @@ var bump = require('gulp-bump');
 // var jsValidate = require('gulp-jsvalidate');
 // var watch = require('gulp-watch');
 var less = require('gulp-less');
-var pkg = require('./package.json');
+var pkg;
 
 var paths = {
     build: 'build',
@@ -54,6 +54,13 @@ var libs = bowerPackages.map(function (item) {
     return path.join(paths.src, paths.vendor, item);
 }));
 
+var getPackageJson = function () {
+    var fs = require('fs');
+
+    pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+    return pkg;
+};
+
 paths.origin = {
     jade: path.join(paths.src, paths.jade, '**/*.jade'),
     less: path.join(paths.src, paths.less, '*.less'),
@@ -91,8 +98,9 @@ gulp.task('less', function () {
 });
 
 gulp.task('zip', function () {
+    var _pkg = getPackageJson();
     gulp.src('build/**/*')
-        .pipe(zip('gamesTab.' + pkg.version + '.zip'))
+        .pipe(zip('gamesTab.' + _pkg.version + '.zip'))
         .pipe(gulp.dest('builds'));
 });
 
@@ -115,11 +123,11 @@ gulp.task('clean', function () {
 
 gulp.task('bump', function () {
     //reget package
-    pkg = require('./package.json');
+    var _pkg = getPackageJson();
     //increment version
-    var newVer = semver.inc(pkg.version, 'patch');
+    var newVer = semver.inc(_pkg.version, 'patch');
     //log actgion
-    gutil.log('Bumping version', gutil.colors.cyan(pkg.version), '=>', gutil.colors.blue(newVer));
+    gutil.log('Bumping version', gutil.colors.cyan(_pkg.version), '=>', gutil.colors.blue(newVer));
     //increment bower & package version seperately since they are in different places
     gulp.src(['./bower.json', './package.json'])
         .pipe(bump({
