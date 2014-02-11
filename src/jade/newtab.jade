@@ -45,7 +45,7 @@ html(ng-csp='ng-csp')
         //----------------
     body(ng-controller='MainCtrl')
     #wrapper(hl-background)
-        .search2(ng-show="displayTopSearchBox")
+        .search1(ng-show="displayTopSearchBox")
             iframe.blurred-background
             .search-input
                 input(placeholder="Web Search...", ng-keypress="goSearch($event)", ng-model="searchQuery", id="search-input", aio-search-box)

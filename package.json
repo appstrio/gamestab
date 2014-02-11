@@ -1,6 +1,6 @@
 {
   "name": "gamesTab",
-  "version": "1.0.37",
+  "version": "1.0.39",
   "description": "Generic template (hopefuly) to whitelabel the internet's new tab.",
   "dependencies": {},
   "repository": "https://github.com/appstrio/wint",
