@@ -78,10 +78,12 @@ paths.dist = {
     js: path.join(paths.build, 'js')
 };
 
+//default task
 gulp.task('default', ['clean'], function () {
     gulp.start('bump', 'assets', 'jade', 'libs', 'less', 'manifest', 'scripts', 'reloadExtension', 'watch');
 });
 
+//jade -> html
 gulp.task('jade', function () {
     return gulp.src(paths.origin.jade)
         .pipe(flatten())
@@ -91,12 +93,14 @@ gulp.task('jade', function () {
         .pipe(gulp.dest(paths.build));
 });
 
+//less -> css
 gulp.task('less', function () {
     return gulp.src(paths.origin.less)
         .pipe(less())
         .pipe(gulp.dest(paths.dist.less));
 });
 
+// zip build folder. buggy
 gulp.task('zip', function () {
     var _pkg = getPackageJson();
     gulp.src('build/**/*')
@@ -104,23 +108,27 @@ gulp.task('zip', function () {
         .pipe(gulp.dest('builds'));
 });
 
+// copy & uglify js scripts
 gulp.task('scripts', function () {
     return gulp.src(paths.origin.js)
         .pipe(uglify())
         .pipe(gulp.dest(paths.dist.js));
 });
 
+//copy manifest
 gulp.task('manifest', function () {
     return gulp.src(paths.origin.manifest)
         .pipe(gulp.dest(paths.build));
 });
 
+//clean build folder
 gulp.task('clean', function () {
     return gulp.src(paths.build, {
         read: false
     }).pipe(clean());
 });
 
+//bump versions on package/bower/manifest
 gulp.task('bump', function () {
     //reget package
     var _pkg = getPackageJson();

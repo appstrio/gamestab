@@ -1,44 +1,6 @@
 /* global _ */
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
-
-launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 'Background', 'Analytics',
-    function ($scope, $http, Apps, Config, $log, Background, Analytics) {
-
-        //get from settings
-        $scope.displayTopSearchBox = 1;
-
-        $scope.init = function () {
-            $log.log('[MainCtrl] - Apps finished loading. Organizing dials');
-            $scope.rawScreens = Apps.apps();
-            $scope.config = Config.get();
-        };
-
-        console.debug('[MainCtrl] - init');
-        //load config from local or remote
-        Config.init()
-        //load apps from local or remote
-        .then(Apps.init)
-        //assign main ctrl scope vars
-        .then($scope.init)
-        //load analytics scripts
-        .then(Analytics.init)
-        //load background from local or remote
-        .then(Background.init);
-
-        /**
-         * setOverlay
-         * Sets the scope overlay
-         *
-         * @param overlay
-         * @return
-         */
-        $scope.setOverlay = function (overlay) {
-            $scope.overlay = {
-                name: overlay
-            };
-        };
-    }
-]).controller('SettingsCtrl', ['$scope', 'Constants', 'Analytics', 'Config',
+launcherModule.controller('SettingsCtrl', ['$scope', 'Constants', 'Analytics', 'Config',
     function ($scope, C, Analytics, Config) {
         $scope.panes = ['General', 'Background', 'About'];
         //initial selected pane

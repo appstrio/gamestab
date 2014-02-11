@@ -1,26 +1,12 @@
 WINT (White Label New Tab)
 --------------------------
-
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 ## First Installation
 
 1. Clone repo.
-2. Run `npm install` which will bootstrap everything.
-3. Load unpacked extension, at `build`.
-4. Run `npm start`.
-5. Start developing, while grunt compiles your changes on the fly with `watch`.
-
-## Reinstallation
-
-1. Just run `npm start`.
-
-# HACKING
-
-refer to HACKING.md
-
-# More info
-
-ANALYTICS.md
-
-# TODOs
+2. Run `npm install`.
+3. Run `bower install`.
+4. You will need `Gulp` installed globally. Do this by: `npm i gulp -g`.
+5. run `gulp` and start developing.
+6. App is built into the `build` directory, and also changes are watched.

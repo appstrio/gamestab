@@ -260,10 +260,10 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                 $previewImage[0].src = cropperOptions.dataURL;
             };
 
-            var clear = function () {
-                delete cropperOptions.dataURL;
-                cropperOptions = null;
-            };
+            // var clear = function () {
+            // delete cropperOptions.dataURL;
+            // cropperOptions = null;
+            // };
         };
     }
 ]).directive('hlBackgroundLocalImage', ['Background', '$rootScope', 'Analytics',
