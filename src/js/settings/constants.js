@@ -8,6 +8,7 @@ settingsModule.factory('Constants', [
             BACKGROUNDS_JSON_URL: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
             DEFAULT_BACKGROUND_IMG: 'img/wallpapers/default.jpg',
             ANALYTICS_UA_ACCOUNT: 'UA-47928276-1',
+            APP_VERSION: chrome.app.getDetails().version,
             STORAGE_KEYS: {
                 CONFIG: 'gt.config',
                 APPS: 'gt.apps',

@@ -3,8 +3,8 @@ var analyticsModule = angular.module('aio.analytics', []);
 //global
 var _gaq = _gaq || [];
 
-analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants',
-    function ($rootScope, $log, $q, C) {
+analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '$timeout',
+    function ($rootScope, $log, $q, C, $timeout) {
         /**
          * init
          * Load the analytics script
@@ -23,85 +23,176 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants',
                 s.parentNode.insertBefore(ga, s);
             })();
 
+            //register account
             _gaq.push(['_setAccount', C.ANALYTICS_UA_ACCOUNT]);
             _gaq.push(['_setDomainName', 'none']);
             //track pageview
             _gaq.push(['_trackPageview']);
+            //report app_load
+            reportEvent(501, {
+                label: C.APP_VERSION
+            });
             $log.log('[Analytics] - done loading...');
         };
 
         var events = {
             101: {
-                'Category': 'dials',
-                'Action': 'dial_click'
+                category: 'dials',
+                action: 'dial_click'
             },
             102: {
-                'Category': 'dials',
-                'Action': 'dials_dragging'
+                category: 'dials',
+                action: 'dials_dragging'
             },
             103: {
-                'Category': 'dials',
-                'Action': 'remove_dial'
+                category: 'dials',
+                action: 'remove_dial'
             },
             201: {
-                'Category': 'partner_logo',
-                'Action': 'click'
+                category: 'partner_logo',
+                action: 'click'
             },
             301: {
-                'Category': 'search',
-                'Action': 'search_complete'
+                category: 'search',
+                action: 'search_complete'
             },
             302: {
-                'Category': 'search',
-                'Action': 'search_focus'
+                category: 'search',
+                action: 'search_focus'
             },
             401: {
-                'Category': 'navigation',
-                'Action': 'navigation_clicked'
+                category: 'navigation',
+                action: 'navigation_clicked'
             },
             501: {
-                'Category': 'page_load',
-                'Action': 'load'
+                category: 'app_load',
+                action: 'load'
             },
             601: {
-                'Category': 'appstore',
-                'Action': 'open'
+                category: 'appstore',
+                action: 'open'
             },
             602: {
-                'Category': 'appstore',
-                'Action': 'category_click'
+                category: 'appstore',
+                action: 'category_click'
             },
             603: {
-                'Category': 'appstore',
-                'Action': 'add_new_dial'
+                category: 'appstore',
+                action: 'add_new_dial'
             },
             701: {
-                'Category': 'settings',
-                'Action': 'open'
+                category: 'settings',
+                action: 'open'
             },
             702: {
-                'Category': 'settings',
-                'Action': 'category_click'
+                category: 'settings',
+                action: 'category_click'
             },
             703: {
-                'Category': 'settings',
-                'Action': 'show_search'
+                category: 'settings',
+                action: 'show_search'
             },
             704: {
-                'Category': 'settings',
-                'Action': 'background_select'
+                category: 'settings',
+                action: 'background_select'
             },
             705: {
-                'Category': 'settings',
-                'Action': 'background_upload'
+                category: 'settings',
+                action: 'background_upload'
             }
         };
 
-        var getEventArray = function (eventId, params) {};
+        /**
+         * getEventArray
+         * generate an event array to report to analytics
+         * @private
+         *
+         * @param eventId
+         * @param params
+         * @return
+         */
+        var _getEventArray = function (eventId, params) {
+            var _event;
 
+            //if eventId isn't found
+            if (!events[eventId]) {
+                return null;
+            }
+
+            //get the known event details from list
+            _event = angular.extend({}, events[eventId]);
+
+            //set defaults
+            _event.value = 1;
+            _event.opt_noninteraction = false;
+            _event.label = params.label || '';
+
+            switch (eventId) {
+
+            case 501:
+                //set as non-interaction
+                _event.opt_noninteraction = true;
+                break;
+            default:
+                break;
+            }
+
+            return _event;
+        };
+
+        /**
+         * reportEvent
+         * report an event to analytics
+         *
+         * @param {number} eventId the event Id
+         * @param params
+         * @param {Booolean} [params.waitForFinish] should wait for callback to finish and then return a promise
+         * @return {Promise|Boolean}
+         */
+        var reportEvent = function (eventId, params) {
+            var deferred;
+            //max delay in hit callback
+            var hitCallbackMaxDelay = 400;
+            var _event = _getEventArray(eventId, params);
+
+            if (!_event || !_event.category || !_event.action) {
+                $log.log('[Analytics] - Error in reporting event. Missing fields', _event);
+                return false;
+            }
+
+            //if needing to wait for finish, such as when tracking outbound links
+            if (params.waitForFinish) {
+                deferred = $q.defer();
+                _gaq.push(['_set', 'hitCallback',
+                    function () {
+                        $rootScope.$apply(function () {
+                            deferred.resolve();
+                        });
+                    }
+                ]);
+
+                $timeout(function () {
+                    deferred.resolve();
+                }, hitCallbackMaxDelay);
+            }
+
+            //report analtyics event
+            _gaq.push(['_trackEvent', _event.category, _event.action,
+                _event.label, _event.value, _event.opt_noninteraction
+            ]);
+
+            //return promise
+            if (params.waitForFinish) {
+                return deferred.promise;
+            }
+
+
+            return true;
+        };
 
         return {
-            init: init
+            init: init,
+            reportEvent: reportEvent
         };
     }
 ]);

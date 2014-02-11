@@ -1,6 +1,6 @@
 {
   "name": "whitelabelnewtab",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Generic template (hopefuly) to whitelabel the internet's new tab.",
   "dependencies": {},
   "repository": "https://github.com/hlandao/whiteLabelNewTab",
