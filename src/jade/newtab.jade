@@ -48,7 +48,8 @@ html(ng-csp='ng-csp')
         .search1(ng-show="displayTopSearchBox")
             iframe.blurred-background
             .search-input
-                input(placeholder="Web Search...", ng-keypress="goSearch($event)", ng-model="searchQuery", id="search-input", aio-search-box)
+                .input-holder
+                    input(placeholder="Web Search...", ng-keypress="goSearch($event)", ng-model="searchQuery", id="search-input", aio-search-box)
         .main
             section(hl-launcher)
                 .arrows
