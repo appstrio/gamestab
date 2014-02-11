@@ -30,7 +30,18 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
                 return false;
             }
 
-            //app is a link. run it
+            //click on a partner dial
+            if (app.owner_partner_id) {
+                Analytics.reportEvent(201, {
+                    label: app.title || app.url,
+                    waitForFinish: true
+                }).then(function () {
+                    window.location = app.url;
+                });
+                return;
+            }
+
+            //regular app link. open it
             if (app.url) {
                 Analytics.reportEvent(101, {
                     label: app.title || app.url,
