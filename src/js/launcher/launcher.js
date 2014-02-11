@@ -1,8 +1,9 @@
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
-launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout',
-    function(Apps, $log, $timeout) {
-        return function(scope, element) {
+launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics',
+    function (Apps, $log, $timeout, GA) {
+        return function (scope, element) {
+            //jshint unused:false
 
             scope.curScreen = 0;
 
@@ -12,15 +13,15 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout',
             var screenWidth = 880;
             scope.isDragging = false;
 
-            var getScreenWidth = function(numberOfScreen) {
+            var getScreenWidth = function (numberOfScreen) {
                 return screenWidth * numberOfScreen + 'px';
             };
 
-            var getScreenPosition = function(curScreen) {
+            var getScreenPosition = function (curScreen) {
                 return screenWidth * curScreen * (-1) + 'px';
             };
 
-            var checkArrows = function() {
+            var checkArrows = function () {
                 if (!scope.rawScreens) {
                     return;
                 }
@@ -38,18 +39,23 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout',
                 }
             };
 
-            $arrowLeft.click(function() {
-                if (scope.curScreen > 0) {
-                    --scope.curScreen;
-                    moveViewport();
-                } else if (scope.curScreen <= 0) {
-                    //user on first screen and clicked left
+            $arrowLeft.click(function () {
+                //user on first screen
+                if (scope.curScreen <= 0) {
                     return;
                 }
-            }).mouseover(function() {
+
+                --scope.curScreen;
+                moveViewport();
+                GA.reportEvent(401, {
+                    label: 'left'
+                });
+            }).mouseover(function () {
+                //only run this code if user is dragging
                 if (!scope.isDragging) {
                     return;
                 }
+
                 if (scope.curScreen > 0) {
                     --scope.curScreen;
                     moveViewport();
@@ -59,19 +65,25 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout',
                 }
             });
 
-            $arrowRight.click(function() {
+            $arrowRight.click(function () {
+                //clicks on right arrow and we have screen to show him
                 if (scope.rawScreens && scope.rawScreens.length && scope.curScreen < scope.rawScreens.length - 1) {
                     ++scope.curScreen;
                     moveViewport();
+                    GA.reportEvent(401, {
+                        label: 'right'
+                    });
                 } else if (scope.curScreen >= scope.rawScreens.length) {
                     //user clicked on right arrow and is on top right screen
                     return;
                 }
-            }).mouseover(function() {
+            }).mouseover(function () {
+                //only run this code if user is dragging
                 if (!scope.isDragging) {
                     return;
                 }
                 if (scope.curScreen < scope.rawScreens.length - 1) {
+                    console.log('here');
                     ++scope.curScreen;
                     $draggingHelper.animate({
                         left: '+=' + screenWidth + 'px'
@@ -80,7 +92,7 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout',
                 }
             });
 
-            var moveViewport = function() {
+            var moveViewport = function () {
                 var newVal = scope.curScreen || 0;
                 $viewport.css({
                     left: getScreenPosition(newVal)
@@ -89,7 +101,7 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout',
             };
 
             // watch the number of screens to set the width of the viewport
-            scope.$watch('rawScreens', function(newVal) {
+            scope.$watch('rawScreens', function (newVal) {
                 if (newVal && newVal.length) {
                     $viewport.css({
                         width: getScreenWidth(newVal.length)
@@ -103,19 +115,19 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout',
             scope.sortableOptions = {
                 //tolerance : 'pointer',
                 disabled: true,
-                start: function(e, u) {
+                start: function (e, u) {
                     $draggingItem = $(u.item);
                     $draggingHelper = $(u.helper);
                     $draggingPlaceholder = $(u.placeholder);
                     $draggingItem.appendTo($draggingItem.parent());
                     $draggingHelper.addClass('dragging');
-                    $timeout(function() {
+                    $timeout(function () {
                         $draggingHelper.parent().parent().addClass('edit');
                     }, 0);
 
                     scope.isDragging = true;
                 },
-                stop: function(e, u) {
+                stop: function (e, u) {
                     // remove unnecessary classes
                     $draggingHelper.removeClass('dragging');
                     $draggingHelper.parent().parent().removeClass('edit');
@@ -124,7 +136,7 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout',
                     $draggingHelper = null;
                     $draggingItem = null;
                     $draggingPlaceholder = null;
-                    scope.$apply(function() {
+                    scope.$apply(function () {
                         Apps.store();
                     });
                 },
@@ -132,11 +144,10 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout',
                 revert: 500,
                 opacity: 0.75,
                 helper: 'clone',
-                over: function(e, u) {},
-                sort: function(e, u) {},
-                receive: function(e, u) {
-                    angular.forEach(scope.rawScreens, function(screen, index) {
-
+                over: function (e, u) {},
+                sort: function (e, u) {},
+                receive: function (e, u) {
+                    angular.forEach(scope.rawScreens, function (screen, index) {
                         if (screen.length > 12) {
                             var lastApp = screen.pop();
                             moveLastAppToNewScreen(lastApp, index);
@@ -146,7 +157,7 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout',
                 connectWith: '.apps-container'
             };
 
-            var moveLastAppToNewScreen = function(app, startIndex) {
+            var moveLastAppToNewScreen = function (app, startIndex) {
                 var foundNewScreen = false,
                     screen;
 
@@ -168,14 +179,15 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout',
                 }
             };
 
-            scope.longPress = function(app, e) {
+            scope.longPress = function (app, e) {
                 $log.log('[hlLauncher] - starting drag');
                 scope.isEditing = true;
                 scope.sortableOptions.disabled = false;
 
-                $(document).one('click', function() {
+                //track only once - since this turns off dragging
+                $(document).one('click', function () {
                     $log.log('[hlLauncher] - ended drag');
-                    scope.$apply(function() {
+                    scope.$apply(function () {
                         //turn editing off
                         scope.isEditing = false;
                         scope.sortableOptions.disabled = true;
