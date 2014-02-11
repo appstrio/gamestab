@@ -29,14 +29,6 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
             return deferred.promise;
         };
 
-        /**
-         * getter
-         *
-         * @return
-         */
-        var getter = function () {
-            return data;
-        };
 
         /**
          * setter
@@ -165,8 +157,10 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
 
         return {
             init: init,
-            get: getter,
-            set: setter,
+            get: function () {
+                return data;
+            },
+            set: store,
             setup: setup
         };
     }

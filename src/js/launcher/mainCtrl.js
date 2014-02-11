@@ -86,14 +86,14 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
         //set scope config
         $scope.config = Config.get();
 
-
         $scope.toggleShowSearch = function () {
             //report analytics
             Analytics.reportEvent(703, {
                 label: $scope.config.user_preferences.show_search_box
             });
 
-            console.log(Config.get());
+            //store settings
+            Config.set();
         };
 
         /**

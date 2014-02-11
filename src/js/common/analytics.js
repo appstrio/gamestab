@@ -131,8 +131,10 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
             _event = angular.extend({}, events[eventId]);
 
             //set defaults
+            //if value is a number report it
             _event.value = typeof params.value === 'number' ? params.value : 1;
             _event.opt_noninteraction = false;
+            //report label as string
             _event.label = typeof params.label !== 'undefined' ? String(params.label) : '';
 
             switch (eventId) {
