@@ -132,7 +132,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             var games, maxDials = C.CONFIG.initial_dials_size;
             var _appsDb, chromeApps, returnArr;
 
-            _appsDb = parseWebApps(results[0]);
+            _appsDb = results[0] || [];
             chromeApps = results[1] || [];
 
             var firstApps = getAppsFromAppsDb(_appsDb);
@@ -193,7 +193,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @return
          */
         var setup = function () {
-            var getDials = [getWebAppsDb(), Chrome.management.getAll()];
+            var getDials = [getOrganizedWebApps(), Chrome.management.getAll()];
 
             $log.log('[Apps] - starting setup');
             return $q.all(getDials)
@@ -215,6 +215,12 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         var getWebAppsDb = function () {
             $log.log('[Apps] - getting webAppsDb from', C.WEB_APPS_DB);
             return $http.get(C.WEB_APPS_DB);
+        };
+
+        var getOrganizedWebApps = function () {
+            return getWebAppsDb().then(function (webApps) {
+                return parseWebApps(webApps);
+            });
         };
 
         /**
@@ -327,7 +333,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 return apps;
             },
             store: store,
-            appsDB: getWebAppsDb,
+            getWebAppsDb: getOrganizedWebApps,
             addNewApp: addNewApp,
             uninstallApp: uninstallApp
         };

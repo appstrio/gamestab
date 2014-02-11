@@ -117,7 +117,8 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
     }
 ]).controller('StoreCtrl', ['$scope', 'Apps', '$log',
     function ($scope, Apps, $log) {
-        var byTags = {}, flattenedApps = [];
+        var byTags = {}, flattenedApps = [],
+            allApps = [];
 
         $scope.tags = ['Featured', 'Games', 'Social', 'News & Weather', 'Shopping', 'Productivity'];
         //default starting tag
@@ -133,11 +134,12 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
             flattenedApps = setFlattenedApps(_apps);
         };
 
-        Apps.isReady.then(function () {
+        Apps.getWebAppsDb().then(function (webAppsDb) {
             $log.log('[StoreCtrl] - initiating apps store ctrl');
+            allApps = webAppsDb;
             getAppsAndFlatten();
             //loop through each app
-            _.each(flattenedApps, function (app) {
+            _.each(allApps, function (app) {
                 //loop through each app tags
                 _.each(app.tags, function (tag) {
                     byTags[tag] = byTags[tag] || [];
