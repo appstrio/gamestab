@@ -46,6 +46,17 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
                 $scope.overlay = {
                     name: app.overlay
                 };
+
+                var analyticsEvent;
+
+                //report analytics
+                if (app.overlay === 'settings') {
+                    analyticsEvent = 701;
+                } else if (app.overlay === 'store') {
+                    analyticsEvent = 601;
+                }
+
+                return Analytics.reportEvent(analyticsEvent);
             }
         };
 
@@ -58,7 +69,12 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
          * @return
          */
         $scope.uninstallApp = function (app, e) {
+            console.log(app);
             Apps.uninstallApp(app);
+            //report analytics
+            Analytics.reportEvent(103, {
+                label: app.title || app.url
+            });
         };
 
         /**
@@ -137,8 +153,8 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
             Background.selectBackground(bg);
         };
     }
-]).controller('StoreCtrl', ['$scope', 'Apps', '$log',
-    function ($scope, Apps, $log) {
+]).controller('StoreCtrl', ['$scope', 'Apps', '$log', 'Analytics',
+    function ($scope, Apps, $log, Analytics) {
         var byTags = {}, flattenedApps = [],
             allApps = [];
 
@@ -176,6 +192,10 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
             e.stopPropagation();
             $scope.selectedTag = tag;
             $scope.selectedTagApps = byTags[$scope.selectedTag];
+            //report analytics
+            Analytics.reportEvent(602, {
+                label: tag
+            });
         };
 
         /**
@@ -203,6 +223,9 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
             e.stopPropagation();
             Apps.addNewApp(app);
             getAppsAndFlatten();
+            Analytics.reportEvent(603, {
+                label: app.title || app.url
+            });
         };
     }
 ]);

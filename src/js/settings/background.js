@@ -225,7 +225,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
     }
 ]).directive('hlBackground', ['Background', '$log',
     function (Background, $log) {
-        return function (scope, element, attrs) {
+        return function (scope, element) {
             var setBackground = function (background) {
                 element.css({
                     backgroundImage: 'url(' + background + ')'
@@ -266,9 +266,9 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
             };
         };
     }
-]).directive('hlBackgroundLocalImage', ['Background', '$rootScope',
-    function (Background, $rootScope) {
-        return function (scope, element, attrs) {
+]).directive('hlBackgroundLocalImage', ['Background', '$rootScope', 'Analytics',
+    function (Background, $rootScope, Analytics) {
+        return function (scope, element) {
             var $preview = element.find('.preview').eq(0),
                 $loader = $preview.find('.loader').eq(0),
                 $previewIMG = $preview.children().eq(0),
@@ -284,6 +284,9 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                     $preview.show();
                     $loader.addClass('showed');
                     Background.uploadNewLocalImage(oFREvent.target.result).then(function () {
+                        Analytics.reportEvent(705, {
+                            label: 'file'
+                        });
                         console.log('finished uploading');
                         $loader.removeClass('showed');
                         $preview.hide();
@@ -301,6 +304,10 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                     $preview.show();
                     $loader.addClass('showed');
                     Background.uploadNewLocalImage($(this).val()).then(function () {
+                        Analytics.reportEvent(705, {
+                            label: 'url'
+                        });
+
                         $loader.removeClass('showed');
                         $preview.hide();
                     }, function (e) {

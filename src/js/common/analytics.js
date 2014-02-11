@@ -163,6 +163,7 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
             var deferred;
             //max delay in hit callback
             var hitCallbackMaxDelay = 400;
+            params = params || {};
             var _event = _getEventArray(eventId, params);
 
             if (!_event || !_event.category || !_event.action) {
