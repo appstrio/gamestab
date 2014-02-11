@@ -114,14 +114,20 @@ gulp.task('clean', function () {
 });
 
 gulp.task('bump', function () {
+    //reget package
+    pkg = require('./package.json');
+    //increment version
     var newVer = semver.inc(pkg.version, 'patch');
+    //log actgion
     gutil.log('Bumping version', gutil.colors.cyan(pkg.version), '=>', gutil.colors.blue(newVer));
+    //increment bower & package version seperately since they are in different places
     gulp.src(['./bower.json', './package.json'])
         .pipe(bump({
             version: newVer
         }))
         .pipe(gulp.dest('./'));
 
+    //increment manifest version
     gulp.src('./src/manifest.json')
         .pipe(bump({
             version: newVer
@@ -129,6 +135,7 @@ gulp.task('bump', function () {
         .pipe(gulp.dest('./src'));
 });
 
+//handle assets
 gulp.task('assets', function () {
     //copy regular assets
     gulp.src(paths.origin.assets)
@@ -161,13 +168,15 @@ gulp.task('reloadExtension', function () {
 
 //all tasks are watch -> bump patch version -> reload extension (globally enabled)
 gulp.task('watch', function () {
-    gulp.watch(libs, ['libs', 'bump', 'reloadExtension']);
+    var afterTasks = ['bump', 'reloadExtension'];
+
+    gulp.watch(libs, ['libs'].concat(afterTasks));
     gulp.watch([
         paths.origin.assets,
         paths.origin.extraAssets,
         paths.origin.extraBuild
-    ], ['assets', 'bump', 'reloadExtension']);
-    gulp.watch(paths.origin.js, ['scripts', 'bump', 'reloadExtension']);
-    gulp.watch(paths.origin.less, ['less', 'bump', 'reloadExtension']);
-    gulp.watch(paths.origin.jade, ['jade', 'bump', 'reloadExtension']);
+    ], ['assets'].concat(afterTasks));
+    gulp.watch(paths.origin.js, ['scripts'].concat(afterTasks));
+    gulp.watch(paths.origin.less, ['less'].concat(afterTasks));
+    gulp.watch(paths.origin.jade, ['jade'].concat(afterTasks));
 });

@@ -56,6 +56,7 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics',
                     return;
                 }
 
+                //we are not on the lefmost screen
                 if (scope.curScreen > 0) {
                     --scope.curScreen;
                     moveViewport();
