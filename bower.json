@@ -1,32 +1,34 @@
 {
-  "name": "wint",
-  "version": "1.0.33",
-  "homepage": "https://github.com/hlandao/wint",
-  "authors": [
-    "WildEyes <xwildeyes@gmail.com>"
-  ],
-  "license": "MIT",
-  "private": true,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "jquery": "~2.0.3",
-    "moment": "~2.4.0",
-    "underscore": "~1.5.2",
-    "uri.js": "~1.11.2",
-    "jfeed": "*",
-    "requirejs": "~2.1.9",
-    "requirejs-promise": "*",
-    "typeahead.js": "~0.9.3",
-    "when": "~2.7.0",
-    "angular": "~1.2.6",
-    "jquery-ui": "~1.10.3",
-    "angular-ui-sortable": "https://github.com/hlandao/ui-sortable.git#~0.10.0",
-    "async": "~0.2.5"
-  }
+    "name": "gamestab",
+    "version": "1.0.33",
+    "description": "Games oriented Chrome Extension Newtab",
+    "homepage": "https://github.com/appstrio/gamestab",
+    "authors": [
+        "WildEyes <xwildeyes@gmail.com>",
+        "pgilad <giladp007@gmail.com>"
+    ],
+    "license": "MIT",
+    "private": true,
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "jquery": "~2.0.3",
+        "moment": "~2.4.0",
+        "underscore": "~1.5.2",
+        "uri.js": "~1.11.2",
+        "jfeed": "*",
+        "requirejs": "~2.1.9",
+        "requirejs-promise": "*",
+        "typeahead.js": "~0.9.3",
+        "when": "~2.7.0",
+        "angular": "~1.2.6",
+        "jquery-ui": "~1.10.3",
+        "angular-ui-sortable": "https://github.com/hlandao/ui-sortable.git#~0.10.0",
+        "async": "~0.2.5"
+    }
 }
