@@ -24,6 +24,7 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
             })();
 
             //runnig on dev version - no update url
+            //FIXME remove this false
             if (false && !chrome.runtime.getManifest().update_url) {
                 console.debug('Setting up local analytics ID of UA-99999999-X');
                 _gaq.push(['_setAccount', 'UA-99999999-X']);
