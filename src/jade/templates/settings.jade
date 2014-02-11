@@ -11,12 +11,11 @@
                     li
                         .control
                             .squaredFour
-                                input#squaredFour(name="check", checked, value="None", type="checkbox")
+                                input#squaredFour(name="check", ng-change="toggleShowSearch()" ng-model="config.user_preferences.show_search_box", value="None", type="checkbox")
                                 label(for="squaredFour")
                         .details
                             .label Show Search Box
                             .more-details Use our smart search box to search the web and launch your favorite web apps
-
             .settings-background(ng-switch-when="Background", ng-controller="BackgroundCtrl")
                 .bg-explorer
                     .bg-sample(ng-repeat="bg in backgrounds", ng-style="{'background-image':'url(' + bg.image + ')'}", ng-class="{selected : bg.isActive}", ng-click="selectBackground(bg, $event)")
@@ -31,7 +30,6 @@
                     .preview
                         .loader
                             img(src="./img/loader.gif")
-
                 //- .cropper(hl-cropper, cropper-options="cropperOptions")
                    .header Crop the image you uploaded
                    .editor

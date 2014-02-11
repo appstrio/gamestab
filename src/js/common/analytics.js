@@ -24,7 +24,7 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
             })();
 
             //runnig on dev version - no update url
-            if (!chrome.runtime.getManifest().update_url) {
+            if (false && !chrome.runtime.getManifest().update_url) {
                 console.debug('Setting up local analytics ID of UA-99999999-X');
                 _gaq.push(['_setAccount', 'UA-99999999-X']);
             } else {
@@ -98,7 +98,7 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
             },
             703: {
                 category: 'settings',
-                action: 'show_search'
+                action: 'show_search_box'
             },
             704: {
                 category: 'settings',
@@ -131,9 +131,9 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
             _event = angular.extend({}, events[eventId]);
 
             //set defaults
-            _event.value = 1;
+            _event.value = typeof params.value === 'number' ? params.value : 1;
             _event.opt_noninteraction = false;
-            _event.label = params.label || '';
+            _event.label = typeof params.label !== 'undefined' ? String(params.label) : '';
 
             switch (eventId) {
 

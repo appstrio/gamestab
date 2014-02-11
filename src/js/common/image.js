@@ -197,7 +197,9 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
                     urlToLocalFile({
                         url: item[fieldToConvert]
                     }).then(function (file) {
-                        //on success
+                        // save original url
+                        item.originalUrl = item[fieldToConvert];
+                        //save new url
                         item[fieldToConvert] = file;
                         return callback();
                     }, callback);

@@ -10,7 +10,6 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
         var assignScopeVars = function () {
             $log.log('[MainCtrl] - Apps finished loading. Organizing dials');
             $scope.rawScreens = Apps.apps();
-            $scope.config = Config.get();
         };
 
         console.debug('[MainCtrl] - init');
@@ -77,13 +76,25 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
 
         $('#search-input').keypress($scope.goSearch); //TODO:
     }
-]).controller('SettingsCtrl', ['$scope', 'Constants',
-    function ($scope, C) {
+]).controller('SettingsCtrl', ['$scope', 'Constants', 'Analytics', 'Config',
+    function ($scope, C, Analytics, Config) {
         $scope.panes = ['General', 'Background', 'About'];
         //initial selected pane
         $scope.selectedPane = 'General';
         //get version for display
         $scope.clientVersion = C.APP_VERSION;
+        //set scope config
+        $scope.config = Config.get();
+
+
+        $scope.toggleShowSearch = function () {
+            //report analytics
+            Analytics.reportEvent(703, {
+                label: $scope.config.user_preferences.show_search_box
+            });
+
+            console.log(Config.get());
+        };
 
         /**
          * selectPane
@@ -96,24 +107,35 @@ launcherModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$lo
         $scope.selectPane = function (pane, e) {
             e.stopPropagation();
             $scope.selectedPane = pane;
+            Analytics.reportEvent(702, {
+                label: pane
+            });
         };
     }
-]).controller('BackgroundCtrl', ['$scope', 'Background',
-    function ($scope, Background) {
+]).controller('BackgroundCtrl', ['$scope', 'Background', 'Analytics',
+    function ($scope, Background, Analytics) {
 
+        //assign scope backgrounds
         Background.isReady.then(function () {
             $scope.backgrounds = Background.backgrounds();
         });
 
+        /**
+         * selectBackground
+         * User selects a background
+         *
+         * @param bg
+         * @param e
+         * @return
+         */
         $scope.selectBackground = function (bg, e) {
             e.stopPropagation();
+            //report analytics
+            Analytics.reportEvent(704, {
+                label: bg.originalUrl || bg.image
+            });
             Background.selectBackground(bg);
         };
-
-        $scope.isSelected = function (bg) {
-            return bg.isActive;
-        };
-
     }
 ]).controller('StoreCtrl', ['$scope', 'Apps', '$log',
     function ($scope, Apps, $log) {

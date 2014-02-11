@@ -12,7 +12,6 @@ overlayModule.directive('aioOverlay', ['$timeout', '$log',
                     if (!newVal || !newVal.name) {
                         return hide();
                     }
-
                     $log.log('[aioOverlay] - opening overlay', newVal);
 
                     scope.templateURL = newVal.name + '.html';
@@ -38,7 +37,7 @@ overlayModule.directive('aioOverlay', ['$timeout', '$log',
                  * @param done
                  * @return
                  */
-                var show = function (done) {
+                var show = function () {
                     $overlay.addClass('showed');
                     $('#wrapper').addClass('blurred');
                     $overlay.addClass('enlarged');
