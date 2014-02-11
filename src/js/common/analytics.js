@@ -12,7 +12,7 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
          * @return
          */
         var init = function () {
-            $log.log('[Analytics] - loading analytics script with Account: ' + C.ANALYTICS_UA_ACCOUNT);
+            $log.log('[Analytics] - loading analytics script with Account');
             //init account
             (function () {
                 var ga = document.createElement('script');
@@ -23,8 +23,16 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
                 s.parentNode.insertBefore(ga, s);
             })();
 
-            //register account
-            _gaq.push(['_setAccount', C.ANALYTICS_UA_ACCOUNT]);
+            //runnig on dev version - no update url
+            if (!chrome.runtime.getManifest().update_url) {
+                console.debug('Setting up local analytics ID of UA-99999999-X');
+                _gaq.push(['_setAccount', 'UA-99999999-X']);
+            } else {
+                console.debug('Setting up online analytics ID of ' + C.ANALYTICS_UA_ACCOUNT);
+                //register account
+                _gaq.push(['_setAccount', C.ANALYTICS_UA_ACCOUNT]);
+            }
+
             _gaq.push(['_setDomainName', 'none']);
             //track pageview
             _gaq.push(['_trackPageview']);
