@@ -1,9 +1,9 @@
 /* global _ */
 var settingsModule = settingsModule || angular.module('aio.settings', []);
 
-settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'FileSystem', 'Image', '$log', 'Constants',
-    function ($rootScope, $http, Storage, $q, FileSystem, Image, $log, C) {
-        var initting = $q.defer(),
+settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'Image', '$log', 'Constants',
+    function ($rootScope, $http, Storage, $q, Image, $log, C) {
+        var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.BACKGROUNDS,
             background = {},
             backgrounds = [];
@@ -11,7 +11,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
         // intializes the service, fetch the background from localStorage or use default
         var init = function () {
             var t0 = Date.now();
-            $log.log('[Background] - init service. Getting from localStorage');
+            console.debug('[Background] - init');
             Storage.get(storageKey, function (items) {
                 var _backgrounds = items && items[storageKey];
                 if (_backgrounds && angular.isArray(_backgrounds)) {
@@ -19,7 +19,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
                     getActiveBackground(_backgrounds);
                     backgrounds = _backgrounds;
                     $log.log('[Background] - finished init in ' + (Date.now() - t0) + ' ms.');
-                    return initting.resolve(background);
+                    return isReady.resolve(background);
                 }
 
                 $log.log('[Background] - did not find backgrounds in localStorage. Getting from remote');
@@ -35,11 +35,13 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
                         store(function () {
                             $log.log('[Background] - finished init in ' + (Date.now() - t0) + ' ms.');
                             $rootScope.$apply(function () {
-                                initting.resolve(background);
+                                isReady.resolve(background);
                             });
                         });
                     });
             });
+
+            return isReady.promise;
         };
 
         /**
@@ -209,11 +211,10 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'F
             return uploading.promise;
         };
 
-        init();
-
         return {
-            promise: initting.promise,
+            isReady: isReady.promise,
             background: background,
+            init: init,
             backgrounds: function () {
                 return backgrounds;
             },

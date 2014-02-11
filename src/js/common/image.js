@@ -1,4 +1,4 @@
-/* global async */
+/* global async,_ */
 var imageModule = angular.module('aio.image', []);
 
 imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
@@ -84,6 +84,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
 
                 ctx.drawImage(canvasCopy, 0, 0, canvasCopy.width,
                     canvasCopy.height, 0, 0, canvas.width, canvas.height);
+
                 $rootScope.$apply(function () {
                     deferred.resolve(canvas.toDataURL());
                 });
@@ -182,27 +183,32 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
          * @return
          */
         var convertFieldToLocalFile = function (fieldToConvert, arr) {
+            var counter = 0;
             var deferred = $q.defer();
 
             async.eachSeries(arr, function (item, callback) {
-                //if field is local, don't change it
-                if (isPathLocal(item[fieldToConvert])) {
-                    return callback();
-                }
+                    ++counter;
+                    $log.log('[Image] - caching ' + fieldToConvert + '=> ' + counter + '/' + arr.length + '.');
+                    //if field is local, don't change it
+                    if (isPathLocal(item[fieldToConvert])) {
+                        return callback();
+                    }
 
-                urlToLocalFile({
-                    url: item[fieldToConvert]
-                }).then(function (file) {
-                    //on success
-                    item[fieldToConvert] = file;
-                    return callback();
-                }, function () {
-                    //on error
-                    return callback();
+                    urlToLocalFile({
+                        url: item[fieldToConvert]
+                    }).then(function (file) {
+                        //on success
+                        item[fieldToConvert] = file;
+                        return callback();
+                    }, callback);
+                },
+                function () {
+                    _.defer(function () {
+                        $rootScope.$apply(function () {
+                            deferred.resolve(arr);
+                        });
+                    });
                 });
-            }, function () {
-                deferred.resolve(arr);
-            });
             return deferred.promise;
         };
 

@@ -62,7 +62,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
                 // Create a FileWriter object for our FileEntry (log.txt).
                 fileEntry.createWriter(function (fileWriter) {
                     fileWriter.onwriteend = function () {
-                        $log.info('Write completed. ', fileEntry.toURL());
+                        $log.info('Write completed -> ' + fileEntry.toURL());
                         $rootScope.$apply(function () {
                             deferred.resolve(fileEntry.toURL());
                         });

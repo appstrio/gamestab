@@ -12,7 +12,7 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
          * @return
          */
         var init = function () {
-            $log.log('[Analytics] - loading analytics script with Account');
+            $log.log('[Analytics] - init');
             //init account
             (function () {
                 var ga = document.createElement('script');
@@ -193,7 +193,6 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
             if (params.waitForFinish) {
                 return deferred.promise;
             }
-
 
             return true;
         };

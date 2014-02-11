@@ -1,20 +1,20 @@
 /* global _ */
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
-launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Setup', 'Image',
-    function ($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Setup, Image) {
+launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Image',
+    function ($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Image) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
             apps;
 
         var systemApps = [{
             title: 'Settings',
-            icon: './img/logo_icons/settings175x175.png',
+            icon: './img/dials/settings175x175.png',
             overlay: 'settings',
             permanent: true
         }, {
             title: 'Apps Store',
-            icon: './img/logo_icons/appstore175x175.png',
+            icon: './img/dials/appstore175x175.png',
             overlay: 'store',
             permanent: true
         }];
@@ -25,29 +25,27 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @return
          */
         var init = function () {
+            console.debug('[Apps] - init');
             var t0 = Date.now();
-            $log.log('[Apps] - starting init');
-            Setup.startSetup().then(function () {
-                $log.log('[Apps] - getting apps from local storage', storageKey);
-                Storage.get(storageKey, function (items) {
-                    var _apps = items && items[storageKey];
-                    if (_apps && angular.isArray(_apps)) {
-                        setApps(_apps);
-                        $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0), ' ms.');
-                        return isReady.resolve(_apps);
-                    }
+            Storage.get(storageKey, function (items) {
+                var _apps = items && items[storageKey];
+                if (_apps && angular.isArray(_apps)) {
+                    setApps(_apps);
+                    $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0), ' ms.');
+                    return isReady.resolve(_apps);
+                }
 
-                    $log.log('[Apps] - did not find apps in localStorage, getting from remote');
-                    setup().then(function () {
-                        store(function () {
-                            $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0), ' ms.');
-                            $rootScope.$apply(function () {
-                                isReady.resolve(apps);
-                            });
+                $log.log('[Apps] - did not find apps in localStorage, getting from remote');
+                return setup().then(function () {
+                    store(function () {
+                        $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0), ' ms.');
+                        $rootScope.$apply(function () {
+                            isReady.resolve(apps);
                         });
                     });
                 });
             });
+            return isReady.promise;
         };
 
         /**
@@ -58,6 +56,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @return
          */
         var setApps = function (_apps) {
+            $log.log('[Apps] - settings app');
             apps = _apps;
             return apps;
         };
@@ -84,9 +83,8 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             //default=>All, tags=>Featured
             return _.chain(_appsDb)
                 .filter(function (app) {
-                    return _.has(app, 'default') &&
-                        _.contains(app.
-                            default, 'ALL');
+                    return _.has(app, 'default') && _.contains(app.
+                        default, 'ALL');
                 })
                 .first(4)
                 .value();
@@ -109,6 +107,20 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 .value();
         };
 
+        var parseWebApps = function (webApps) {
+            var sortedApps = [];
+            var paths = webApps.data;
+            _.each(paths, function (filesInPath) {
+                _.each(filesInPath.files, function (webApp) {
+                    webApp.icon = filesInPath.path + webApp.icon;
+                    sortedApps.push(webApp);
+                });
+            });
+
+            $log.log('[Apps] - found # number of webApps', sortedApps.length);
+            return sortedApps;
+        };
+
         /**
          * organizeAppsAsDials
          * Get the webAppsDb and ChromeApps and organizes them into an array
@@ -120,7 +132,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             var games, maxDials = C.CONFIG.initial_dials_size;
             var _appsDb, chromeApps, returnArr;
 
-            _appsDb = results[0] && results[0].data || {};
+            _appsDb = parseWebApps(results[0]);
             chromeApps = results[1] || [];
 
             var firstApps = getAppsFromAppsDb(_appsDb);
@@ -153,7 +165,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             return returnArr;
         };
 
-
         /**
          * organizeAsPages
          * Get dials and returns pages with dials grouped in arrays
@@ -165,6 +176,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             var count = 0,
                 dialsPerPage = C.CONFIG.dials_per_page;
 
+            $log.log('[Apps] - organizing apps in pages of ' + C.CONFIG.dials_per_page);
             //have only 12 dials in a page
             var getPageIndex = function () {
                 return Math.floor((count++) / dialsPerPage);
@@ -181,7 +193,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @return
          */
         var setup = function () {
-            var getDials = [getLocalAppsDb(), Chrome.management.getAll()];
+            var getDials = [getWebAppsDb(), Chrome.management.getAll()];
 
             $log.log('[Apps] - starting setup');
             return $q.all(getDials)
@@ -196,13 +208,13 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         };
 
         /**
-         * getLocalAppsDb
+         * getWebAppsDb
          *
          * @return
          */
-        var getLocalAppsDb = function () {
-            $log.log('[Apps] - getting localWebAppsDb');
-            return $http.get('./data/webAppsDB1.json');
+        var getWebAppsDb = function () {
+            $log.log('[Apps] - getting webAppsDb from', C.WEB_APPS_DB);
+            return $http.get(C.WEB_APPS_DB);
         };
 
         /**
@@ -308,15 +320,14 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             }
         };
 
-        init();
-
         return {
-            promise: isReady.promise,
+            isReady: isReady.promise,
+            init: init,
             apps: function () {
                 return apps;
             },
             store: store,
-            appsDB: getLocalAppsDb,
+            appsDB: getWebAppsDb,
             addNewApp: addNewApp,
             uninstallApp: uninstallApp
         };

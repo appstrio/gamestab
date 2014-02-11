@@ -176,7 +176,7 @@ gulp.task('reloadExtension', function () {
 
 //all tasks are watch -> bump patch version -> reload extension (globally enabled)
 gulp.task('watch', function () {
-    var afterTasks = ['bump', 'reloadExtension'];
+    var afterTasks = ['reloadExtension'];
 
     gulp.watch(libs, ['libs'].concat(afterTasks));
     gulp.watch([

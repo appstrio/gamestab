@@ -7,13 +7,26 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
             storageKey = C.STORAGE_KEYS.CONFIG;
 
         /**
-         * init
+         * loadFromStorage
+         * Try to load key from local storage.
          *
-         * @return
+         * @return promise
          */
-        var init = function () {
-            $log.log('[Config] - init');
-            Storage.get(storageKey);
+        var loadFromStorage = function () {
+            var deferred = $q.defer();
+
+            Storage.get(storageKey, function (items) {
+                if (items && items[storageKey]) {
+                    $log.log('[Config] - got settings from localstorage');
+                    setter(items[storageKey]);
+                    return deferred.resolve();
+                }
+
+                $log.log('[Config] - did not find local settings. getting from remote.');
+                return deferred.reject();
+            });
+
+            return deferred.promise;
         };
 
         /**
@@ -24,7 +37,6 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
         var getter = function () {
             return data;
         };
-
 
         /**
          * setter
@@ -51,6 +63,16 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
                     $log.warn('[Config] - could not get partnerJSON, using default', e);
                     return finishSetup();
                 });
+        };
+
+        var init = function () {
+            console.debug('[Config] - init');
+            //load config from storage, or run setup to get from remotes
+            return loadFromStorage()
+                .then(function () {
+                    $log.log('[Config] - data loaded from storage');
+                    return data;
+                }, setup);
         };
 
         /**
