@@ -1,0 +1,19 @@
+# Libraries
+node_modules
+bower_components
+
+# Builds
+builds
+build
+tmp-*
+
+# My own stuff
+debugSettings.js
+
+# Bullshit
+temp
+.tmp
+.sass-cache
+.idea
+.DS_Store
+*.sublime-workspace

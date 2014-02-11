@@ -1,0 +1,71 @@
+doctype html
+html(ng-csp='ng-csp')
+    head
+        link(href='fonts/fontello/css/fontello.css', rel='stylesheet')
+        link(href='css/style.css', rel='stylesheet')
+        meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+        meta(name='google', content='notranslate')
+        //- load vendor
+        script(src='./js/vendor/jquery.min.js')
+        script(src='./js/vendor/angular.min.js')
+        script(src='./js/vendor/async.js')
+        script(src='./js/vendor/jquery.jfeed.pack.js')
+        script(src='./js/vendor/jquery-ui.js')
+        script(src='./js/vendor/moment.min.js')
+        script(src='./js/vendor/underscore-min.js')
+        script(src='./js/vendor/URI.min.js')
+        //- load commons
+        script(src='./js/app.js')
+        script(src='./js/common/chrome.js')
+        script(src='./js/common/common.js')
+        script(src='./js/common/file.js')
+        script(src='./js/common/analytics.js')
+        script(src='./js/common/image.js')
+        script(src='./js/common/longkeyPress.js')
+        script(src='./js/common/overlay.js')
+        script(src='./js/common/storage.js')
+        //- load jquery ui
+        script(src='./js/vendor/jquery.ui.core.js')
+        script(src='./js/vendor/jquery.ui.mouse.js')
+        script(src='./js/vendor/jquery.ui.sortable.js')
+        script(src='./js/vendor/jquery.ui.widget.js')
+        script(src='./js/vendor/sortable.js')
+        //- launcher
+        script(src='./js/settings/constants.js')
+        script(src='./js/settings/account.js')
+        script(src='./js/settings/background.js')
+        script(src='./js/settings/config.js')
+        script(src='./js/search/search.js')
+        script(src='./js/launcher/apps.js')
+        script(src='./js/launcher/overlays.js')
+        script(src='./js/launcher/launcher.js')
+        script(src='./js/main/main.js')
+
+        title GamesTab
+        //----------------
+    body(ng-controller='MainCtrl')
+    #wrapper(hl-background)
+        .search2(ng-show="displayTopSearchBox")
+            iframe.blurred-background
+            .search-input
+                input(placeholder="Web Search...", ng-keypress="goSearch($event)", ng-model="searchQuery", id="search-input", aio-search-box)
+        .main
+            section(hl-launcher)
+                .arrows
+                    .inner
+                        .arrow-left
+                            i.icon-left-open-big
+                        .arrow-right
+                            i.icon-right-open-big
+                .inner
+                    .viewport(hl-viewport, ng-class="{editing : isEditing}")
+                        .apps-container.screen(ui-sortable="sortableOptions", ng-model="screen", ng-repeat="screen in rawScreens")
+                            .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)", hl-long-press="longPress(app, $event)", ng-class="{permanent : app.permanent}")
+                                .wrapper
+                                    .remove-button(ng-click="uninstallApp(app, $event)") X
+                                    .icon(ng-style="{'background-image': 'url(' + app.icon + ')'}")
+                                    .title {{app.title}}
+            .partner-logo
+                a(ng-href="{{config.partner_url}}", target="_self", title="{{config.partner_name}}")
+                    img(ng-src="{{config.partner_logo}}", style="cursor:pointer;")
+    #overlay(aio-overlay, overlay-options="overlay", ng-include="templateURL")

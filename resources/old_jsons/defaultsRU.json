@@ -1,0 +1,37 @@
+[{
+    "title": "ВКонтакте",
+    "url": "http://www.vk.com",
+    "icon": "/img/logo_icons/country/ru/vk.com.jpg"
+}, {
+    "title": "Mail.Ru",
+    "url": "http://www.mail.ru",
+    "icon": "/img/logo_icons/country/ru/mail.ru.jpg"
+}, {
+    "title": "Одноклассники.ru",
+    "url": "http://www.odnoklassniki.ru",
+    "icon": "/img/logo_icons/country/ru/odnoklassniki.ru.jpg"
+}, {
+    "title": "AVITO.RU",
+    "url": "http://www.avito.ru",
+    "icon": "/img/logo_icons/country/ru/avito.ru.jpg"
+}, {
+    "title": "Рамблер",
+    "url": "http://www.rambler.ru",
+    "icon": "/img/logo_icons/country/ru/rambler.ru.jpg"
+}, {
+    "title": "Youtube",
+    "url": "http://www.youtube.com",
+    "icon": "/img/logo_icons/country/ru/youtube.jpg"
+}, {
+    "title": "Gmail",
+    "url": "http://mail.google.com",
+    "icon": "/img/logo_icons/country/ru/gmail.jpg"
+}, {
+    "title": "Facebook",
+    "url": "http://www.facebook.com",
+    "icon": "/img/logo_icons/country/ru/facebook.jpg"
+}, {
+    "title": "Twitter",
+    "url": "http://www.twitter.com",
+    "icon": "/img/logo_icons/country/ru/twitter.jpg"
+}]

@@ -1,0 +1,604 @@
+[
+    {
+        "title": "Facebook",
+        "url": "http://www.facebook.com",
+        "icon": "/img/logo_icons/country/us/facebook.jpg",
+        "default" : ["ALL"],
+        "tags" : ["Social","Featured"]
+    },
+    {
+        "title": "Youtube",
+        "url": "http://www.youtube.com",
+        "icon": "/img/logo_icons/country/us/youtube.jpg",
+        "default" : ["ALL"],
+        "tags" : ["Social","Featured"]
+    },
+    {
+        "title": "Google Maps",
+        "url": "http://www.maps.google.com",
+        "icon": "/img/logo_icons/country/us/googlemaps.jpg",
+        "default" : ["ALL"],
+        "tags" : ["Productivity","Featured"]
+    },
+    {
+        "title": "Gmail",
+        "url": "http://www.gmail.com",
+        "icon": "/img/logo_icons/country/us/gmail.jpg",
+        "default" : ["ALL"],
+        "tags" : ["Social","Featured"]
+    },
+    {
+        "title": "Twitter",
+        "url": "http://www.twitter.com",
+        "icon": "/img/logo_icons/country/us/twitter.jpg",
+        "default" : ["ALL"],
+        "tags" : ["Social","Featured"]
+    },
+    {
+        "title": "Amazon",
+        "url": "http://www.amazon.com",
+        "icon": "/img/logo_icons/country/us/amazon.jpg",
+        "default" : ["ALL", "US"],
+        "tags" : ["Shopping","Featured"]
+    },
+    {
+        "title": "Ebay",
+        "url": "http://www.ebay.com",
+        "icon": "/img/logo_icons/country/us/ebay.jpg",
+        "default" : ["DEFAULT", "US", "DE"],
+        "tags" : ["Shopping"]
+    },
+    {
+        "title": "Outlook",
+        "url": "http://www.outlook.com",
+        "icon": "/img/logo_icons/country/us/outlook.jpg",
+        "default" : ["US"],
+        "tags" : ["Social"]
+    },
+    {
+        "title": "LinkedIn",
+        "url": "http://www.linkedin.com",
+        "icon": "/img/logo_icons/country/us/linkedin.jpg",
+        "default" : ["US"],
+        "tags" : ["Social"]
+    },
+    {
+        "title": "Tumblr",
+        "url": "http://www.tumblr.com",
+        "icon": "/img/logo_icons/country/us/tumblr.jpg",
+        "default" : ["US"],
+        "tags" : ["Social","Featured"]
+    },
+    {
+        "title": "Instagram",
+        "url": "http://www.instagram.com",
+        "icon": "/img/logo_icons/country/us/instagram.jpg",
+        "default" : ["ALL"],
+        "tags" : ["Social","Featured"]
+    },
+    {
+        "title": "Web.de",
+        "url": "http://www.web.de",
+        "icon": "img/logo_icons/country/de/web.de.jpg",
+        "default" : ["DE"]
+    },
+    {
+        "title": "Amazon",
+        "url": "http://www.amazon.de",
+        "icon": "img/logo_icons/country/de/amazon.jpg",
+        "default" : ["DE"]
+    },
+    {
+        "title": "GMX",
+        "url": "http://www.gmx.com",
+        "icon": "img/logo_icons/country/de/gmx.jpg",
+        "default" : ["DE"]
+    },
+    {
+        "title": "Ebay",
+        "url": "http://www.ebay.de",
+        "icon": "/img/logo_icons/country/de/ebay.jpg",
+        "default" : ["DE"]
+    },
+    {
+        "title": "Bild.de",
+        "url": "http://www.bild.de",
+        "icon": "img/logo_icons/country/de/bild.de.jpg",
+        "default" : ["DE"]
+    },
+    {
+        "title": "Spiegel",
+        "url": "http://www.spiegel.de",
+        "icon": "img/logo_icons/country/de/spiegel.jpg",
+        "default" : ["DE"]
+    },
+    {
+        "title": "Wetter",
+        "url": "http://www.wetter.de",
+        "icon": "img/logo_icons/country/de/wetter.de.jpg",
+        "default" : ["DE"]
+    },
+    {
+        "title": "Amazon",
+        "url": "http://www.amazon.com.br",
+        "icon": "/img/logo_icons/country/br/amazon.jpg",
+        "default" : ["BR"]
+    },
+    {
+
+
+        "title": "Americanas",
+        "url": "http://www.americanas.com.br",
+        "icon": "/img/logo_icons/country/br/americanas.com.br.jpg",
+        "default" : ["BR"]
+    },
+    {
+        "title": "UOL",
+        "url": "http://www.uol.com.br",
+        "icon": "/img/logo_icons/country/br/uol.com.br.jpg",
+        "default" : ["BR"]
+    },
+    {
+        "title": "Globo",
+        "url": "http://www.globo.com",
+        "icon": "/img/logo_icons/country/br/globo.com.jpg",
+        "default" : ["BR"]
+    },
+    {
+        "title": "Mercado Livre",
+        "url": "http://www.mercadolivre.com.br",
+        "icon": "/img/logo_icons/country/br/mercadolivre.com.br.gif",
+        "default" : ["BR"]
+    },
+    {
+        "title": "Mercado Livre",
+        "url": "http://www.ig.com.br",
+        "icon": "/img/logo_icons/country/br/ig.com.br.jpg",
+        "default" : ["BR"]
+    },
+    {
+        "title": "Terra",
+        "url": "http://www.terra.com.br",
+        "icon": "/img/logo_icons/country/br/terra.com.br.jpg",
+        "default" : ["BR"]
+    },
+    {
+        "title": "Abril",
+        "url": "http://www.abril.com.br",
+        "icon": "/img/logo_icons/country/br/abril.com.br.jpg",
+        "default" : ["BR"]
+    },
+    {
+        "title": "Globo TV",
+        "url": "http://globotv.globo.com",
+        "icon": "/img/logo_icons/country/br/globotv.globo.com.jpg",
+        "default" : ["BR"]
+    },
+    {
+        "title": "Amazon",
+        "url": "http://www.amazon.fr",
+        "icon": "/img/logo_icons/country/fr/amazon.jpg",
+        "default" : ["FR"]
+    },
+    {
+        "title": "Ebay",
+        "url": "http://www.ebay.fr",
+        "icon": "/img/logo_icons/country/fr/ebay.jpg",
+        "default" : ["FR"]
+    },
+    {
+        "title": "L'Equipe",
+        "url": "http://www.lequipe.fr",
+        "icon": "/img/logo_icons/country/fr/lequipe.jpg",
+        "default" : ["FR"]
+    },
+    {
+        "title": "Le Monde",
+        "url": "http://www.lemonde.fr",
+        "icon": "/img/logo_icons/country/fr/lemonde.fr.jpg",
+        "default" : ["FR"]
+    },
+    {
+        "title": "Dailymotion",
+        "url": "http://www.dailymotion.com",
+        "icon": "/img/logo_icons/country/fr/dailymotion.jpg",
+        "default" : ["FR"]
+    },
+    {
+        "title": "Leboncoin",
+        "url": "http://www.leboncoin.fr",
+        "icon": "/img/logo_icons/country/fr/leboncoin.fr.jpg",
+        "default" : ["FR"]
+    },
+    {
+        "title": "Programme TV",
+        "url": "http://www.programme-tv.net",
+        "icon": "/img/logo_icons/country/fr/programme-tv.net.jpg",
+        "default" : ["FR"]
+    },
+    {
+        "title": "The Guardian",
+        "url": "http://www.guardian.co.uk",
+        "icon": "/img/logo_icons/country/gb/guardian.jpg",
+        "default" : ["GB"]
+    },
+    {
+        "title": "BBC",
+        "url": "http://www.bbc.co.uk",
+        "icon": "/img/logo_icons/country/gb/bbc.jpg",
+        "default" : ["GB"]
+    },
+    {
+        "title": "The Daily Mail",
+        "url": "http://www.dailymail.co.uk",
+        "icon": "/img/logo_icons/country/gb/dailymail.jpg",
+        "default" : ["GB"]
+    },
+    {
+        "title": "Telegraph",
+        "url": "http://www.telegraph.co.uk",
+        "icon": "/img/logo_icons/country/gb/telegraph.jpg",
+        "default" : ["GB"]
+    },
+    {
+        "title": "Amazon",
+        "url": "http://www.amazon.co.uk",
+        "icon": "/img/logo_icons/country/gb/amazon.jpg",
+        "default" : ["GB"]
+    },
+    {
+        "title": "Ebay",
+        "url": "http://www.ebay.co.uk",
+        "icon": "/img/logo_icons/country/gb/ebay.jpg",
+        "default" : ["GB"]
+    },
+    {
+        "title": "Ynet",
+        "url": "http://www.ynet.co.il",
+        "icon": "/img/logo_icons/country/il/ynet.jpg",
+        "default" : ["IL"]
+    },
+    {
+        "title": "Walla",
+        "url": "http://www.walla.co.il",
+        "icon": "/img/logo_icons/country/il/walla.jpg",
+        "default" : ["IL"]
+    },
+    {
+        "title": "Mako",
+        "url": "http://www.mako.co.il",
+        "icon": "/img/logo_icons/country/il/mako.jpg",
+        "default" : ["IL"]
+    },
+    {
+        "title": "Tapuz",
+        "url": "http://www.tapuz.co.il",
+        "icon": "/img/logo_icons/country/il/tapuz.jpg",
+        "default" : ["IL"]
+    },
+    {
+        "title": "Nana10",
+        "url": "http://www.nana10.co.il",
+        "icon": "/img/logo_icons/country/il/nana10.jpg",
+        "default" : ["IL"]
+    },
+    {
+        "title": "ONE",
+        "url": "http://www.one.co.il",
+        "icon": "/img/logo_icons/country/il/one.co.il.jpg",
+        "default" : ["IL"]
+    },
+    {
+        "title": "Zap",
+        "url": "http://www.zap.co.io",
+        "icon": "/img/logo_icons/country/il/zap.co.il.jpg",
+        "default" : ["IL"]
+    },
+    {
+        "title": "Globes",
+        "url": "http://www.globes.co.il",
+        "icon": "/img/logo_icons/country/il/globes.jpg",
+        "default" : ["IL"]
+    },
+    {
+        "title": "Amazon",
+        "url": "http://www.amazon.it",
+        "icon": "/img/logo_icons/amazon.jpg",
+        "default" : ["IT"]
+    },
+    {
+        "title": "Ebay",
+        "url": "http://www.ebay.it",
+        "icon": "/img/logo_icons/ebay.jpg",
+        "default" : ["IT"]
+    },
+    {
+        "title": "LIBERO",
+        "url": "http://www.libero.it",
+        "icon": "/img/logo_icons/libero.it.jpg",
+        "default" : ["IT"]
+    },
+    {
+        "title": "La Repubblica",
+        "url": "http://www.repubblica.it",
+        "icon": "/img/logo_icons/repubblica.it.jpg",
+        "default" : ["IT"]
+    },
+    {
+        "title": "Virgilio",
+        "url": "http://www.virgilio.it",
+        "icon": "/img/logo_icons/virgilio.it.jpg",
+        "default" : ["IT"]
+    },
+    {
+        "title": "Subito.it",
+        "url": "http://www.subito.it",
+        "icon": "/img/logo_icons/subito.it.jpg",
+        "default" : ["IT"]
+    },
+    {
+        "title": "Candy Crush Saga",
+        "url": "http://www.king.com/#!/play/candycrush",
+        "icon": "img/logo_icons/games/candy.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Farm Heroes",
+        "url": "http://www.king.com/#!/play/farmking",
+        "icon": "img/logo_icons/games/farm.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Cut The Rope",
+        "url": "http://www.cuttherope.ie",
+        "icon": "img/logo_icons/games/cuttherope.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Bejeweled 2",
+        "url": "http://www.popcap.com/games/bejeweled2/online",
+        "icon": "img/logo_icons/games/bj2.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Book Worm",
+        "url": "http://www.popcap.com/games/bookworm/online",
+        "icon": "img/logo_icons/games/bookworm.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Angry Birds",
+        "url": "http://chrome.angrybirds.com/",
+        "icon": "img/logo_icons/games/angrybirds.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Plants Vs. Zombies",
+        "url": "http://www.popcap.com/games/plants-vs-zombies/online",
+        "icon": "img/logo_icons/games/zombies.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Zuma's Revenge!",
+        "url": "http://www.popcap.com/games/zumas-revenge/online",
+        "icon": "img/logo_icons/games/Zumas.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Flow Colors",
+        "url": "http://www.moh97.us/flow",
+        "icon": "img/logo_icons/games/flow.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Where's My Water?",
+        "url": "http://www.a10.com/puzzle-games/where-is-my-water-free-online",
+        "icon": "img/logo_icons/games/wmw.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Bad Piggies",
+        "url": "http://www.puffgames.com/games/bad-piggies-2/",
+        "icon": "img/logo_icons/games/pig.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Angry Birds Space",
+        "url": "http://www.flashgamesplayer.com/Free/Angry-Birds-Space/Play.html",
+        "icon": "img/logo_icons/games/space.jpg",
+        "tags" : ["Games","Featured"]
+    },
+    {
+        "title": "Bloxorz",
+        "url": "http://www.miniclip.com/games/bloxorz/en/",
+        "icon": "img/logo_icons/games/bloxorz.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "8 Ball Multiplayer",
+        "url": "http://www.miniclip.com/games/8-ball-pool-multiplayer/en/#t-w-t-H",
+        "icon": "img/logo_icons/games/8ball.jpg",
+        "tags" : ["Games","Featured"]
+    },
+    {
+        "title": "Western Front 1914",
+        "url": "http://www.miniclip.com/games/western-front-1914/en/#t-w-t-H",
+        "icon": "img/logo_icons/games/wf1914.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Motocross Nitro",
+        "url": "http://www.miniclip.com/games/motocross-nitro/en/#t-w-t-H",
+        "icon": "img/logo_icons/games/mnitro.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Ski Safari",
+        "url": "http://www.miniclip.com/games/ski-safari/en/#t-w-t-H",
+        "icon": "img/logo_icons/games/skisafari.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Raft Wars 2",
+        "url": "http://www.miniclip.com/games/raft-wars-2/en/#t-w-t-H",
+        "icon": "img/logo_icons/games/raftwars2.jpg",
+        "tags" : ["Games","Featured"]
+    },
+    {
+        "title": "Rail Rush Worlds",
+        "url": "http://www.miniclip.com/games/rail-rush-worlds/en/#t-w-t-H",
+        "icon": "img/logo_icons/games/rrworlds.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Urban Basketball",
+        "url": "http://www.miniclip.com/games/urban-basketball/en/#t-w-t-H",
+        "icon": "img/logo_icons/games/urbanbasketball.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Empire",
+        "url": "http://www.miniclip.com/games/empire/en/#t-w-t-H",
+        "icon": "img/logo_icons/games/ggempire.png",
+        "tags" : ["Games","Featured"]
+    },
+    {
+        "title": "Saloon Brawl",
+        "url": "http://www.miniclip.com/games/saloon-brawl-2/en/#t-w-t-H",
+        "icon": "img/logo_icons/games/sb2.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Cargo brige",
+        "url": "http://www.kongregate.com/games/limex/cargo-bridge",
+        "icon": "img/logo_icons/games/cargobridge.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Fancy Panys",
+        "url": "http://armorgames.com/play/301/fancy-pants-adventures",
+        "icon": "img/logo_icons/games/fancypants.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Doodle Jump",
+        "url": "http://www.agame.com/game/doodle-jump",
+        "icon": "img/logo_icons/games/doodlejump.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Isoball 3",
+        "url": "http://www.kongregate.com/games/3dleigh/isoball-3",
+        "icon": "img/logo_icons/games/isoball3.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Unblock Me",
+        "url": "http://www.onlinegamesbazar.com/game/unblock_me_free",
+        "icon": "img/logo_icons/games/unblock.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "3D Bomb Destroyer",
+        "url": "http://www.unityplay.me/chrome/bomb_destroyer/bomb.html",
+        "icon": "img/logo_icons/games/Bomb-Destroyer-Icon.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Kingdom Rush",
+        "url": "http://armorgames.com/play/12141/kingdom-rush",
+        "icon": "img/logo_icons/games/kingdomrush.png",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Sniper Team",
+        "url": "http://www.addictinggames.com/shooting-games/sniper-team-game.jsp",
+        "icon": "img/logo_icons/games/sniperteam.jpg",
+        "tags" : ["Games"]
+    },
+    {
+        "title": "Google Plus",
+        "url": "http://plus.google.com",
+        "icon": "img/logo_icons/Social_media/plus.jpg",
+        "tags" : ["Social","Featured"]
+    },
+    {
+        "title": "Flickr",
+        "url": "http://www.flickr.com",
+        "icon": "img/logo_icons/Social_media/flickr.png",
+        "tags" : ["Social","Featured"]
+    },
+    {
+        "title": "Pinterest",
+        "url": "http://www.Pinterest.com",
+        "icon": "img/logo_icons/Social_media/Pinterest.jpg",
+        "tags" : ["Social","Featured"]
+    },
+    {
+        "title": "VK",
+        "url": "http://www.vk.com",
+        "icon": "img/logo_icons/Social_media/vk.jpg",
+        "tags" : ["Social"]
+    },
+    {
+        "title": "MySpace",
+        "url": "http://www.myspace.com",
+        "icon": "img/logo_icons/Social_media/myspace.jpg",
+        "tags" : ["Social"]
+    },
+    {
+        "title": "Odnoklassniki",
+        "url": "http://www.odnoklassniki.ru",
+        "icon": "img/logo_icons/Social_media/odnoklassniki.ru.jpg",
+        "tags" : ["Social"]
+    },
+    {
+        "title": "Cafe Mom",
+        "url": "http://www.cafemom.com",
+        "icon": "img/logo_icons/Social_media/cafemom.png",
+        "tags" : ["Social"]
+    },
+    {
+        "title": "Tagged",
+        "url": "http://www.tagged.com",
+        "icon": "img/logo_icons/Social_media/tagged.png",
+        "tags" : ["Social"]
+    },
+    {
+        "title": "LIVEJOURNAL",
+        "url": "http://www.livejournal.com",
+        "icon": "img/logo_icons/Social_media/livejournal.jpg",
+        "tags" : ["Social"]
+    },
+    {
+        "title": "Deviant Art",
+        "url": "http://www.deviantart.com",
+        "icon": "img/logo_icons/Social_media/deviantart.png",
+        "tags" : ["Social"]
+    },
+    {
+        "title": "Vine",
+        "url": "http://www.vine.com",
+        "icon": "img/logo_icons/Social_media/vine.jpg"
+    },
+    {
+        "title": "Yelp",
+        "url": "http://www.yelp.com",
+        "icon": "img/logo_icons/Social_media/.jpg",
+        "tags" : ["Social"]
+    },
+    {
+        "title": "StumbleUpon",
+        "url": "http://www.stumbleupon.com",
+        "icon": "img/logo_icons/Social_media/stumbleupon.jpg",
+        "tags" : ["Social"]
+    },
+    {
+        "title": "Reddit",
+        "url": "http://www.reddit.com",
+        "icon": "img/logo_icons/Social_media/reddit.jpg",
+        "tags" : ["Social"]
+    }
+]
+
+

@@ -1,0 +1,56 @@
+#settings.inner(ng-controller="SettingsCtrl")
+    .header Settings
+    .main
+        .left
+            ul
+                li(ng-repeat="pane in panes", ng-class="{selected : (selectedPane == pane)}", ng-click="selectPane(pane, $event)") {{pane}}
+
+        .right(ng-switch="selectedPane")
+            .settings-general(ng-switch-default)
+                ul.controls
+                    li
+                        .control
+                            .squaredFour
+                                input#squaredFour(name="check", ng-change="toggleShowSearch()" ng-model="config.user_preferences.show_search_box", value="None", type="checkbox")
+                                label(for="squaredFour")
+                        .details
+                            .label Show Search Box
+                            .more-details Use our smart search box to search the web and launch your favorite web apps
+            .settings-background(ng-switch-when="Background", ng-controller="BackgroundCtrl")
+                .bg-explorer
+                    .bg-sample(ng-repeat="bg in backgrounds", ng-style="{'background-image':'url(' + bg.image + ')'}", ng-class="{selected : bg.isActive}", ng-click="selectBackground(bg, $event)")
+                        //- custom user image
+                        img(src="./img/custom_user.png", style="width:30px;height:30px;float:left;", ng-show="bg.isLocalBackground")
+                .bg-upload(hl-background-local-image)
+                    .image-selector
+                        h2 Select your own image
+                        input(type="file", id="localImageFile")
+                        h2 Enter image url
+                        input(type="text", id="remoteImageUrl", ng-keypress="remoteUrlKeyPress($event)")
+                    .preview
+                        .loader
+                            img(src="./img/loader.gif")
+                //- .cropper(hl-cropper, cropper-options="cropperOptions")
+                   .header Crop the image you uploaded
+                   .editor
+                       .left
+                           h2 Edit The Image
+                           .original-image
+                               img
+                       .right
+                           h2 Preview
+                           .preview-image
+                               img
+                   .footer
+                       button Cancel
+                       button OK
+            .settings-about(ng-switch-when="About")
+                .logo(style="width:134px;margin:0 auto;")
+                    img(src="/img/favicons/128x128.png")
+                .details(style="width:134px;margin:0 auto;text-align:center;")
+                    h2 GamesTab
+                    p Version : {{clientVersion}}
+                    p
+                        a(href="http://www.gamestab.me/privacy.html", style="color:black;text-decoration:none;font-size:12px;") Privacy Policy
+                    p
+                        a(href="http://www.gamestab.me/tos.html", style="color:black;text-decoration:none;font-size:12px;") Terms of Use

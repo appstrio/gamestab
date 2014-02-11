@@ -1,0 +1,53 @@
+[{
+    "title": "Facebook",
+    "url": "http://www.facebook.com",
+    "icon": "/img/logo_icons/facebook.jpg"
+}, {
+    "title": "Youtube",
+    "url": "http://www.youtube.com",
+    "icon": "/img/logo_icons/youtube.jpg"
+}, {
+    "title": "Amazon",
+    "url": "http://www.amazon.it",
+    "icon": "/img/logo_icons/amazon.jpg"
+}, {
+    "title": "Ebay",
+    "url": "http://www.ebay.it",
+    "icon": "/img/logo_icons/ebay.jpg"
+}, {
+    "title": "Google Maps",
+    "url": "http://www.maps.google.com",
+    "icon": "/img/logo_icons/googlemaps.jpg"
+}, {
+    "title": "LIBERO",
+    "url": "http://www.libero.it",
+    "icon": "/img/logo_icons/libero.it.jpg"
+}, {
+    "title": "La Repubblica",
+    "url": "http://www.repubblica.it",
+    "icon": "/img/logo_icons/repubblica.it.jpg"
+}, {
+    "title": "Virgilio",
+    "url": "http://www.virgilio.it",
+    "icon": "/img/logo_icons/virgilio.it.jpg"
+}, {
+    "title": "Subito.it",
+    "url": "http://www.subito.it",
+    "icon": "/img/logo_icons/subito.it.jpg"
+}, {
+    "title": "Gmail",
+    "url": "http://mail.google.com",
+    "icon": "/img/logo_icons/gmail.jpg"
+}, {
+    "title": "Outlook",
+    "url": "http://www.outlook.com",
+    "icon": "/img/logo_icons/outlook.jpg"
+}, {
+    "title": "LinkedIn",
+    "url": "http://www.linkedin.com",
+    "icon": "/img/logo_icons/linkedin.jpg"
+}, {
+    "title": "Tumblr",
+    "url": "http://www.tumblr.com",
+    "icon": "/img/logo_icons/tumblr.jpg"
+}]
