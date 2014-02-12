@@ -48,13 +48,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             return isReady.promise;
         };
 
-        /**
-         * setApps
-         * setter
-         *
-         * @param _apps
-         * @return
-         */
         var setApps = function (_apps) {
             $log.log('[Apps] - settings app');
             apps = _apps;
@@ -218,16 +211,15 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         };
 
         var getOrganizedWebApps = function () {
-            return getWebAppsDb().then(function (webApps) {
-                return parseWebApps(webApps);
-            });
+            return getWebAppsDb()
+                .then(parseWebApps);
         };
 
         /**
          * chromeAppToObject
          *
          * @param app
-         * @return
+         * @return {app}
          */
         var chromeAppToObject = function (app) {
             var _app = angular.copy(app);
@@ -316,12 +308,13 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             var lastPage = apps[apps.length - 1];
             if (lastPage.length < 12) {
                 return lastPage;
-            } else {
-                var newPage = [];
-                apps.push(newPage);
-                store();
-                return newPage;
             }
+
+            var newPage = [];
+            apps.push(newPage);
+            store();
+            return newPage;
+
         };
 
         return {
