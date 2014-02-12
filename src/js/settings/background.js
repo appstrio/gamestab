@@ -232,7 +232,9 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                 $iframe = $('iframe.blurred-background').eq(0),
                 $iframeContents = $iframe.contents(),
                 $iframeBody = $iframeContents.find('body'),
-                $iframeDiv;
+                $iframeDiv,
+                iframeShown = false;
+
             $iframeBody.append(iframeHTML);
             $iframeDiv = $iframeBody.find('div.bg').eq(0);
 
@@ -246,6 +248,8 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                     backgroundImage: 'url(' + background + ')',
                     backgroundPosition: 'center calc(50% - 200px)'
                 });
+
+                if(!iframeShown) $iframe.show();
             };
 
             scope.$on('setBackgroundImage', function (e, image) {
