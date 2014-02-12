@@ -21,7 +21,9 @@ settingsModule.factory('Constants', ['Chrome',
                 }
             },
             CONFIG: {
-                search_url: '',
+                search_url: 'http://www.google.com/search?q=',
+                suggestions_url : 'http://api.bing.com/osjson.aspx?Market=en-us&query=',
+                suggestions_type : 'bing',
                 config_update_url: '',
                 dials_per_page: 12,
                 initial_dials_size: 26,

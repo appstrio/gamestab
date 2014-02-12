@@ -47,6 +47,9 @@ chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
                         return 0;
                     }
                 }
+            },
+            isChrome : function(){
+                return chrome && chrome.extension;
             }
         };
     }
