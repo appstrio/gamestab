@@ -187,26 +187,29 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
             var counter = 0;
             var deferred = $q.defer();
 
+            //TODO get rid of async and convert to promise based
             async.eachSeries(arr, function (item, callback) {
+                    var url = item[fieldToConvert];
                     ++counter;
                     $log.log('[Image] - caching ' + fieldToConvert + '=> ' + counter + '/' + arr.length + '.');
                     //if field is local, don't change it
-                    if (isPathLocal(item[fieldToConvert])) {
+                    if (isPathLocal(url)) {
                         // save original url
-                        item.originalUrl = item[fieldToConvert];
-                        if (/^chrome/.test(item[fieldToConvert])) {
+                        item.originalUrl = url;
+                        //test if url has chrome in the beginning
+                        if (/^chrome/.test(url)) {
                             return callback();
                         }
                         //save absolute chrome path
-                        item[fieldToConvert] = Chrome.extension.getURL(item[fieldToConvert]);
+                        item[fieldToConvert] = Chrome.extension.getURL(url);
                         return callback();
                     }
 
                     urlToLocalFile({
-                        url: item[fieldToConvert]
+                        url: url
                     }).then(function (file) {
                         // save original url
-                        item.originalUrl = item[fieldToConvert];
+                        item.originalUrl = url;
                         //save new url
                         item[fieldToConvert] = file;
                         return callback();
