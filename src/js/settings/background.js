@@ -30,15 +30,19 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                 //local backgrounds not found.
                 getBackgroundsJson()
                     .then(parseBackgrounds)
-                    .then(Image.convertFieldToLocalFile.bind(null, 'image'))
-                    .then(function () {
-                        store(function () {
-                            $log.log('[Background] - finished init in ' + (Date.now() - t0) + ' ms.');
-                            $rootScope.$apply(function () {
-                                isReady.resolve(background);
-                            });
+                    .then(Image.convertFieldToLocalFile.bind(null, 'image', {}))
+                    .then(Image.generateThumbnail.bind(null, 'image', {
+                        resizeOptions: {
+                            fixedHeight: 160,
+                            fixedWidth: 160
+                        }
+                    }))
+                    .then(store.bind(null, function () {
+                        $log.log('[Background] - finished init in ' + (Date.now() - t0) + ' ms.');
+                        $rootScope.$apply(function () {
+                            isReady.resolve(background);
                         });
-                    });
+                    }));
             });
 
             return isReady.promise;
@@ -120,13 +124,16 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
          */
         var turnOffActiveBackgrounds = function () {
             _.chain(backgrounds)
-                .where({
-                    isActive: true
-                })
-                .each(function (item) {
-                    item.isActive = false;
-                })
-                .value();
+            //find active backgrounds
+            .where({
+                isActive: true
+            })
+            //turn each one to isActive=false
+            .each(function (item) {
+                item.isActive = false;
+            })
+            //run
+            .value();
         };
 
         /**
@@ -233,6 +240,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                 $iframeContents = $iframe.contents(),
                 $iframeBody = $iframeContents.find('body'),
                 $iframeDiv;
+
             $iframeBody.append(iframeHTML);
             $iframeDiv = $iframeBody.find('div.bg').eq(0);
 
@@ -241,13 +249,6 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                 element.css({
                     backgroundImage: 'url(' + background + ')'
                 });
-
-//                // TEST
-//
-//                    if(background.indexOf('://') === -1){
-//                        background = chrome.extension.getURL(background);
-//                    }
-//                // TEST
 
                 $iframeDiv.css({
                     backgroundImage: 'url(' + background + ')',

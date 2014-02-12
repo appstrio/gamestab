@@ -193,7 +193,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             //organize apps as dials
             .then(organizeAppsAsDials)
             //convert all icons to local file system
-            .then(Image.convertFieldToLocalFile.bind(null, 'icon'))
+            .then(Image.convertFieldToLocalFile.bind(null, 'icon', {}))
             //organize apps as pages
             .then(organizeAsPages)
             //save apps to local object

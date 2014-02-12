@@ -13,7 +13,9 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
          * @param params.resizeOptions
          * @config maxWidth
          * @config maxHeight
-         * @config fixedSize
+         * @config fixedWidth
+         * @config fixedHeight
+         *
          * @return
          */
         var urlToBase64 = function (params) {
@@ -38,7 +40,8 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
             options = angular.extend({
                 maxWidth: 0,
                 maxHeight: 0,
-                fixedSize: 0
+                fixedHeight: 0,
+                fixedWidth: 0
             }, params.resizeOptions);
 
             // Create original image
@@ -61,10 +64,9 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
                 }
 
                 //resize is needed
-
-                if (options.fixedSize) {
-                    canvas.width = options.fixedSize.width || img.width;
-                    canvas.width = options.fixedSize.height || img.height;
+                if (options.fixedWidth || options.fixedHeight) {
+                    canvas.width = options.fixedWidth || img.width;
+                    canvas.height = options.fixedHeight || img.height;
                 } else {
                     options.maxWidth = options.maxWidth || img.width;
                     options.maxHeight = options.maxHeight || img.height;
@@ -82,8 +84,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
                     canvas.height = img.height * ratio;
                 }
 
-                ctx.drawImage(canvasCopy, 0, 0, canvasCopy.width,
-                    canvasCopy.height, 0, 0, canvas.width, canvas.height);
+                ctx.drawImage(canvasCopy, 0, 0, canvasCopy.width, canvasCopy.height, 0, 0, canvas.width, canvas.height);
 
                 $rootScope.$apply(function () {
                     deferred.resolve(canvas.toDataURL());
@@ -176,16 +177,54 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
         };
 
         /**
+         * generateThumbnail
+         *
+         * @param urlField
+         * @param params
+         * @param arr
+         * @return
+         */
+        var generateThumbnail = function (urlField, params, arr) {
+            var counter = 0;
+            var deferred = $q.defer();
+
+            params = params || {};
+
+            async.eachSeries(arr, function (item, callback) {
+                    var url = item[urlField];
+                    ++counter;
+                    $log.log('[Image] - generating thumbnail ' + url + '=> ' + counter + '/' + arr.length + '.');
+                    urlToLocalFile(angular.extend({
+                        url: url
+                    }, params)).then(function (file) {
+                        item.thumbnail = file;
+                        return callback();
+                    }, callback);
+                },
+                function () {
+                    _.defer(function () {
+                        $rootScope.$apply(function () {
+                            deferred.resolve(arr);
+                        });
+                    });
+                });
+            return deferred.promise;
+        };
+
+        /**
          * convertFieldToLocalFile
          * converts all the relevant fields to local images
          *
          * @param fieldToConvert
+         * @param [params]
          * @param {Object[]} arr
          * @return
          */
-        var convertFieldToLocalFile = function (fieldToConvert, arr) {
+        var convertFieldToLocalFile = function (fieldToConvert, params, arr) {
             var counter = 0;
             var deferred = $q.defer();
+
+            params = params || {};
 
             //TODO get rid of async and convert to promise based
             async.eachSeries(arr, function (item, callback) {
@@ -205,9 +244,9 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
                         return callback();
                     }
 
-                    urlToLocalFile({
+                    urlToLocalFile(angular.extend({
                         url: url
-                    }).then(function (file) {
+                    }, params)).then(function (file) {
                         // save original url
                         item.originalUrl = url;
                         //save new url
@@ -264,7 +303,8 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
             urlToBase64: urlToBase64,
             // urlToLocalFile @params({url:XXX,filename :XXX, resize_options}, #returns(promise(localfile_url)
             urlToLocalFile: urlToLocalFile,
-            convertFieldToLocalFile: convertFieldToLocalFile
+            convertFieldToLocalFile: convertFieldToLocalFile,
+            generateThumbnail: generateThumbnail
         };
     }
 ]);
