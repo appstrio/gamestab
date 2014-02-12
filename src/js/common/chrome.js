@@ -38,6 +38,15 @@ chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
 
                     return deferred.promise;
                 }
+            },
+            extension : {
+                getURL : function(url){
+                    if(chrome && chrome.extension){
+                        return chrome.extension.getURL(url);
+                    }else{
+                        return 0;
+                    }
+                }
             }
         };
     }

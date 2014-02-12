@@ -1,8 +1,8 @@
 /* global async,_ */
 var imageModule = angular.module('aio.image', []);
 
-imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
-    function ($q, $rootScope, FileSystem, $log) {
+imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome',
+    function ($q, $rootScope, FileSystem, $log, Chrome) {
 
         var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
         /**
@@ -164,12 +164,13 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
          * @return
          */
         var isPathLocal = function (field) {
-            if (/filesystem:chrome-extension/.test(field)) {
+            if (/^filesystem:chrome-extension/.test(field)) {
                 return true;
             }
             if (/^https?/.test(field)) {
                 return false;
             }
+
 
             return true;
         };
@@ -191,6 +192,13 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log',
                     $log.log('[Image] - caching ' + fieldToConvert + '=> ' + counter + '/' + arr.length + '.');
                     //if field is local, don't change it
                     if (isPathLocal(item[fieldToConvert])) {
+                        // save original url
+                        item.originalUrl = item[fieldToConvert];
+                        if (/^chrome/.test(item[fieldToConvert])) {
+                            return callback();
+                        }
+                        //save absolute chrome path
+                        item[fieldToConvert] = Chrome.extension.getURL(item[fieldToConvert]);
                         return callback();
                     }
 
