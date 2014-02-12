@@ -26,30 +26,22 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          */
         var init = function () {
             console.debug('[Apps] - init');
-            var t0 = Date.now();
             Storage.get(storageKey, function (items) {
                 var _apps = items && items[storageKey];
                 if (_apps && angular.isArray(_apps)) {
+                    $log.log('[Apps] - got apps from local storage');
                     setApps(_apps);
-                    $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0), ' ms.');
                     return isReady.resolve(_apps);
                 }
 
                 $log.log('[Apps] - did not find apps in localStorage, getting from remote');
-                return setup().then(function () {
-                    store(function () {
-                        $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0), ' ms.');
-                        $rootScope.$apply(function () {
-                            isReady.resolve(apps);
-                        });
-                    });
-                });
+                return setup();
             });
             return isReady.promise;
         };
 
         var setApps = function (_apps) {
-            $log.log('[Apps] - settings app');
+            $log.log('[Apps] - saving apps to memory');
             apps = _apps;
             return apps;
         };
@@ -179,6 +171,19 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             return _.values(_.groupBy(dials, getPageIndex));
         };
 
+        var lazyCacheIcons = function () {
+            var arr = angular.copy(_.flatten(apps));
+            return Image.convertFieldToLocalFile('icon', {}, arr)
+                .then(organizeAsPages)
+                .then(setApps)
+                .then(store)
+                .then(reportDone.bind(null, 'lazy cache icons'));
+        };
+
+        var reportDone = function (activity) {
+            $log.info('[Apps] - finished ' + activity);
+        };
+
         /**
          * setup
          *
@@ -192,12 +197,16 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             return $q.all(getDials)
             //organize apps as dials
             .then(organizeAppsAsDials)
-            //convert all icons to local file system
-            .then(Image.convertFieldToLocalFile.bind(null, 'icon', {}))
             //organize apps as pages
             .then(organizeAsPages)
             //save apps to local object
-            .then(setApps);
+            .then(setApps)
+            //save to storage
+            .then(store)
+            //report done
+            .then(reportDone.bind(null, 'install'))
+            //resolve service promise
+            .then(isReady.resolve.bind(null, apps));
         };
 
         /**
@@ -255,10 +264,18 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          *
          * @return promise
          */
-        var store = function (cb) {
-            //enforce function type
-            cb = cb || angular.noop;
-            Storage.setItem(storageKey, apps, cb);
+        var store = function () {
+            $log.log('[Apps] - Saving apps to storage');
+            var deferred = $q.defer();
+            //need to bind here to resolve deferred
+            Storage.setItem(storageKey, apps, function () {
+                _.defer(function () {
+                    $rootScope.$apply(function () {
+                        deferred.resolve();
+                    });
+                });
+            });
+            return deferred.promise;
         };
 
         /**
@@ -272,11 +289,13 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             var lastAvailablePage = getLastAvailablePage();
             app.installTimestamp = Date.now();
             lastAvailablePage.push(app);
-            store(cb);
+            //TODO change whoever calls this to work with promises
+            store().then(cb);
         };
 
         /**
          * uninstallApp
+         * TODO change to work with promises (from originating function)
          *
          * @param app
          * @param cb
@@ -289,8 +308,8 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 angular.forEach(page, function (_app, index) {
                     if (app.url === _app.url) {
                         page.splice(index, 1);
-                        store(cb);
                         found = true;
+                        store().then(cb);
                     }
                 });
             });
@@ -325,6 +344,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             },
             store: store,
             getWebAppsDb: getOrganizedWebApps,
+            lazyCacheIcons: lazyCacheIcons,
             addNewApp: addNewApp,
             uninstallApp: uninstallApp
         };

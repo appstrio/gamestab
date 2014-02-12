@@ -21,7 +21,9 @@ mainModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 
         //load analytics scripts
         .then(Analytics.init)
         //load background from local or remote
-        .then(Background.init);
+        .then(Background.init)
+        //now lazy cache app icons
+        .then(Apps.lazyCacheIcons);
 
         /**
          * setOverlay

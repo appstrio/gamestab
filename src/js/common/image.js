@@ -156,24 +156,18 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
             return deferred.promise;
         };
 
-        /**
-         * isPathLocal
-         * Checks if field is local
-         * local field has 'filesystem:chrome-extension' or doesn't beging with http/https
-         *
-         * @param field
-         * @return
-         */
-        var isPathLocal = function (field) {
-            if (/^filesystem:chrome-extension/.test(field)) {
-                return true;
-            }
-            if (/^https?/.test(field)) {
-                return false;
-            }
+        var helpers = {
+            isPathFileSystem: function (field) {
+                return /^filesystem/.test(field);
+            },
 
+            isPathLocal: function (field) {
+                return !/^https?/.test(field);
+            },
 
-            return true;
+            isPathChrome: function (field) {
+                return /^chrome/.test(field);
+            }
         };
 
         /**
@@ -194,6 +188,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
                     var url = item[urlField];
                     ++counter;
                     $log.log('[Image] - generating thumbnail ' + url + '=> ' + counter + '/' + arr.length + '.');
+
                     urlToLocalFile(angular.extend({
                         url: url
                     }, params)).then(function (file) {
@@ -231,14 +226,22 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
                     var url = item[fieldToConvert];
                     ++counter;
                     $log.log('[Image] - caching ' + fieldToConvert + '=> ' + counter + '/' + arr.length + '.');
-                    //if field is local, don't change it
-                    if (isPathLocal(url)) {
-                        // save original url
-                        item.originalUrl = url;
-                        //test if url has chrome in the beginning
-                        if (/^chrome/.test(url)) {
-                            return callback();
-                        }
+
+                    // save original url
+                    item.originalUrl = url;
+
+                    //check if path starts with chrome
+                    if (helpers.isPathChrome(url)) {
+                        return callback();
+                    }
+
+                    //is path a filesystem html5 path?
+                    if (helpers.isPathFileSystem(url)) {
+                        return callback();
+                    }
+
+                    //is path a local one?
+                    if (helpers.isPathLocal(url)) {
                         //save absolute chrome path
                         item[fieldToConvert] = Chrome.extension.getURL(url);
                         return callback();
@@ -247,8 +250,6 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
                     urlToLocalFile(angular.extend({
                         url: url
                     }, params)).then(function (file) {
-                        // save original url
-                        item.originalUrl = url;
                         //save new url
                         item[fieldToConvert] = file;
                         return callback();
