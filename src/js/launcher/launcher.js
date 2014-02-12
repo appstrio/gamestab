@@ -1,7 +1,7 @@
 var launcherModule = launcherModule || angular.module('aio.launcher', []);
 
-launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics',
-    function (Apps, $log, $timeout, Analytics) {
+launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome',
+    function (Apps, $log, $timeout, Analytics, Chrome) {
         return function (scope, element) {
             //jshint unused:false
 
@@ -43,13 +43,10 @@ launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics',
 
                 //app is a chrome app. launch it
                 if (app.chromeId) {
-                    Analytics.reportEvent(101, {
+                    return Analytics.reportEvent(101, {
                         label: app.title || app.chromeId,
                         waitForFinish: true
-                    }).then(function () {
-                        chrome.management.launchApp(app.chromeId, function () {});
-                    });
-                    return;
+                    }).then(Chrome.management.launchApp.bind(null, app.chromeId));
                 }
 
                 //app is an overlay. run it

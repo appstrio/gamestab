@@ -1,15 +1,14 @@
 var settingsModule = settingsModule || angular.module('aio.settings', []);
 
-settingsModule.factory('Constants', [
-
-    function () {
+settingsModule.factory('Constants', ['Chrome',
+    function (Chrome) {
         return {
             PARTNERS_JSON_URL: 'data/partners/partners.json',
             BACKGROUNDS_JSON_URL: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
             WEB_APPS_DB: 'https://s3.amazonaws.com/Gamestab/JSONs/webAppsDb.json',
             DEFAULT_BACKGROUND_IMG: 'img/wallpapers/default.jpg',
             ANALYTICS_UA_ACCOUNT: 'UA-47928276-1',
-            APP_VERSION: chrome.app.getDetails().version,
+            APP_VERSION: Chrome.getVersion(),
             STORAGE_KEYS: {
                 CONFIG: 'gt.config',
                 APPS: 'gt.apps',

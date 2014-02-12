@@ -3,8 +3,8 @@ var analyticsModule = angular.module('aio.analytics', []);
 //global
 var _gaq = _gaq || [];
 
-analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '$timeout',
-    function ($rootScope, $log, $q, C, $timeout) {
+analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '$timeout', 'Chrome',
+    function ($rootScope, $log, $q, C, $timeout, Chrome) {
         /**
          * init
          * Load the analytics script
@@ -25,7 +25,7 @@ analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '
 
             //runnig on dev version - no update url
             //FIXME remove this false
-            if (false && !chrome.runtime.getManifest().update_url) {
+            if (false && !Chrome.getUpdateUrl()) {
                 console.debug('Setting up local analytics ID of UA-99999999-X');
                 _gaq.push(['_setAccount', 'UA-99999999-X']);
             } else {

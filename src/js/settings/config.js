@@ -79,6 +79,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
                 });
             } else {
                 async.detect(partnersList, function (partner, cb) {
+                    //TODO export to chrome module
                     chrome.history.search({
                         text: partner.partner_install_url_snippit
                     }, function (found) {

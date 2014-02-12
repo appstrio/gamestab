@@ -3,6 +3,12 @@ var chromeModule = angular.module('aio.chrome', []);
 chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
     function ($rootScope, $timeout, $q, $log) {
         return {
+            getUpdateUrl: function () {
+                return chrome.runtime.getManifest().update_url;
+            },
+            getVersion: function () {
+                return chrome.app.getDetails().version;
+            },
             management: {
                 getAll: function () {
                     var deferred = $q.defer();
@@ -19,6 +25,16 @@ chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
                             deferred.resolve();
                         });
                     }
+
+                    return deferred.promise;
+                },
+                launchApp: function (app) {
+                    var deferred = $q.defer();
+                    chrome.management.launchApp(app.chromeId, function () {
+                        $rootScope.$apply(function () {
+                            deferred.resolve();
+                        });
+                    });
 
                     return deferred.promise;
                 }
