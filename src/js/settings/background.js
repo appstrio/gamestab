@@ -1,8 +1,8 @@
 /* global _ */
 var settingsModule = settingsModule || angular.module('aio.settings', []);
 
-settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'Image', '$log', 'Constants',
-    function ($rootScope, $http, Storage, $q, Image, $log, C) {
+settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'Image', '$log', 'Constants', 'Chrome',
+    function ($rootScope, $http, Storage, $q, Image, $log, C, Chrome) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.BACKGROUNDS,
             background = {},
@@ -52,7 +52,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
          */
         var setDefaultBackground = function () {
             var newBackground = {
-                image: C.DEFAULT_BACKGROUND_IMG,
+                image: Chrome.extension.getURL(C.DEFAULT_BACKGROUND_IMG),
                 isLocalBackground: false,
                 isActive: true
             };
@@ -241,7 +241,14 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                 element.css({
                     backgroundImage: 'url(' + background + ')'
                 });
-                console.log('background', background);
+
+//                // TEST
+//
+//                    if(background.indexOf('://') === -1){
+//                        background = chrome.extension.getURL(background);
+//                    }
+//                // TEST
+
                 $iframeDiv.css({
                     backgroundImage: 'url(' + background + ')',
                     backgroundPosition: 'center calc(50% - 200px)'
