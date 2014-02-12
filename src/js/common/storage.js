@@ -1,7 +1,7 @@
 var storageModule = angular.module('aio.storage', []);
 
-storageModule.factory('Storage', ['$rootScope',
-    function ($rootScope) {
+storageModule.factory('Storage', ['$rootScope', 'Chrome',
+    function ($rootScope, Chrome) {
         var localStorageAbstraction = {
             get: function (key, cb) {
                 var raw = localStorage.getItem(key);
@@ -50,7 +50,7 @@ storageModule.factory('Storage', ['$rootScope',
             }
         };
 
-        var StorageArea = localStorageAbstraction || chrome.storage.local;
+        var StorageArea = localStorageAbstraction || Chrome.storage.local;
         return {
             get: function (keys, cb) {
                 cb = cb || angular.noop;

@@ -13,6 +13,9 @@ chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
                     }
                 }
             },
+            storage: {
+                local: chrome.storage.local
+            },
             getUpdateUrl: function () {
                 return chrome.runtime.getManifest().update_url;
             },
@@ -49,11 +52,11 @@ chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
                     return deferred.promise;
                 }
             },
-            extension : {
-                getURL : function(url){
-                    if(chrome && chrome.extension){
+            extension: {
+                getURL: function (url) {
+                    if (chrome && chrome.extension) {
                         return chrome.extension.getURL(url);
-                    }else{
+                    } else {
                         return 0;
                     }
                 }
