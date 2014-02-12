@@ -51,6 +51,10 @@ html(ng-csp='ng-csp')
                 .search-input
                     .input-holder
                         input(placeholder="Web Search...", ng-keypress="goSearch($event)", ng-model="searchQuery", id="search-input", aio-search-box)
+            .suggestions(aio-search-suggestions)
+                .suggestions-wrapper
+                    div(class="suggestion", ng-repeat="suggestion in suggestions.data") {{suggestion}}
+
 
         #wrapper(hl-background)
             #search-placeholder

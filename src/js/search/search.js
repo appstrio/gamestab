@@ -1,19 +1,15 @@
 /* global _ */
 var searchModule = angular.module('aio.search', []);
 
-searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bingSearchSuggestions',
+searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData',
 
-    function (Analytics, C, Config, bingSearchSuggestions) {
+    function (Analytics, C, Config, bingSearchSuggestions, suggestionsData) {
         return function (scope, element) {
             var throttleLimit = C.CONFIG.search_throttle_limit,
                 config = Config.get(),
                 searchURL = Config.search_url || C.CONFIG.search_url,
                 suggestionsURL = Config.suggestions_url || C.CONFIG.suggestions_url,
-                $iframe = $('iframe.blurred-background').eq(0),
-                $iframeContents = $iframe.contents(),
-                $iframeBody = $iframeContents.find('body'),
-                $iframeDiv = $iframeBody.find('div.bg').eq(0),
-                $searchWrapper = $('#search-wrapper');
+                $container = $('#container');
 
 
             bingSearchSuggestions.init(suggestionsURL);
@@ -21,9 +17,15 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
             element.focus();
 
             var showSuggestionsBox = function(){
-                $searchWrapper.css({height: "100%"});
-                $iframeDiv.css({height: "100%"});
+                $container.addClass('suggestions-on');
             };
+
+            scope.$watch('searchQuery', function(newVal){
+                console.log('newVal',newVal);
+               if(!newVal){
+                   $container.removeClass('suggestions-on');
+               }
+            });
 
 
             // get the results using a throttled function
@@ -31,8 +33,9 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
                 //TODO build a list of recommended search results
                 console.debug('typeahead guess', val);
 
-                bingSearchSuggestions.getSuggestions(val).then(function(suggestions){
-                   console.debug('suggestions for ' + val,suggestions);
+                bingSearchSuggestions.getSuggestions(val).then(function(suggestionsResponse){
+                   console.debug('suggestions for ' + val,suggestionsResponse);
+                    suggestionsData.data = suggestionsResponse
                     showSuggestionsBox();
                 });
             }, throttleLimit);
@@ -128,4 +131,12 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
         init : init,
         getSuggestions : getSuggestions
     }
+}]).factory('suggestionsData', [function(){
+        return {
+            data : []
+        };
+}]).directive('aioSearchSuggestions', ['suggestionsData', function(suggestionsData){
+        return function(scope){
+            scope.suggestions = suggestionsData;
+        }
 }]);
