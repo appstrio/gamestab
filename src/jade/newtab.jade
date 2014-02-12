@@ -56,7 +56,9 @@ html(ng-csp='ng-csp')
                     div(class="suggestion", ng-repeat="suggestion in suggestions.data")
                         span.icon(ng-show="suggestion.icon")
                             img(ng-src="{{suggestion.icon}}")
-                        span.title {{suggestion.title}}
+                        span.details
+                            span.title {{suggestion.title}}
+                            span.description(ng-show="suggestion.description") {{suggestion.description}}
 
 
         #wrapper(hl-background)

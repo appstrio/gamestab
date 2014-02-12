@@ -184,7 +184,7 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
 
     // wrap a suggestion so it will conform the structure of the suggestion object
     var wrapSuggestion = function(suggestion){
-        return {title : suggestion};
+        return {title : suggestion, description : "Search"};
     }
 
 
@@ -223,9 +223,19 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
     var getSuggestions = function(q){
         return getWebAppsDb().then(function(){
             var filteredApps = $filter('filter')(webAppsDB, q);
+            for(var i = 0; i < filteredApps.length; ++i){
+                filteredApps[i] = wrapSuggestion(filteredApps[i]);
+            }
             return filteredApps;
         });
     };
+
+    // wrap a suggestion so it will conform the structure of the suggestion object
+    var wrapSuggestion = function(app){
+        app.description = app.tags && app.tags[0];
+        return app;
+    }
+
 
     return {
         getSuggestions : getSuggestions

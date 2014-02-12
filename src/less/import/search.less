@@ -118,20 +118,34 @@
      > div.suggestion{
        padding: 5px 11px;
        color: rgb(230,230,230);
-       color: white;
+
        border-bottom: 1px solid rgba(255,255,255,0.17);
-       height: 30px;
+       height: 40px;
        .icon{
          float:left;
          margin-right:10px;
          img{
-           margin-top:2px;
+           margin-top:7px;
            width:25px;
            border-radius: 3px;
          }
        }
-       .title{
-         line-height: 30px;
+       .details{
+         height:40px;
+         .title{
+           display: block;
+           color: white;
+           line-height: 10px;
+           padding-top: 9px;
+         }
+         .description{
+            font-size:11px;
+            color: #323232;
+         }
+       }
+
+       &:hover{
+        background: rgba(255,255,255,0.5);
        }
        clear:both;
     }
