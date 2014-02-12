@@ -245,22 +245,17 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @return
          */
         var getLargestIconChromeApp = function (iconsArr) {
-            var selected;
             if (!iconsArr.length) {
                 return null;
             }
 
-            for (var i = 0; i < iconsArr.length; ++i) {
-                if (!selected) {
-                    selected = iconsArr[i];
-                } else {
-                    if (selected.size < iconsArr[i].size) {
-                        selected = iconsArr[i];
-                    }
+            //find item with largest size
+            return _.reduce(iconsArr, function (largest, item) {
+                if (item.size > largest.size) {
+                    return item;
                 }
-            }
-
-            return selected;
+                return largest;
+            }, iconsArr[0]);
         };
 
         /**
