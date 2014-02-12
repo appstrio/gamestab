@@ -160,11 +160,9 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
             isPathFileSystem: function (field) {
                 return /^filesystem/.test(field);
             },
-
-            isPathLocal: function (field) {
-                return !/^https?/.test(field);
+            isPathRemote: function (field) {
+                return /^https?/.test(field);
             },
-
             isPathChrome: function (field) {
                 return /^chrome/.test(field);
             }
@@ -187,7 +185,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
             async.eachSeries(arr, function (item, callback) {
                     var url = item[urlField];
                     ++counter;
-                    $log.log('[Image] - generating thumbnail ' + url + '=> ' + counter + '/' + arr.length + '.');
+                    $log.log('[Image] - generating thumbnail ' + urlField + ' => ' + counter + '/' + arr.length + '.');
 
                     urlToLocalFile(angular.extend({
                         url: url
@@ -241,7 +239,7 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
                     }
 
                     //is path a local one?
-                    if (helpers.isPathLocal(url)) {
+                    if (!helpers.isPathRemote(url)) {
                         //save absolute chrome path
                         item[fieldToConvert] = Chrome.extension.getURL(url);
                         return callback();
@@ -305,7 +303,9 @@ imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome'
             // urlToLocalFile @params({url:XXX,filename :XXX, resize_options}, #returns(promise(localfile_url)
             urlToLocalFile: urlToLocalFile,
             convertFieldToLocalFile: convertFieldToLocalFile,
-            generateThumbnail: generateThumbnail
+            generateThumbnail: generateThumbnail,
+
+            helpers: helpers
         };
     }
 ]);

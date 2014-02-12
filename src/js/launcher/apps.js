@@ -5,6 +5,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
     function ($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Image) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
+            isCacheNeededFlag = false,
             apps;
 
         var systemApps = [{
@@ -34,6 +35,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                     return isReady.resolve(_apps);
                 }
 
+                isCacheNeededFlag = true;
                 $log.log('[Apps] - did not find apps in localStorage, getting from remote');
                 return setup();
             });
@@ -172,16 +174,34 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         };
 
         var lazyCacheIcons = function () {
+            console.debug('[Apps] - starting to lazy cache items');
             var arr = angular.copy(_.flatten(apps));
             return Image.convertFieldToLocalFile('icon', {}, arr)
                 .then(organizeAsPages)
                 .then(setApps)
                 .then(store)
-                .then(reportDone.bind(null, 'lazy cache icons'));
+                .then(reportDone.bind(null, 'lazy cache icons'))
+                .then(function () {
+                    isCacheNeededFlag = false;
+                });
         };
 
         var reportDone = function (activity) {
             $log.info('[Apps] - finished ' + activity);
+        };
+
+        /**
+         * isCacheNeeded
+         * returns true if any app.icon is a remote url
+         *
+         * @return
+         */
+        var isCacheNeeded = function () {
+            var arr = _.flatten(apps);
+
+            return _.some(arr, function (item) {
+                return Image.helpers.isPathRemote(item.icon);
+            });
         };
 
         /**
@@ -339,6 +359,10 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         return {
             isReady: isReady.promise,
             init: init,
+            isCacheNeeded: function () {
+                //return true if flag is up, or if any items pass the remote url check
+                return isCacheNeededFlag || isCacheNeeded();
+            },
             apps: function () {
                 return apps;
             },

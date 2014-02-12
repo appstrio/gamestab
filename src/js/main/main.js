@@ -23,7 +23,11 @@ mainModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 
         //load background from local or remote
         .then(Background.init)
         //now lazy cache app icons
-        .then(Apps.lazyCacheIcons);
+        .then(function () {
+            if (Apps.isCacheNeeded()) {
+                return Apps.lazyCacheIcons();
+            }
+        });
 
         /**
          * setOverlay
