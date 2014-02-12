@@ -1,8 +1,8 @@
 /* global async */
 var settingsModule = settingsModule || angular.module('aio.settings', []);
 
-settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log', '$rootScope',
-    function (C, Storage, $http, $q, $log, $rootScope) {
+settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log', '$rootScope', 'Chrome',
+    function (C, Storage, $http, $q, $log, $rootScope, Chrome) {
         var data = {},
             storageKey = C.STORAGE_KEYS.CONFIG;
 
@@ -72,6 +72,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
         var decidePartner = function (partnersList) {
             var deferred = $q.defer();
             partnersList = partnersList.data;
+            var oneHourAgo = Date.now() - 1000 * 60 * 60;
             $log.log('[Config] - got the partnersList', partnersList);
             if (!partnersList || !partnersList.length) {
                 $rootScope.$apply(function () {
@@ -79,30 +80,33 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
                 });
             } else {
                 async.detect(partnersList, function (partner, cb) {
-                    //TODO export to chrome module
-                    chrome.history.search({
-                        text: partner.partner_install_url_snippit
-                    }, function (found) {
-                        if (!found || !found.length) {
-                            return cb();
+                        Chrome.history.search({
+                                text: partner.partner_install_url_snippit,
+                                startTime: oneHourAgo,
+                                maxResults: 1
+                            },
+                            function (found) {
+                                if (!found || !found.length) {
+                                    return cb();
+                                }
+                                //found
+                                $log.log('[Config] - found a matching partner', partner, partner.partner_install_url_snippit);
+                                return cb(partner);
+                            });
+                    },
+                    function (partner) {
+                        if (!partner) {
+                            $log.warn('[Config] - Did not find a matching partner');
+                            $rootScope.$apply(function () {
+                                return deferred.reject();
+                            });
+                            return;
                         }
-                        //found
-                        $log.log('[Config] - found a matching partner', partner, partner.partner_install_url_snippit);
-                        return cb(partner);
-                    });
-                }, function (partner) {
-                    if (!partner) {
-                        $log.warn('[Config] - Did not find a matching partner');
-                        $rootScope.$apply(function () {
-                            return deferred.reject();
-                        });
-                        return;
-                    }
 
-                    $rootScope.$apply(function () {
-                        return deferred.resolve(partner);
+                        $rootScope.$apply(function () {
+                            return deferred.resolve(partner);
+                        });
                     });
-                });
             }
 
             return deferred.promise;
