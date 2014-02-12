@@ -242,13 +242,6 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                     backgroundImage: 'url(' + background + ')'
                 });
 
-//                // TEST
-//
-//                    if(background.indexOf('://') === -1){
-//                        background = chrome.extension.getURL(background);
-//                    }
-//                // TEST
-
                 $iframeDiv.css({
                     backgroundImage: 'url(' + background + ')',
                     backgroundPosition: 'center calc(50% - 200px)'
