@@ -32,13 +32,12 @@
     "unlimitedStorage",
     "background",
     "webNavigation",
-    "contextMenus",
-    "geolocation"
+    "contextMenus"
   ],
   "web_accessible_resources": [
     "newtab.html",
     "launcher.html"
   ],
-  "version": "1.0.38",
+  "version": "1.0.42",
   "manifest_version": 2
 }
