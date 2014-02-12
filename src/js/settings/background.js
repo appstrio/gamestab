@@ -226,9 +226,26 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
 ]).directive('hlBackground', ['Background', '$log',
     function (Background, $log) {
         return function (scope, element) {
+
+
+            // search blurred background setup
+            var iframeHTML = "<link href='css/bg-iframe.css' rel='stylesheet') /><div class='bg'></div>",
+                $iframe = $('iframe.blurred-background').eq(0),
+                $iframeContents = $iframe.contents(),
+                $iframeBody = $iframeContents.find('body'),
+                $iframeDiv;
+            $iframeBody.append(iframeHTML);
+            $iframeDiv = $iframeBody.find('div.bg').eq(0);
+
+
             var setBackground = function (background) {
                 element.css({
                     backgroundImage: 'url(' + background + ')'
+                });
+                console.log('background',background);
+                $iframeDiv.css({
+                    backgroundImage: 'url(' + background + ')',
+                    backgroundPosition: 'center calc(50% - 200px)'
                 });
             };
 
