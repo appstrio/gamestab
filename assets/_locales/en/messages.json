@@ -1,14 +1,8 @@
 {
     "appDescription": {
-        "description": "",
-        "message": "This description should be replaced"
+        "message": "Bringing you your favorites games to the newtab"
     },
     "appName": {
-        "description": "",
-        "message": "WhiteLabeled NewTab"
-    },
-    "extVersion": {
-        "dscription": "",
-        "message": "1"
+        "message": "Gamestab"
     }
 }
