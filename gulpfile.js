@@ -22,7 +22,7 @@ var libs = bowerPackages.concat(vendorPackages);
 //global config
 var shouldReload = false;
 
-var getPackageJson = function() {
+var getPackageJson = function () {
     var fs = require('fs');
 
     pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
@@ -30,12 +30,12 @@ var getPackageJson = function() {
 };
 
 //default task
-gulp.task('default', ['clean'], function() {
+gulp.task('default', ['clean'], function () {
     gulp.start('bump', 'assets', 'jade', 'libs', 'less', 'manifest', 'scripts', 'reloadExtension', 'watch');
 });
 
 //jade -> html
-gulp.task('jade', function() {
+gulp.task('jade', function () {
     return gulp.src(paths.origin.jade)
         .pipe(flatten())
         .pipe(jade({
@@ -45,14 +45,14 @@ gulp.task('jade', function() {
 });
 
 //less -> css
-gulp.task('less', function() {
+gulp.task('less', function () {
     return gulp.src(paths.origin.less)
         .pipe(less())
         .pipe(gulp.dest(paths.dist.less));
 });
 
 // zip build folder. buggy
-gulp.task('zip', function() {
+gulp.task('zip', function () {
     var _pkg = getPackageJson();
     gulp.src('build/**/*')
         .pipe(zip('gamesTab.' + _pkg.version + '.zip'))
@@ -60,27 +60,27 @@ gulp.task('zip', function() {
 });
 
 // copy & uglify js scripts
-gulp.task('scripts', function() {
+gulp.task('scripts', function () {
     return gulp.src(paths.origin.js)
         .pipe(uglify())
         .pipe(gulp.dest(paths.dist.js));
 });
 
 //copy manifest
-gulp.task('manifest', function() {
+gulp.task('manifest', function () {
     return gulp.src(paths.origin.manifest)
         .pipe(gulp.dest(paths.build));
 });
 
 //clean build folder
-gulp.task('clean', function() {
+gulp.task('clean', function () {
     return gulp.src(paths.build, {
         read: false
     }).pipe(clean());
 });
 
 //bump versions on package/bower/manifest
-gulp.task('bump', function() {
+gulp.task('bump', function () {
     //reget package
     var _pkg = getPackageJson();
     //increment version
@@ -103,7 +103,7 @@ gulp.task('bump', function() {
 });
 
 //handle assets
-gulp.task('assets', function() {
+gulp.task('assets', function () {
     //copy regular assets
     gulp.src(paths.origin.assets)
         .pipe(gulp.dest(paths.build));
@@ -117,12 +117,12 @@ gulp.task('assets', function() {
         .pipe(gulp.dest(paths.dist.extraBuild));
 });
 
-gulp.task('libs', function() {
+gulp.task('libs', function () {
     return gulp.src(libs)
         .pipe(gulp.dest(paths.dist.libs));
 });
 
-gulp.task('reloadExtension', function() {
+gulp.task('reloadExtension', function () {
     if (!shouldReload) {
         return;
     }
@@ -134,7 +134,7 @@ gulp.task('reloadExtension', function() {
 });
 
 //all tasks are watch -> bump patch version -> reload extension (globally enabled)
-gulp.task('watch', function() {
+gulp.task('watch', function () {
     var afterTasks = ['reloadExtension'];
 
     gulp.watch(libs, ['libs'].concat(afterTasks));
