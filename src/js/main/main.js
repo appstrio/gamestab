@@ -12,6 +12,7 @@ mainModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 
         };
 
         console.debug('[MainCtrl] - init');
+        var t0 = Date.now();
         //load config from local or remote
         Config.init()
         //load apps from local or remote
@@ -22,11 +23,21 @@ mainModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 
         .then(Analytics.init)
         //load background from local or remote
         .then(Background.init)
-        //now lazy cache app icons
+        //detect if app icons need lazy cache
         .then(function () {
             if (Apps.isCacheNeeded()) {
                 return Apps.lazyCacheIcons();
             }
+        })
+        //detect if background images need lazy cache
+        .then(function () {
+            if (Background.isCacheNeeded()) {
+                return Background.lazyCacheImages();
+            }
+        })
+        //report time
+        .then(function () {
+            console.debug('%c[MainCtrl] - entire startup process took ' + (Date.now() - t0) + ' ms.', 'background:black;color:yellow;');
         });
 
         /**
