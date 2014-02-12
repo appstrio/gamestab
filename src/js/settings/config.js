@@ -18,7 +18,7 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
             Storage.get(storageKey, function (items) {
                 if (items && items[storageKey]) {
                     $log.log('[Config] - got settings from localstorage');
-                    setter(items[storageKey]);
+                    data = items[storageKey];
                     return deferred.resolve();
                 }
 
@@ -27,17 +27,6 @@ settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log',
             });
 
             return deferred.promise;
-        };
-
-
-        /**
-         * setter
-         *
-         * @param _data
-         * @return
-         */
-        var setter = function (_data) {
-            data = _data;
         };
 
         /**

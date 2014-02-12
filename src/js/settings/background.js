@@ -227,9 +227,8 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
     function (Background, $log) {
         return function (scope, element) {
 
-
             // search blurred background setup
-            var iframeHTML = "<link href='css/bg-iframe.css' rel='stylesheet') /><div class='bg'></div>",
+            var iframeHTML = '<link href=\'css/bg-iframe.css\' rel=\'stylesheet\') /><div class=\'bg\'></div>',
                 $iframe = $('iframe.blurred-background').eq(0),
                 $iframeContents = $iframe.contents(),
                 $iframeBody = $iframeContents.find('body'),
@@ -242,7 +241,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                 element.css({
                     backgroundImage: 'url(' + background + ')'
                 });
-                console.log('background',background);
+                console.log('background', background);
                 $iframeDiv.css({
                     backgroundImage: 'url(' + background + ')',
                     backgroundPosition: 'center calc(50% - 200px)'
