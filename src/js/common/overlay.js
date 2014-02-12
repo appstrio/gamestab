@@ -26,7 +26,7 @@ overlayModule.directive('aioOverlay', ['$timeout', '$log',
                  */
                 var hide = function (done) {
                     $overlay.removeClass('showed');
-                    $('#wrapper').removeClass('blurred');
+                    $('#container').removeClass('blurred');
                     $overlay.removeClass('enlarged');
                     scope.templateURL = '';
                     scope.overlayOptions = null;
@@ -39,7 +39,7 @@ overlayModule.directive('aioOverlay', ['$timeout', '$log',
                  */
                 var show = function () {
                     $overlay.addClass('showed');
-                    $('#wrapper').addClass('blurred');
+                    $('#container').addClass('blurred');
                     $overlay.addClass('enlarged');
                 };
 

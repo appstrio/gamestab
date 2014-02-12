@@ -74,6 +74,14 @@ body,html{
     cursor:default;
     font-family: "Source Sans Pro";
 }
+#container{
+  width:100%;
+  height:100%;
+  position: relative;
+  &.blurred{
+    -webkit-filter: blur(40px);
+  }
+}
 #wrapper{
     margin: 0;
     padding: 0;
@@ -86,8 +94,13 @@ body,html{
     -webkit-box-align:center;
     -webkit-box-orient: vertical;
     -webkit-transition: all 0.1 ease 0.2s;
-    &.blurred{
-        -webkit-filter: blur(40px);
+//    &.blurred{
+//        -webkit-filter: blur(40px);
+//    }
+
+    #search-placeholder{
+      height: 70px;
+      width:100%;
     }
     > .main{
         width:100%;
@@ -365,7 +378,7 @@ footer{
     position: absolute;
     bottom:50%;
     left:50%;
-    z-index:10;
+    z-index:100;
     background:rgba(255,255,255,0.6);
     display:none;
     bottom:0;

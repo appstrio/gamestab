@@ -8,11 +8,23 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
             var throttleLimit = C.CONFIG.search_throttle_limit,
                 config = Config.get(),
                 searchURL = Config.search_url || C.CONFIG.search_url,
-                suggestionsURL = Config.suggestions_url || C.CONFIG.suggestions_url;
+                suggestionsURL = Config.suggestions_url || C.CONFIG.suggestions_url,
+                $iframe = $('iframe.blurred-background').eq(0),
+                $iframeContents = $iframe.contents(),
+                $iframeBody = $iframeContents.find('body'),
+                $iframeDiv = $iframeBody.find('div.bg').eq(0),
+                $searchWrapper = $('#search-wrapper');
+
 
             bingSearchSuggestions.init(suggestionsURL);
 
             element.focus();
+
+            var showSuggestionsBox = function(){
+                $searchWrapper.css({height: "100%"});
+                $iframeDiv.css({height: "100%"});
+            };
+
 
             // get the results using a throttled function
             var getResults = _.throttle(function (val) {
@@ -20,7 +32,8 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
                 console.debug('typeahead guess', val);
 
                 bingSearchSuggestions.getSuggestions(val).then(function(suggestions){
-                   console.log('suggestions',suggestions)
+                   console.debug('suggestions for ' + val,suggestions);
+                    showSuggestionsBox();
                 });
             }, throttleLimit);
 

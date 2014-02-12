@@ -44,29 +44,33 @@ html(ng-csp='ng-csp')
         title GamesTab
         //----------------
     body(ng-controller='MainCtrl')
-    #wrapper(hl-background)
-        .search1(ng-show="displayTopSearchBox")
-            iframe.blurred-background
-            .search-input
-                .input-holder
-                    input(placeholder="Web Search...", ng-keypress="goSearch($event)", ng-model="searchQuery", id="search-input", aio-search-box)
-        .main
-            section(hl-launcher)
-                .arrows
+    #container
+        #search-wrapper
+            .search1(ng-show="displayTopSearchBox")
+                iframe.blurred-background
+                .search-input
+                    .input-holder
+                        input(placeholder="Web Search...", ng-keypress="goSearch($event)", ng-model="searchQuery", id="search-input", aio-search-box)
+
+        #wrapper(hl-background)
+            #search-placeholder
+            .main
+                section(hl-launcher)
+                    .arrows
+                        .inner
+                            .arrow-left
+                                i.icon-left-open-big
+                            .arrow-right
+                                i.icon-right-open-big
                     .inner
-                        .arrow-left
-                            i.icon-left-open-big
-                        .arrow-right
-                            i.icon-right-open-big
-                .inner
-                    .viewport(hl-viewport, ng-class="{editing : isEditing}")
-                        .apps-container.screen(ui-sortable="sortableOptions", ng-model="screen", ng-repeat="screen in rawScreens")
-                            .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)", hl-long-press="longPress(app, $event)", ng-class="{permanent : app.permanent}")
-                                .wrapper
-                                    .remove-button(ng-click="uninstallApp(app, $event)") X
-                                    .icon(ng-style="{'background-image': 'url(' + app.icon + ')'}")
-                                    .title {{app.title}}
-            .partner-logo
-                a(ng-href="{{config.partner_url}}", target="_self", title="{{config.partner_name}}")
-                    img(ng-src="{{config.partner_logo}}", style="cursor:pointer;")
+                        .viewport(hl-viewport, ng-class="{editing : isEditing}")
+                            .apps-container.screen(ui-sortable="sortableOptions", ng-model="screen", ng-repeat="screen in rawScreens")
+                                .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)", hl-long-press="longPress(app, $event)", ng-class="{permanent : app.permanent}")
+                                    .wrapper
+                                        .remove-button(ng-click="uninstallApp(app, $event)") X
+                                        .icon(ng-style="{'background-image': 'url(' + app.icon + ')'}")
+                                        .title {{app.title}}
+                .partner-logo
+                    a(ng-href="{{config.partner_url}}", target="_self", title="{{config.partner_name}}")
+                        img(ng-src="{{config.partner_logo}}", style="cursor:pointer;")
     #overlay(aio-overlay, overlay-options="overlay", ng-include="templateURL")
