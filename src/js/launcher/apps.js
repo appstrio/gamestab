@@ -5,7 +5,8 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
     function ($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Image) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
-            apps;
+            apps,
+            cachedSortedWebApps;
 
         var systemApps = [{
             title: 'Settings',
@@ -117,6 +118,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 });
             });
 
+            cachedSortedWebApps = sortedApps;
             $log.log('[Apps] - found # number of webApps', sortedApps.length);
             return sortedApps;
         };
@@ -218,6 +220,12 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
         };
 
         var getOrganizedWebApps = function () {
+            // if sorted web apps are sorted are already there, just return them
+            if(cachedSortedWebApps){
+                var defer = $q.defer();
+                defer.resolve(cachedSortedWebApps);
+                return defer.promise;
+            }
             return getWebAppsDb().then(function (webApps) {
                 return parseWebApps(webApps);
             });

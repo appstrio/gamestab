@@ -53,7 +53,10 @@ html(ng-csp='ng-csp')
                         input(placeholder="Web Search...", ng-keypress="goSearch($event)", ng-model="searchQuery", id="search-input", aio-search-box)
             .suggestions(aio-search-suggestions)
                 .suggestions-wrapper
-                    div(class="suggestion", ng-repeat="suggestion in suggestions.data") {{suggestion}}
+                    div(class="suggestion", ng-repeat="suggestion in suggestions.data")
+                        span.icon(ng-show="suggestion.icon")
+                            img(ng-src="{{suggestion.icon}}")
+                        span.title {{suggestion.title}}
 
 
         #wrapper(hl-background)
