@@ -5,7 +5,7 @@ mainModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 
         //get from settings
         $scope.displayTopSearchBox = 1;
 
-        $scope.init = function () {
+        var init = function () {
             $log.log('[MainCtrl] - Apps finished loading. Organizing dials');
             $scope.rawScreens = Apps.apps();
             $scope.config = Config.get();
@@ -15,14 +15,14 @@ mainModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 
         var t0 = Date.now();
         //load config from local or remote
         Config.init()
+        //load background from local or remote
+        .then(Background.init)
         //load apps from local or remote
         .then(Apps.init)
         //assign main ctrl scope vars
-        .then($scope.init)
+        .then(init)
         //load analytics scripts
         .then(Analytics.init)
-        //load background from local or remote
-        .then(Background.init)
         //detect if app icons need lazy cache
         .then(function () {
             if (Apps.isCacheNeeded()) {

@@ -27,7 +27,6 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @return
          */
         var init = function () {
-            console.debug('[Apps] - init');
             Storage.get(storageKey, function (items) {
                 var _apps = items && items[storageKey];
                 if (_apps && angular.isArray(_apps)) {
