@@ -3,6 +3,19 @@ var chromeModule = angular.module('aio.chrome', []);
 chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
     function ($rootScope, $timeout, $q, $log) {
         return {
+            history: {
+                search: function (params, cb) {
+                    if (chrome && chrome.history) {
+                        chrome.history.search(params, cb);
+                    } else {
+                        $log.warn('[Chrome] - no permission for chrome history');
+                        cb();
+                    }
+                }
+            },
+            storage: {
+                local: chrome.storage.local
+            },
             getUpdateUrl: function () {
                 return chrome.runtime.getManifest().update_url;
             },
@@ -20,7 +33,7 @@ chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
                             });
                         });
                     } else {
-                        $log.log('[Chrome] - no permission for chrome management');
+                        $log.warn('[Chrome] - no permission for chrome management');
                         $rootScope.$apply(function () {
                             deferred.resolve();
                         });
@@ -39,11 +52,11 @@ chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
                     return deferred.promise;
                 }
             },
-            extension : {
-                getURL : function(url){
-                    if(chrome && chrome.extension){
+            extension: {
+                getURL: function (url) {
+                    if (chrome && chrome.extension) {
                         return chrome.extension.getURL(url);
-                    }else{
+                    } else {
                         return 0;
                     }
                 }

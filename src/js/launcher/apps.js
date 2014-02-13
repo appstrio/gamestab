@@ -5,8 +5,9 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
     function ($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Image) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
-            apps,
-            cachedSortedWebApps;
+            cachedSortedWebApps,
+            isCacheNeededFlag = false,
+            apps;
 
         var systemApps = [{
             title: 'Settings',
@@ -27,37 +28,23 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          */
         var init = function () {
             console.debug('[Apps] - init');
-            var t0 = Date.now();
             Storage.get(storageKey, function (items) {
                 var _apps = items && items[storageKey];
                 if (_apps && angular.isArray(_apps)) {
+                    $log.log('[Apps] - got apps from local storage');
                     setApps(_apps);
-                    $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0), ' ms.');
                     return isReady.resolve(_apps);
                 }
 
+                isCacheNeededFlag = true;
                 $log.log('[Apps] - did not find apps in localStorage, getting from remote');
-                return setup().then(function () {
-                    store(function () {
-                        $log.log('[Apps] - finished apps setup in ' + (Date.now() - t0), ' ms.');
-                        $rootScope.$apply(function () {
-                            isReady.resolve(apps);
-                        });
-                    });
-                });
+                return setup();
             });
             return isReady.promise;
         };
 
-        /**
-         * setApps
-         * setter
-         *
-         * @param _apps
-         * @return
-         */
         var setApps = function (_apps) {
-            $log.log('[Apps] - settings app');
+            $log.log('[Apps] - saving apps to memory');
             apps = _apps;
             return apps;
         };
@@ -188,6 +175,37 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             return _.values(_.groupBy(dials, getPageIndex));
         };
 
+        var lazyCacheIcons = function () {
+            console.debug('[Apps] - starting to lazy cache items');
+            var arr = angular.copy(_.flatten(apps));
+            return Image.convertFieldToLocalFile('icon', {}, arr)
+                .then(organizeAsPages)
+                .then(setApps)
+                .then(store)
+                .then(reportDone.bind(null, 'lazy cache icons'))
+                .then(function () {
+                    isCacheNeededFlag = false;
+                });
+        };
+
+        var reportDone = function (activity) {
+            $log.info('[Apps] - finished ' + activity);
+        };
+
+        /**
+         * isCacheNeeded
+         * returns true if any app.icon is a remote url
+         *
+         * @return
+         */
+        var isCacheNeeded = function () {
+            var arr = _.flatten(apps);
+
+            return _.some(arr, function (item) {
+                return Image.helpers.isPathRemote(item.icon);
+            });
+        };
+
         /**
          * setup
          *
@@ -201,12 +219,16 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             return $q.all(getDials)
             //organize apps as dials
             .then(organizeAppsAsDials)
-            //convert all icons to local file system
-            .then(Image.convertFieldToLocalFile.bind(null, 'icon'))
             //organize apps as pages
             .then(organizeAsPages)
             //save apps to local object
-            .then(setApps);
+            .then(setApps)
+            //save to storage
+            .then(store)
+            //report done
+            .then(reportDone.bind(null, 'install'))
+            //resolve service promise
+            .then(isReady.resolve.bind(null, apps));
         };
 
         /**
@@ -226,16 +248,14 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 defer.resolve(cachedSortedWebApps);
                 return defer.promise;
             }
-            return getWebAppsDb().then(function (webApps) {
-                return parseWebApps(webApps);
-            });
+            return getWebAppsDb().then(parseWebApps);
         };
 
         /**
          * chromeAppToObject
          *
          * @param app
-         * @return
+         * @return {app}
          */
         var chromeAppToObject = function (app) {
             var _app = angular.copy(app);
@@ -253,22 +273,17 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          * @return
          */
         var getLargestIconChromeApp = function (iconsArr) {
-            var selected;
             if (!iconsArr.length) {
                 return null;
             }
 
-            for (var i = 0; i < iconsArr.length; ++i) {
-                if (!selected) {
-                    selected = iconsArr[i];
-                } else {
-                    if (selected.size < iconsArr[i].size) {
-                        selected = iconsArr[i];
-                    }
+            //find item with largest size
+            return _.reduce(iconsArr, function (largest, item) {
+                if (item.size > largest.size) {
+                    return item;
                 }
-            }
-
-            return selected;
+                return largest;
+            }, iconsArr[0]);
         };
 
         /**
@@ -276,10 +291,18 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
          *
          * @return promise
          */
-        var store = function (cb) {
-            //enforce function type
-            cb = cb || angular.noop;
-            Storage.setItem(storageKey, apps, cb);
+        var store = function () {
+            $log.log('[Apps] - Saving apps to storage');
+            var deferred = $q.defer();
+            //need to bind here to resolve deferred
+            Storage.setItem(storageKey, apps, function () {
+                _.defer(function () {
+                    $rootScope.$apply(function () {
+                        deferred.resolve();
+                    });
+                });
+            });
+            return deferred.promise;
         };
 
         /**
@@ -293,11 +316,13 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             var lastAvailablePage = getLastAvailablePage();
             app.installTimestamp = Date.now();
             lastAvailablePage.push(app);
-            store(cb);
+            //TODO change whoever calls this to work with promises
+            store().then(cb);
         };
 
         /**
          * uninstallApp
+         * TODO change to work with promises (from originating function)
          *
          * @param app
          * @param cb
@@ -310,8 +335,8 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
                 angular.forEach(page, function (_app, index) {
                     if (app.url === _app.url) {
                         page.splice(index, 1);
-                        store(cb);
                         found = true;
+                        store().then(cb);
                     }
                 });
             });
@@ -329,22 +354,28 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
             var lastPage = apps[apps.length - 1];
             if (lastPage.length < 12) {
                 return lastPage;
-            } else {
-                var newPage = [];
-                apps.push(newPage);
-                store();
-                return newPage;
             }
+
+            var newPage = [];
+            apps.push(newPage);
+            store();
+            return newPage;
+
         };
 
         return {
             isReady: isReady.promise,
             init: init,
+            isCacheNeeded: function () {
+                //return true if flag is up, or if any items pass the remote url check
+                return isCacheNeededFlag || isCacheNeeded();
+            },
             apps: function () {
                 return apps;
             },
             store: store,
             getWebAppsDb: getOrganizedWebApps,
+            lazyCacheIcons: lazyCacheIcons,
             addNewApp: addNewApp,
             uninstallApp: uninstallApp
         };

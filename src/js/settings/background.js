@@ -6,11 +6,11 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.BACKGROUNDS,
             background = {},
+            isCacheNeededFlag = false,
             backgrounds = [];
 
         // intializes the service, fetch the background from localStorage or use default
         var init = function () {
-            var t0 = Date.now();
             console.debug('[Background] - init');
             Storage.get(storageKey, function (items) {
                 var _backgrounds = items && items[storageKey];
@@ -18,30 +18,58 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                     $log.log('[Background] - Found backgrounds in localStorage', _backgrounds.length);
                     getActiveBackground(_backgrounds);
                     backgrounds = _backgrounds;
-                    $log.log('[Background] - finished init in ' + (Date.now() - t0) + ' ms.');
                     return isReady.resolve(background);
                 }
 
                 $log.log('[Background] - did not find backgrounds in localStorage. Getting from remote');
-
                 //set default background to local one.
                 setDefaultBackground();
+
+                isCacheNeededFlag = true;
 
                 //local backgrounds not found.
                 getBackgroundsJson()
                     .then(parseBackgrounds)
-                    .then(Image.convertFieldToLocalFile.bind(null, 'image'))
-                    .then(function () {
-                        store(function () {
-                            $log.log('[Background] - finished init in ' + (Date.now() - t0) + ' ms.');
-                            $rootScope.$apply(function () {
-                                isReady.resolve(background);
-                            });
-                        });
-                    });
+                    .then(store.bind(null, angular.noop))
+                    .then(reportDone.bind(null, 'stored backgrounds'))
+                    .then(isReady.resolve.bind(null, background));
             });
 
             return isReady.promise;
+        };
+
+        var lazyCacheImages = function () {
+            console.debug('[Background] - starting to lazy cache items');
+            return Image.convertFieldToLocalFile('image', {}, backgrounds)
+                .then(Image.generateThumbnail.bind(null, 'image', {
+                    resizeOptions: {
+                        fixedHeight: 160,
+                        fixedWidth: 160
+                    }
+                }))
+                .then(store.bind(null, angular.noop))
+                .then(reportDone.bind(null, 'lazy cache images'))
+                .then(function () {
+                    isCacheNeededFlag = false;
+                });
+        };
+
+        var reportDone = function (activity) {
+            $log.info('[Background] - finished ' + activity);
+        };
+
+        /**
+         * isCacheNeeded
+         * returns true if any backgrounds.image is a remote url
+         *
+         * @return
+         */
+        var isCacheNeeded = function () {
+            var arr = backgrounds;
+
+            return _.some(arr, function (item) {
+                return Image.helpers.isPathRemote(item.image);
+            });
         };
 
         /**
@@ -120,13 +148,16 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
          */
         var turnOffActiveBackgrounds = function () {
             _.chain(backgrounds)
-                .where({
-                    isActive: true
-                })
-                .each(function (item) {
-                    item.isActive = false;
-                })
-                .value();
+            //find active backgrounds
+            .where({
+                isActive: true
+            })
+            //turn each one to isActive=false
+            .each(function (item) {
+                item.isActive = false;
+            })
+            //run
+            .value();
         };
 
         /**
@@ -218,6 +249,11 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
             backgrounds: function () {
                 return backgrounds;
             },
+            isCacheNeeded: function () {
+                //return true if flag is up, or if any items pass the remote url check
+                return isCacheNeededFlag || isCacheNeeded();
+            },
+            lazyCacheImages: lazyCacheImages,
             selectBackground: selectBackground,
             uploadNewLocalImage: uploadNewLocalImage,
             store: store
