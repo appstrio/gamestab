@@ -50,10 +50,11 @@ html(ng-csp='ng-csp')
                 iframe.blurred-background
                 .search-input
                     .input-holder
+                        input(type="text", class="hidden", style="width:0;height:0;display:inherit;")
                         input(placeholder="Web Search...", ng-keypress="goSearch($event)", ng-model="searchQuery", id="search-input", aio-search-box)
             .suggestions(aio-search-suggestions)
                 .suggestions-wrapper
-                    div(class="suggestion", ng-repeat="suggestion in suggestions.data")
+                    div(class="suggestion", ng-repeat="suggestion in suggestions.data", ng-class="{selected : currentSuggestion == $index}", ng-click="launchSuggestionByClick(suggestion, $event)")
                         span.icon(ng-show="suggestion.icon")
                             img(ng-src="{{suggestion.icon}}")
                         span.details
