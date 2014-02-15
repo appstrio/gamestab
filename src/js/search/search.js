@@ -9,7 +9,8 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
                 config = Config.get(),
                 searchURL = Config.search_url || C.CONFIG.search_url,
                 suggestionsURL = Config.suggestions_url || C.CONFIG.suggestions_url,
-                $container = $('#container');
+                $container = $('#container'),
+                $hiddenInput = $('.hidden').eq(0);
 
                 // each provider should have getSuggestions(q) method that returns a promise
                 var suggestionsProviders = [
@@ -47,6 +48,9 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
             });
 
 
+            var autoSelectFirst = function(){
+                //scope.currentSuggestion = -1;
+            };
 
             // get the results using a throttled function
             var getResults = _.throttle(function (val) {
@@ -54,6 +58,7 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
                 console.debug('typeahead guess', val);
 
                 suggestionsData.data = [];
+                scope.currentSuggestion = -1;
 
                 async.each(suggestionsProviders, function(provider, cb){
                     var pushMethod = (provider.priority > 0) ? 'unshift' : 'push' ;
@@ -61,7 +66,10 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
                         for(var i = 0; i < provider.maxSuggestions && i < suggestionsResponse.length; ++i){
                             suggestionsData.data[pushMethod](suggestionsResponse[i]);
                         }
-                        if(provider.autoShowSuggestionsBox) showSuggestionsBox();
+                        if(provider.autoShowSuggestionsBox){
+                            showSuggestionsBox();
+                            autoSelectFirst();
+                        }
                         cb();
                     }, function(){
                         cb();
@@ -87,6 +95,55 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
 
             }, throttleLimit);
 
+
+            // When user click enter on the visible/hidden input boxes OR clicks on suggestion
+            var executeEnterKeyPress = function(val, suggestion){
+                if(!val){
+                    if(!suggestion){
+                        suggestion = suggestionsData.data[scope.currentSuggestion];
+                    }
+                    if(!suggestion) return;
+                    if(suggestion.url){
+                        return executeAppLaunch(suggestion);
+                    }else{
+                        val = suggestion.title;
+                    }
+                }
+
+                return executeSearch(val);
+            };
+
+
+            // Execute App Launch
+            var executeAppLaunch = function(appSuggestion){
+                Analytics.reportEvent(301, {
+                    label: appSuggestion.title,
+                    waitForFinish: true
+                }).then(function () {
+                        window.location = appSuggestion.url;
+                });
+            };
+
+
+            // Execute Search
+            var executeSearch = function(val){
+                Analytics.reportEvent(301, {
+                    label: val,
+                    waitForFinish: true
+                }).then(function () {
+                        window.location = searchURL + val;
+                });
+            };
+
+            // launch search suggestion form mouse click
+            scope.launchSuggestionByClick = function(suggestion, e){
+                e.preventDefault();
+                e.stopPropagation();
+                return executeEnterKeyPress(null, suggestion);
+            };
+
+
+
             //search box is focused
             element.on('focus', function () {
                 Analytics.reportEvent(302);
@@ -96,17 +153,60 @@ searchModule.directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bin
             element.on('keyup', function (e) {
                 var val = element.val();
                 if (val) {
-                    if (e.keyCode === 13) {
-                        Analytics.reportEvent(301, {
-                            label: val,
-                            waitForFinish: true
-                        }).then(function () {
-                            window.location = searchURL + val;
-                        });
-                    } else {
-                        getResults(val);
+                    switch(e.keyCode){
+                        case 13:
+                            executeEnterKeyPress(val);
+                            break;
+                        case 40:
+                            // down
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('$hiddenInput',$hiddenInput);
+                            $hiddenInput.val("");
+                            $hiddenInput.focus();
+                            scope.$apply(function(){
+                                scope.currentSuggestion = 0;
+                            });
+                            break
+                        case 38:
+                            break;
+                        default:
+                            getResults(val);
+
                     }
                 }
+            });
+
+            //keydown is pressed in HIDDEN search box
+            $hiddenInput.on('keyup', function (e) {
+                if(!suggestionsData.data || !suggestionsData.data.length) return;
+                switch(e.keyCode){
+                    case 40:
+                        // down
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if(scope.currentSuggestion < suggestionsData.data.length-1){
+                            scope.$apply(function(){
+                                ++scope.currentSuggestion;
+                            });
+                        }
+
+                        break
+                    case 38:
+                        // up
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if(scope.currentSuggestion > 0){
+                            scope.$apply(function(){
+                                --scope.currentSuggestion;
+                            });
+                        }
+                        break
+                    case 13:
+                        executeEnterKeyPress();
+                        break;
+                }
+
             });
         };
     }
