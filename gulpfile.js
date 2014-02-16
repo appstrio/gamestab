@@ -118,12 +118,8 @@ gulp.task('bump', function () {
 //handle assets
 gulp.task('assets', function () {
     //copy regular assets
-    gulp.src([paths.origin.assets, paths.origin.extraAssets])
+    gulp.src(paths.origin.assets)
         .pipe(gulp.dest(paths.build));
-
-    //extra build stuff
-    gulp.src(paths.origin.extraBuild)
-        .pipe(gulp.dest(paths.dist.extraBuild));
 });
 
 gulp.task('libs', function () {
@@ -147,16 +143,8 @@ gulp.task('watch', function () {
     var afterTasks = [];
 
     gulp.watch(libs, ['libs'].concat(afterTasks));
-
-    gulp.watch([
-        paths.origin.assets,
-        paths.origin.extraAssets,
-        paths.origin.extraBuild
-    ], ['assets'].concat(afterTasks));
-
+    gulp.watch(paths.origin.assets, ['assets'].concat(afterTasks));
     gulp.watch(paths.origin.js, ['scripts'].concat(afterTasks));
-
     gulp.watch(paths.src + '/less/**/*.less', ['less'].concat(afterTasks));
-
     gulp.watch(paths.origin.jade, ['jade'].concat(afterTasks));
 });

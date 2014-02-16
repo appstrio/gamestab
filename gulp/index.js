@@ -33,8 +33,6 @@ paths.origin = {
     jade: paths.src + '/jade/**/*.jade',
     less: paths.src + '/less/*.less',
     assets: paths.assets + '/**/*',
-    extraAssets: 'extra/lovedGames/assets/**/*',
-    extraBuild: 'extra/lovedGames/build.json',
     manifest: paths.src + '/manifest.json',
     js: [paths.src + '/js/**/*.js', '!' + paths.src + '/js/vendor/**/*.js']
 };
@@ -42,7 +40,6 @@ paths.origin = {
 paths.dist = {
     less: paths.build + '/css',
     libs: paths.build + '/' + paths.vendor,
-    extraBuild: paths.build + '/data',
     minifiedScripts: 'scripts.min.js',
     minifiedLibs: 'libs.min.js',
     js: paths.build + '/js'
