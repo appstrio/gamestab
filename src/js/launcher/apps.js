@@ -20,11 +20,14 @@ angular.module('aio.launcher').factory('Apps', ['$rootScope', '$http', 'Storage'
         }];
 
         /**
-         * init
+         * loadFromStorage
+         * Try to load key from local storage.
          *
-         * @return
+         * @return promise
          */
-        var init = function () {
+        var loadFromStorage = function () {
+            var deferred = $q.defer();
+
             Storage.get(storageKey, function (items) {
                 var _apps = items && items[storageKey];
                 if (_apps && angular.isArray(_apps)) {
@@ -33,10 +36,24 @@ angular.module('aio.launcher').factory('Apps', ['$rootScope', '$http', 'Storage'
                     return isReady.resolve(_apps);
                 }
 
-                isCacheNeededFlag = true;
                 $log.log('[Apps] - did not find apps in localStorage, getting from remote');
-                return setup();
+                isCacheNeededFlag = true;
+                return deferred.reject();
             });
+
+            return deferred.promise;
+        };
+
+        /**
+         * init
+         *
+         * @return
+         */
+        var init = function () {
+            console.debug('[Apps] - init');
+            loadFromStorage()
+                .then(null, setup);
+
             return isReady.promise;
         };
 
@@ -255,7 +272,7 @@ angular.module('aio.launcher').factory('Apps', ['$rootScope', '$http', 'Storage'
          */
         var chromeAppToObject = function (app) {
             var _app = angular.copy(app);
-            _app.icon = getLargestIconChromeApp(app.icons).url;
+            _app.icon = getLargestIconChromeApp(app.icons).url || 'unknown.png';
             _app.chromeId = app.id;
             _app.title = app.shortName || app.name;
             delete _app.id;
@@ -269,8 +286,8 @@ angular.module('aio.launcher').factory('Apps', ['$rootScope', '$http', 'Storage'
          * @return
          */
         var getLargestIconChromeApp = function (iconsArr) {
-            if (!iconsArr.length) {
-                return null;
+            if (!iconsArr || !iconsArr.length) {
+                return {};
             }
 
             //find item with largest size

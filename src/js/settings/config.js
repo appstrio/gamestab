@@ -1,4 +1,4 @@
-/* global async */
+/* global _ */
 angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http', '$q', '$log', '$rootScope', 'Chrome',
     function (C, Storage, $http, $q, $log, $rootScope, Chrome) {
         var data = {},
@@ -17,7 +17,7 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
                 if (items && items[storageKey]) {
                     $log.log('[Config] - got settings from localstorage');
                     data = items[storageKey];
-                    return deferred.resolve();
+                    return deferred.resolve(data);
                 }
 
                 $log.log('[Config] - did not find local settings. getting from remote.');
@@ -68,44 +68,53 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
          * @returns {promise(PARTNER_SETUP_OBJECT)}
          */
         var decidePartner = function (partnersList) {
-            var deferred = $q.defer();
             partnersList = partnersList.data;
+            var deferred = $q.defer();
+            var promises = [];
             var oneHourAgo = Date.now() - 1000 * 60 * 60;
             $log.log('[Config] - got the partnersList', partnersList);
-            if (!partnersList || !partnersList.length) {
-                $rootScope.$apply(function () {
-                    deferred.reject(C.ERRORS.SETUP.PARTNER_NOT_FOUND);
-                });
-            } else {
-                async.detect(partnersList, function (partner, cb) {
-                        Chrome.history.search({
-                                text: partner.partner_install_url_snippit,
-                                startTime: oneHourAgo,
-                                maxResults: 1
-                            },
-                            function (found) {
-                                if (!found || !found.length) {
-                                    return cb();
-                                }
-                                //found
-                                $log.log('[Config] - found a matching partner', partner, partner.partner_install_url_snippit);
-                                return cb(partner);
-                            });
-                    },
-                    function (partner) {
-                        if (!partner) {
-                            $log.warn('[Config] - Did not find a matching partner');
-                            $rootScope.$apply(function () {
-                                return deferred.reject();
-                            });
-                            return;
-                        }
+            partnersList.forEach(function (partner) {
+                promises.push(Chrome.history.search({
+                    text: partner.partner_install_url_snippit,
+                    startTime: oneHourAgo,
+                    maxResults: 1
+                }));
+            });
 
-                        $rootScope.$apply(function () {
-                            return deferred.resolve(partner);
-                        });
-                    });
-            }
+            $q.all(promises).then(function (results) {
+                var partnerIndex = -1;
+                results = _.flatten(results);
+                var historyMatch = _.reduce(results, function (memo, item, index) {
+                    if (!item || !item.lastVisitTime) {
+                        return memo;
+                    }
+                    if (!memo || !memo.lastVisitTime) {
+                        partnerIndex = index;
+                        return item;
+                    }
+
+                    if (item.lastVisitTime > memo.lastVisitTime) {
+                        partnerIndex = index;
+                        return item;
+                    }
+
+                    return memo;
+                }, results[0]);
+
+                //if first element was the closest
+                if (partnerIndex === -1 && historyMatch && historyMatch.lastVisitTime) {
+                    partnerIndex = 0;
+                }
+
+                if (partnerIndex === -1) {
+                    $log.warn('[Config] - Did not find a matching partner');
+                    return deferred.reject();
+                }
+
+                var partner = partnersList[partnerIndex];
+                $log.log('[Config] - found a matching partner', partner, partner.partner_install_url_snippit);
+                return deferred.resolve(partner);
+            });
 
             return deferred.promise;
         };
@@ -149,6 +158,7 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
 
         return {
             init: init,
+            loadFromStorage: loadFromStorage,
             get: function () {
                 return data;
             },

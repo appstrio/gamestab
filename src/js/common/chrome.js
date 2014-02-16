@@ -2,13 +2,19 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
     function ($rootScope, $timeout, $q, $log) {
         return {
             history: {
-                search: function (params, cb) {
+                search: function (params) {
+                    var deferred = $q.defer();
                     if (chrome && chrome.history) {
-                        chrome.history.search(params, cb);
+                        chrome.history.search(params, function (results) {
+                            $rootScope.$apply(function () {
+                                deferred.resolve(results);
+                            });
+                        });
                     } else {
                         $log.warn('[Chrome] - no permission for chrome history');
-                        cb();
+                        deferred.reject();
                     }
+                    return deferred.promise;
                 }
             },
             storage: {
@@ -39,9 +45,9 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
 
                     return deferred.promise;
                 },
-                launchApp: function (app) {
+                launchApp: function (chromeId) {
                     var deferred = $q.defer();
-                    chrome.management.launchApp(app.chromeId, function () {
+                    chrome.management.launchApp(chromeId, function () {
                         $rootScope.$apply(function () {
                             deferred.resolve();
                         });
@@ -60,7 +66,7 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                 }
             },
             isChrome: function () {
-                return chrome && !!chrome.extension;
+                return chrome && !! chrome.extension;
             }
         };
     }
