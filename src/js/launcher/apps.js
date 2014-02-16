@@ -161,7 +161,6 @@ angular.module('aio.launcher').factory('Apps', ['$rootScope', '$http', 'Storage'
             var count = 0,
                 dialsPerPage = C.CONFIG.dials_per_page;
 
-            console.info('got dials', arguments);
             $log.log('[Apps] - organizing apps in pages of ' + C.CONFIG.dials_per_page);
             //have only 12 dials in a page
             var getPageIndex = function () {

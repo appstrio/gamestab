@@ -60,7 +60,7 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                 }
             },
             isChrome: function () {
-                return chrome && chrome.extension;
+                return chrome && !!chrome.extension;
             }
         };
     }

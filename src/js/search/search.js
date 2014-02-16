@@ -1,10 +1,9 @@
-/* global _ */
-angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions',
-
+/* global _,async */
+angular.module('aio.search').directive('aioSearchBox', [
+    'Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions',
     function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions) {
         return function (scope, element) {
             var throttleLimit = C.CONFIG.search_throttle_limit,
-                config = Config.get(),
                 searchURL = Config.search_url || C.CONFIG.search_url,
                 suggestionsURL = Config.suggestions_url || C.CONFIG.suggestions_url,
                 $container = $('#container'),
@@ -27,14 +26,12 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
 
             element.focus();
 
-
             /**
              * shows the suggestions box
              */
             var showSuggestionsBox = function () {
                 $container.addClass('suggestions-on');
             };
-
 
             /**
              * hide the suggestions box
@@ -43,7 +40,6 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
                 $container.removeClass('suggestions-on');
             };
 
-
             // watches whether the suggestion box was emptied
             scope.$watch('searchQuery', function (newVal) {
                 if (!newVal) {
@@ -51,16 +47,12 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
                 }
             });
 
-
             var autoSelectFirst = function () {
                 //scope.currentSuggestion = -1;
             };
 
             // get the results using a throttled function
             var getResults = _.throttle(function (val) {
-                //TODO build a list of recommended search results
-                console.debug('typeahead guess', val);
-
                 suggestionsData.data = [];
                 scope.currentSuggestion = -1;
 
@@ -99,14 +91,15 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
 
             }, throttleLimit);
 
-
             // When user click enter on the visible/hidden input boxes OR clicks on suggestion
             var executeEnterKeyPress = function (val, suggestion) {
                 if (!val) {
                     if (!suggestion) {
                         suggestion = suggestionsData.data[scope.currentSuggestion];
                     }
-                    if (!suggestion) return;
+                    if (!suggestion) {
+                        return;
+                    }
                     if (suggestion.url) {
                         return executeAppLaunch(suggestion);
                     } else {
@@ -128,7 +121,6 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
                 });
             };
 
-
             // Execute Search
             var executeSearch = function (val) {
                 Analytics.reportEvent(301, {
@@ -146,47 +138,48 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
                 return executeEnterKeyPress(null, suggestion);
             };
 
-
-
             //search box is focused
             element.on('focus', function () {
                 Analytics.reportEvent(302);
             });
 
             //keydown is pressed in search box
-            element.on('keyup', function (e) {
+            element.on('keyup', function (e, bubbled) {
+                var keyCode = e.keyCode || bubbled.keyCode;
                 var val = element.val();
                 if (val) {
-                    switch (e.keyCode) {
-                    case 13:
+                    switch (keyCode) {
+                    case 13: //enter
                         executeEnterKeyPress(val);
+                        break;
+                    case 27: //esc
                         break;
                     case 40:
                         // down
                         e.preventDefault();
                         e.stopPropagation();
                         console.log('$hiddenInput', $hiddenInput);
-                        $hiddenInput.val("");
+                        $hiddenInput.val('');
                         $hiddenInput.focus();
                         scope.$apply(function () {
                             scope.currentSuggestion = 0;
                         });
-                        break
-                    case 38:
+                        break;
+                    case 38: //up arrow
                         break;
                     default:
                         getResults(val);
-
                     }
                 }
             });
 
             //keydown is pressed in HIDDEN search box
             $hiddenInput.on('keyup', function (e) {
-                if (!suggestionsData.data || !suggestionsData.data.length) return;
+                if (!suggestionsData.data || !suggestionsData.data.length) {
+                    return;
+                }
                 switch (e.keyCode) {
-                case 40:
-                    // down
+                case 40: //down key
                     e.preventDefault();
                     e.stopPropagation();
                     if (scope.currentSuggestion < suggestionsData.data.length - 1) {
@@ -195,9 +188,8 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
                         });
                     }
 
-                    break
-                case 38:
-                    // up
+                    break;
+                case 38: //up key
                     e.preventDefault();
                     e.stopPropagation();
                     if (scope.currentSuggestion > 0) {
@@ -205,29 +197,34 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
                             --scope.currentSuggestion;
                         });
                     }
-                    break
-                case 13:
+
+                    break;
+                case 13: //enter
                     executeEnterKeyPress();
                     break;
+                default:
+                    //bubble up the key
+                    element.trigger('keyup', {
+                        keyCode: e.keyCode
+                    });
                 }
-
             });
         };
     }
-]).factory('searchSuggestions', ['$http', 'Constants',
-    function ($http, C) {
+]).factory('searchSuggestions', [
+
+    function () {
 
         return {
 
-        }
+        };
     }
-]).factory('bingSearchSuggestions', ['$http', 'Constants', 'Config', 'Chrome',
-    function ($http, C, Config, Chrome) {
+]).factory('bingSearchSuggestions', ['$http', 'Constants', 'Config', 'Chrome', '$q',
+    function ($http, C, Config, Chrome, $q) {
         /**
          * Bing Suggestions Provider
          */
         var baseURL;
-
 
         /**
          *
@@ -236,7 +233,6 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
         var init = function (_baseURL) {
             baseURL = _baseURL;
         };
-
 
         /**
          *
@@ -255,27 +251,22 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
             }
         };
 
-
         /**
+         * TODO - verify this with Hadar. it isn't correct
          * if chrome extension - use  JSONP
          * if website - use regular GET call
          */
         var getSuggestions = function (q) {
             var urlBuildParams = {}, httpMethod = 'get';
             if (baseURL) {
-                if (!Chrome.isChrome()) {
-                    urlBuildParams.jsonp = true;
-                    httpMethod = 'jsonp';
-                } else {
-
+                if (Chrome.isChrome()) {
+                    // urlBuildParams.jsonp = true;
+                    // httpMethod = 'jsonp';
                 }
 
                 return $http[httpMethod](bingURLBuilder(urlBuildParams, q)).then(function (response) {
                     if (response && response.data && response.data.length && response.data[1]) {
-                        for (var i = 0; i < response.data[1].length; ++i) {
-                            response.data[1][i] = wrapSuggestion(response.data[1][i]);
-                        }
-                        return response.data[1]
+                        return _.map(response.data[1], wrapSuggestion);
                     } else {
                         return 0;
                     }
@@ -288,21 +279,18 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
             }
         };
 
-
         // wrap a suggestion so it will conform the structure of the suggestion object
         var wrapSuggestion = function (suggestion) {
             return {
                 title: suggestion,
-                description: "Search"
+                description: 'Search'
             };
-        }
-
-
+        };
 
         return {
             init: init,
             getSuggestions: getSuggestions
-        }
+        };
     }
 ]).factory('webAppsSuggestions', ['Apps', '$filter', '$q',
     function (Apps, $filter, $q) {
@@ -328,17 +316,12 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
             }
 
             return defer.promise;
-
         };
-
 
         var getSuggestions = function (q) {
             return getWebAppsDb().then(function () {
                 var filteredApps = $filter('filter')(webAppsDB, q);
-                for (var i = 0; i < filteredApps.length; ++i) {
-                    filteredApps[i] = wrapSuggestion(filteredApps[i]);
-                }
-                return filteredApps;
+                return _.map(filteredApps, wrapSuggestion);
             });
         };
 
@@ -346,14 +329,14 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
         var wrapSuggestion = function (app) {
             app.description = app.tags && app.tags[0];
             return app;
-        }
-
+        };
 
         return {
             getSuggestions: getSuggestions
-        }
+        };
     }
 ]).factory('suggestionsData', [
+
     function () {
         // service to share the suggestions array between controllers and other services
         return {
@@ -364,6 +347,6 @@ angular.module('aio.search').directive('aioSearchBox', ['Analytics', 'Constants'
     function (suggestionsData) {
         return function (scope) {
             scope.suggestions = suggestionsData;
-        }
+        };
     }
 ]);
