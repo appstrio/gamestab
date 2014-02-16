@@ -1,6 +1,4 @@
-var launcherModule = launcherModule || angular.module('aio.launcher', []);
-
-launcherModule.directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome',
+angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome',
     function (Apps, $log, $timeout, Analytics, Chrome) {
         return function (scope, element) {
             //jshint unused:false

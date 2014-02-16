@@ -1,7 +1,5 @@
 /* global async,_ */
-var imageModule = angular.module('aio.image', []);
-
-imageModule.factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome',
+angular.module('aio.image').factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome',
     function ($q, $rootScope, FileSystem, $log, Chrome) {
 
         var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;

@@ -1,5 +1,4 @@
-var mainModule = mainModule || angular.module('aio.main', []);
-mainModule.controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 'Background', 'Analytics',
+angular.module('aio.main').controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 'Background', 'Analytics',
     function ($scope, $http, Apps, Config, $log, Background, Analytics) {
 
         //get from settings

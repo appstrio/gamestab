@@ -1,6 +1,4 @@
-var overlayModule = angular.module('aio.overlay', []);
-
-overlayModule.directive('aioOverlay', ['$timeout', '$log',
+angular.module('aio.overlay').directive('aioOverlay', ['$timeout', '$log',
     function ($timeout, $log) {
         return {
             scope: {

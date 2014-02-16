@@ -1,6 +1,5 @@
 /* global _ */
-var launcherModule = launcherModule || angular.module('aio.launcher', []);
-launcherModule.controller('SettingsCtrl', ['$scope', 'Constants', 'Analytics', 'Config',
+angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants', 'Analytics', 'Config',
     function ($scope, C, Analytics, Config) {
         $scope.panes = ['General', 'Background', 'About'];
         //initial selected pane

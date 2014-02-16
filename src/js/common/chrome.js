@@ -1,6 +1,4 @@
-var chromeModule = angular.module('aio.chrome', []);
-
-chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
+angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
     function ($rootScope, $timeout, $q, $log) {
         return {
             history: {
@@ -61,7 +59,7 @@ chromeModule.factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
                     }
                 }
             },
-            isChrome : function(){
+            isChrome: function () {
                 return chrome && chrome.extension;
             }
         };

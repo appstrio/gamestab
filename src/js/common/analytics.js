@@ -1,10 +1,9 @@
-var analyticsModule = angular.module('aio.analytics', []);
-
 //global
 var _gaq = _gaq || [];
 
-analyticsModule.factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '$timeout', 'Chrome',
+angular.module('aio.analytics').factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '$timeout', 'Chrome',
     function ($rootScope, $log, $q, C, $timeout, Chrome) {
+
         /**
          * init
          * Load the analytics script

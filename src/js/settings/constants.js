@@ -1,6 +1,4 @@
-var settingsModule = settingsModule || angular.module('aio.settings', []);
-
-settingsModule.factory('Constants', ['Chrome',
+angular.module('aio.settings').factory('Constants', ['Chrome',
     function (Chrome) {
         return {
             PARTNERS_JSON_URL: 'data/partners/partners.json',
@@ -22,8 +20,8 @@ settingsModule.factory('Constants', ['Chrome',
             },
             CONFIG: {
                 search_url: 'http://www.google.com/search?q=',
-                suggestions_url : 'http://api.bing.com/osjson.aspx?Market=en-us&query=',
-                suggestions_type : 'bing',
+                suggestions_url: 'http://api.bing.com/osjson.aspx?Market=en-us&query=',
+                suggestions_type: 'bing',
                 config_update_url: '',
                 dials_per_page: 12,
                 initial_dials_size: 26,

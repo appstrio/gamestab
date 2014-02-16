@@ -1,7 +1,5 @@
 /* global async */
-var settingsModule = settingsModule || angular.module('aio.settings', []);
-
-settingsModule.factory('Config', ['Constants', 'Storage', '$http', '$q', '$log', '$rootScope', 'Chrome',
+angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http', '$q', '$log', '$rootScope', 'Chrome',
     function (C, Storage, $http, $q, $log, $rootScope, Chrome) {
         var data = {},
             storageKey = C.STORAGE_KEYS.CONFIG;

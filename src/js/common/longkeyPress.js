@@ -1,6 +1,4 @@
-var longKeyPressModule = angular.module('aio.interactions', []);
-
-longKeyPressModule.directive('hlLongPress', ['$parse',
+angular.module('aio.interactions').directive('hlLongPress', ['$parse',
     function ($parse) {
         return function (scope, element, attr) {
             var fn = $parse(attr.hlLongPress);

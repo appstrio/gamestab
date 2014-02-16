@@ -1,7 +1,5 @@
 /* global _ */
-var settingsModule = settingsModule || angular.module('aio.settings', []);
-
-settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'Image', '$log', 'Constants', 'Chrome',
+angular.module('aio.settings').factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'Image', '$log', 'Constants', 'Chrome',
     function ($rootScope, $http, Storage, $q, Image, $log, C, Chrome) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.BACKGROUNDS,
@@ -285,7 +283,7 @@ settingsModule.factory('Background', ['$rootScope', '$http', 'Storage', '$q', 'I
                     backgroundPosition: 'center calc(50% - 200px)'
                 });
 
-                if(!iframeShown) $iframe.show();
+                if (!iframeShown) $iframe.show();
             };
 
             scope.$on('setBackgroundImage', function (e, image) {

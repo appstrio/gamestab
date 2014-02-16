@@ -1,7 +1,5 @@
 /* global _ */
-var launcherModule = launcherModule || angular.module('aio.launcher', []);
-
-launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Image',
+angular.module('aio.launcher').factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Image',
     function ($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Image) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
@@ -242,7 +240,7 @@ launcherModule.factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome'
 
         var getOrganizedWebApps = function () {
             // if sorted web apps are sorted are already there, just return them
-            if(cachedSortedWebApps){
+            if (cachedSortedWebApps) {
                 var defer = $q.defer();
                 defer.resolve(cachedSortedWebApps);
                 return defer.promise;

@@ -1,7 +1,5 @@
 /* global FileError */
-var fileModule = angular.module('aio.file', []);
-
-fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
+angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
     function filesStorageService_Main($rootScope, $log, $q) {
         //vars
         var fs = null,
@@ -56,7 +54,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
         var write = function (fileName, content, type) {
             var deferred = $q.defer();
 
-            init().then(function(){
+            init().then(function () {
                 fs.root.getFile(fileName, {
                     create: true
                 }, function (fileEntry) {
@@ -113,7 +111,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
         var read = function filesStorageService_read(fileName) {
             var deferred = $q.defer();
 
-            init().then(function(){
+            init().then(function () {
                 try {
                     fs.root.getFile(fileName, {}, function filesStorageService_read_getFile(fileEntry) {
                         // Get a File object representing the file,
@@ -154,7 +152,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
         var append = function filesStorageService_append(fileName, type, content) {
             var deferred = $q.defer();
 
-            init().then(function(){
+            init().then(function () {
                 try {
                     fs.root.getFile(fileName, {
                         create: false
@@ -197,7 +195,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
         var remove = function filesStorageService_remove(fileName) {
             var deferred = $q.defer();
 
-            init.then(function(){
+            init.then(function () {
                 try {
                     fs.root.getFile(fileName, {
                         create: false
@@ -229,7 +227,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
         var removeByPath = function filesStorageService_removeByPath(path) {
             var deferred = $q.defer();
 
-            init.then(function(){
+            init.then(function () {
                 if (path) {
                     var split = path.split('/');
                     if (split.length > 0) {
@@ -262,7 +260,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
         var getFileUrlByFileName = function filesStorageService_getFileUrlByFileName(fileName) {
             var deferred = $q.defer();
 
-            init.then(function(){
+            init.then(function () {
                 var createObject = {
                     create: false
                 };
@@ -288,7 +286,7 @@ fileModule.factory('FileSystem', ['$rootScope', '$log', '$q',
          * @return
          */
         var init = function filesStorageService_init() {
-            if(fs){
+            if (fs) {
                 return initting.promise;
             }
 
