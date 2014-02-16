@@ -4,6 +4,7 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
         //vars
         var fs = null,
             fsReady = false,
+            isInitting = false,
             initting = $q.defer();
 
         /**
@@ -139,8 +140,6 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
             return deferred.promise;
         };
 
-
-
         /**
          * filesStorageService_append
          *
@@ -260,7 +259,7 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
         var getFileUrlByFileName = function filesStorageService_getFileUrlByFileName(fileName) {
             var deferred = $q.defer();
 
-            init.then(function () {
+            init().then(function () {
                 var createObject = {
                     create: false
                 };
@@ -286,22 +285,26 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
          * @return
          */
         var init = function filesStorageService_init() {
-            if (fs) {
+            if (fs || isInitting) {
                 return initting.promise;
             }
 
+            if (!isInitting) {
+                isInitting = true;
+            }
+
+            //support change in file system api prefix
+            window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+            var fileSystemSize = 10 * 1024 * 1024, // in byts =10 megabits
+                apiType = window.PERSISTENT, // or window.TEMPORARY
+
+                //TODO need more research as to what type is better for us to store
+                storageType = {
+                    persistent: 'webkitPersistentStorage',
+                    temporary: 'temporaryStorage'
+                };
+
             try {
-                //support change in file system api prefix
-                window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-                var fileSystemSize = 10 * 1024 * 1024, // in byts =10 megabits
-                    apiType = window.PERSISTENT, // or window.TEMPORARY
-
-                    //TODO need more research as to what type is better for us to store
-                    storageType = {
-                        persistent: 'webkitPersistentStorage',
-                        temporary: 'temporaryStorage'
-                    };
-
                 /**
                  * New Version
                  */
@@ -316,17 +319,14 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
 
                     }, errorHandler(initting));
                 }, function fileStorageService_init_requestQuota_error(e) {
-                    $log.info('Error init file system api', e);
+                    $log.error('Error init file system api', e);
                 });
-
             } catch (e) {
-                $log.info('Error init file system api, caught an error : ', e);
+                $log.error('Error init file system api, caught an error : ', e);
             }
 
             return initting.promise;
         };
-
-        //init();
 
         return {
             promise: initting.promise,
