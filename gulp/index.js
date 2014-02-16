@@ -44,6 +44,8 @@ paths.dist = {
     less: paths.build + '/css',
     libs: paths.build + '/' + paths.vendor,
     extraBuild: paths.build + '/data',
+    minifiedScripts: 'scripts.min.js',
+    minifiedLibs: 'libs.min.js',
     js: paths.build + '/js'
 };
 

@@ -39,11 +39,18 @@ gulp.task('default', ['clean'], function () {
 //jade -> html
 gulp.task('jade', function () {
     return gulp.src(paths.origin.jade)
-        .pipe(flatten())
-        .pipe(jade({
-            pretty: false
-        }))
-        .pipe(gulp.dest(paths.build));
+    //flatten
+    .pipe(flatten())
+    //pretty false on production
+    .pipe(gulpif(isProduction, jade({
+        pretty: false
+    })))
+    //pretty true on production
+    .pipe(gulpif(!isProduction, jade({
+        pretty: true
+    })))
+    //ouput
+    .pipe(gulp.dest(paths.build));
 });
 
 //less -> css
@@ -64,9 +71,12 @@ gulp.task('zip', function () {
 // copy & uglify js scripts
 gulp.task('scripts', function () {
     return gulp.src(paths.origin.js)
-        .pipe(uglify())
-        .pipe(concat('scripts.min.js'))
-        .pipe(gulp.dest(paths.dist.js));
+    //uglify
+    .pipe(gulpif(isProduction, uglify()))
+    //concat
+    .pipe(gulpif(isProduction, concat(paths.dist.minifiedScripts)))
+    //output
+    .pipe(gulp.dest(paths.dist.js));
 });
 
 //copy manifest
@@ -88,9 +98,9 @@ gulp.task('bump', function () {
     var _pkg = getPackageJson();
     //increment version
     var newVer = semver.inc(_pkg.version, 'patch');
-    //log actgion
+    //log action
     gutil.log('Bumping version', gutil.colors.cyan(_pkg.version), '=>', gutil.colors.blue(newVer));
-    //increment bower & package version seperately since they are in different places
+    //increment bower & package version separately since they are in different places
     gulp.src(['./bower.json', './package.json'])
         .pipe(bump({
             version: newVer
@@ -108,11 +118,7 @@ gulp.task('bump', function () {
 //handle assets
 gulp.task('assets', function () {
     //copy regular assets
-    gulp.src(paths.origin.assets)
-        .pipe(gulp.dest(paths.build));
-
-    //copy extra assets
-    gulp.src(paths.origin.extraAssets)
+    gulp.src([paths.origin.assets, paths.origin.extraAssets])
         .pipe(gulp.dest(paths.build));
 
     //extra build stuff
@@ -122,7 +128,10 @@ gulp.task('assets', function () {
 
 gulp.task('libs', function () {
     return gulp.src(libs)
-        .pipe(gulp.dest(paths.dist.libs));
+    //concat
+    .pipe(gulpif(isProduction, concat(paths.dist.minifiedLibs)))
+    //output
+    .pipe(gulp.dest(paths.dist.libs));
 });
 
 gulp.task('reloadExtension', function () {
@@ -138,12 +147,16 @@ gulp.task('watch', function () {
     var afterTasks = [];
 
     gulp.watch(libs, ['libs'].concat(afterTasks));
+
     gulp.watch([
         paths.origin.assets,
         paths.origin.extraAssets,
         paths.origin.extraBuild
     ], ['assets'].concat(afterTasks));
+
     gulp.watch(paths.origin.js, ['scripts'].concat(afterTasks));
+
     gulp.watch(paths.src + '/less/**/*.less', ['less'].concat(afterTasks));
+
     gulp.watch(paths.origin.jade, ['jade'].concat(afterTasks));
 });
