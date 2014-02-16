@@ -42,7 +42,9 @@
     "gulp-uglify": "~0.2.1",
     "gulp-zip": "~0.1.2",
     "gulp-bump": "~0.1.4",
-    "semver": "~2.2.1"
+    "semver": "~2.2.1",
+    "gulp-concat": "~2.1.7",
+    "gulp-if": "0.0.5"
   },
   "engines": {
     "node": ">=0.8.0"

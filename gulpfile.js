@@ -4,11 +4,12 @@ var clean = require('gulp-clean');
 var jade = require('gulp-jade');
 var flatten = require('gulp-flatten');
 var gulpOpen = require('gulp-open');
+var gulpif = require('gulp-if');
 var semver = require('semver');
+var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 var bump = require('gulp-bump');
-// var watch = require('gulp-watch');
 var less = require('gulp-less');
 var config = require('./gulp');
 var pkg;
@@ -19,15 +20,16 @@ var bowerPackages = config.bowerPackages;
 var vendorPackages = config.vendorPackages;
 var libs = bowerPackages.concat(vendorPackages);
 
-//global config
-var shouldReload = false;
-
 var getPackageJson = function () {
     var fs = require('fs');
 
     pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
     return pkg;
 };
+
+//to set production env use --production in command line
+//production will minify & concat scripts/libs
+var isProduction = Boolean(gutil.env.production);
 
 //default task
 gulp.task('default', ['clean'], function () {
@@ -63,6 +65,7 @@ gulp.task('zip', function () {
 gulp.task('scripts', function () {
     return gulp.src(paths.origin.js)
         .pipe(uglify())
+        .pipe(concat('scripts.min.js'))
         .pipe(gulp.dest(paths.dist.js));
 });
 
@@ -123,9 +126,6 @@ gulp.task('libs', function () {
 });
 
 gulp.task('reloadExtension', function () {
-    if (!shouldReload) {
-        return;
-    }
     gulp.src('README.md')
         .pipe(gulpOpen('', {
             url: 'http://reload.extensions',
@@ -135,7 +135,7 @@ gulp.task('reloadExtension', function () {
 
 //all tasks are watch -> bump patch version -> reload extension (globally enabled)
 gulp.task('watch', function () {
-    var afterTasks = ['reloadExtension'];
+    var afterTasks = [];
 
     gulp.watch(libs, ['libs'].concat(afterTasks));
     gulp.watch([
