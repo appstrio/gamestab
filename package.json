@@ -44,7 +44,10 @@
     "gulp-bump": "~0.1.4",
     "semver": "~2.2.1",
     "gulp-concat": "~2.1.7",
-    "gulp-if": "0.0.5"
+    "gulp-if": "0.0.5",
+    "gulp-usemin": "~0.2.3",
+    "gulp-using": "0.0.1",
+    "gulp-filter": "~0.3.0"
   },
   "engines": {
     "node": ">=0.8.0"

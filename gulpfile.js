@@ -2,6 +2,9 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var clean = require('gulp-clean');
 var jade = require('gulp-jade');
+var gulpFilter = require('gulp-filter');
+var using = require('gulp-using');
+var usemin = require('gulp-usemin');
 var flatten = require('gulp-flatten');
 var gulpOpen = require('gulp-open');
 var gulpif = require('gulp-if');
@@ -31,26 +34,26 @@ var getPackageJson = function () {
 //production will minify & concat scripts/libs
 var isProduction = Boolean(gutil.env.production);
 
-//default task
-gulp.task('default', ['clean'], function () {
-    gulp.start('assets', 'jade', 'libs', 'less', 'manifest', 'scripts', 'reloadExtension', 'watch');
-});
-
 //jade -> html
 gulp.task('jade', function () {
     return gulp.src(paths.origin.jade)
-    //flatten
-    .pipe(flatten())
-    //pretty false on production
-    .pipe(gulpif(isProduction, jade({
-        pretty: false
-    })))
-    //pretty true on production
-    .pipe(gulpif(!isProduction, jade({
-        pretty: true
-    })))
-    //ouput
-    .pipe(gulp.dest(paths.build));
+        .pipe(flatten())
+        .pipe(jade({
+            pretty: !isProduction
+        }))
+        .pipe(gulp.dest(paths.build));
+});
+
+gulp.task('usemin', ['jade', 'libs'], function () {
+    if (!isProduction) {
+        gulp.start('scripts');
+        return;
+    }
+    gulp.src('build/newtab.html')
+        .pipe(usemin({
+            jsmin: uglify()
+        }))
+        .pipe(gulp.dest(paths.build));
 });
 
 //less -> css
@@ -71,12 +74,7 @@ gulp.task('zip', function () {
 // copy & uglify js scripts
 gulp.task('scripts', function () {
     return gulp.src(paths.origin.js)
-    //uglify
-    .pipe(gulpif(isProduction, uglify()))
-    //concat
-    .pipe(gulpif(isProduction, concat(paths.dist.minifiedScripts)))
-    //output
-    .pipe(gulp.dest(paths.dist.js));
+        .pipe(gulp.dest(paths.dist.js));
 });
 
 //copy manifest
@@ -124,10 +122,7 @@ gulp.task('assets', function () {
 
 gulp.task('libs', function () {
     return gulp.src(libs)
-    //concat
-    .pipe(gulpif(isProduction, concat(paths.dist.minifiedLibs)))
-    //output
-    .pipe(gulp.dest(paths.dist.libs));
+        .pipe(gulp.dest(paths.dist.libs));
 });
 
 gulp.task('reloadExtension', function () {
@@ -147,4 +142,9 @@ gulp.task('watch', function () {
     gulp.watch(paths.origin.js, ['scripts'].concat(afterTasks));
     gulp.watch(paths.src + '/less/**/*.less', ['less'].concat(afterTasks));
     gulp.watch(paths.origin.jade, ['jade'].concat(afterTasks));
+});
+
+//default task
+gulp.task('default', ['clean'], function () {
+    gulp.start('assets', 'jade', 'libs', 'less', 'manifest', 'usemin', 'watch');
 });
