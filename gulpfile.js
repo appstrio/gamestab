@@ -2,14 +2,15 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var clean = require('gulp-clean');
 var jade = require('gulp-jade');
-var gulpFilter = require('gulp-filter');
-var using = require('gulp-using');
+// var gulpFilter = require('gulp-filter');
+// var using = require('gulp-using');
 var usemin = require('gulp-usemin');
 var flatten = require('gulp-flatten');
 var gulpOpen = require('gulp-open');
-var gulpif = require('gulp-if');
+// var gulpif = require('gulp-if');
 var semver = require('semver');
-var concat = require('gulp-concat');
+// var imagemin = require('gulp-imagemin');
+// var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 var bump = require('gulp-bump');
@@ -29,6 +30,8 @@ var getPackageJson = function () {
     pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
     return pkg;
 };
+
+// var imageFilter = gulpFilter(['**/*.{png,jpeg,jpg,gif}']);
 
 //to set production env use --production in command line
 //production will minify & concat scripts/libs

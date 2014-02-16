@@ -47,7 +47,8 @@
     "gulp-if": "0.0.5",
     "gulp-usemin": "~0.2.3",
     "gulp-using": "0.0.1",
-    "gulp-filter": "~0.3.0"
+    "gulp-filter": "~0.3.0",
+    "gulp-imagemin": "~0.1.5"
   },
   "engines": {
     "node": ">=0.8.0"
