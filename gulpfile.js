@@ -33,7 +33,7 @@ var isProduction = Boolean(gutil.env.production);
 
 //default task
 gulp.task('default', ['clean'], function () {
-    gulp.start('bump', 'assets', 'jade', 'libs', 'less', 'manifest', 'scripts', 'reloadExtension', 'watch');
+    gulp.start('assets', 'jade', 'libs', 'less', 'manifest', 'scripts', 'reloadExtension', 'watch');
 });
 
 //jade -> html
