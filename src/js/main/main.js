@@ -1,5 +1,5 @@
-angular.module('aio.main').controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 'Background', 'Analytics', '$q',
-    function ($scope, $http, Apps, Config, $log, Background, Analytics, $q) {
+angular.module('aio.main').controller('MainCtrl', ['$scope', 'Apps', 'Config', '$log', 'Background', 'Analytics', '$q',
+    function ($scope, Apps, Config, $log, Background, Analytics, $q) {
 
         //get from settings
         $scope.displayTopSearchBox = 1;
@@ -26,12 +26,14 @@ angular.module('aio.main').controller('MainCtrl', ['$scope', '$http', 'Apps', 'C
                 return Apps.lazyCacheIcons();
             }
         })
-        //detect if background images need lazy cache
-        .then(function () {
-            if (Background.isCacheNeeded()) {
-                return Background.lazyCacheImages();
-            }
-        })
+        /*
+         * //detect if background images need lazy cache
+         * .then(function () {
+         *     if (Background.isCacheNeeded()) {
+         *         return Background.lazyCacheImages();
+         *     }
+         * })
+         */
         //report time
         .then(function () {
             console.debug('%c[MainCtrl] - entire startup process took ' + (Date.now() - t0) + ' ms.', 'background:black;color:yellow;');
