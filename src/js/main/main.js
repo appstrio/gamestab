@@ -1,5 +1,5 @@
-angular.module('aio.main').controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 'Background', 'Analytics',
-    function ($scope, $http, Apps, Config, $log, Background, Analytics) {
+angular.module('aio.main').controller('MainCtrl', ['$scope', '$http', 'Apps', 'Config', '$log', 'Background', 'Analytics', '$q',
+    function ($scope, $http, Apps, Config, $log, Background, Analytics, $q) {
 
         //get from settings
         $scope.displayTopSearchBox = 1;
@@ -13,10 +13,8 @@ angular.module('aio.main').controller('MainCtrl', ['$scope', '$http', 'Apps', 'C
         console.debug('[MainCtrl] - init');
         var t0 = Date.now();
         //load config from local or remote
-        Config.init()
-        //load background from local or remote
-        .then(Background.init)
-        //load apps from local or remote
+        $q.all([Config.init(), Background.init()])
+        //init dials
         .then(Apps.init)
         //assign main ctrl scope vars
         .then(init)

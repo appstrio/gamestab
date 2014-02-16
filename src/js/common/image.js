@@ -1,4 +1,3 @@
-/* global async,_ */
 angular.module('aio.image').factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome',
     function ($q, $rootScope, FileSystem, $log, Chrome) {
 
@@ -176,30 +175,28 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', 'FileSystem', 
          */
         var generateThumbnail = function (urlField, params, arr) {
             var counter = 0;
-            var deferred = $q.defer();
+            var promises = [];
 
             params = params || {};
 
-            async.eachSeries(arr, function (item, callback) {
-                    var url = item[urlField];
-                    ++counter;
-                    $log.log('[Image] - generating thumbnail ' + urlField + ' => ' + counter + '/' + arr.length + '.');
+            arr.forEach(function (item) {
+                var url = item[urlField];
+                //extend to newParams
+                var newParams = angular.extend({
+                    url: url
+                }, params);
 
-                    urlToLocalFile(angular.extend({
-                        url: url
-                    }, params)).then(function (file) {
-                        item.thumbnail = file;
-                        return callback();
-                    }, callback);
-                },
-                function () {
-                    _.defer(function () {
-                        $rootScope.$apply(function () {
-                            deferred.resolve(arr);
-                        });
-                    });
-                });
-            return deferred.promise;
+                //push into promise array
+                promises.push(urlToLocalFile(newParams).then(function (file) {
+                    item.thumbnail = file;
+                    $log.log('[Image] - generating thumbnail ' + urlField + ' => ' + counter + '/' + arr.length + '.');
+                    ++counter;
+                    return item;
+                }));
+            });
+
+            //resolve when all promises finish
+            return $q.all(promises);
         };
 
         /**
@@ -213,52 +210,46 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', 'FileSystem', 
          */
         var convertFieldToLocalFile = function (fieldToConvert, params, arr) {
             var counter = 0;
-            var deferred = $q.defer();
+            var promises = [];
 
             params = params || {};
 
-            //TODO get rid of async and convert to promise based
-            async.eachSeries(arr, function (item, callback) {
-                    var url = item[fieldToConvert];
-                    ++counter;
-                    $log.log('[Image] - caching ' + fieldToConvert + '=> ' + counter + '/' + arr.length + '.');
+            function logAndReturn(item) {
+                $log.log('[image] - caching ' + fieldToConvert + '=> ' + counter + '/' + arr.length + '.');
+                return promises.push(item);
+            }
 
-                    // save original url
-                    item.originalUrl = url;
+            arr.forEach(function (item) {
+                var url = item[fieldToConvert];
+                ++counter;
+                // save original url
+                item.originalUrl = url;
 
-                    //check if path starts with chrome
-                    if (helpers.isPathChrome(url)) {
-                        return callback();
-                    }
+                //check if path starts with chrome or filesystem
+                if (helpers.isPathChrome(url) || helpers.isPathFileSystem(url)) {
+                    return logAndReturn(item);
+                }
 
-                    //is path a filesystem html5 path?
-                    if (helpers.isPathFileSystem(url)) {
-                        return callback();
-                    }
-
-                    //is path a local one?
-                    if (!helpers.isPathRemote(url)) {
-                        //save absolute chrome path
-                        item[fieldToConvert] = Chrome.extension.getURL(url);
-                        return callback();
-                    }
-
-                    urlToLocalFile(angular.extend({
+                //is path a local one?
+                if (!helpers.isPathRemote(url)) {
+                    //save absolute chrome path
+                    item[fieldToConvert] = Chrome.extension.getURL(url);
+                    return logAndReturn(item);
+                }
+                (function (counter) {
+                    $log.log('[image] - caching ' + fieldToConvert + '=> ' + counter + '/' + arr.length + '.');
+                    //return promise
+                    promises.push(urlToLocalFile(angular.extend({
                         url: url
                     }, params)).then(function (file) {
                         //save new url
                         item[fieldToConvert] = file;
-                        return callback();
-                    }, callback);
-                },
-                function () {
-                    _.defer(function () {
-                        $rootScope.$apply(function () {
-                            deferred.resolve(arr);
-                        });
-                    });
-                });
-            return deferred.promise;
+                        return item;
+                    }));
+                })(counter);
+            });
+
+            return $q.all(promises);
         };
 
         /**
