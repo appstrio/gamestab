@@ -24,8 +24,6 @@ angular.module('aio.search').directive('aioSearchBox', [
             // initializes the bing search suggestions
             bingSearchSuggestions.init(suggestionsURL);
 
-            element.focus();
-
             /**
              * shows the suggestions box
              */
@@ -75,19 +73,19 @@ angular.module('aio.search').directive('aioSearchBox', [
 
                 });
 
-                //                bingSearchSuggestions.getSuggestions(val).then(function(suggestionsResponse){
-                //                    for(var i = 0; i < 3 && i < suggestionsResponse.length; ++i){
-                //                        suggestionsData.data.unshift(suggestionsResponse[i]);
-                //                    }
-                //                    showSuggestionsBox();
-                //                });
+                //bingSearchSuggestions.getSuggestions(val).then(function(suggestionsResponse){
+                //    for(var i = 0; i < 3 && i < suggestionsResponse.length; ++i){
+                //        suggestionsData.data.unshift(suggestionsResponse[i]);
+                //    }
+                //    showSuggestionsBox();
+                //});
                 //
-                //                webAppsSuggestions.getSuggestions(val).then(function(suggestionsResponse){
-                //                    for(var i = 0; i < 3 && i < suggestionsResponse.length; ++i){
-                //                        suggestionsData.data.push(suggestionsResponse[i]);
-                //                    }
+                //webAppsSuggestions.getSuggestions(val).then(function(suggestionsResponse){
+                //    for(var i = 0; i < 3 && i < suggestionsResponse.length; ++i){
+                //        suggestionsData.data.push(suggestionsResponse[i]);
+                //    }
                 //
-                //                });
+                //});
 
             }, throttleLimit);
 
@@ -109,7 +107,6 @@ angular.module('aio.search').directive('aioSearchBox', [
 
                 return executeSearch(val);
             };
-
 
             // Execute App Launch
             var executeAppLaunch = function (appSuggestion) {
@@ -153,12 +150,12 @@ angular.module('aio.search').directive('aioSearchBox', [
                         executeEnterKeyPress(val);
                         break;
                     case 27: //esc
+                        hideSuggestionsBox();
                         break;
                     case 40:
                         // down
                         e.preventDefault();
                         e.stopPropagation();
-                        console.log('$hiddenInput', $hiddenInput);
                         $hiddenInput.val('');
                         $hiddenInput.focus();
                         scope.$apply(function () {
@@ -178,6 +175,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                 if (!suggestionsData.data || !suggestionsData.data.length) {
                     return;
                 }
+
                 switch (e.keyCode) {
                 case 40: //down key
                     e.preventDefault();
@@ -253,8 +251,8 @@ angular.module('aio.search').directive('aioSearchBox', [
 
         /**
          * TODO - verify this with Hadar. it isn't correct
-         * if chrome extension - use  JSONP
-         * if website - use regular GET call
+         * if chrome extension - use regular GET call
+         * if website - use jsnop
          */
         var getSuggestions = function (q) {
             var urlBuildParams = {}, httpMethod = 'get';
