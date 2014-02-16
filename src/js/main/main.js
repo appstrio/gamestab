@@ -26,14 +26,6 @@ angular.module('aio.main').controller('MainCtrl', ['$scope', 'Apps', 'Config', '
                 return Apps.lazyCacheIcons();
             }
         })
-        /*
-         * //detect if background images need lazy cache
-         * .then(function () {
-         *     if (Background.isCacheNeeded()) {
-         *         return Background.lazyCacheImages();
-         *     }
-         * })
-         */
         //report time
         .then(function () {
             console.debug('%c[MainCtrl] - entire startup process took ' + (Date.now() - t0) + ' ms.', 'background:black;color:yellow;');

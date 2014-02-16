@@ -274,8 +274,9 @@ angular.module('aio.settings').factory('Background', [
             $iframeBody.append(iframeHTML);
             $iframeDiv = $iframeBody.find('div.bg').eq(0);
 
-
-            var setBackground = function (background) {
+            var setBackground = function (e, image) {
+                var background = image.image;
+                $log.log('[hlBackground] - set background image', image.image);
                 element.css({
                     backgroundImage: 'url(' + background + ')'
                 });
@@ -290,10 +291,7 @@ angular.module('aio.settings').factory('Background', [
                 }
             };
 
-            scope.$on('setBackgroundImage', function (e, image) {
-                $log.log('[hlBackground] - set background image', image.image);
-                setBackground(image.image);
-            });
+            scope.$on('setBackgroundImage', setBackground);
         };
     }
 ]).directive('hlCropper', [
@@ -317,11 +315,6 @@ angular.module('aio.settings').factory('Background', [
                 $editorImage.Jcrop();
                 $previewImage[0].src = cropperOptions.dataURL;
             };
-
-            // var clear = function () {
-            // delete cropperOptions.dataURL;
-            // cropperOptions = null;
-            // };
         };
     }
 ]).directive('hlBackgroundLocalImage', ['Background', '$rootScope', 'Analytics',

@@ -38,9 +38,19 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
 ]).controller('BackgroundCtrl', ['$scope', 'Background', 'Analytics',
     function ($scope, Background, Analytics) {
 
+        $scope.loading = true;
+
         //assign scope backgrounds
         Background.isReady.then(function () {
-            $scope.backgrounds = Background.backgrounds();
+            if (Background.isCacheNeeded()) {
+                Background.lazyCacheImages().then(function () {
+                    $scope.loading = false;
+                    $scope.backgrounds = Background.backgrounds();
+                });
+            } else {
+                $scope.loading = false;
+                $scope.backgrounds = Background.backgrounds();
+            }
         });
 
         /**

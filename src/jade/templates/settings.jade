@@ -17,6 +17,7 @@
                             .label Show Search Box
                             .more-details Use our smart search box to search the web and launch your favorite web apps
             .settings-background(ng-switch-when="Background", ng-controller="BackgroundCtrl")
+                h1(ng-show="loading") Loading backgrounds for the first time. Please wait...
                 .bg-explorer
                     .bg-sample(ng-repeat="bg in backgrounds", ng-style="{'background-image':'url(' + bg.thumbnail + ')'}", ng-class="{selected : bg.isActive}", ng-click="selectBackground(bg, $event)")
                         //- custom user image
