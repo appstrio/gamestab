@@ -17,12 +17,16 @@
                             .label Show Search Box
                             .more-details Use our smart search box to search the web and launch your favorite web apps
             .settings-background(ng-switch-when="Background", ng-controller="BackgroundCtrl")
-                h1(ng-show="loading") Loading backgrounds for the first time. Please wait...
-                .bg-explorer
+                .loading-backgrounds(ng-show="loading")
+                    .logo(style="text-align:center;")
+                        img(src="./img/favicons/128x128.png")
+                    h1(style="text-align:center;") Gamestab
+                    h2(ng-show="true", style="text-align:center;") loading backgrounds for the first time. Please wait...
+                .bg-explorer(ng-show="!loading")
                     .bg-sample(ng-repeat="bg in backgrounds", ng-style="{'background-image':'url(' + bg.thumbnail + ')'}", ng-class="{selected : bg.isActive}", ng-click="selectBackground(bg, $event)")
                         //- custom user image
                         img(src="./img/custom_user.png", style="width:30px;height:30px;float:left;", ng-show="bg.isLocalBackground")
-                .bg-upload(hl-background-local-image)
+                .bg-upload(hl-background-local-image, ng-show="!loading")
                     .image-selector
                         h2 Select your own image
                         input(type="file", id="localImageFile")
@@ -31,23 +35,9 @@
                     .preview
                         .loader
                             img(src="./img/loader.gif")
-                //- .cropper(hl-cropper, cropper-options="cropperOptions")
-                   .header Crop the image you uploaded
-                   .editor
-                       .left
-                           h2 Edit The Image
-                           .original-image
-                               img
-                       .right
-                           h2 Preview
-                           .preview-image
-                               img
-                   .footer
-                       button Cancel
-                       button OK
             .settings-about(ng-switch-when="About")
-                .logo(style="width:134px;margin:0 auto;")
-                    img(src="/img/favicons/128x128.png")
+                .logo(style="text-align:center;")
+                    img(src="./img/favicons/128x128.png")
                 .details(style="width:134px;margin:0 auto;text-align:center;")
                     h2 GamesTab
                     p Version : {{clientVersion}}

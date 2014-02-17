@@ -14,6 +14,7 @@ var bowerPackages = [
     paths.bower + '/angular/angular.min.js',
     paths.bower + '/underscore/underscore-min.js',
     paths.bower + '/angular-fallback-src/fallback-src.js',
+    paths.bower + '/ngprogress/build/ngProgress.min.js',
     paths.bower + '/async/lib/async.js'
 ];
 

@@ -24,6 +24,7 @@
     "jquery-ui": "~1.10.3",
     "angular-ui-sortable": "https://github.com/hlandao/ui-sortable.git#~0.10.0",
     "async": "~0.2.5",
-    "angular-fallback-src": "~0.1.2"
+    "angular-fallback-src": "~0.1.2",
+    "ngprogress": "~1.0.4"
   }
 }

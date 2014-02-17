@@ -35,17 +35,21 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
             });
         };
     }
-]).controller('BackgroundCtrl', ['$scope', 'Background', 'Analytics',
-    function ($scope, Background, Analytics) {
+]).controller('BackgroundCtrl', ['$scope', 'Background', 'Analytics', 'ngProgress',
+    function ($scope, Background, Analytics, ngProgress) {
 
         $scope.loading = true;
 
         //assign scope backgrounds
         Background.isReady.then(function () {
             if (Background.isCacheNeeded()) {
+                //start progress bar
+                ngProgress.start();
                 Background.lazyCacheImages().then(function () {
                     $scope.loading = false;
                     $scope.backgrounds = Background.backgrounds();
+                    //finish progress bar
+                    ngProgress.complete();
                 });
             } else {
                 $scope.loading = false;
