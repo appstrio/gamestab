@@ -17,7 +17,7 @@ angular.module('aio.main').controller('MainCtrl', [
                 $log.log('[MainCtrl] - Apps already lazy cached.');
                 if (Apps.isCacheNeeded()) {
                     $log.log('[MainCtrl] - Initiating lazy cache for dial icons');
-                    return Apps.lazyCacheIcons();
+                    return Apps.lazyCacheIcons().then(init);
                 }
             }, lazyCacheAppsTimeout);
         };
