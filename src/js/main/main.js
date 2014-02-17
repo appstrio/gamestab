@@ -28,16 +28,18 @@ angular.module('aio.main').controller('MainCtrl', [
         };
 
         var loadPhaseOne = function () {
+            $log.info('[MainCtrl] - Start phase one');
             return $q.all([Config.init(), Background.init(), Apps.init()]);
         };
 
         var loadPhaseTwo = function () {
+            $log.info('[MainCtrl] - Start phase two');
             return $q.all([init(), Analytics.init(), lazyCacheApps()]);
         };
 
         //load config from local or remote
         loadPhaseOne()
-        //if apps setup is need
+        //if apps setup is needed
         .then(null, Apps.setup)
         //init scope vars
         .then(loadPhaseTwo)
