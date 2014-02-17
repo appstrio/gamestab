@@ -58,8 +58,8 @@ html(ng-csp='ng-csp')
                         span.icon(ng-show="suggestion.icon")
                             img(ng-src="{{suggestion.icon}}")
                         span.details
-                            span.title {{suggestion.title}}
-                            span.description(ng-show="suggestion.description") {{suggestion.description}}
+                            span.title(ng-bind="suggestion.title")
+                            span.description(ng-show="suggestion.description", ng-bind="suggestion.description")
 
         #wrapper(hl-background)
             #search-placeholder
@@ -77,8 +77,9 @@ html(ng-csp='ng-csp')
                                 .app(ng-repeat="app in screen", data-title="{{app.title}}", ng-click="launchApp(app, $event)", hl-long-press="longPress(app, $event)", ng-class="{permanent : app.permanent}")
                                     .wrapper
                                         .remove-button(ng-click="uninstallApp(app, $event)") X
-                                        .icon(ng-style="{'background-image': 'url(' + app.icon + ')'}")
-                                        .title {{app.title}}
+                                        .icon
+                                            img(ng-src="{{app.icon}}", fb-src="./img/dials/default.png", alt="{{app.title}} Logo")
+                                        .title(ng-bind="app.title")
                 .partner-logo
                     a(ng-href="{{config.partner_url}}", target="_self", title="{{config.partner_name}}")
                         img(ng-src="{{config.partner_logo}}", style="cursor:pointer;")

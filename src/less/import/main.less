@@ -294,9 +294,11 @@ section{
         }
         .wrapper{
             position: relative;
+            cursor: pointer;
             .remove-button{
                 display: none;
                 position: absolute;
+                cursor:pointer;
                 right:-5px;
                 top:-5px;
                 width:15px;
@@ -307,21 +309,23 @@ section{
                 color:white;
                 font-family: sans-serif;
                 font-size:9px;
-                cursor: pointer;
             }
             .icon{
-                //background: white;
-                border-radius: 15px;
+                img {
+                    border-radius: 15px;
+                    width:90px;
+                    height: 90px;
+                    cursor:pointer;
+                }
                 width:90px;
-                height: 90px;
                 cursor:pointer;
-                background-size: cover;
+                height: 90px;
             }
             .title{
                 margin-top:20px;
+                cursor:pointer;
                 color:white;
                 white-space: nowrap;
-                cursor:pointer;
                 font-size: 15px;
                 font-weight: 400;
                 text-overflow: ellipsis;
