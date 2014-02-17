@@ -123,11 +123,13 @@ gulp.task('assets', function () {
         .pipe(gulp.dest(paths.build));
 });
 
+//copy libs
 gulp.task('libs', function () {
     return gulp.src(libs)
         .pipe(gulp.dest(paths.dist.libs));
 });
 
+//use alongside with chrome extension reload-extension
 gulp.task('reloadExtension', function () {
     gulp.src('README.md')
         .pipe(gulpOpen('', {
