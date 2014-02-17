@@ -10,13 +10,10 @@ var paths = {
 };
 
 var bowerPackages = [
-    // paths.bower + '/requirejs/require.js',
-    // paths.bower + '/when/when.js',
     paths.bower + '/jquery/jquery.min.js',
     paths.bower + '/angular/angular.min.js',
-    // paths.bower + '/jfeed/build/dist/jquery.jfeed.pack.js',
-    // paths.bower + '/moment/min/moment.min.js',
     paths.bower + '/underscore/underscore-min.js',
+    paths.bower + '/angular-fallback-src/fallback-src.js',
     paths.bower + '/async/lib/async.js'
 ];
 

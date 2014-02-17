@@ -3,15 +3,15 @@
     .main
         .left
             ul
-                li(ng-repeat="tag in tags", ng-class="{selected : (selectedTag == tag)}", ng-click="selectTag(tag, $event)") {{tag}}
+                li(ng-repeat="tag in tags", ng-class="{selected : (selectedTag == tag)}", ng-click="selectTag(tag, $event)", ng-bind="tag")
         .right
             .store-explorer
                 .app(ng-repeat="app in selectedTagApps", ng-class-odd="'odd'")
                     .icon
-                        img(ng-src="{{app.icon}}")
+                        img(ng-src="{{app.icon}}", fb-src="./img/dials/default.png")
                     .details
-                        .title {{app.title}}
-                        .tag {{app.tags[0]}}
+                        .title(ng-bind="app.title")
+                        .tag(ng-bind="app.tags[0]")
                         .is-installed(ng-show="isInstalled(app)")
                             span Installed
                         .install-button(ng-show="!isInstalled(app)", ng-click="install(app, $event)")
