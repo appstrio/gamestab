@@ -9,33 +9,45 @@ angular.module('aio.settings').factory('Background', [
             isCacheNeededFlag = false,
             backgrounds = [];
 
+        var loadFromStorage = function (storageKey) {
+            var deferred = $q.defer();
+
+            Storage.get(storageKey, function (items) {
+                if (items && items[storageKey] && angular.isArray(items[storageKey])) {
+                    var _data = items[storageKey];
+                    return deferred.resolve(_data);
+                }
+
+                $log.log('[Background] - did not find local settings.');
+                return deferred.reject();
+            });
+
+            return deferred.promise;
+        };
+
+        var setup = function () {
+            //set default background to local one.
+            setDefaultBackground();
+            //need to cache images
+            isCacheNeededFlag = true;
+            //local backgrounds not found.
+            return getBackgroundsJson()
+                .then(parseBackgrounds)
+                .then(store.bind(null, angular.noop))
+                .then(reportDone.bind(null, 'stored backgrounds'))
+                .then(isReady.resolve.bind(null, background));
+        };
+
         // intializes the service, fetch the background from localStorage or use default
         var init = function () {
             console.debug('[Background] - init');
-            Storage.get(storageKey, function (items) {
-                var _backgrounds = items && items[storageKey];
-                if (_backgrounds && angular.isArray(_backgrounds)) {
-                    $log.log('[Background] - Found backgrounds in localStorage', _backgrounds.length);
-                    getActiveBackground(_backgrounds);
-                    backgrounds = _backgrounds;
+            return loadFromStorage(storageKey)
+                .then(function (_data) {
+                    $log.info('[Background] - Done with loading from storage', _data.length);
+                    getActiveBackground(_data);
+                    backgrounds = _data;
                     return isReady.resolve(background);
-                }
-
-                $log.log('[Background] - did not find backgrounds in localStorage. Getting from remote');
-                //set default background to local one.
-                setDefaultBackground();
-
-                isCacheNeededFlag = true;
-
-                //local backgrounds not found.
-                getBackgroundsJson()
-                    .then(parseBackgrounds)
-                    .then(store.bind(null, angular.noop))
-                    .then(reportDone.bind(null, 'stored backgrounds'))
-                    .then(isReady.resolve.bind(null, background));
-            });
-
-            return isReady.promise;
+                }, setup);
         };
 
         var lazyCacheImages = function () {
@@ -55,7 +67,7 @@ angular.module('aio.settings').factory('Background', [
         };
 
         var reportDone = function (activity) {
-            $log.info('[Background] - finished ' + activity);
+            $log.info('[Background] - done with: ' + activity);
         };
 
         /**

@@ -10,17 +10,16 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
          *
          * @return promise
          */
-        var loadFromStorage = function () {
+        var loadFromStorage = function (storageKey) {
             var deferred = $q.defer();
 
             Storage.get(storageKey, function (items) {
                 if (items && items[storageKey]) {
-                    $log.log('[Config] - got settings from localstorage');
-                    data = items[storageKey];
-                    return deferred.resolve(data);
+                    var _data = items[storageKey];
+                    return deferred.resolve(_data);
                 }
 
-                $log.log('[Config] - did not find local settings. getting from remote.');
+                $log.log('[Config] - did not find local settings.');
                 return deferred.reject();
             });
 
@@ -32,7 +31,7 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
          * @returns {promise}
          */
         var setup = function () {
-            $log.log('[Config] - starting setup');
+            $log.log('[Config] - did not find config in localStorage. Getting from remote');
 
             return partnersJSONUrl()
                 .then(decidePartner)
@@ -47,9 +46,10 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
         var init = function () {
             console.debug('[Config] - init');
             //load config from storage, or run setup to get from remotes
-            return loadFromStorage()
-                .then(function () {
-                    $log.log('[Config] - data loaded from storage');
+            return loadFromStorage(storageKey)
+                .then(function (_data) {
+                    $log.info('[Config] - Done with loading from storage');
+                    data = _data;
                     return data;
                 }, setup);
         };
@@ -71,12 +71,12 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
             partnersList = partnersList.data;
             var deferred = $q.defer();
             var promises = [];
-            var oneHourAgo = Date.now() - 1000 * 60 * 60;
+            var halfHourAgo = Date.now() - 1000 * 60 * 30;
             $log.log('[Config] - got the partnersList', partnersList);
             partnersList.forEach(function (partner) {
                 promises.push(Chrome.history.search({
                     text: partner.partner_install_url_snippit,
-                    startTime: oneHourAgo,
+                    startTime: halfHourAgo,
                     maxResults: 1
                 }));
             });

@@ -1,5 +1,6 @@
 /* global _ */
-angular.module('aio.launcher').factory('Apps', ['$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Image',
+angular.module('aio.launcher').factory('Apps', [
+    '$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Image',
     function ($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Image) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
@@ -29,15 +30,12 @@ angular.module('aio.launcher').factory('Apps', ['$rootScope', '$http', 'Storage'
             var deferred = $q.defer();
 
             Storage.get(storageKey, function (items) {
-                var _apps = items && items[storageKey];
-                if (_apps && angular.isArray(_apps)) {
-                    $log.log('[Apps] - got apps from local storage');
-                    setApps(_apps);
-                    return isReady.resolve(_apps);
+                if (items && items[storageKey] && angular.isArray(items[storageKey])) {
+                    var _apps = items[storageKey];
+                    return deferred.resolve(_apps);
                 }
 
-                $log.log('[Apps] - did not find apps in localStorage, getting from remote');
-                isCacheNeededFlag = true;
+                $log.log('[Apps] - did not find apps in localStorage.');
                 return deferred.reject();
             });
 
@@ -51,10 +49,12 @@ angular.module('aio.launcher').factory('Apps', ['$rootScope', '$http', 'Storage'
          */
         var init = function () {
             console.debug('[Apps] - init');
-            loadFromStorage()
-                .then(null, setup);
-
-            return isReady.promise;
+            return loadFromStorage()
+                .then(function (_apps) {
+                    $log.info('[Apps] - Done with loading from storage');
+                    setApps(_apps);
+                    return isReady.resolve(_apps);
+                });
         };
 
         var setApps = function (_apps) {
@@ -227,6 +227,7 @@ angular.module('aio.launcher').factory('Apps', ['$rootScope', '$http', 'Storage'
          */
         var setup = function () {
             var getDials = [getOrganizedWebApps(), Chrome.management.getAll()];
+            isCacheNeededFlag = true;
 
             $log.log('[Apps] - starting setup');
             return $q.all(getDials)
@@ -378,6 +379,7 @@ angular.module('aio.launcher').factory('Apps', ['$rootScope', '$http', 'Storage'
 
         return {
             isReady: isReady.promise,
+            setup: setup,
             init: init,
             isCacheNeeded: function () {
                 //return true if flag is up, or if any items pass the remote url check
