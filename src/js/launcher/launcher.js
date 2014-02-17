@@ -1,3 +1,4 @@
+/* global _ */
 angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome',
     function (Apps, $log, $timeout, Analytics, Chrome) {
         return function (scope, element) {
@@ -71,10 +72,23 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
              * @return
              */
             scope.uninstallApp = function (app) {
-                Apps.uninstallApp(app);
-                //report analytics
-                Analytics.reportEvent(103, {
-                    label: app.title || app.url
+                if (app.overlay && _.contains(app.overlay, ['settings', 'store'])) {
+                    //can't allow them to uninstall system apps, even by error
+                    return;
+                }
+                if (app.chromeId) {
+                    //need to confirm before delete
+                    var response = window.confirm('Are you sure you want to delete your Chrome App ' + app.title + '?');
+                    if (!response) {
+                        return;
+                    }
+                }
+
+                Apps.uninstallApp(app, function () {
+                    //report analytics
+                    Analytics.reportEvent(103, {
+                        label: app.title || app.url
+                    });
                 });
             };
 

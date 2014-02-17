@@ -18,10 +18,9 @@
                             .more-details Use our smart search box to search the web and launch your favorite web apps
             .settings-background(ng-switch-when="Background", ng-controller="BackgroundCtrl")
                 .loading-backgrounds(ng-show="loading")
-                    .logo(style="text-align:center;")
-                        img(src="./img/favicons/128x128.png")
+                    img(src="img/favicons/128x128.png", style="margin:0 auto;display:block;")
                     h1(style="text-align:center;") Gamestab
-                    h2(ng-show="true", style="text-align:center;") loading backgrounds for the first time. Please wait...
+                    h2(style="text-align:center;") loading backgrounds for the first time. Please wait...
                 .bg-explorer(ng-show="!loading")
                     .bg-sample(ng-repeat="bg in backgrounds", ng-style="{'background-image':'url(' + bg.thumbnail + ')'}", ng-class="{selected : bg.isActive}", ng-click="selectBackground(bg, $event)")
                         //- custom user image

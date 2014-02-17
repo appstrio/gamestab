@@ -342,20 +342,30 @@ angular.module('aio.launcher').factory('Apps', [
          * @param cb
          * @return
          */
-        var uninstallApp = function (app, cb) {
+        var uninstallApp = function (appToUninstall, cb) {
             var found = false;
             cb = cb || angular.noop;
-            angular.forEach(apps, function (page) {
-                angular.forEach(page, function (_app, index) {
-                    if (app.url === _app.url) {
+
+            //first let's find the page in which the app's in
+            _.find(apps, function (page) {
+                return _.find(page, function (app, index) {
+                    if (appToUninstall.url && appToUninstall.url === app.url ||
+                        appToUninstall.chromeId && appToUninstall.chromeId === app.chromeId) {
+
+                        //delete app from page
                         page.splice(index, 1);
                         found = true;
+                        //store new dials
                         store().then(cb);
+                        return found;
                     }
+                    return false;
                 });
             });
+
             if (!found) {
-                cb();
+                $log.warn('App to uninstall was not found', appToUninstall);
+                return cb();
             }
         };
 
