@@ -42,13 +42,12 @@ angular.module('aio.settings').factory('Background', [
         // intializes the service, fetch the background from localStorage or use default
         var init = function () {
             console.debug('[Background] - init');
-            return loadFromStorage(storageKey)
-                .then(function (_data) {
-                    $log.info('[Background] - Done with loading from storage', _data.length);
-                    getActiveBackground(_data);
-                    backgrounds = _data;
-                    return isReady.resolve(background);
-                }, setup);
+            return loadFromStorage(storageKey).then(function (_data) {
+                $log.info('[Background] - Done with loading from storage', _data.length);
+                getActiveBackground(_data);
+                backgrounds = _data;
+                return isReady.resolve(background);
+            });
         };
 
         var lazyCacheImages = function () {
@@ -259,6 +258,7 @@ angular.module('aio.settings').factory('Background', [
             isReady: isReady.promise,
             background: background,
             init: init,
+            setup: setup,
             backgrounds: function () {
                 return backgrounds;
             },

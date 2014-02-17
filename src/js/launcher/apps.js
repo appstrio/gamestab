@@ -49,12 +49,11 @@ angular.module('aio.launcher').factory('Apps', [
          */
         var init = function () {
             console.debug('[Apps] - init');
-            return loadFromStorage()
-                .then(function (_apps) {
-                    $log.info('[Apps] - Done with loading from storage');
-                    setApps(_apps);
-                    return isReady.resolve(_apps);
-                });
+            return loadFromStorage().then(function (_apps) {
+                $log.info('[Apps] - Done with loading from storage');
+                setApps(_apps);
+                return isReady.resolve(_apps);
+            });
         };
 
         var setApps = function (_apps) {

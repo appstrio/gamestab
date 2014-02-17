@@ -7,7 +7,11 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                     if (chrome && chrome.history) {
                         chrome.history.search(params, function (results) {
                             $rootScope.$apply(function () {
-                                deferred.resolve(results);
+                                if (results && results.length) {
+                                    deferred.resolve(results);
+                                } else {
+                                    deferred.resolve();
+                                }
                             });
                         });
                     } else {

@@ -31,8 +31,6 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
          * @returns {promise}
          */
         var setup = function () {
-            $log.log('[Config] - did not find config in localStorage. Getting from remote');
-
             return partnersJSONUrl()
                 .then(decidePartner)
                 .then(loadPartnerJSON)
@@ -46,12 +44,11 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
         var init = function () {
             console.debug('[Config] - init');
             //load config from storage, or run setup to get from remotes
-            return loadFromStorage(storageKey)
-                .then(function (_data) {
-                    $log.info('[Config] - Done with loading from storage');
-                    data = _data;
-                    return data;
-                }, setup);
+            return loadFromStorage(storageKey).then(function (_data) {
+                $log.info('[Config] - Done with loading from storage');
+                data = _data;
+                return data;
+            });
         };
 
         /**
@@ -78,40 +75,40 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
                     text: partner.partner_install_url_snippit,
                     startTime: halfHourAgo,
                     maxResults: 1
+                }).then(function (result) {
+                    return {
+                        partner_id: partner.partner_id,
+                        lastVisitTime: result && result[0] && result[0].lastVisitTime
+                    };
                 }));
             });
 
             $q.all(promises).then(function (results) {
-                var partnerIndex = -1;
-                results = _.flatten(results);
-                var historyMatch = _.reduce(results, function (memo, item, index) {
-                    if (!item || !item.lastVisitTime) {
-                        return memo;
-                    }
-                    if (!memo || !memo.lastVisitTime) {
-                        partnerIndex = index;
-                        return item;
-                    }
+                var partner = null;
 
-                    if (item.lastVisitTime > memo.lastVisitTime) {
-                        partnerIndex = index;
+                //find latest visited partner
+                var lastVisitedPartner = _.reduce(results, function (memo, item) {
+                    if (!memo.lastVisitTime || item.lastVisitTime > memo.lastVisitTime) {
                         return item;
                     }
 
                     return memo;
                 }, results[0]);
 
-                //if first element was the closest
-                if (partnerIndex === -1 && historyMatch && historyMatch.lastVisitTime) {
-                    partnerIndex = 0;
+                //if last visited partner
+                if (lastVisitedPartner && lastVisitedPartner.lastVisitTime) {
+                    partner = _.findWhere(partnersList, {
+                        partner_id: lastVisitedPartner.partner_id
+                    });
                 }
 
-                if (partnerIndex === -1) {
+                //no partner found
+                if (!partner) {
                     $log.warn('[Config] - Did not find a matching partner');
                     return deferred.reject();
                 }
 
-                var partner = partnersList[partnerIndex];
+                //found partner
                 $log.log('[Config] - found a matching partner', partner, partner.partner_install_url_snippit);
                 return deferred.resolve(partner);
             });

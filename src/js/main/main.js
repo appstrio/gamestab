@@ -28,19 +28,26 @@ angular.module('aio.main').controller('MainCtrl', [
         };
 
         //first loading services
-        var loadPhaseOne = function () {
+        var loadFromStorage = function () {
             $log.info('✔ [MainCtrl] - Start phase one');
             return $q.all([Config.init(), Background.init(), Apps.init()]);
         };
 
         //second loading services
-        var loadPhaseTwo = function () {
+        var initializeApp = function () {
             $log.info('✔ [MainCtrl] - Start phase two');
             return $q.all([init(), Analytics.init(), lazyCacheApps()]);
         };
 
+        var loadFromRemotes = function () {
+            return $q.all([Config.setup(), Background.setup()]).then(Apps.setup);
+        };
+
         //load config from local or remote
-        loadPhaseOne().then(null, Apps.setup).then(loadPhaseTwo).then(reportDone);
+        loadFromStorage()
+            .then(null, loadFromRemotes)
+            .then(initializeApp)
+            .then(reportDone);
 
         //get from settings
         $scope.displayTopSearchBox = 1;
