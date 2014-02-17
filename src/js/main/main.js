@@ -3,8 +3,6 @@ angular.module('aio.main').controller('MainCtrl', ['$scope', 'Apps', 'Config', '
 
         console.debug('[MainCtrl] - init');
         var t0 = Date.now();
-        //get from settings
-        $scope.displayTopSearchBox = 1;
 
         var init = function () {
             $log.log('[MainCtrl] - Setting scope vars');
@@ -23,18 +21,25 @@ angular.module('aio.main').controller('MainCtrl', ['$scope', 'Apps', 'Config', '
                 (Date.now() - t0) + ' ms.', 'background:black;color:yellow;');
         };
 
+        var loadPhaseOne = function () {
+            return $q.all([Config.init(), Background.init(), Apps.init()]);
+        };
+
+        var loadPhaseTwo = function () {
+            return $q.all([init(), Analytics.init(), lazyCacheApps()]);
+        };
+
         //load config from local or remote
-        $q.all([Config.init(), Background.init(), Apps.init()])
+        loadPhaseOne()
         //if apps setup is need
         .then(null, Apps.setup)
         //init scope vars
-        .then(init)
-        //load analytics scripts
-        .then(Analytics.init)
-        //detect if app icons need lazy cache
-        .then(lazyCacheApps)
+        .then(loadPhaseTwo)
         //report time
         .then(reportDone);
+
+        //get from settings
+        $scope.displayTopSearchBox = 1;
 
         /**
          * setOverlay

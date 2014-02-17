@@ -19,6 +19,11 @@ angular.module('aio.settings').factory('Background', [
                 }
 
                 $log.log('[Background] - did not find local settings.');
+                //set default background to local one.
+                setDefaultBackground();
+                //need to cache images
+                isCacheNeededFlag = true;
+
                 return deferred.reject();
             });
 
@@ -26,10 +31,6 @@ angular.module('aio.settings').factory('Background', [
         };
 
         var setup = function () {
-            //set default background to local one.
-            setDefaultBackground();
-            //need to cache images
-            isCacheNeededFlag = true;
             //local backgrounds not found.
             return getBackgroundsJson()
                 .then(parseBackgrounds)
