@@ -7,6 +7,7 @@ var jade = require('gulp-jade');
 var usemin = require('gulp-usemin');
 var flatten = require('gulp-flatten');
 var gulpOpen = require('gulp-open');
+var cssmin = require('gulp-cssmin');
 // var gulpif = require('gulp-if');
 var semver = require('semver');
 // var imagemin = require('gulp-imagemin');
@@ -63,6 +64,7 @@ gulp.task('usemin', ['jade', 'libs'], function () {
 gulp.task('less', function () {
     return gulp.src(paths.origin.less)
         .pipe(less())
+        .pipe(cssmin())
         .pipe(gulp.dest(paths.dist.less));
 });
 

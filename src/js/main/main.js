@@ -23,17 +23,17 @@ angular.module('aio.main').controller('MainCtrl', [
         };
 
         var reportDone = function () {
-            console.debug('%c[MainCtrl] - entire startup process took ' +
+            console.debug('%c✔[MainCtrl] - entire startup process took ' +
                 (Date.now() - t0) + ' ms.', 'background:black;color:yellow;');
         };
 
         var loadPhaseOne = function () {
-            $log.info('[MainCtrl] - Start phase one');
+            $log.info('✔ [MainCtrl] - Start phase one');
             return $q.all([Config.init(), Background.init(), Apps.init()]);
         };
 
         var loadPhaseTwo = function () {
-            $log.info('[MainCtrl] - Start phase two');
+            $log.info('✔ [MainCtrl] - Start phase two');
             return $q.all([init(), Analytics.init(), lazyCacheApps()]);
         };
 
