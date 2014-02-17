@@ -85,6 +85,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                 }
 
                 Apps.uninstallApp(app, function () {
+                    console.debug('deleted app');
                     //report analytics
                     Analytics.reportEvent(103, {
                         label: app.title || app.url

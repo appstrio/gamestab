@@ -347,17 +347,14 @@ angular.module('aio.launcher').factory('Apps', [
             cb = cb || angular.noop;
 
             //first let's find the page in which the app's in
-            _.find(apps, function (page) {
+            found = _.find(apps, function (page) {
                 return _.find(page, function (app, index) {
                     if (appToUninstall.url && appToUninstall.url === app.url ||
                         appToUninstall.chromeId && appToUninstall.chromeId === app.chromeId) {
 
                         //delete app from page
                         page.splice(index, 1);
-                        found = true;
-                        //store new dials
-                        store().then(cb);
-                        return found;
+                        return true;
                     }
                     return false;
                 });
@@ -366,6 +363,9 @@ angular.module('aio.launcher').factory('Apps', [
             if (!found) {
                 $log.warn('App to uninstall was not found', appToUninstall);
                 return cb();
+            } else {
+                //store new dials
+                store().then(cb);
             }
         };
 
@@ -395,10 +395,12 @@ angular.module('aio.launcher').factory('Apps', [
                 //return true if flag is up, or if any items pass the remote url check
                 return isCacheNeededFlag || isCacheNeeded();
             },
+            setApps: setApps,
             apps: function () {
                 return apps;
             },
             store: store,
+            organizeAsPages: organizeAsPages,
             getWebAppsDb: getOrganizedWebApps,
             lazyCacheIcons: lazyCacheIcons,
             addNewApp: addNewApp,
