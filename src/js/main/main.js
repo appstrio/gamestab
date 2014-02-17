@@ -1,7 +1,9 @@
-angular.module('aio.main').controller('MainCtrl', ['$scope', 'Apps', 'Config', '$log', 'Background', 'Analytics', '$q',
-    function ($scope, Apps, Config, $log, Background, Analytics, $q) {
+angular.module('aio.main').controller('MainCtrl', [
+    '$scope', 'Apps', 'Config', '$log', 'Constants', 'Background', 'Analytics', '$q', '$timeout',
+    function ($scope, Apps, Config, $log, Constants, Background, Analytics, $q, $timeout) {
 
-        console.debug('[MainCtrl] - init');
+        console.debug('[MainCtrl] - init with version', Constants.APP_VERSION);
+        var lazyCacheAppsTimeout = Constants.CONFIG.lazy_cache_dials_timeout;
         var t0 = Date.now();
 
         var init = function () {
@@ -11,9 +13,13 @@ angular.module('aio.main').controller('MainCtrl', ['$scope', 'Apps', 'Config', '
         };
 
         var lazyCacheApps = function () {
-            if (Apps.isCacheNeeded()) {
-                return Apps.lazyCacheIcons();
-            }
+            $timeout(function () {
+                $log.log('[MainCtrl] - Apps already lazy cached.');
+                if (Apps.isCacheNeeded()) {
+                    $log.log('[MainCtrl] - Initiating lazy cache for dial icons');
+                    return Apps.lazyCacheIcons();
+                }
+            }, lazyCacheAppsTimeout);
         };
 
         var reportDone = function () {
