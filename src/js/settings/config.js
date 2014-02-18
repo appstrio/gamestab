@@ -6,34 +6,12 @@ angular.module('aio.settings').factory('Config', [
             storageKey = C.STORAGE_KEYS.CONFIG;
 
         /**
-         * loadFromStorage
-         * Try to load key from local storage.
-         *
-         * @return promise
-         */
-        var loadFromStorage = function (storageKey) {
-            var deferred = $q.defer();
-
-            Storage.get(storageKey, function (items) {
-                if (items && items[storageKey]) {
-                    var _data = items[storageKey];
-                    return deferred.resolve(_data);
-                }
-
-                $log.log('[Config] - did not find local settings.');
-                return deferred.reject();
-            });
-
-            return deferred.promise;
-        };
-
-        /**
          * Setup config for the first time
          * @returns {promise}
          */
         var setup = function () {
             //load local partners config json
-            return Helpers.loadRemoteJson(C.PARTNERS_JSON_URL).then(decidePartner)
+            return Helpers.loadLocalJson(C.PARTNERS_JSON_URL).then(decidePartner)
             //load relevant partner config json
             .then(Helpers.loadRemoteJson).then(extendConfig, function (e) {
                 $log.warn('Error getting remote config json', e);
@@ -41,14 +19,19 @@ angular.module('aio.settings').factory('Config', [
             });
         };
 
+        var assignData = function (_data) {
+            data = _data;
+            return data;
+        };
+
+        var loadFromStorage = function () {
+            return Helpers.loadFromStorage(storageKey);
+        };
+
         var init = function () {
             console.debug('[Config] - init');
             //load config from storage, or run setup to get from remotes
-            return loadFromStorage(storageKey).then(function (_data) {
-                $log.info('[Config] - Done with loading from storage');
-                data = _data;
-                return data;
-            });
+            return loadFromStorage().then(assignData);
         };
 
         var getLastVisitedPartner = function (results, partnersList) {

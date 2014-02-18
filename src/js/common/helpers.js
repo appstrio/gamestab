@@ -8,8 +8,30 @@ angular.module('aio.common.helpers').factory('Helpers', [
          * @returns {$http promise}
          */
         var loadRemoteJson = function (remoteJsonUrl) {
-            $log.log('getting remote json', remoteJsonUrl);
+            $log.log('[Helpers] - getting remote json', remoteJsonUrl);
             return $http.get(remoteJsonUrl);
+        };
+
+        /**
+         * loadFromStorage
+         * Try to load key from local storage.
+         *
+         * @return promise
+         */
+        var loadFromStorage = function (storageKey) {
+            var deferred = $q.defer();
+
+            Storage.get(storageKey, function (items) {
+                if (items && items[storageKey]) {
+                    var returnData = items[storageKey];
+                    return deferred.resolve(returnData);
+                }
+
+                $log.log('[Helpers] - did not find ' + storageKey + ' in localStorage');
+                return deferred.reject();
+            });
+
+            return deferred.promise;
         };
 
         var store = function (storageKey, data) {
@@ -24,6 +46,10 @@ angular.module('aio.common.helpers').factory('Helpers', [
 
         return {
             loadRemoteJson: loadRemoteJson,
+            //alias
+            loadLocalJson: loadRemoteJson,
+
+            loadFromStorage: loadFromStorage,
             store: store
         };
     }

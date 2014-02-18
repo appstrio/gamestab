@@ -20,26 +20,8 @@ angular.module('aio.launcher').factory('Apps', [
             permanent: true
         }];
 
-        /**
-         * loadFromStorage
-         * Try to load key from local storage.
-         *
-         * @return promise
-         */
         var loadFromStorage = function () {
-            var deferred = $q.defer();
-
-            Storage.get(storageKey, function (items) {
-                if (items && items[storageKey] && angular.isArray(items[storageKey])) {
-                    var _apps = items[storageKey];
-                    return deferred.resolve(_apps);
-                }
-
-                $log.log('[Apps] - did not find apps in localStorage.');
-                return deferred.reject();
-            });
-
-            return deferred.promise;
+            return Helpers.loadFromStorage(storageKey);
         };
 
         var store = function () {

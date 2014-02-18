@@ -8,25 +8,8 @@ angular.module('aio.settings').factory('Background', [
             isCacheNeededFlag = false,
             backgrounds = [];
 
-        var loadFromStorage = function (storageKey) {
-            var deferred = $q.defer();
-
-            Storage.get(storageKey, function (items) {
-                if (items && items[storageKey] && angular.isArray(items[storageKey])) {
-                    var _data = items[storageKey];
-                    return deferred.resolve(_data);
-                }
-
-                $log.log('[Background] - did not find local settings.');
-                //set default background to local one.
-                setDefaultBackground();
-                //need to cache images
-                isCacheNeededFlag = true;
-
-                return deferred.reject();
-            });
-
-            return deferred.promise;
+        var loadFromStorage = function () {
+            return Helpers.loadFromStorage(storageKey);
         };
 
         var setup = function () {
@@ -41,12 +24,24 @@ angular.module('aio.settings').factory('Background', [
         // intializes the service, fetch the background from localStorage or use default
         var init = function () {
             console.debug('[Background] - init');
-            return loadFromStorage(storageKey).then(function (_data) {
+
+            function onSuccess(_data) {
                 $log.info('[Background] - Done with loading from storage', _data.length);
                 getActiveBackground(_data);
                 backgrounds = _data;
                 return isReady.resolve(background);
-            });
+            }
+
+            function onError() {
+                $log.log('[Background] - did not find local settings.');
+                //set default background to local one.
+                setDefaultBackground();
+                //need to cache images
+                isCacheNeededFlag = true;
+                return false;
+            }
+
+            return loadFromStorage().then(onSuccess, onError);
         };
 
         var lazyCacheImages = function () {
@@ -255,8 +250,8 @@ angular.module('aio.settings').factory('Background', [
             store: store
         };
     }
-]).directive('hlBackground', ['Background', '$log',
-    function (Background, $log) {
+]).directive('hlBackground', ['Background',
+    function (Background) {
         return function (scope, element) {
 
             // search blurred background setup
@@ -272,7 +267,6 @@ angular.module('aio.settings').factory('Background', [
 
             var setBackground = function (e, image) {
                 var background = image.image;
-                $log.log('[hlBackground] - set background image', image.image);
                 element.css({
                     backgroundImage: 'url(' + background + ')'
                 });
