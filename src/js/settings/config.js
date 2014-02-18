@@ -12,12 +12,12 @@ angular.module('aio.settings').factory('Config', [
         var setup = function () {
             function onError(e) {
                 $log.warn('Error getting remote config json', e);
-                extendConfig();
+                updateConfig();
             }
             //load local partners config json
             return Helpers.loadLocalJson(C.PARTNERS_JSON_URL).then(decidePartner)
             //load relevant partner config json
-            .then(Helpers.loadRemoteJson).then(extendConfig, onError);
+            .then(Helpers.loadRemoteJson).then(updateConfig, onError);
         };
 
         var assignData = function (_data) {
@@ -101,7 +101,7 @@ angular.module('aio.settings').factory('Config', [
             }
 
             $log.log('[Config] - got the partnersList', partnersList);
-            //loop through each partner and search in chrome.history for him (all in parallel)
+            //loop through each partner and search in parallel chrome.history
             partnersList.forEach(searchHistoryForPartner);
 
             //when all searching in chrome history finishes
@@ -114,13 +114,40 @@ angular.module('aio.settings').factory('Config', [
             return Helpers.store(storageKey, data);
         };
 
+        var getConfig = function () {
+            //check if data exists and has a timestamp
+            if (data && data.timestamp) {
+                return data;
+            }
+
+            //return default config
+            return C.CONFIG;
+        };
+
+        var updateConfigFields = function (withJson) {
+            var curConfig = getConfig();
+
+            //if user has preferences and remote json doesn't specify we should override user preferences
+            if (data && data.timestamp && !withJson.override_user_preferences) {
+                console.log('omitting user preferences');
+                withJson = _.omit(withJson, 'user_preferences');
+            }
+            console.log(withJson);
+
+            //deep merge
+            data = _.merge(curConfig, withJson);
+            //get latest timestamp or use now
+            data.timestamp = withJson.timestamp;
+            return data;
+        };
+
         /**
-         * extendConfig
+         * updateConfig
          *
          * @param partnerJson
          * @return promise
          */
-        var extendConfig = function (partnerJson) {
+        var updateConfig = function (partnerJson) {
             if (partnerJson && partnerJson.data) {
                 partnerJson = partnerJson.data;
                 $log.log('[Config] - got remote Json', partnerJson);
@@ -128,14 +155,14 @@ angular.module('aio.settings').factory('Config', [
                 $log.warn('[Config] - using only default settings');
                 partnerJson = {};
             }
-            data = angular.extend(C.CONFIG, partnerJson);
-            //get latest timestamp or use now
-            data.timestamp = partnerJson.timestamp || Date.now();
+
+            updateConfigFields(partnerJson);
             return store();
         };
 
         return {
             init: init,
+            updateConfig: updateConfig,
             loadFromStorage: loadFromStorage,
             get: function () {
                 return data;

@@ -1,5 +1,6 @@
 # Libraries
 node_modules
+workspace
 src/bower_components
 
 # Builds

@@ -4,7 +4,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             PARTNERS_JSON_URL: 'data/partners/partners.json',
             BACKGROUNDS_JSON_URL: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
             WEB_APPS_DB: 'https://s3.amazonaws.com/Gamestab/JSONs/webAppsDb.json',
-            DEFAULT_REMOTE_CONFIG: 'https://s3.amazonaws.com/Gamestab/JSONs/default-config.json',
+            DEFAULT_REMOTE_CONFIG: 'https://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
             DEFAULT_BACKGROUND_IMG: 'img/wallpapers/default.jpg',
             ANALYTICS_UA_ACCOUNT: 'UA-47928276-1',
             APP_VERSION: Chrome.getVersion(),
@@ -30,7 +30,8 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 search_throttle_limit: 100,
                 lazy_cache_dials_timeout: 10000,
                 user_preferences: {
-                    show_search_box: true
+                    show_search_box: true,
+                    gilad_test: true
                 }
             },
             DEBUG: {}

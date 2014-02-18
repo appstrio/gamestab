@@ -1,6 +1,6 @@
 angular.module('aio.main').controller('MainCtrl', [
-    '$scope', 'Apps', 'Config', '$log', 'Constants', 'Background', 'Analytics', '$q', '$timeout',
-    function ($scope, Apps, Config, $log, Constants, Background, Analytics, $q, $timeout) {
+    '$scope', 'Apps', 'Config', '$log', 'Constants', 'Background', 'Analytics', '$q', '$timeout', 'Helpers',
+    function ($scope, Apps, Config, $log, Constants, Background, Analytics, $q, $timeout, Helpers) {
 
         console.debug('[MainCtrl] - init with version', Constants.APP_VERSION);
         var lazyCacheAppsTimeout = Constants.CONFIG.lazy_cache_dials_timeout;
@@ -36,7 +36,17 @@ angular.module('aio.main').controller('MainCtrl', [
         //second loading services
         var initializeApp = function () {
             $log.info('✔ [MainCtrl] - Start phase two');
-            return $q.all([init(), Analytics.init(), lazyCacheApps()]);
+            return $q.all([init(), Analytics.init(), lazyCacheApps(), testConfig()]);
+        };
+
+        var testConfig = function () {
+            $timeout(function () {
+                Helpers.loadRemoteJson($scope.config.config_update_url).then(function (data) {
+                    if (data && data.data) {
+                        Config.updateConfig(data);
+                    }
+                });
+            }, 4 * 1000);
         };
 
         var loadFromRemotes = function () {
