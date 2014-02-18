@@ -19,6 +19,7 @@ var less = require('gulp-less');
 var config = require('./gulp');
 var pkg;
 
+
 //get paths from config file
 var paths = config.paths;
 var bowerPackages = config.bowerPackages;

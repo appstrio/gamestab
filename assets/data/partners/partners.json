@@ -10,8 +10,4 @@
     "partner_id": "lovedgames",
     "partner_install_url_snippit": "lovedgames.com",
     "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/partner_config_lovedgames.json"
-}, {
-    "partner_id": "gamestab",
-    "partner_install_url_snippit": "gamestab.me",
-    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/gamestab/partner_config_gamestab.json"
 }]

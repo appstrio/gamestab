@@ -34,10 +34,9 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
             return partnersJSONUrl()
                 .then(decidePartner)
                 .then(loadPartnerJSON)
-                .then(finishSetup, function (e) {
-                    //final error handling
-                    $log.warn('[Config] - could not get partnerJSON, using default', e);
-                    return finishSetup();
+                .then(extendConfig, function (e) {
+                    $log.warn('Error getting remote config json', e);
+                    extendConfig();
                 });
         };
 
@@ -49,6 +48,26 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
                 data = _data;
                 return data;
             });
+        };
+
+        var getLastVisitedPartner = function (results, partnersList) {
+            var partner = null;
+            //find latest visited partner
+            var lastVisitedPartner = _.reduce(results, function (memo, item) {
+                if (!memo.lastVisitTime || item.lastVisitTime > memo.lastVisitTime) {
+                    return item;
+                }
+                return memo;
+            }, results[0]);
+
+            //if last visited partner
+            if (lastVisitedPartner && lastVisitedPartner.lastVisitTime) {
+                partner = _.findWhere(partnersList, {
+                    partner_id: lastVisitedPartner.partner_id
+                });
+            }
+
+            return partner;
         };
 
         /**
@@ -70,12 +89,14 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
             var promises = [];
             var halfHourAgo = Date.now() - 1000 * 60 * 30;
             $log.log('[Config] - got the partnersList', partnersList);
+            //loop through each partner and search in chrome.history for him (all in parallel)
             partnersList.forEach(function (partner) {
                 promises.push(Chrome.history.search({
                     text: partner.partner_install_url_snippit,
                     startTime: halfHourAgo,
                     maxResults: 1
                 }).then(function (result) {
+                    //build return object
                     return {
                         partner_id: partner.partner_id,
                         lastVisitTime: result && result[0] && result[0].lastVisitTime
@@ -83,34 +104,22 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
                 }));
             });
 
+            //when all searching in chrome history finishes
             $q.all(promises).then(function (results) {
-                var partner = null;
-
-                //find latest visited partner
-                var lastVisitedPartner = _.reduce(results, function (memo, item) {
-                    if (!memo.lastVisitTime || item.lastVisitTime > memo.lastVisitTime) {
-                        return item;
-                    }
-
-                    return memo;
-                }, results[0]);
-
-                //if last visited partner
-                if (lastVisitedPartner && lastVisitedPartner.lastVisitTime) {
-                    partner = _.findWhere(partnersList, {
-                        partner_id: lastVisitedPartner.partner_id
-                    });
-                }
+                var remoteUrl;
+                var partner = getLastVisitedPartner(results, partnersList);
 
                 //no partner found
                 if (!partner) {
                     $log.warn('[Config] - Did not find a matching partner');
-                    return deferred.reject();
+                    remoteUrl = C.DEFAULT_REMOTE_CONFIG;
+                } else {
+                    //found partner
+                    $log.log('[Config] - found a matching partner', partner.partner_id);
+                    remoteUrl = partner.partner_config_json_url;
                 }
 
-                //found partner
-                $log.log('[Config] - found a matching partner', partner, partner.partner_install_url_snippit);
-                return deferred.resolve(partner);
+                return deferred.resolve(remoteUrl);
             });
 
             return deferred.promise;
@@ -120,21 +129,28 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
          * Load partner json from remote
          * @returns {$http promise}
          */
-        var loadPartnerJSON = function (partnerObject) {
-            $log.log('[Config] - getting remote partner json', partnerObject.partner_config_json_url);
-            return $http.get(partnerObject.partner_config_json_url);
+        var loadPartnerJSON = function (remoteJsonUrl) {
+            $log.log('[Config] - getting remote partner json', remoteJsonUrl);
+            return $http.get(remoteJsonUrl);
         };
 
         /**
-         * finishSetup
+         * extendConfig
          *
-         * @param partnerJSON
+         * @param partnerJson
          * @return promise
          */
-        var finishSetup = function (partnerJSON) {
-            var _partnersJSON = partnerJSON && partnerJSON.data || {};
-            $log.log('[Config] - finishing setup with PartnerJSON - ', _partnersJSON);
-            data = angular.extend(C.CONFIG, _partnersJSON);
+        var extendConfig = function (partnerJson) {
+            if (partnerJson && partnerJson.data) {
+                partnerJson = partnerJson.data;
+                $log.log('[Config] - got remote Json', partnerJson);
+            } else {
+                $log.warn('[Config] - using only default settings');
+                partnerJson = {};
+            }
+            data = angular.extend(C.CONFIG, partnerJson);
+            //add timestamp
+            data.updatedAt = Date.now();
             return store();
         };
 

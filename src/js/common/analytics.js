@@ -1,9 +1,10 @@
 //global
 var _gaq = _gaq || [];
 
-angular.module('aio.analytics').factory('Analytics', ['$rootScope', '$log', '$q', 'Constants', '$timeout', 'Chrome',
-    function ($rootScope, $log, $q, C, $timeout, Chrome) {
-
+angular.module('aio.analytics').factory('Analytics', [
+    '$rootScope', '$log', '$q', 'Constants', '$timeout', 'Config', 'AnalyticsEvents',
+    function ($rootScope, $log, $q, C, $timeout, Config, AnalyticsEvents) {
+        var events = AnalyticsEvents;
         /**
          * init
          * Load the analytics script
@@ -22,92 +23,20 @@ angular.module('aio.analytics').factory('Analytics', ['$rootScope', '$log', '$q'
                 s.parentNode.insertBefore(ga, s);
             })();
 
-            //runnig on dev version - no update url
-            //FIXME remove this false
-            if (false && !Chrome.getUpdateUrl()) {
-                console.debug('Setting up local analytics ID of UA-99999999-X');
-                _gaq.push(['_setAccount', 'UA-99999999-X']);
-            } else {
-                console.debug('Setting up online analytics ID of ' + C.ANALYTICS_UA_ACCOUNT);
-                //register account
-                _gaq.push(['_setAccount', C.ANALYTICS_UA_ACCOUNT]);
-            }
-
+            console.debug('Setting up online analytics ID of ' + C.ANALYTICS_UA_ACCOUNT);
+            //register account
+            _gaq.push(['_setAccount', C.ANALYTICS_UA_ACCOUNT]);
+            //required for newtab with no domain
             _gaq.push(['_setDomainName', 'none']);
             //track pageview
             _gaq.push(['_trackPageview']);
+            //track partnerid or default
+            _gaq.push(['_setCustomVar', 1, 'partner_id', Config.get().partner_id, 1]);
             //report app_load
             reportEvent(501, {
                 label: C.APP_VERSION
             });
             $log.log('[Analytics] - done loading...');
-        };
-
-        var events = {
-            101: {
-                category: 'dials',
-                action: 'dial_click'
-            },
-            102: {
-                category: 'dials',
-                action: 'dials_dragging'
-            },
-            103: {
-                category: 'dials',
-                action: 'remove_dial'
-            },
-            201: {
-                category: 'partner_logo',
-                action: 'click'
-            },
-            301: {
-                category: 'search',
-                action: 'search_complete'
-            },
-            302: {
-                category: 'search',
-                action: 'search_focus'
-            },
-            401: {
-                category: 'navigation',
-                action: 'navigation_clicked'
-            },
-            501: {
-                category: 'app_load',
-                action: 'load'
-            },
-            601: {
-                category: 'appstore',
-                action: 'open'
-            },
-            602: {
-                category: 'appstore',
-                action: 'category_click'
-            },
-            603: {
-                category: 'appstore',
-                action: 'add_new_dial'
-            },
-            701: {
-                category: 'settings',
-                action: 'open'
-            },
-            702: {
-                category: 'settings',
-                action: 'category_click'
-            },
-            703: {
-                category: 'settings',
-                action: 'show_search_box'
-            },
-            704: {
-                category: 'settings',
-                action: 'background_select'
-            },
-            705: {
-                category: 'settings',
-                action: 'background_upload'
-            }
         };
 
         /**
