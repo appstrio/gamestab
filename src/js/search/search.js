@@ -260,6 +260,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                 if (Chrome.isChrome()) {
                     // urlBuildParams.jsonp = true;
                     // httpMethod = 'jsonp';
+                    console.log('is chrome');
                 }
 
                 return $http[httpMethod](bingURLBuilder(urlBuildParams, q)).then(function (response) {
@@ -269,12 +270,11 @@ angular.module('aio.search').directive('aioSearchBox', [
                         return 0;
                     }
                 });
-
-            } else {
-                var defer = $q.defer;
-                defer.reject();
-                return defer.promise;
             }
+
+            var defer = $q.defer;
+            defer.reject();
+            return defer.promise;
         };
 
         // wrap a suggestion so it will conform the structure of the suggestion object
@@ -292,10 +292,6 @@ angular.module('aio.search').directive('aioSearchBox', [
     }
 ]).factory('webAppsSuggestions', ['Apps', '$filter', '$q',
     function (Apps, $filter, $q) {
-        /**
-         * Web Apps Suggestions Provider
-         */
-
         var webAppsDB;
 
         /**
@@ -312,7 +308,6 @@ angular.module('aio.search').directive('aioSearchBox', [
                     defer.resolve(webAppsDB);
                 });
             }
-
             return defer.promise;
         };
 
@@ -333,15 +328,14 @@ angular.module('aio.search').directive('aioSearchBox', [
             getSuggestions: getSuggestions
         };
     }
-]).factory('suggestionsData', [
-
+]).factory('suggestionsData',
     function () {
         // service to share the suggestions array between controllers and other services
         return {
             data: []
         };
     }
-]).directive('aioSearchSuggestions', ['suggestionsData',
+).directive('aioSearchSuggestions', ['suggestionsData',
     function (suggestionsData) {
         return function (scope) {
             scope.suggestions = suggestionsData;
