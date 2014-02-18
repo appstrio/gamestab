@@ -250,41 +250,39 @@ angular.module('aio.settings').factory('Background', [
             store: store
         };
     }
-]).directive('hlBackground', ['Background',
-    function (Background) {
-        return function (scope, element) {
+]).directive('hlBackground', function () {
+    return function (scope, element) {
 
-            // search blurred background setup
-            var iframeHTML = '<link href=\'css/bg-iframe.css\' rel=\'stylesheet\') /><div class=\'bg\'></div>',
-                $iframe = $('iframe.blurred-background').eq(0),
-                $iframeContents = $iframe.contents(),
-                $iframeBody = $iframeContents.find('body'),
-                $iframeDiv,
-                iframeShown = false;
+        // search blurred background setup
+        var iframeHTML = '<link href=\'css/bg-iframe.css\' rel=\'stylesheet\') /><div class=\'bg\'></div>',
+            $iframe = $('iframe.blurred-background').eq(0),
+            $iframeContents = $iframe.contents(),
+            $iframeBody = $iframeContents.find('body'),
+            $iframeDiv,
+            iframeShown = false;
 
-            $iframeBody.append(iframeHTML);
-            $iframeDiv = $iframeBody.find('div.bg').eq(0);
+        $iframeBody.append(iframeHTML);
+        $iframeDiv = $iframeBody.find('div.bg').eq(0);
 
-            var setBackground = function (e, image) {
-                var background = image.image;
-                element.css({
-                    backgroundImage: 'url(' + background + ')'
-                });
+        var setBackground = function (e, image) {
+            var background = image.image;
+            element.css({
+                backgroundImage: 'url(' + background + ')'
+            });
 
-                $iframeDiv.css({
-                    backgroundImage: 'url(' + background + ')',
-                    backgroundPosition: 'center calc(50% - 200px)'
-                });
+            $iframeDiv.css({
+                backgroundImage: 'url(' + background + ')',
+                backgroundPosition: 'center calc(50% - 200px)'
+            });
 
-                if (!iframeShown) {
-                    $iframe.show();
-                }
-            };
-
-            scope.$on('setBackgroundImage', setBackground);
+            if (!iframeShown) {
+                $iframe.show();
+            }
         };
-    }
-]).directive('hlCropper', [
+
+        scope.$on('setBackgroundImage', setBackground);
+    };
+}).directive('hlCropper', [
 
     function () {
         return function (scope, element, attrs) {
