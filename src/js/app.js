@@ -2,7 +2,7 @@ angular.module('aio.settings', []);
 angular.module('aio.search', []);
 angular.module('aio.launcher', []);
 angular.module('aio.common', [
-    'aio.chrome', 'aio.file', 'aio.image', 'aio.interactions',
+    'aio.common.helpers', 'aio.chrome', 'aio.file', 'aio.image', 'aio.interactions',
     'aio.overlay', 'aio.storage', 'aio.analytics'
 ]);
 angular.module('aio.main', []);

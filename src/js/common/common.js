@@ -1,3 +1,4 @@
+angular.module('aio.common.helpers', []);
 angular.module('aio.analytics', ['aio.analyticsEvents']);
 angular.module('aio.storage', []);
 angular.module('aio.overlay', []);

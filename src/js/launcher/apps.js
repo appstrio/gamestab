@@ -1,7 +1,7 @@
 /* global _ */
 angular.module('aio.launcher').factory('Apps', [
-    '$rootScope', '$http', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Image',
-    function ($rootScope, $http, Storage, $q, Chrome, C, Config, $log, Image) {
+    '$rootScope', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Image', 'Helpers',
+    function ($rootScope, Storage, $q, Chrome, C, Config, $log, Image, Helpers) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
             cachedSortedWebApps,
@@ -40,6 +40,10 @@ angular.module('aio.launcher').factory('Apps', [
             });
 
             return deferred.promise;
+        };
+
+        var store = function () {
+            return Helpers.store(storageKey, apps);
         };
 
         /**
@@ -244,16 +248,6 @@ angular.module('aio.launcher').factory('Apps', [
             .then(isReady.resolve.bind(null, apps));
         };
 
-        /**
-         * getWebAppsDb
-         *
-         * @return
-         */
-        var getWebAppsDb = function () {
-            $log.log('[Apps] - getting webAppsDb from', C.WEB_APPS_DB);
-            return $http.get(C.WEB_APPS_DB);
-        };
-
         var getOrganizedWebApps = function () {
             // if sorted web apps are sorted are already there, just return them
             if (cachedSortedWebApps) {
@@ -261,7 +255,7 @@ angular.module('aio.launcher').factory('Apps', [
                 defer.resolve(cachedSortedWebApps);
                 return defer.promise;
             }
-            return getWebAppsDb().then(parseWebApps);
+            return Helpers.loadRemoteJson(C.WEB_APPS_DB).then(parseWebApps);
         };
 
         /**
@@ -300,25 +294,6 @@ angular.module('aio.launcher').factory('Apps', [
         };
 
         /**
-         * store
-         *
-         * @return promise
-         */
-        var store = function () {
-            $log.log('[Apps] - Saving apps to storage');
-            var deferred = $q.defer();
-            //need to bind here to resolve deferred
-            Storage.setItem(storageKey, apps, function () {
-                _.defer(function () {
-                    $rootScope.$apply(function () {
-                        deferred.resolve();
-                    });
-                });
-            });
-            return deferred.promise;
-        };
-
-        /**
          * addNewApp
          *
          * @param app
@@ -330,7 +305,7 @@ angular.module('aio.launcher').factory('Apps', [
             app.installTimestamp = Date.now();
             lastAvailablePage.push(app);
             //TODO change whoever calls this to work with promises
-            store().then(cb);
+            return store().then(cb);
         };
 
         /**
@@ -362,10 +337,9 @@ angular.module('aio.launcher').factory('Apps', [
             if (!found) {
                 $log.warn('App to uninstall was not found', appToUninstall);
                 return cb();
-            } else {
-                //store new dials
-                store().then(cb);
             }
+            //store new dials
+            return store().then(cb);
         };
 
         /**
@@ -383,7 +357,6 @@ angular.module('aio.launcher').factory('Apps', [
             apps.push(newPage);
             store();
             return newPage;
-
         };
 
         return {

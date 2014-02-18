@@ -1,8 +1,7 @@
 /* global _ */
-
 angular.module('aio.settings').factory('Background', [
-    '$rootScope', '$http', 'Storage', '$q', 'Image', '$log', 'Constants', 'Chrome',
-    function ($rootScope, $http, Storage, $q, Image, $log, C, Chrome) {
+    '$rootScope', 'Storage', '$q', 'Image', '$log', 'Constants', 'Chrome', 'Helpers',
+    function ($rootScope, Storage, $q, Image, $log, C, Chrome, Helpers) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.BACKGROUNDS,
             background = {},
@@ -32,9 +31,9 @@ angular.module('aio.settings').factory('Background', [
 
         var setup = function () {
             //local backgrounds not found.
-            return getBackgroundsJson()
+            return Helpers.loadRemoteJson(C.BACKGROUNDS_JSON_URL)
                 .then(parseBackgrounds)
-                .then(store.bind(null, angular.noop))
+                .then(store)
                 .then(reportDone.bind(null, 'stored backgrounds'))
                 .then(isReady.resolve.bind(null, background));
         };
@@ -59,7 +58,7 @@ angular.module('aio.settings').factory('Background', [
                         fixedWidth: 160
                     }
                 }))
-                .then(store.bind(null, angular.noop))
+                .then(store)
                 .then(reportDone.bind(null, 'lazy cache images'))
                 .then(function () {
                     isCacheNeededFlag = false;
@@ -142,17 +141,6 @@ angular.module('aio.settings').factory('Background', [
         };
 
         /**
-         * getBackgroundsJson
-         * do a http.GET request to backgrounds json
-         *
-         * @return
-         */
-        var getBackgroundsJson = function () {
-            $log.log('[Background] - getting backgrounds json', C.BACKGROUNDS_JSON_URL);
-            return $http.get(C.BACKGROUNDS_JSON_URL);
-        };
-
-        /**
          * turnOffActiveBackgrounds
          * returns an array of all items that have isActive:true
          *
@@ -211,10 +199,8 @@ angular.module('aio.settings').factory('Background', [
         };
 
         // store background object in the localStorage
-        var store = function (cb) {
-            //enforce function type
-            cb = cb || angular.noop;
-            Storage.setItem(storageKey, backgrounds, cb);
+        var store = function () {
+            return Helpers.store(storageKey, backgrounds);
         };
 
         // handle image file uploads
@@ -239,11 +225,8 @@ angular.module('aio.settings').factory('Background', [
 
                 backgrounds.push(newBackground);
                 broadcastNewBackground(newBackground);
-
-                store(function () {
-                    $rootScope.$apply(function () {
-                        uploading.resolve(file);
-                    });
+                store().then(function () {
+                    uploading.resolve(file);
                 });
             }, function (e) {
                 $rootScope.$apply(function () {

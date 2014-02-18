@@ -1,6 +1,7 @@
 /* global _ */
-angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http', '$q', '$log', '$rootScope', 'Chrome',
-    function (C, Storage, $http, $q, $log, $rootScope, Chrome) {
+angular.module('aio.settings').factory('Config', [
+    'Constants', 'Storage', '$http', '$q', '$log', '$rootScope', 'Chrome', 'Helpers',
+    function (C, Storage, $http, $q, $log, $rootScope, Chrome, Helpers) {
         var data = {},
             storageKey = C.STORAGE_KEYS.CONFIG;
 
@@ -31,13 +32,13 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
          * @returns {promise}
          */
         var setup = function () {
-            return partnersJSONUrl()
-                .then(decidePartner)
-                .then(loadPartnerJSON)
-                .then(extendConfig, function (e) {
-                    $log.warn('Error getting remote config json', e);
-                    extendConfig();
-                });
+            //load local partners config json
+            return Helpers.loadRemoteJson(C.PARTNERS_JSON_URL).then(decidePartner)
+            //load relevant partner config json
+            .then(Helpers.loadRemoteJson).then(extendConfig, function (e) {
+                $log.warn('Error getting remote config json', e);
+                extendConfig();
+            });
         };
 
         var init = function () {
@@ -68,15 +69,6 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
             }
 
             return partner;
-        };
-
-        /**
-         * Get the remote games tab json
-         * @returns {$http promise}
-         */
-        var partnersJSONUrl = function () {
-            $log.log('[Config] - getting partners json', C.PARTNERS_JSON_URL);
-            return $http.get(C.PARTNERS_JSON_URL);
         };
 
         /**
@@ -125,13 +117,8 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
             return deferred.promise;
         };
 
-        /**
-         * Load partner json from remote
-         * @returns {$http promise}
-         */
-        var loadPartnerJSON = function (remoteJsonUrl) {
-            $log.log('[Config] - getting remote partner json', remoteJsonUrl);
-            return $http.get(remoteJsonUrl);
+        var store = function () {
+            return Helpers.store(storageKey, data);
         };
 
         /**
@@ -152,21 +139,6 @@ angular.module('aio.settings').factory('Config', ['Constants', 'Storage', '$http
             //add timestamp
             data.updatedAt = Date.now();
             return store();
-        };
-
-        /**
-         * store
-         *
-         * @return
-         */
-        var store = function () {
-            var deferred = $q.defer();
-            Storage.setItem(storageKey, data, function () {
-                $rootScope.$apply(function () {
-                    deferred.resolve();
-                });
-            });
-            return deferred.promise;
         };
 
         return {
