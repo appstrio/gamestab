@@ -10,13 +10,14 @@ angular.module('aio.settings').factory('Config', [
          * @returns {promise}
          */
         var setup = function () {
+            function onError(e) {
+                $log.warn('Error getting remote config json', e);
+                extendConfig();
+            }
             //load local partners config json
             return Helpers.loadLocalJson(C.PARTNERS_JSON_URL).then(decidePartner)
             //load relevant partner config json
-            .then(Helpers.loadRemoteJson).then(extendConfig, function (e) {
-                $log.warn('Error getting remote config json', e);
-                extendConfig();
-            });
+            .then(Helpers.loadRemoteJson).then(extendConfig, onError);
         };
 
         var assignData = function (_data) {
@@ -36,13 +37,17 @@ angular.module('aio.settings').factory('Config', [
 
         var getLastVisitedPartner = function (results, partnersList) {
             var partner = null;
-            //find latest visited partner
-            var lastVisitedPartner = _.reduce(results, function (memo, item) {
+
+            function findLatestVisitTime(memo, item) {
                 if (!memo.lastVisitTime || item.lastVisitTime > memo.lastVisitTime) {
                     return item;
                 }
                 return memo;
-            }, results[0]);
+            }
+
+            //find latest visited partner
+            var startingPartner = results[0];
+            var lastVisitedPartner = _.reduce(results, findLatestVisitTime, startingPartner);
 
             //if last visited partner
             if (lastVisitedPartner && lastVisitedPartner.lastVisitTime) {
@@ -63,9 +68,8 @@ angular.module('aio.settings').factory('Config', [
             var deferred = $q.defer();
             var promises = [];
             var halfHourAgo = Date.now() - 1000 * 60 * 30;
-            $log.log('[Config] - got the partnersList', partnersList);
-            //loop through each partner and search in chrome.history for him (all in parallel)
-            partnersList.forEach(function (partner) {
+
+            function searchHistoryForPartner(partner) {
                 promises.push(Chrome.history.search({
                     text: partner.partner_install_url_snippit,
                     startTime: halfHourAgo,
@@ -77,10 +81,9 @@ angular.module('aio.settings').factory('Config', [
                         lastVisitTime: result && result[0] && result[0].lastVisitTime
                     };
                 }));
-            });
+            }
 
-            //when all searching in chrome history finishes
-            $q.all(promises).then(function (results) {
+            function getMatchingPartner(results) {
                 var remoteUrl;
                 var partner = getLastVisitedPartner(results, partnersList);
 
@@ -95,7 +98,14 @@ angular.module('aio.settings').factory('Config', [
                 }
 
                 return deferred.resolve(remoteUrl);
-            });
+            }
+
+            $log.log('[Config] - got the partnersList', partnersList);
+            //loop through each partner and search in chrome.history for him (all in parallel)
+            partnersList.forEach(searchHistoryForPartner);
+
+            //when all searching in chrome history finishes
+            $q.all(promises).then(getMatchingPartner);
 
             return deferred.promise;
         };
@@ -119,8 +129,8 @@ angular.module('aio.settings').factory('Config', [
                 partnerJson = {};
             }
             data = angular.extend(C.CONFIG, partnerJson);
-            //add timestamp
-            data.updatedAt = Date.now();
+            //get latest timestamp or use now
+            data.timestamp = partnerJson.timestamp || Date.now();
             return store();
         };
 
