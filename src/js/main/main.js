@@ -33,20 +33,21 @@ angular.module('aio.main').controller('MainCtrl', [
             return $q.all([Config.init(), Background.init(), Apps.init()]);
         };
 
+        var checkConfigExpiration = function () {
+            //check if config needs update
+            if ($scope.config.updatedAt + $scope.config.config_expiration_time < Date.now()) {
+                $log.log('[MainCtrl] - config needs updating...');
+                return Helpers.loadRemoteJson($scope.config.config_update_url).then(Config.updateConfig);
+            }
+
+            $log.log('[MainCtrl] - config is up to date.');
+            return;
+        };
+
         //second loading services
         var initializeApp = function () {
             $log.info('✔ [MainCtrl] - Start phase two');
-            return $q.all([init(), Analytics.init(), lazyCacheApps(), testConfig()]);
-        };
-
-        var testConfig = function () {
-            $timeout(function () {
-                Helpers.loadRemoteJson($scope.config.config_update_url).then(function (data) {
-                    if (data && data.data) {
-                        Config.updateConfig(data);
-                    }
-                });
-            }, 4 * 1000);
+            return $q.all([init(), Analytics.init(), lazyCacheApps(), checkConfigExpiration()]);
         };
 
         var loadFromRemotes = function () {

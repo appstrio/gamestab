@@ -27,11 +27,11 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 partner_id: 'default',
                 dials_per_page: 12,
                 initial_dials_size: 26,
-                search_throttle_limit: 100,
-                lazy_cache_dials_timeout: 10000,
+                search_throttle_limit: 100, //100 ms
+                lazy_cache_dials_timeout: 10000, // 10 seconds
+                config_expiration_time: 14400000, //4 hours
                 user_preferences: {
-                    show_search_box: true,
-                    gilad_test: true
+                    show_search_box: true
                 }
             },
             DEBUG: {}

@@ -128,16 +128,17 @@ angular.module('aio.settings').factory('Config', [
             var curConfig = getConfig();
 
             //if user has preferences and remote json doesn't specify we should override user preferences
-            if (data && data.timestamp && !withJson.override_user_preferences) {
-                console.log('omitting user preferences');
+            if (data && data.updatedAt && !withJson.override_user_preferences) {
+                $log.info('[Config] - merging without user preferences');
                 withJson = _.omit(withJson, 'user_preferences');
+            } else {
+                $log.warn('[Config] - overriding user preferences');
             }
-            console.log(withJson);
 
             //deep merge
             data = _.merge(curConfig, withJson);
             //get latest timestamp or use now
-            data.timestamp = withJson.timestamp;
+            data.updatedAt = Date.now();
             return data;
         };
 
