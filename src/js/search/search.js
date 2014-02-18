@@ -260,7 +260,6 @@ angular.module('aio.search').directive('aioSearchBox', [
                 if (Chrome.isChrome()) {
                     // urlBuildParams.jsonp = true;
                     // httpMethod = 'jsonp';
-                    console.log('is chrome');
                 }
 
                 return $http[httpMethod](bingURLBuilder(urlBuildParams, q)).then(function (response) {

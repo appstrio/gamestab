@@ -4,6 +4,7 @@ angular.module('aio.main').controller('MainCtrl', [
 
         console.debug('[MainCtrl] - init with version', Constants.APP_VERSION);
         var lazyCacheAppsTimeout = Constants.CONFIG.lazy_cache_dials_timeout;
+        var checkConfigTimeout = 3000;
         var t0 = Date.now();
 
         var init = function () {
@@ -34,14 +35,15 @@ angular.module('aio.main').controller('MainCtrl', [
         };
 
         var checkConfigExpiration = function () {
-            //check if config needs update
-            if ($scope.config.updatedAt + $scope.config.config_expiration_time < Date.now()) {
-                $log.log('[MainCtrl] - config needs updating...');
-                return Helpers.loadRemoteJson($scope.config.config_update_url).then(Config.updateConfig);
-            }
+            $timeout(function () {
+                //check if config needs update
+                if ($scope.config.updatedAt + $scope.config.config_expiration_time < Date.now()) {
+                    $log.log('[MainCtrl] - config needs updating...');
+                    return Helpers.loadRemoteJson($scope.config.config_update_url).then(Config.updateConfig);
+                }
 
-            $log.log('[MainCtrl] - config is up to date.');
-            return;
+                $log.log('[MainCtrl] - config is up to date.');
+            }, checkConfigTimeout);
         };
 
         //second loading services
