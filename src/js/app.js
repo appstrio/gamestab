@@ -14,6 +14,7 @@ angular.module('myApp', ['aio.main', 'aio.settings', 'ui.sortable',
     'aio.common', 'aio.launcher', 'aio.search', 'fallback.src', 'ngProgress'
 ]);
 
+//use cross domain requests
 angular.module('myApp').config(['$httpProvider',
     function ($httpProvider) {
         $httpProvider.defaults.useXDomain = true;
