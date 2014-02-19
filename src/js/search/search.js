@@ -257,9 +257,9 @@ angular.module('aio.search').directive('aioSearchBox', [
         var getSuggestions = function (q) {
             var urlBuildParams = {}, httpMethod = 'get';
             if (baseURL) {
-                if (Chrome.isChrome()) {
-                    // urlBuildParams.jsonp = true;
-                    // httpMethod = 'jsonp';
+                if (!Chrome.isChrome()) {
+                    urlBuildParams.jsonp = true;
+                    httpMethod = 'jsonp';
                 }
 
                 return $http[httpMethod](bingURLBuilder(urlBuildParams, q)).then(function (response) {
