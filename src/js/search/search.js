@@ -57,6 +57,9 @@ angular.module('aio.search').directive('aioSearchBox', [
                 async.each(suggestionsProviders, function (provider, cb) {
                     var pushMethod = (provider.priority > 0) ? 'unshift' : 'push';
                     provider.providerObject.getSuggestions(val).then(function (suggestionsResponse) {
+                        if (!suggestionsResponse || !suggestionsResponse.length) {
+                            return cb();
+                        }
                         for (var i = 0; i < provider.maxSuggestions && i < suggestionsResponse.length; ++i) {
                             suggestionsData.data[pushMethod](suggestionsResponse[i]);
                         }
@@ -271,12 +274,17 @@ angular.module('aio.search').directive('aioSearchBox', [
                     httpMethod = 'jsonp';
                 }
 
-                return $http[httpMethod](bingURLBuilder(urlBuildParams, q)).then(function (response) {
+                var url = bingURLBuilder(urlBuildParams, q);
+
+                return $http[httpMethod](url).then(function (response) {
                     if (response && response.data && response.data.length && response.data[1]) {
                         return _.map(response.data[1], wrapSuggestion);
                     } else {
-                        return 0;
+                        return [];
                     }
+                }, function (e) {
+                    console.log('e', e);
+                    return false;
                 });
             }
 
