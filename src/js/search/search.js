@@ -249,15 +249,24 @@ angular.module('aio.search').directive('aioSearchBox', [
             }
         };
 
+        var isIframe = (function (window) {
+            var test;
+            try {
+                test = window.top !== window.self;
+            } catch (e) {
+                test = false;
+            }
+            return test;
+        }(window));
+
         /**
-         * TODO - verify this with Hadar. it isn't correct
          * if chrome extension - use regular GET call
          * if website - use jsnop
          */
         var getSuggestions = function (q) {
             var urlBuildParams = {}, httpMethod = 'get';
             if (baseURL) {
-                if (!Chrome.isChrome()) {
+                if (!Chrome.isChrome() || isIframe) {
                     urlBuildParams.jsonp = true;
                     httpMethod = 'jsonp';
                 }
