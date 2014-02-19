@@ -4,9 +4,6 @@
         "page": "background.html",
         "persistent": false
     },
-    "chrome_url_overrides": {
-        "newtab": "newtab.html"
-    },
     "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self'",
     "default_locale": "en",
     "description": "__MSG_appDescription__",
