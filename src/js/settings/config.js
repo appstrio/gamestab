@@ -85,6 +85,7 @@ angular.module('aio.settings').factory('Config', [
 
             function getMatchingPartner(results) {
                 var remoteUrl;
+                results = results || {};
                 var partner = getLastVisitedPartner(results, partnersList);
 
                 //no partner found
@@ -105,7 +106,7 @@ angular.module('aio.settings').factory('Config', [
             partnersList.forEach(searchHistoryForPartner);
 
             //when all searching in chrome history finishes
-            $q.all(promises).then(getMatchingPartner);
+            $q.all(promises).then(getMatchingPartner, getMatchingPartner);
 
             return deferred.promise;
         };

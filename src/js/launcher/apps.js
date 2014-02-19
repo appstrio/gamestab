@@ -217,7 +217,7 @@ angular.module('aio.launcher').factory('Apps', [
             $log.log('[Apps] - starting setup');
             return $q.all(getDials)
             //organize apps as dials
-            .then(organizeAppsAsDials)
+            .then(organizeAppsAsDials, organizeAppsAsDials)
             //organize apps as pages
             .then(organizeAsPages)
             //save apps to local object

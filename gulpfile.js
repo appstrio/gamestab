@@ -60,6 +60,11 @@ gulp.task('usemin', ['jade', 'libs'], function () {
         .pipe(gulp.dest(paths.build));
 });
 
+gulp.task('copyMaps', function () {
+    gulp.src('src/bower_components/jquery/jquery.min.map')
+        .pipe(gulp.dest('build/js/vendor/'));
+});
+
 //less -> css
 gulp.task('less', function () {
     return gulp.src(paths.origin.less)
@@ -153,5 +158,5 @@ gulp.task('watch', function () {
 
 //default task
 gulp.task('default', ['clean'], function () {
-    gulp.start('assets', 'jade', 'libs', 'less', 'manifest', 'usemin', 'watch');
+    gulp.start('assets', 'copyMaps', 'jade', 'libs', 'less', 'manifest', 'usemin', 'watch');
 });

@@ -42,9 +42,7 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                         });
                     } else {
                         $log.warn('[Chrome] - no permission for chrome management');
-                        $rootScope.$apply(function () {
-                            deferred.resolve();
-                        });
+                        deferred.resolve();
                     }
 
                     return deferred.promise;
