@@ -15,9 +15,13 @@ angular.module('aio.settings').factory('Config', [
                 updateConfig();
             }
             //load local partners config json
-            return Helpers.loadLocalJson(C.PARTNERS_JSON_URL).then(decidePartner)
-            //load relevant partner config json
-            .then(Helpers.loadRemoteJson).then(updateConfig, onError);
+            return Helpers.loadRemoteJson(C.PARTNERS_JSON_URL)
+            //decide which partner
+            .then(decidePartner)
+            //get the partner's json
+            .then(Helpers.loadRemoteJson)
+            //update config
+            .then(updateConfig, onError);
         };
 
         var assignData = function (_data) {

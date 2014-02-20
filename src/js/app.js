@@ -1,4 +1,6 @@
-var isWebsite = true;
+var isDev = true; //jshint ignore:line
+var isWebsite = false;
+
 angular.module('aio.settings', []);
 angular.module('aio.search', []);
 angular.module('aio.launcher', []);
