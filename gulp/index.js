@@ -33,7 +33,9 @@ paths.origin = {
     less: paths.src + '/less/*.less',
     assets: paths.assets + '/**/*',
     manifest: paths.src + '/manifest.json',
-    js: [paths.src + '/js/**/*.js', '!' + paths.src + '/js/vendor/**/*.js']
+    js: paths.src + '/js/client/**/*.js',
+    //js to not mangle/compress/concat
+    unchangedJs: paths.src + '/js/*.js'
 };
 
 paths.dist = {
@@ -41,7 +43,8 @@ paths.dist = {
     libs: paths.build + '/' + paths.vendor,
     minifiedScripts: 'scripts.min.js',
     minifiedLibs: 'vendors.min.js',
-    js: paths.build + '/js'
+    js: paths.build + '/js/client',
+    unchangedJs: paths.build + '/js/'
 };
 
 exports.paths = paths;
