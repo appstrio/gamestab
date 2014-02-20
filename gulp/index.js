@@ -24,7 +24,8 @@ var vendorPackages = [
     paths.src + '/' + paths.vendor + '/jquery.ui.widget.js',
     paths.src + '/' + paths.vendor + '/jquery.ui.mouse.js',
     paths.src + '/' + paths.vendor + '/jquery.ui.sortable.js',
-    paths.src + '/' + paths.vendor + '/sortable.js'
+    paths.src + '/' + paths.vendor + '/sortable.js',
+    paths.src + '/' + paths.vendor + '/ga.js'
 ];
 
 paths.origin = {

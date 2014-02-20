@@ -14,6 +14,14 @@ angular.module('myApp', ['aio.main', 'aio.settings', 'ui.sortable',
     'aio.common', 'aio.launcher', 'aio.search', 'fallback.src', 'ngProgress'
 ]);
 
+//use cross domain requests
+angular.module('myApp').config(['$httpProvider',
+    function ($httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    }
+]);
+
 //first boot angular
 angular.element(document).ready(function () {
     //bootstrap
