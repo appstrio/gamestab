@@ -50,7 +50,7 @@ gulp.task('jade', function () {
 
 gulp.task('usemin', ['jade', 'libs'], function () {
     if (!isProduction) {
-        gulp.start('scripts');
+        gulp.start('clientScripts');
         return;
     }
     gulp.src('build/newtab.html')
@@ -60,9 +60,16 @@ gulp.task('usemin', ['jade', 'libs'], function () {
         .pipe(gulp.dest(paths.build));
 });
 
-gulp.task('copyMaps', function () {
+//copy maps, js etc...
+gulp.task('otherScripts', function () {
     gulp.src('src/bower_components/jquery/jquery.min.map')
         .pipe(gulp.dest('build/js/vendor/'));
+
+    gulp.src(paths.origin.otherJs)
+        .pipe(gulp.dest(paths.dist.otherJs));
+
+    return gulp.src(paths.origin.backgroundJs)
+        .pipe(gulp.dest(paths.dist.backgroundJs));
 });
 
 //less -> css
@@ -82,14 +89,9 @@ gulp.task('zip', function () {
 });
 
 // copy & uglify js scripts
-gulp.task('scripts', function () {
-    gulp.src(paths.origin.js)
-        .pipe(gulp.dest(paths.dist.js));
-
-    console.log(paths.origin.unchangedJs, paths.dist.unchangedJs);
-
-    return gulp.src(paths.origin.unchangedJs)
-        .pipe(gulp.dest(paths.dist.unchangedJs));
+gulp.task('clientScripts', function () {
+    return gulp.src(paths.origin.clientJs)
+        .pipe(gulp.dest(paths.dist.clientJs));
 });
 
 //copy manifest
@@ -163,5 +165,5 @@ gulp.task('watch', function () {
 
 //default task
 gulp.task('default', ['clean'], function () {
-    gulp.start('assets', 'copyMaps', 'jade', 'libs', 'less', 'manifest', 'usemin', 'watch');
+    gulp.start('assets', 'otherScripts', 'jade', 'libs', 'less', 'manifest', 'usemin', 'watch');
 });
