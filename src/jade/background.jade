@@ -1,6 +1,32 @@
 html(ng-csp='ng-csp')
     head
+        meta(charset="utf-8")
         link(href='img/favicons/favicongray16.png', rel='shortcut icon')
         meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
         meta(name='google', content='notranslate')
+
+        script(src='./js/vendor/jquery.min.js')
+        script(src='./js/vendor/angular.min.js')
+
+        <!-- build:js(src) ./js/scripts.min.js -->
+        script(src='./js/app.js')
+        script(src='./js/common/common.js')
+        script(src='./js/common/helpers.js')
+        script(src='./js/common/chrome.js')
+        script(src='./js/common/file.js')
+        script(src='./js/common/analytics.js')
+        script(src='./js/common/analytics-events.js')
+        script(src='./js/common/image.js')
+        script(src='./js/common/longkeyPress.js')
+        script(src='./js/common/overlay.js')
+        script(src='./js/common/storage.js')
+        script(src='./js/settings/constants.js')
+        script(src='./js/settings/account.js')
+        script(src='./js/settings/background.js')
+        script(src='./js/settings/config.js')
+        script(src='./js/search/search.js')
+        script(src='./js/launcher/apps.js')
+        script(src='./js/launcher/overlays.js')
+        script(src='./js/launcher/launcher.js')
+        script(src='./js/main/main.js')
     body
