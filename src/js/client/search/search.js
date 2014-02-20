@@ -49,46 +49,26 @@ angular.module('aio.search').directive('aioSearchBox', [
                 //scope.currentSuggestion = -1;
             };
 
+            var port = chrome.runtime.connect({
+                name: 'suggestions'
+            });
+
+            port.onMessage.addListener(function (msg) {
+                if (msg.searchResults) {
+                    suggestionsData.data = msg.searchResults;
+                    showSuggestionsBox();
+                    autoSelectFirst();
+                }
+            });
+
             // get the results using a throttled function
             var getResults = _.throttle(function (val) {
                 suggestionsData.data = [];
                 scope.currentSuggestion = -1;
 
-                async.each(suggestionsProviders, function (provider, cb) {
-                    var pushMethod = (provider.priority > 0) ? 'unshift' : 'push';
-                    provider.providerObject.getSuggestions(val).then(function (suggestionsResponse) {
-                        if (!suggestionsResponse || !suggestionsResponse.length) {
-                            return cb();
-                        }
-                        for (var i = 0; i < provider.maxSuggestions && i < suggestionsResponse.length; ++i) {
-                            suggestionsData.data[pushMethod](suggestionsResponse[i]);
-                        }
-                        if (provider.autoShowSuggestionsBox) {
-                            showSuggestionsBox();
-                            autoSelectFirst();
-                        }
-                        cb();
-                    }, function () {
-                        cb();
-                    });
-
-                }, function () {
-
+                port.postMessage({
+                    searchVal: val
                 });
-
-                //bingSearchSuggestions.getSuggestions(val).then(function(suggestionsResponse){
-                //    for(var i = 0; i < 3 && i < suggestionsResponse.length; ++i){
-                //        suggestionsData.data.unshift(suggestionsResponse[i]);
-                //    }
-                //    showSuggestionsBox();
-                //});
-                //
-                //webAppsSuggestions.getSuggestions(val).then(function(suggestionsResponse){
-                //    for(var i = 0; i < 3 && i < suggestionsResponse.length; ++i){
-                //        suggestionsData.data.push(suggestionsResponse[i]);
-                //    }
-                //
-                //});
 
             }, throttleLimit);
 

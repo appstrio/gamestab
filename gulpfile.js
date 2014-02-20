@@ -158,7 +158,9 @@ gulp.task('watch', function () {
 
     gulp.watch(libs, ['libs'].concat(afterTasks));
     gulp.watch(paths.origin.assets, ['assets'].concat(afterTasks));
-    gulp.watch(paths.origin.js, ['scripts'].concat(afterTasks));
+    gulp.watch(paths.origin.clientJs, ['usemin'].concat(afterTasks));
+    gulp.watch(paths.origin.otherJs, ['otherScripts'].concat(afterTasks));
+    gulp.watch(paths.origin.backgroundJs, ['otherScripts'].concat(afterTasks));
     gulp.watch(paths.src + '/less/**/*.less', ['less'].concat(afterTasks));
     gulp.watch(paths.origin.jade, ['jade'].concat(afterTasks));
 });
