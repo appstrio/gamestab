@@ -1,5 +1,5 @@
 var isDev = true; //jshint ignore:line
-var isWebsite = true;
+var isWebsite = false;
 
 angular.module('aio.settings', []);
 angular.module('aio.search', []);
