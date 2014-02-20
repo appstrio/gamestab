@@ -1,3 +1,6 @@
+var isDev = true; //jshint ignore:line
+var isWebsite = false;
+
 angular.module('aio.settings', []);
 angular.module('aio.search', []);
 angular.module('aio.launcher', []);
@@ -14,13 +17,15 @@ angular.module('myApp', ['aio.main', 'aio.settings', 'ui.sortable',
     'aio.common', 'aio.launcher', 'aio.search', 'fallback.src', 'ngProgress'
 ]);
 
-//use cross domain requests
-angular.module('myApp').config(['$httpProvider',
-    function ($httpProvider) {
-        $httpProvider.defaults.useXDomain = true;
-        delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    }
-]);
+if (isWebsite) {
+    //use cross domain requests - needed if website
+    angular.module('myApp').config(['$httpProvider',
+        function ($httpProvider) {
+            $httpProvider.defaults.useXDomain = true;
+            delete $httpProvider.defaults.headers.common['X-Requested-With'];
+        }
+    ]);
+}
 
 //first boot angular
 angular.element(document).ready(function () {

@@ -1,4 +1,4 @@
-//global
+/* global isWebsite,isDev */
 var _gaq = _gaq || [];
 
 angular.module('aio.analytics').factory('Analytics', [
@@ -18,14 +18,26 @@ angular.module('aio.analytics').factory('Analytics', [
                 var ga = document.createElement('script');
                 ga.type = 'text/javascript';
                 ga.async = true;
-                ga.src = 'js/vendor/ga.js';
+                if (isWebsite) {
+                    //use local version
+                    ga.src = 'js/vendor/ga.js';
+                } else {
+                    //use remote version
+                    ga.src = 'https://ssl.google-analytics.com/ga.js';
+                }
                 var s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(ga, s);
             })();
 
-            console.debug('Setting up online analytics ID of ' + C.ANALYTICS_UA_ACCOUNT);
             //register account
-            _gaq.push(['_setAccount', C.ANALYTICS_UA_ACCOUNT]);
+            if (!isDev) {
+                console.debug('Setting up online analytics ID of ' + C.ANALYTICS_UA_ACCOUNT);
+                _gaq.push(['_setAccount', C.ANALYTICS_UA_ACCOUNT]);
+            } else {
+                //push bad account on purpose
+                console.debug('Not working with live analytics - running dev mode');
+                _gaq.push(['_setAccount', 'UA-99999999-X']);
+            }
             //required for newtab with no domain
             _gaq.push(['_setDomainName', 'none']);
             //track pageview
