@@ -1,7 +1,7 @@
-angular.module('backgroundService', ['chromeWrapper']);
+angular.module('backgroundService', []);
 
 angular.module('backgroundService').controller('MainCtrl', [
-    'searchSuggestions', 'Chrome',
+    'searchSuggestions', 'chromeWrapper',
     function (searchSuggestions, chromeWrapper) {
 
         var maxSuggestions = 3;

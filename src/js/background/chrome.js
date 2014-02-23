@@ -1,5 +1,4 @@
-angular.module('chromeWrapper', []);
-angular.module('chromeWrapper').factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
+angular.module('backgroundService').factory('chromeWrapper', ['$rootScope', '$timeout', '$q', '$log',
     function ($rootScope, $timeout, $q, $log) {
         //detect if chrome
         var isChrome = typeof chrome !== 'undefined';
