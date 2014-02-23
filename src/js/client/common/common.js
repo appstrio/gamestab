@@ -6,3 +6,4 @@ angular.module('aio.interactions', []);
 angular.module('aio.image', []);
 angular.module('aio.file', []);
 angular.module('aio.chrome', []);
+angular.module('communications', []);

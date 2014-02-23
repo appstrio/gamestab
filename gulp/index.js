@@ -9,6 +9,8 @@ var paths = {
     src: 'src',
 };
 
+
+
 var bowerPackages = [
     paths.bower + '/jquery/jquery.min.js',
     paths.bower + '/angular/angular.min.js',
@@ -27,6 +29,9 @@ var vendorPackages = [
     paths.src + '/' + paths.vendor + '/sortable.js',
     paths.src + '/' + paths.vendor + '/ga.js'
 ];
+
+
+
 
 paths.origin = {
     jade: paths.src + '/jade/**/*.jade',

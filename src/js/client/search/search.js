@@ -1,6 +1,6 @@
 angular.module('aio.search').directive('aioSearchBox', [
-    'Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions', '$rootScope',
-    function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions, $rootScope) {
+    'Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions', '$rootScope', 'bConnect',
+    function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions, $rootScope, bConnect) {
         return function (scope, element) {
             var throttleLimit = C.CONFIG.search_throttle_limit,
                 searchURL = Config.search_url || C.CONFIG.search_url,
@@ -40,13 +40,9 @@ angular.module('aio.search').directive('aioSearchBox', [
                 }
             });
 
-            //connect to background
-            var port = chrome.runtime.connect({
-                name: 'suggestions'
-            });
+            var bConnection = new bConnect.RuntimeConnect('suggestions');
 
-            //listen for background messages
-            port.onMessage.addListener(function (msg) {
+            bConnection.defineHandler(function (msg) {
                 if (msg.searchResults) {
                     $rootScope.$apply(function () {
                         suggestionsData.data = msg.searchResults;
@@ -66,8 +62,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     howMany: 5
                 };
 
-                //get suggestions from background
-                port.postMessage(postObj);
+                bConnection.postMessage(postObj);
             }, throttleLimit);
 
             // When user click enter on the visible/hidden input boxes OR clicks on suggestion

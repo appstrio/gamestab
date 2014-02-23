@@ -1,9 +1,8 @@
-/* global _ */
-angular.module('backgroundService', []);
+angular.module('backgroundService', ['chromeWrapper']);
 
 angular.module('backgroundService').controller('MainCtrl', [
-    'searchSuggestions',
-    function (searchSuggestions) {
+    'searchSuggestions', 'Chrome',
+    function (searchSuggestions, chromeWrapper) {
 
         var maxSuggestions = 3;
         /**
@@ -30,6 +29,10 @@ angular.module('backgroundService').controller('MainCtrl', [
             }
         }
 
+        function chromeHandler(port, msg) {
+            console.log('Filename: backapp.js', 'Line: 33', 'msg:', msg);
+        }
+
         /**
          * Wrapper for chrome runtime communications with client
          *
@@ -38,6 +41,10 @@ angular.module('backgroundService').controller('MainCtrl', [
         chrome.runtime.onConnect.addListener(function (port) {
             if (port.name === 'suggestions') {
                 port.onMessage.addListener(suggestionsHandler.bind(null, port));
+            } else if (port.name === 'chrome') {
+                port.onMessage.addListener(chromeHandler.bind(null, port));
+            } else {
+                console.error('unrecognized port name', port.name);
             }
         });
     }

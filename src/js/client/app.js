@@ -6,7 +6,7 @@ angular.module('aio.search', []);
 angular.module('aio.launcher', []);
 angular.module('aio.common', [
     'aio.common.helpers', 'aio.chrome', 'aio.file', 'aio.image', 'aio.interactions',
-    'aio.overlay', 'aio.storage', 'aio.analytics'
+    'aio.overlay', 'aio.storage', 'aio.analytics', 'communications'
 ]);
 angular.module('aio.main', []);
 
