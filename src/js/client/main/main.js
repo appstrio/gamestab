@@ -39,7 +39,8 @@ angular.module('aio.main').controller('MainCtrl', [
                 //check if config needs update
                 if ($scope.config.updatedAt + $scope.config.config_expiration_time < Date.now()) {
                     $log.log('[MainCtrl] - config needs updating...');
-                    return Helpers.loadRemoteJson($scope.config.config_update_url).then(Config.updateConfig);
+                    return Helpers.loadRemoteJson($scope.config.partner_config_json_url)
+                        .then(Config.updateConfig);
                 }
 
                 $log.log('[MainCtrl] - config is up to date.');

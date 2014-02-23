@@ -22,7 +22,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             CONFIG: {
                 search_url: 'http://www.google.com/search?q=',
                 suggestions_url: 'http://api.bing.com/osjson.aspx?Market=en-us&query=',
-                config_update_url: 'http://s3.amazonaws.com/Gamestab/JSONs/default-config.json',
+                partner_config_json_url: 'http://s3.amazonaws.com/Gamestab/JSONs/default-config.json',
                 suggestions_type: 'bing',
                 partner_id: 'default',
                 dials_per_page: 12,

@@ -130,6 +130,7 @@ angular.module('aio.settings').factory('Config', [
         };
 
         var updateConfigFields = function (withJson) {
+            console.log('Filename: config.js', 'Line: 133', 'withJson:',  withJson);
             var curConfig = getConfig();
 
             //if user has preferences and remote json doesn't specify we should override user preferences
