@@ -251,7 +251,7 @@ angular.module('aio.search').directive('aioSearchBox', [
         var getSuggestions = function (q) {
             var urlBuildParams = {}, httpMethod = 'get';
             if (baseURL) {
-                if (!Chrome.isExtension() || isIframe) {
+                if (!Chrome.isExtension || isIframe) {
                     urlBuildParams.jsonp = true;
                     httpMethod = 'jsonp';
                 }

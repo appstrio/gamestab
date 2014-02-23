@@ -1,6 +1,10 @@
 angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
     function ($rootScope, $timeout, $q, $log) {
+        //detect if chrome
         var isChrome = typeof chrome !== 'undefined';
+
+        //detect if chrome extension
+        var isExtension = isChrome && Boolean(chrome.extension);
 
         var history = {
             search: function (params) {
@@ -61,15 +65,12 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
         };
         var extension = {
             getURL: function (url) {
-                if (isChrome && chrome.extension) {
+                if (isExtension) {
                     return chrome.extension.getURL(url);
                 } else {
                     return 0;
                 }
             }
-        };
-        var isExtension = function () {
-            return isChrome && !! chrome.extension;
         };
 
         return {
