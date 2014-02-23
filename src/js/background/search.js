@@ -1,4 +1,4 @@
-angular.module('backgroundService').factory('searchSuggestions', [
+angular.module('background').factory('searchSuggestions', [
     'bingSearchSuggestions',
     function (bingSearchSuggestions) {
 
@@ -28,7 +28,7 @@ angular.module('backgroundService').factory('searchSuggestions', [
     }
 ]);
 
-angular.module('backgroundService').factory('bingSearchSuggestions', ['$http',
+angular.module('background').factory('bingSearchSuggestions', ['$http',
     function ($http) {
         /**
          * Bing Suggestions Provider

@@ -24,7 +24,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                         label: app.title || app.url,
                         waitForFinish: true
                     }).then(function () {
-                        window.location = app.url;
+                        window.parent.location = app.url;
                     });
                     return;
                 }

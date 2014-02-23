@@ -1,6 +1,6 @@
-angular.module('backgroundService', []);
+angular.module('background', []);
 
-angular.module('backgroundService').controller('MainCtrl', [
+angular.module('background').controller('MainCtrl', [
     'searchSuggestions', 'chromeWrapper',
     function (searchSuggestions, chromeWrapper) {
 

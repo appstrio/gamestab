@@ -1,7 +1,7 @@
 /* global _ */
 angular.module('aio.settings').factory('Config', [
-    'Constants', 'Storage', '$http', '$q', '$log', '$rootScope', 'Chrome', 'Helpers',
-    function (C, Storage, $http, $q, $log, $rootScope, Chrome, Helpers) {
+    'Constants', 'Storage', '$http', '$q', '$log', '$rootScope', 'Chrome', 'Helpers', 'bConnect',
+    function (C, Storage, $http, $q, $log, $rootScope, Chrome, Helpers, bConnect) {
         var data = {},
             storageKey = C.STORAGE_KEYS.CONFIG;
 
@@ -17,8 +17,10 @@ angular.module('aio.settings').factory('Config', [
             //load local partners config json
             return Helpers.loadRemoteJson(C.PARTNERS_JSON_URL)
             //decide which partner
-            .then(decidePartner)
-            //get the partner's json
+            .then(getHistoryByPartner)
+            //get the matching partner
+            .then(getMatchingPartner)
+            //get remote partner's json
             .then(Helpers.loadRemoteJson)
             //update config
             .then(updateConfig, onError);
@@ -39,39 +41,50 @@ angular.module('aio.settings').factory('Config', [
             return loadFromStorage().then(assignData);
         };
 
-        var getLastVisitedPartner = function (results, partnersList) {
-            var partner = null;
+        var getLastVisitedPartner = function (results) {
+            //get only results with valid lastVisitTime
+            results = _.filter(results, 'lastVisitTime');
+            if (!results || !results.length) {
+                return null;
+            }
 
             function findLatestVisitTime(memo, item) {
-                if (!memo.lastVisitTime || item.lastVisitTime > memo.lastVisitTime) {
-                    return item;
-                }
-                return memo;
+                return item.lastVisitTime > memo.lastVisitTime ? item : memo;
             }
 
             //find latest visited partner
-            var startingPartner = results[0];
-            var lastVisitedPartner = _.reduce(results, findLatestVisitTime, startingPartner);
+            return _.reduce(results, findLatestVisitTime, results[0]);
+        };
 
-            //if last visited partner
-            if (lastVisitedPartner && lastVisitedPartner.lastVisitTime) {
-                partner = _.findWhere(partnersList, {
-                    partner_id: lastVisitedPartner.partner_id
-                });
+        var getMatchingPartner = function (results) {
+            var remoteUrl;
+            results = results || {};
+            var partner = getLastVisitedPartner(results);
+
+            //no partner found
+            if (!partner) {
+                $log.warn('[Config] - Did not find a matching partner');
+                remoteUrl = C.DEFAULT_REMOTE_CONFIG;
+            } else {
+                //found partner
+                $log.log('[Config] - found a matching partner', partner.partner_id);
+                remoteUrl = partner.partner_config_json_url;
             }
 
-            return partner;
+            return remoteUrl;
         };
 
         /**
          * Decide which partner "owns" the app by the partner object install_url_snippit
          * @returns {promise(PARTNER_SETUP_OBJECT)}
          */
-        var decidePartner = function (partnersList) {
+        var getHistoryByPartner = function (partnersList) {
             partnersList = partnersList.data;
-            var deferred = $q.defer();
             var promises = [];
             var halfHourAgo = Date.now() - 1000 * 60 * 30;
+
+            var bConnection = new bConnect.RuntimeConnect('chrome');
+            bConnection.postMessage('hello');
 
             function searchHistoryForPartner(partner) {
                 promises.push(Chrome.history.search({
@@ -81,28 +94,13 @@ angular.module('aio.settings').factory('Config', [
                 }).then(function (result) {
                     //build return object
                     return {
-                        partner_id: partner.partner_id,
+                        partner: partner,
                         lastVisitTime: result && result[0] && result[0].lastVisitTime
                     };
+                }, function (e) {
+                    console.warn('Bad partner search', partner.partner_id, e);
+                    return;
                 }));
-            }
-
-            function getMatchingPartner(results) {
-                var remoteUrl;
-                results = results || {};
-                var partner = getLastVisitedPartner(results, partnersList);
-
-                //no partner found
-                if (!partner) {
-                    $log.warn('[Config] - Did not find a matching partner');
-                    remoteUrl = C.DEFAULT_REMOTE_CONFIG;
-                } else {
-                    //found partner
-                    $log.log('[Config] - found a matching partner', partner.partner_id);
-                    remoteUrl = partner.partner_config_json_url;
-                }
-
-                return deferred.resolve(remoteUrl);
             }
 
             $log.log('[Config] - got the partnersList', partnersList);
@@ -110,9 +108,7 @@ angular.module('aio.settings').factory('Config', [
             partnersList.forEach(searchHistoryForPartner);
 
             //when all searching in chrome history finishes
-            $q.all(promises).then(getMatchingPartner, getMatchingPartner);
-
-            return deferred.promise;
+            return $q.all(promises);
         };
 
         var store = function () {

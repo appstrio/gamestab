@@ -3,7 +3,7 @@ var gutil = require('gulp-util');
 var clean = require('gulp-clean');
 var jade = require('gulp-jade');
 var filter = require('gulp-filter');
-var using = require('gulp-using');
+// var using = require('gulp-using');
 var usemin = require('gulp-usemin');
 var inject = require('gulp-inject');
 var flatten = require('gulp-flatten');
@@ -14,7 +14,6 @@ var semver = require('semver');
 // var imagemin = require('gulp-imagemin');
 // var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
-var zip = require('gulp-zip');
 var bump = require('gulp-bump');
 var less = require('gulp-less');
 var config = require('./gulp');
@@ -23,13 +22,12 @@ var pkg;
 //get paths from config file
 var paths = config.paths;
 var bowerPackages = config.bowerPackages;
-var vendorPackages = config.vendorPackages;
-var libs = bowerPackages.concat(vendorPackages);
 
 var getPackageJson = function () {
     var fs = require('fs');
 
-    //use read file instead of require because require caches the results
+    //use read file inste;w
+    //jd of require because require caches the results
     pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
     return pkg;
 };
@@ -38,90 +36,64 @@ var getPackageJson = function () {
 var newtabFilter = filter(['newtab.jade']);
 var backgroundFilter = filter(['background.jade']);
 
-//to set production env use --production in command line
-//production will minify & concat scripts/libs
-var isProduction = Boolean(gutil.env.production);
+var injectToNewTab = function () {
+    return inject(gulp.src(['src/js/client/**/*.js'], {
+        read: false
+    }), {
+        ignorePath: 'src'
+    });
+};
 
-//jade -> html
+var injectToBackground = function () {
+    return inject(gulp.src(['src/js/background/**/*.js'], {
+        read: false
+    }), {
+        ignorePath: 'src'
+    });
+};
+
+//inject script tags to selected jade files, and then convert all jade files to html
 gulp.task('jade', function () {
-    return gulp.src(paths.origin.jade)
+    gulp.src('src/jade/**/*.jade')
         .pipe(flatten())
         .pipe(newtabFilter)
-        .pipe(inject(gulp.src(['src/js/client/**/*.js'], {
-            read: false
-        }), {
-            ignorePath: 'src'
-        }))
+        .pipe(injectToNewTab())
         .pipe(newtabFilter.restore())
         .pipe(backgroundFilter)
-        .pipe(inject(gulp.src(['src/js/background/**/*.js'], {
-            read: false
-        }), {
-            ignorePath: 'src'
-        }))
+        .pipe(injectToBackground())
         .pipe(backgroundFilter.restore())
         .pipe(jade({
-            pretty: !isProduction
+            pretty: true
         }))
-        .pipe(gulp.dest(paths.build));
+        .pipe(gulp.dest('build/'));
 });
 
 // html -> minify scripts
 gulp.task('usemin', ['jade', 'libs'], function () {
-    if (!isProduction) {
-        return gulp.start('clientScripts');
-    }
-
     return gulp.src('build/newtab.html')
         .pipe(usemin({
             jsmin: uglify()
         }))
-        .pipe(gulp.dest(paths.build));
+        .pipe(gulp.dest('build/'));
 });
 
-//copy maps, js etc...
-gulp.task('otherScripts', function () {
-    gulp.src('src/bower_components/jquery/jquery.min.map')
-        .pipe(gulp.dest('build/js/vendor/'));
-
-    gulp.src(paths.origin.otherJs)
-        .pipe(gulp.dest(paths.dist.otherJs));
-
-    return gulp.src(paths.origin.backgroundJs)
-        .pipe(gulp.dest(paths.dist.backgroundJs));
+//all scripts no libs
+gulp.task('scripts', function () {
+    return gulp.src('src/js/**/*.js')
+        .pipe(gulp.dest('build/js/'));
 });
 
 //less -> css
 gulp.task('less', function () {
-    return gulp.src(paths.origin.less)
+    return gulp.src('src/less/*.less')
         .pipe(less())
         .pipe(cssmin())
-        .pipe(gulp.dest(paths.dist.less));
-});
-
-// zip build folder. buggy
-gulp.task('zip', function () {
-    var _pkg = getPackageJson();
-    gulp.src('build/**/*')
-        .pipe(zip('gamesTab.' + _pkg.version + '.zip'))
-        .pipe(gulp.dest('builds'));
-});
-
-// copy & uglify js scripts
-gulp.task('clientScripts', function () {
-    return gulp.src(paths.origin.clientJs)
-        .pipe(gulp.dest(paths.dist.clientJs));
-});
-
-//copy manifest
-gulp.task('manifest', function () {
-    return gulp.src(paths.origin.manifest)
-        .pipe(gulp.dest(paths.build));
+        .pipe(gulp.dest('build/css/'));
 });
 
 // build folder -> *boom*
 gulp.task('clean', function () {
-    return gulp.src(paths.build, {
+    return gulp.src(['build/', 'dist/'], {
         read: false
     }).pipe(clean());
 });
@@ -150,21 +122,24 @@ gulp.task('bump', function () {
 });
 
 //handle assets
-gulp.task('assets', function () {
-    //copy regular assets
-    gulp.src(paths.origin.assets)
-        .pipe(gulp.dest(paths.build));
-});
+gulp.task('copyAssets', function () {
+    gulp.src(bowerPackages)
+        .pipe(gulp.dest('build/js/vendor'));
 
-//copy libs
-gulp.task('libs', function () {
-    return gulp.src(libs)
-        .pipe(gulp.dest(paths.dist.libs));
+    gulp.src(paths.origin.manifest)
+        .pipe(gulp.dest('build/'));
+
+    gulp.src('src/bower_components/jquery/jquery.min.map')
+        .pipe(gulp.dest('build/js/vendor/'));
+
+    //copy regular assets
+    return gulp.src(paths.origin.assets)
+        .pipe(gulp.dest('build/'));
 });
 
 //use alongside with chrome extension reload-extension
 gulp.task('reloadExtension', function () {
-    gulp.src('README.md')
+    return gulp.src('README.md')
         .pipe(gulpOpen('', {
             url: 'http://reload.extensions',
             app: 'chrome'
@@ -173,18 +148,17 @@ gulp.task('reloadExtension', function () {
 
 //all tasks are watch -> bump patch version -> reload extension (globally enabled)
 gulp.task('watch', function () {
-    var afterTasks = [];
+    gulp.watch(['src/js/**/*'], ['scripts', 'jade']);
+    gulp.watch(['assets/**/*'], ['assets']);
+    gulp.watch(['src/less/**/*'], ['less']);
+    gulp.watch(['src/jade/**/*'], ['jade']);
+});
 
-    gulp.watch(libs, ['libs'].concat(afterTasks));
-    gulp.watch(paths.origin.assets, ['assets'].concat(afterTasks));
-    gulp.watch(paths.origin.clientJs, ['usemin'].concat(afterTasks));
-    gulp.watch(paths.origin.otherJs, ['otherScripts'].concat(afterTasks));
-    gulp.watch(paths.origin.backgroundJs, ['otherScripts'].concat(afterTasks));
-    gulp.watch(paths.src + '/less/**/*.less', ['less'].concat(afterTasks));
-    gulp.watch(paths.origin.jade, ['jade'].concat(afterTasks));
+gulp.task('deploy', ['build'], function () {
+
 });
 
 //default task
-gulp.task('default', ['clean'], function () {
-    gulp.start('assets', 'otherScripts', 'jade', 'libs', 'less', 'manifest', 'usemin', 'watch');
+gulp.task('build', ['clean'], function () {
+    gulp.start('copyAssets', 'scripts', 'less', 'jade', 'watch');
 });

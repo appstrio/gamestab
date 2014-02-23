@@ -9,8 +9,6 @@ var paths = {
     src: 'src',
 };
 
-
-
 var bowerPackages = [
     paths.bower + '/jquery/jquery.min.js',
     paths.bower + '/angular/angular.min.js',
@@ -20,26 +18,11 @@ var bowerPackages = [
     paths.bower + '/async/lib/async.js'
 ];
 
-var vendorPackages = [
-    paths.src + '/' + paths.vendor + '/jquery-ui.js',
-    paths.src + '/' + paths.vendor + '/jquery.ui.core.js',
-    paths.src + '/' + paths.vendor + '/jquery.ui.widget.js',
-    paths.src + '/' + paths.vendor + '/jquery.ui.mouse.js',
-    paths.src + '/' + paths.vendor + '/jquery.ui.sortable.js',
-    paths.src + '/' + paths.vendor + '/sortable.js',
-    paths.src + '/' + paths.vendor + '/ga.js'
-];
-
-
-
-
 paths.origin = {
     jade: paths.src + '/jade/**/*.jade',
     less: paths.src + '/less/*.less',
     assets: paths.assets + '/**/*',
     manifest: paths.src + '/manifest.json',
-    clientJs: paths.src + '/js/client/**/*.js',
-    backgroundJs: paths.src + '/js/background/**/*.js',
     otherJs: paths.src + '/js/*.js'
 };
 
@@ -55,4 +38,3 @@ paths.dist = {
 
 exports.paths = paths;
 exports.bowerPackages = bowerPackages;
-exports.vendorPackages = vendorPackages;
