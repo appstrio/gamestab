@@ -5,7 +5,6 @@ angular.module('backgroundService').factory('searchSuggestions', [
     '$http', 'bingSearchSuggestions',
     function ($http, bingSearchSuggestions) {
 
-        var throttleLimit = 100;
         var maxSuggestions = 3;
         var searchResults = [];
 
@@ -13,31 +12,20 @@ angular.module('backgroundService').factory('searchSuggestions', [
         bingSearchSuggestions.init('http://api.bing.com/osjson.aspx?Market=en-us&query=');
 
         // get the results using a throttled function
-        var getResults = function (val) {
-            return bingSearchSuggestions.getSuggestions(val).then(function (response) {
+        var getResults = function (val, howMany) {
+            return bingSearchSuggestions.getSuggestions(val, howMany).then(function (response) {
                 if (!response || !response.length) {
                     searchResults.length = [];
-                    return;
+                    return searchResults;
                 }
+
+                howMany = howMany || maxSuggestions;
 
                 searchResults = _.first(response, maxSuggestions);
                 return searchResults;
             });
         };
 
-        chrome.runtime.onConnect.addListener(function (port) {
-            if (port.name === 'suggestions') {
-                port.onMessage.addListener(function (msg) {
-                    if (msg.searchVal) {
-                        getResults(msg.searchVal).then(function (data) {
-                            port.postMessage({
-                                searchResults: data
-                            });
-                        });
-                    }
-                });
-            }
-        });
         return {
             getResults: getResults
         };
@@ -47,9 +35,24 @@ angular.module('backgroundService').factory('searchSuggestions', [
 angular.module('backgroundService').controller('MainCtrl', [
     'searchSuggestions',
     function (searchSuggestions) {
-        console.debug('Starting MainCtrl');
-    }
 
+        function suggestionsHandler(port, msg) {
+            if (msg.searchVal) {
+                searchSuggestions.getResults(msg.searchVal, msg.howMany)
+                    .then(function (data) {
+                        port.postMessage({
+                            searchResults: data
+                        });
+                    });
+            }
+        }
+
+        chrome.runtime.onConnect.addListener(function (port) {
+            if (port.name === 'suggestions') {
+                port.onMessage.addListener(suggestionsHandler.bind(null, port));
+            }
+        });
+    }
 ]);
 
 angular.module('backgroundService').factory('bingSearchSuggestions', ['$http',
@@ -71,7 +74,9 @@ angular.module('backgroundService').factory('bingSearchSuggestions', ['$http',
             var url = bingURLBuilder(q);
 
             return $http.get(url).then(function (response) {
-                return _.flatten(response.data.slice(1, 2)).map(wrapSuggestion);
+                //flatten array and then get relevant mapped suggestions
+                var wrappedSuggestions = _.flatten(response.data.slice(1, 2)).map(wrapSuggestion);
+                return wrappedSuggestions;
             }, function (e) {
                 console.warn('e', e);
                 return false;

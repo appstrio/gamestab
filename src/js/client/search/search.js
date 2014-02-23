@@ -1,7 +1,7 @@
 /* global _,async */
 angular.module('aio.search').directive('aioSearchBox', [
-    'Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions',
-    function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions) {
+    'Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions', '$rootScope',
+    function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions, $rootScope) {
         return function (scope, element) {
             var throttleLimit = C.CONFIG.search_throttle_limit,
                 searchURL = Config.search_url || C.CONFIG.search_url,
@@ -55,7 +55,9 @@ angular.module('aio.search').directive('aioSearchBox', [
 
             port.onMessage.addListener(function (msg) {
                 if (msg.searchResults) {
-                    suggestionsData.data = msg.searchResults;
+                    $rootScope.$apply(function () {
+                        suggestionsData.data = msg.searchResults;
+                    });
                     showSuggestionsBox();
                     autoSelectFirst();
                 }
@@ -67,7 +69,8 @@ angular.module('aio.search').directive('aioSearchBox', [
                 scope.currentSuggestion = -1;
 
                 port.postMessage({
-                    searchVal: val
+                    searchVal: val,
+                    howMany: 5
                 });
 
             }, throttleLimit);
