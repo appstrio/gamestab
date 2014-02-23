@@ -1,4 +1,3 @@
-/* global _,async */
 angular.module('aio.search').directive('aioSearchBox', [
     'Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions', '$rootScope',
     function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions, $rootScope) {
@@ -24,16 +23,12 @@ angular.module('aio.search').directive('aioSearchBox', [
             // initializes the bing search suggestions
             bingSearchSuggestions.init(suggestionsURL);
 
-            /**
-             * shows the suggestions box
-             */
+            //shows the suggestions box
             var showSuggestionsBox = function () {
                 $container.addClass('suggestions-on');
             };
 
-            /**
-             * hide the suggestions box
-             */
+            //hide the suggestions box
             var hideSuggestionsBox = function () {
                 $container.removeClass('suggestions-on');
             };
@@ -45,21 +40,18 @@ angular.module('aio.search').directive('aioSearchBox', [
                 }
             });
 
-            var autoSelectFirst = function () {
-                //scope.currentSuggestion = -1;
-            };
-
+            //connect to background
             var port = chrome.runtime.connect({
                 name: 'suggestions'
             });
 
+            //listen for background messages
             port.onMessage.addListener(function (msg) {
                 if (msg.searchResults) {
                     $rootScope.$apply(function () {
                         suggestionsData.data = msg.searchResults;
                     });
                     showSuggestionsBox();
-                    autoSelectFirst();
                 }
             });
 
@@ -68,11 +60,14 @@ angular.module('aio.search').directive('aioSearchBox', [
                 suggestionsData.data = [];
                 scope.currentSuggestion = -1;
 
-                port.postMessage({
+                var postObj = {
+                    type: 'get',
                     searchVal: val,
                     howMany: 5
-                });
+                };
 
+                //get suggestions from background
+                port.postMessage(postObj);
             }, throttleLimit);
 
             // When user click enter on the visible/hidden input boxes OR clicks on suggestion
@@ -110,7 +105,11 @@ angular.module('aio.search').directive('aioSearchBox', [
                     label: val,
                     waitForFinish: true
                 }).then(function () {
-                    window.location = searchURL + val;
+                    if (window.parent !== window.self) {
+                        window.parent.location = searchURL + val;
+                    } else {
+                        window.location = searchURL + val;
+                    }
                 });
             };
 
@@ -252,7 +251,7 @@ angular.module('aio.search').directive('aioSearchBox', [
         var getSuggestions = function (q) {
             var urlBuildParams = {}, httpMethod = 'get';
             if (baseURL) {
-                if (!Chrome.isChrome() || isIframe) {
+                if (!Chrome.isExtension() || isIframe) {
                     urlBuildParams.jsonp = true;
                     httpMethod = 'jsonp';
                 }

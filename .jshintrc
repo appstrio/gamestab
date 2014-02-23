@@ -35,10 +35,9 @@
     "jquery": true,
     "node": true,
     "globals": {
-        "DEBUG": true,
-        "chrome": true,
-        "angular": true,
-        "define": true,
-        "require": true
+        "DEBUG": false,
+        "chrome": false,
+        "angular": false,
+        "_": false
     }
 }

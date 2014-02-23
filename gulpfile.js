@@ -28,6 +28,7 @@ var libs = bowerPackages.concat(vendorPackages);
 var getPackageJson = function () {
     var fs = require('fs');
 
+    //use read file instead of require because require caches the results
     pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
     return pkg;
 };
@@ -48,12 +49,13 @@ gulp.task('jade', function () {
         .pipe(gulp.dest(paths.build));
 });
 
+// html -> minify scripts
 gulp.task('usemin', ['jade', 'libs'], function () {
     if (!isProduction) {
-        gulp.start('clientScripts');
-        return;
+        return gulp.start('clientScripts');
     }
-    gulp.src('build/newtab.html')
+
+    return gulp.src('build/newtab.html')
         .pipe(usemin({
             jsmin: uglify()
         }))
@@ -100,7 +102,7 @@ gulp.task('manifest', function () {
         .pipe(gulp.dest(paths.build));
 });
 
-//clean build folder
+// build folder -> *boom*
 gulp.task('clean', function () {
     return gulp.src(paths.build, {
         read: false
