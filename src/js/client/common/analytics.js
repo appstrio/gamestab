@@ -1,6 +1,7 @@
 /* global isWebsite,isDev */
 var _gaq = _gaq || [];
 
+angular.module('aio.analytics', ['aio.analyticsEvents']);
 angular.module('aio.analytics').factory('Analytics', [
     '$rootScope', '$log', '$q', 'Constants', '$timeout', 'Config', 'AnalyticsEvents',
     function ($rootScope, $log, $q, C, $timeout, Config, AnalyticsEvents) {

@@ -2,9 +2,10 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var clean = require('gulp-clean');
 var jade = require('gulp-jade');
-// var gulpFilter = require('gulp-filter');
-// var using = require('gulp-using');
+var filter = require('gulp-filter');
+var using = require('gulp-using');
 var usemin = require('gulp-usemin');
+var inject = require('gulp-inject');
 var flatten = require('gulp-flatten');
 var gulpOpen = require('gulp-open');
 var cssmin = require('gulp-cssmin');
@@ -34,6 +35,8 @@ var getPackageJson = function () {
 };
 
 // var imageFilter = gulpFilter(['**/*.{png,jpeg,jpg,gif}']);
+var newtabFilter = filter(['newtab.jade']);
+var backgroundFilter = filter(['background.jade']);
 
 //to set production env use --production in command line
 //production will minify & concat scripts/libs
@@ -43,6 +46,20 @@ var isProduction = Boolean(gutil.env.production);
 gulp.task('jade', function () {
     return gulp.src(paths.origin.jade)
         .pipe(flatten())
+        .pipe(newtabFilter)
+        .pipe(inject(gulp.src(['src/js/client/**/*.js'], {
+            read: false
+        }), {
+            ignorePath: 'src'
+        }))
+        .pipe(newtabFilter.restore())
+        .pipe(backgroundFilter)
+        .pipe(inject(gulp.src(['src/js/background/**/*.js'], {
+            read: false
+        }), {
+            ignorePath: 'src'
+        }))
+        .pipe(backgroundFilter.restore())
         .pipe(jade({
             pretty: !isProduction
         }))

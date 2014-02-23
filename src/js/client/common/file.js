@@ -1,4 +1,6 @@
 /* global FileError */
+angular.module('aio.file', []);
+
 angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
     function filesStorageService_Main($rootScope, $log, $q) {
         //vars

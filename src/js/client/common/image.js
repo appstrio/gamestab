@@ -1,3 +1,4 @@
+angular.module('aio.image', []);
 angular.module('aio.image').factory('Image', ['$q', '$rootScope', 'FileSystem', '$log', 'Chrome',
     function ($q, $rootScope, FileSystem, $log, Chrome) {
 

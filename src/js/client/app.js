@@ -1,4 +1,6 @@
-var isDev = true; //jshint ignore:line
+//determines whether to report analytics
+var isDev = true;
+//whether running on website version
 var isWebsite = true;
 
 angular.module('aio.settings', []);

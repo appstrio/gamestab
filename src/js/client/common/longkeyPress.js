@@ -1,3 +1,4 @@
+angular.module('aio.interactions', []);
 angular.module('aio.interactions').directive('hlLongPress', ['$parse',
     function ($parse) {
         return function (scope, element, attr) {
