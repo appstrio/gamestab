@@ -23,18 +23,15 @@ angular.module('aio.main').controller('MainCtrl', [
             }, lazyCacheAppsTimeout);
         };
 
-        var reportDone = function () {
-            console.debug('%c✔[MainCtrl] - entire startup process took ' +
-                (Date.now() - t0) + ' ms.', 'background:black;color:yellow;');
-        };
-
         var checkConfigExpiration = function () {
             $timeout(function () {
                 //check if config needs update
                 if ($scope.config.updatedAt + $scope.config.config_expiration_time < Date.now()) {
                     $log.log('[MainCtrl] - config needs updating...');
-                    return Helpers.loadRemoteJson($scope.config.partner_config_json_url)
-                        .then(Config.updateConfig);
+                    return Helpers.loadRemoteJson($scope.config.config_update_url)
+                        .then(Config.updateConfig)
+                        .then(Apps.syncWebAppsDb)
+                        .then(init);
                 }
 
                 $log.log('[MainCtrl] - config is up to date.');
@@ -58,7 +55,10 @@ angular.module('aio.main').controller('MainCtrl', [
             .then(Background.init, loadFromRemotes)
             .then(null, Background.setup)
             .then(initializeApp)
-            .then(reportDone);
+            .then(function () {
+                console.debug('%c✔[MainCtrl] - entire startup process took ' +
+                    (Date.now() - t0) + ' ms.', 'background:black;color:yellow;');
+            });
 
         //get from settings
         $scope.displayTopSearchBox = 1;

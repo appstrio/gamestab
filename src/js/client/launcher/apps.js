@@ -4,8 +4,10 @@ angular.module('aio.launcher').factory('Apps', [
     function ($rootScope, Storage, $q, Chrome, C, Config, $log, Image, Helpers) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
+            deletedAppsStorageKey = C.STORAGE_KEYS.DELETED_APPS,
             cachedSortedWebApps,
             isCacheNeededFlag = false,
+            removedApps = [],
             apps;
 
         var systemApps = [{
@@ -28,11 +30,7 @@ angular.module('aio.launcher').factory('Apps', [
             return Helpers.store(storageKey, apps);
         };
 
-        /**
-         * init
-         *
-         * @return
-         */
+        //load from storage
         var init = function () {
             console.debug('[Apps] - init');
             return loadFromStorage().then(function (_apps) {
@@ -160,11 +158,9 @@ angular.module('aio.launcher').factory('Apps', [
          * @return
          */
         var organizeAsPages = function (dials) {
-            var count = 0,
-                dialsPerPage;
-
+            var count = 0;
             var conf = Config.get();
-            dialsPerPage = conf && conf.dials_per_page || C.CONFIG.dials_per_page;
+            var dialsPerPage = conf && conf.dials_per_page || C.CONFIG.dials_per_page;
 
             $log.log('[Apps] - organizing apps in pages of ' + C.CONFIG.dials_per_page);
             //have only 12 dials in a page
@@ -183,8 +179,8 @@ angular.module('aio.launcher').factory('Apps', [
                 .then(organizeAsPages)
                 .then(setApps)
                 .then(store)
-                .then(reportDone.bind(null, 'lazy cache icons'))
                 .then(function () {
+                    reportDone('lazy cache icons');
                     isCacheNeededFlag = false;
                 });
         };
@@ -207,6 +203,9 @@ angular.module('aio.launcher').factory('Apps', [
             });
         };
 
+        var fetchDials = function () {
+            return $q.all([getOrganizedWebApps(), Chrome.management.getAll()]);
+        };
         /**
          * setup
          *
@@ -214,11 +213,10 @@ angular.module('aio.launcher').factory('Apps', [
          * @return
          */
         var setup = function () {
-            var getDials = [getOrganizedWebApps(), Chrome.management.getAll()];
             isCacheNeededFlag = true;
 
             $log.log('[Apps] - starting setup');
-            return $q.all(getDials)
+            return fetchDials()
             //organize apps as dials
             .then(organizeAppsAsDials, organizeAppsAsDials)
             //organize apps as pages
@@ -234,6 +232,12 @@ angular.module('aio.launcher').factory('Apps', [
             });
         };
 
+        /**
+         * getOrganizedWebApps
+         * get apps from cache or remote json
+         *
+         * @return {Promise}
+         */
         var getOrganizedWebApps = function () {
             // if sorted web apps are sorted are already there, just return them
             if (cachedSortedWebApps) {
@@ -310,7 +314,9 @@ angular.module('aio.launcher').factory('Apps', [
                     if (appToUninstall.url && appToUninstall.url === app.url ||
                         appToUninstall.chromeId && appToUninstall.chromeId === app.chromeId) {
 
-                        //delete app from page
+                        var deletedApp = angular.copy(appToUninstall);
+                        deletedApp.deletedTimestamp = Date.now();
+                        removedApps.push(appToUninstall);
                         page.splice(index, 1);
                         return true;
                     }
@@ -323,7 +329,163 @@ angular.module('aio.launcher').factory('Apps', [
                 return cb();
             }
             //store new dials
-            return store().then(cb);
+            return store().then(storeRemoveApps).then(cb);
+        };
+
+        var storeRemoveApps = function () {
+            return Helpers.store(deletedAppsStorageKey, removedApps);
+        };
+
+        var loadRemovedApps = function () {
+            return Helpers.loadFromStorage(deletedAppsStorageKey).then(function (deleted) {
+                removedApps = deleted || [];
+            }, function () {
+                return [];
+            });
+        };
+
+        var syncChromeApps = function (flattenedApps, chromeApps) {
+
+            var appsObject = {};
+            var ourChromeApps = _.filter(flattenedApps, 'chromeId');
+
+            _.chain(ourChromeApps)
+                .pluck('chromeId')
+                .values()
+                .each(function (i) {
+                    appsObject[i] = false;
+                })
+                .value();
+
+            //add missing non-deleted chromeApps
+            chromeApps.forEach(function (cApp) {
+                var newChromeApp;
+                var isChromeAppRemoved = _.findWhere(removedApps, {
+                    chromeId: cApp.id
+                });
+
+                //if it's removed - don't re add it
+                if (isChromeAppRemoved) {
+                    return;
+                }
+
+                //if it's found in ours
+                var isChromeAppFound = _.findWhere(ourChromeApps, {
+                    chromeId: cApp.id
+                });
+
+                newChromeApp = chromeAppToObject(cApp);
+
+                if (isChromeAppFound) {
+                    appsObject[cApp.id] = true;
+                    //sync it
+                    isChromeAppFound = newChromeApp;
+                    return;
+                }
+
+                //app is new and needs to be inserted
+                flattenedApps.push(newChromeApp);
+            });
+
+            //find our apps that user uninstalled externally
+            var redundantApps = [];
+            _.each(appsObject, function (value, key) {
+                if (!value) {
+                    redundantApps.push(key);
+                }
+            });
+
+            _.each(redundantApps, function (chromeId) {
+                var toDelete = _.findWhere(flattenedApps, {
+                    chromeId: chromeId
+                });
+                toDelete.toDelete = true;
+            });
+
+            return flattenedApps;
+        };
+
+        //remove if not existant. add if not found
+        var syncPartnerApps = function (flattenedApps, partnerApps) {
+            //add missing non-deleted chromeApps
+            partnerApps.forEach(function (pApp) {
+                var isPartnerAppFound = _.findWhere(flattenedApps, {
+                    url: pApp.url
+                });
+
+                //sync it
+                if (isPartnerAppFound) {
+                    isPartnerAppFound = pApp;
+                    return;
+                }
+
+                //partner app not found in ours
+                var isPartnerAppRemoved = _.findWhere(removedApps, {
+                    url: pApp.url
+                });
+
+                //if it's removed, don't add it back
+                if (isPartnerAppRemoved) {
+                    return;
+                }
+
+                //else add it
+                flattenedApps.push(pApp);
+            });
+
+            return flattenedApps;
+        };
+
+        //remove app if not found in web apps db
+        var syncAllApps = function (flattenedApps, allApps) {
+
+            flattenedApps.forEach(function (app, index) {
+                //skip partner & chrome apps
+                if (app.owner_partner_id || app.chromeId || app.overlay) {
+                    return;
+                }
+                //find app in all apps
+                var isAppFound = _.findWhere(allApps, {
+                    url: app.url
+                });
+
+                //sync it
+                if (isAppFound) {
+                    isAppFound = app;
+                    return;
+                }
+
+                flattenedApps.splice(index, 1);
+            });
+
+            return flattenedApps;
+        };
+
+        var syncWebAppsDb = function () {
+            var flattenedApps = _.flatten(apps);
+            var partnerApps = Config.get().web_apps_db || [];
+
+            $log.log('Syncing web apps db');
+
+            loadRemovedApps().then(fetchDials).then(function (results) {
+                var webApps = results[0] || [];
+                var chromeApps = results[1] || [];
+
+                chromeApps = _.filter(chromeApps, isAppEnabled);
+
+                $log.info('Done getting remote apps. Now syncing', flattenedApps.length);
+                //make sure all partner dials are synced
+                flattenedApps = syncPartnerApps(flattenedApps, partnerApps);
+                //make sure web apps db are synced
+                flattenedApps = syncAllApps(flattenedApps, webApps);
+                //make sure chrome apps are synced
+                flattenedApps = syncChromeApps(flattenedApps, chromeApps);
+
+                flattenedApps = _.filter(flattenedApps, function (i) {
+                    return (i && !i.toDelete);
+                });
+                return $q.when(organizeAsPages(flattenedApps)).then(setApps).then(store);
+            });
         };
 
         /**
@@ -358,6 +520,7 @@ angular.module('aio.launcher').factory('Apps', [
             store: store,
             organizeAsPages: organizeAsPages,
             getWebAppsDb: getOrganizedWebApps,
+            syncWebAppsDb: syncWebAppsDb,
             lazyCacheIcons: lazyCacheIcons,
             addNewApp: addNewApp,
             uninstallApp: uninstallApp

@@ -12,6 +12,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             STORAGE_KEYS: {
                 CONFIG: 'gt.config',
                 APPS: 'gt.apps',
+                DELETED_APPS: 'gt.deleted.apps',
                 ACCOUNT: 'gt.account',
                 BACKGROUNDS: 'gt.backgrounds',
                 BACKGROUND: 'gt.background'
@@ -38,7 +39,8 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 initial_dials_size: 26,
                 search_throttle_limit: 100, //100 ms
                 lazy_cache_dials_timeout: 10000, // 10 seconds
-                config_expiration_time: 14400000, //4 hours
+                // config_expiration_time: 14400000, //4 hours
+                config_expiration_time: 144, //4 hours
                 user_preferences: {
                     show_search_box: true
                 }
