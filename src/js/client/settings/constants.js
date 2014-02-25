@@ -7,6 +7,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             WEB_APPS_DB: 'https://s3.amazonaws.com/Gamestab/JSONs/webAppsDb.json',
             //default config if not partner found
             DEFAULT_REMOTE_CONFIG: 'https://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
+            DEFAULT_BACKGROUND_URL: 'img/wallpapers/default.jpg',
             APP_VERSION: Chrome.getVersion(),
             STORAGE_KEYS: {
                 CONFIG: 'gt.config',
@@ -30,8 +31,6 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 partner_config_json_url: 'http://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
                 //where to get backgrounds from
                 backgrounds_json_url: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
-                //default background image. can be overriden by partner
-                default_background_url: 'img/wallpapers/default.jpg',
                 analytics_ua_account: 'UA-47928276-1',
                 suggestions_type: 'bing',
                 partner_id: 'default',

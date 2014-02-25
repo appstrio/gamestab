@@ -46,14 +46,15 @@ angular.module('aio.settings').factory('Background', [
         };
 
         var setup = function () {
+            console.info('[Backgorund] - starting setup');
             //get config
             var conf = Config.get();
             //background image is what user selects, or the default one (our default or partner's)
-            var url = conf.user_preferences.background_image || conf.default_background_url;
+            var url = conf.user_preferences.background_image || C.DEFAULT_BACKGROUND_URL;
             var newBg = getCustomBgObj(url);
-
             return Image.generateThumbnail('url', thumbnailResizeParams, [newBg])
                 .then(function (newBackground) {
+                    console.log('Filename: background.js', 'Line: 57', 'newBackground:',  newBackground);
                     //make it the active one
                     return setNewBackground(newBackground[0]);
                 })

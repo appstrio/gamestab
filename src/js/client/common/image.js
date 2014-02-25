@@ -175,28 +175,28 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', 'FileSystem', 
          */
         var generateThumbnail = function (urlField, params, arr) {
             var counter = 0;
-            var promises = [];
-
+            var promiseChain = $q.when();
             params = params || {};
 
             arr.forEach(function (item) {
-                var url = item[urlField];
-                //extend to newParams
-                var newParams = angular.extend({
-                    url: url
-                }, params);
+                (function (item, counter) {
+                    var url = item[urlField];
+                    //extend to newParams
+                    var newParams = angular.extend({
+                        url: url
+                    }, params);
 
-                //push into promise array
-                promises.push(urlToLocalFile(newParams).then(function (file) {
-                    item.thumbnail = file;
-                    $log.log('[Image] - generating thumbnail ' + urlField + ' => ' + counter + '/' + arr.length + '.');
-                    ++counter;
-                    return item;
-                }));
+                    promiseChain = promiseChain.then(function () {
+                        return urlToLocalFile(newParams);
+                    }).then(function (file) {
+                        item.thumbnail = file;
+                        $log.log('[Image] - generating thumbnail ' + urlField + ' => ' + counter + '/' + arr.length + '.');
+                        return arr;
+                    });
+                })(item, ++counter);
             });
 
-            //resolve when all promises finish
-            return $q.all(promises);
+            return promiseChain;
         };
 
         /**

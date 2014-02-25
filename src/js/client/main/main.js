@@ -48,7 +48,9 @@ angular.module('aio.main').controller('MainCtrl', [
         };
 
         var loadFromRemotes = function () {
-            return Config.setup().then(Apps.setup).then(Background.setup);
+            return Config.setup()
+                .then(Apps.setup)
+                .then(Background.setup);
         };
 
         //load config from local or remote

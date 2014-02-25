@@ -161,7 +161,10 @@ angular.module('aio.launcher').factory('Apps', [
          */
         var organizeAsPages = function (dials) {
             var count = 0,
-                dialsPerPage = C.CONFIG.dials_per_page;
+                dialsPerPage;
+
+            var conf = Config.get();
+            dialsPerPage = conf && conf.dials_per_page || C.CONFIG.dials_per_page;
 
             $log.log('[Apps] - organizing apps in pages of ' + C.CONFIG.dials_per_page);
             //have only 12 dials in a page
@@ -211,7 +214,7 @@ angular.module('aio.launcher').factory('Apps', [
          * @return
          */
         var setup = function () {
-            var getDials = [getOrganizedWebApps(), Chrome.management.getAll()];
+            var getDials = [$q.when(getOrganizedWebApps()), Chrome.management.getAll()];
             isCacheNeededFlag = true;
 
             $log.log('[Apps] - starting setup');
@@ -224,18 +227,17 @@ angular.module('aio.launcher').factory('Apps', [
             .then(setApps)
             //save to storage
             .then(store)
-            //report done
-            .then(reportDone.bind(null, 'install'))
             //resolve service promise
-            .then(isReady.resolve.bind(null, apps));
+            .then(function () {
+                reportDone('install');
+                return isReady.resolve(apps);
+            });
         };
 
         var getOrganizedWebApps = function () {
             // if sorted web apps are sorted are already there, just return them
             if (cachedSortedWebApps) {
-                var defer = $q.defer();
-                defer.resolve(cachedSortedWebApps);
-                return defer.promise;
+                return cachedSortedWebApps;
             }
             return Helpers.loadRemoteJson(C.WEB_APPS_DB).then(parseWebApps);
         };

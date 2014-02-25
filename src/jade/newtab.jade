@@ -83,7 +83,7 @@ html(ng-csp='ng-csp')
                                         .icon
                                             img(ng-src="{{app.icon}}", fb-src="./img/dials/default.png", alt="{{app.title}} Logo")
                                         .title(ng-bind="app.title")
-                .partner-logo
+                .partner-logo(ng-show="config.partner_url")
                     a(ng-href="{{config.partner_url}}", target="_self", title="{{config.partner_name}}")
                         img(ng-src="{{config.partner_logo}}", style="cursor:pointer;")
     #overlay(aio-overlay, overlay-options="overlay", ng-include="templateURL")
