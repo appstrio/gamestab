@@ -43,19 +43,19 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
 
         //assign scope backgrounds
         Background.isReady
-            .then(Background.getBackgrounds)
+            .then(Background.fetchBackgrounds)
             .then(function () {
                 ngProgress.complete();
                 $scope.loading = false;
                 $scope.refreshBackgrounds();
+
+                $scope.isActiveBg = function (bg) {
+                    return Background.background.originalUrl === bg.originalUrl ? 'selected' : '';
+                };
             });
 
-        $scope.isActiveBg = function (bg) {
-            return Background.background.url === bg.url ? 'selected' : '';
-        };
-
         $scope.refreshBackgrounds = function () {
-            $scope.backgrounds = Background.backgrounds();
+            $scope.backgrounds = Background.getBackgrounds();
         };
 
         /**

@@ -19,11 +19,15 @@ angular.module('aio.settings').factory('Background', [
             }
         };
 
+        var getBackgrounds = function () {
+            return backgrounds.concat(userBackgrounds);
+        };
+
         var getUserBackgrounds = function () {
             return Helpers.loadFromStorage(storageKey);
         };
 
-        var getBackgrounds = function () {
+        var fetchBackgrounds = function () {
             var backgroundsUrl = Config.get().backgrounds_json_url;
             return Helpers.loadRemoteJson(backgroundsUrl)
                 .then(parseBackgrounds)
@@ -35,16 +39,28 @@ angular.module('aio.settings').factory('Background', [
                 });
         };
 
+        var addBgToUserBgs = function (bg) {
+            userBackgrounds.push(bg);
+            //and store it
+            return storeUserBackgrounds();
+        };
+
         var setup = function () {
             //get config
             var conf = Config.get();
             //background image is what user selects, or the default one (our default or partner's)
             var url = conf.user_preferences.background_image || conf.default_background_url;
-            return setNewBackground({
-                url: url
-            }).then(function () {
-                isReady.resolve(background);
-            });
+            var newBg = getCustomBgObj(url);
+
+            return Image.generateThumbnail('url', thumbnailResizeParams, [newBg])
+                .then(function (newBackground) {
+                    //make it the active one
+                    return setNewBackground(newBackground[0]);
+                })
+                .then(function () {
+                    isReady.resolve(background);
+                    return addBgToUserBgs(background);
+                });
         };
 
         //try to get user preferences from config object
@@ -108,8 +124,7 @@ angular.module('aio.settings').factory('Background', [
                     //point in config
                     conf.user_preferences.background_image = background;
                     Config.setConfig(conf);
-                    Config.set();
-                    return background;
+                    return Config.set();
                 });
         };
 
@@ -134,12 +149,7 @@ angular.module('aio.settings').factory('Background', [
             }).then(function (newBackground) {
                 //make it the active one
                 return setNewBackground(newBackground[0]);
-            }).then(function (newBackground) {
-                //now add it to custom backgrounds
-                userBackgrounds.push(newBackground);
-                //and store it
-                return storeUserBackgrounds();
-            });
+            }).then(addBgToUserBgs);
         };
 
         var storeUserBackgrounds = function () {
@@ -151,11 +161,11 @@ angular.module('aio.settings').factory('Background', [
             background: background,
             init: init,
             setup: setup,
+            //from server
+            fetchBackgrounds: fetchBackgrounds,
+            //from runtime object
             getBackgrounds: getBackgrounds,
             setNewBackground: setNewBackground,
-            backgrounds: function () {
-                return backgrounds.concat(userBackgrounds);
-            },
             uploadNewLocalImage: uploadNewLocalImage
         };
     }
