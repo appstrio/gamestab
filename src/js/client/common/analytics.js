@@ -31,8 +31,8 @@ angular.module('aio.analytics').factory('Analytics', [
 
             //register account
             if (!isDev) {
-                console.debug('Setting up online analytics ID of ' + C.ANALYTICS_UA_ACCOUNT);
-                _gaq.push(['_setAccount', C.ANALYTICS_UA_ACCOUNT]);
+                console.debug('Setting up online analytics ID of ' + Config.get().analytics_ua_account);
+                _gaq.push(['_setAccount', Config.get().analytics_ua_account]);
             } else {
                 //push bad account on purpose
                 console.debug('Not working with live analytics - running dev mode');

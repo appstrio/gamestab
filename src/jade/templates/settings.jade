@@ -19,12 +19,11 @@
             .settings-background(ng-switch-when="Background", ng-controller="BackgroundCtrl")
                 .loading-backgrounds(ng-show="loading")
                     img(src="img/favicons/128x128.png", style="margin:0 auto;display:block;")
-                    h1(style="text-align:center;") Gamestab
-                    h2(style="text-align:center;") loading backgrounds for the first time. Please wait...
+                    h2(style="text-align:center;") Please wait...
                 .bg-explorer(ng-show="!loading")
-                    .bg-sample(ng-repeat="bg in backgrounds", ng-style="{'background-image':'url(' + bg.thumbnail + ')'}", ng-class="{selected : bg.isActive}", ng-click="selectBackground(bg, $event)")
+                    .bg-sample(ng-repeat="bg in backgrounds", ng-style="{'background-image':'url(' + bg.thumbnail + ')'}", ng-class="isActiveBg(bg)", ng-click="selectBackground(bg, $event)")
                         //- custom user image
-                        img(src="./img/custom_user.png", style="width:30px;height:30px;float:left;", ng-show="bg.isLocalBackground")
+                        img(src="./img/custom_user.png", style="width:30px;height:30px;float:left;", ng-show="bg.isCustom")
                 .bg-upload(hl-background-local-image, ng-show="!loading")
                     .image-selector
                         h2 Select your own image

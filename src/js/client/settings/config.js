@@ -115,6 +115,10 @@ angular.module('aio.settings').factory('Config', [
             return deferred.promise;
         };
 
+        var setConfig = function (newConfig) {
+            data = newConfig;
+        };
+
         var store = function () {
             return Helpers.store(storageKey, data);
         };
@@ -130,7 +134,6 @@ angular.module('aio.settings').factory('Config', [
         };
 
         var updateConfigFields = function (withJson) {
-            console.log('Filename: config.js', 'Line: 133', 'withJson:', withJson);
             var curConfig = getConfig();
 
             //if user has preferences and remote json doesn't specify we should override user preferences
@@ -175,6 +178,7 @@ angular.module('aio.settings').factory('Config', [
                 return data;
             },
             set: store,
+            setConfig: setConfig,
             setup: setup
         };
     }

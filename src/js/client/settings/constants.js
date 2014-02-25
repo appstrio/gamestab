@@ -1,28 +1,38 @@
 angular.module('aio.settings').factory('Constants', ['Chrome',
     function (Chrome) {
         return {
+            //partner list
             PARTNERS_JSON_URL: 'https://s3.amazonaws.com/Gamestab/JSONs/partners.json',
-            BACKGROUNDS_JSON_URL: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
+            //common web apps db
             WEB_APPS_DB: 'https://s3.amazonaws.com/Gamestab/JSONs/webAppsDb.json',
+            //default config if not partner found
             DEFAULT_REMOTE_CONFIG: 'https://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
-            DEFAULT_BACKGROUND_IMG: 'img/wallpapers/default.jpg',
-            ANALYTICS_UA_ACCOUNT: 'UA-47928276-1',
             APP_VERSION: Chrome.getVersion(),
             STORAGE_KEYS: {
                 CONFIG: 'gt.config',
                 APPS: 'gt.apps',
                 ACCOUNT: 'gt.account',
-                BACKGROUNDS: 'gt.backgrounds'
+                BACKGROUNDS: 'gt.backgrounds',
+                BACKGROUND: 'gt.background'
             },
             ERRORS: {
                 SETUP: {
                     NO_PUBLISHER_ID: 'NO_PUBLISHER_ID'
                 }
             },
+            //default config. all of it can be overwritten by partner
             CONFIG: {
+                //redirect to search url
                 search_url: 'http://www.google.com/search?q=',
+                //suggestions url
                 suggestions_url: 'http://api.bing.com/osjson.aspx?Market=en-us&query=',
-                partner_config_json_url: 'http://s3.amazonaws.com/Gamestab/JSONs/default-config.json',
+                //where to update from
+                partner_config_json_url: 'http://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
+                //where to get backgrounds from
+                backgrounds_json_url: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
+                //default background image. can be overriden by partner
+                default_background_url: 'img/wallpapers/default.jpg',
+                analytics_ua_account: 'UA-47928276-1',
                 suggestions_type: 'bing',
                 partner_id: 'default',
                 dials_per_page: 12,

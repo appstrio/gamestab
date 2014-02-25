@@ -28,12 +28,6 @@ angular.module('aio.main').controller('MainCtrl', [
                 (Date.now() - t0) + ' ms.', 'background:black;color:yellow;');
         };
 
-        //first loading services
-        var loadFromStorage = function () {
-            $log.info('✔ [MainCtrl] - Start phase one');
-            return $q.all([Config.init(), Background.init(), Apps.init()]);
-        };
-
         var checkConfigExpiration = function () {
             $timeout(function () {
                 //check if config needs update
@@ -54,12 +48,13 @@ angular.module('aio.main').controller('MainCtrl', [
         };
 
         var loadFromRemotes = function () {
-            return $q.all([Config.setup(), Background.setup()]).then(Apps.setup);
+            return Config.setup().then(Apps.setup).then(Background.setup);
         };
 
         //load config from local or remote
-        loadFromStorage()
-            .then(null, loadFromRemotes)
+        $q.all([Config.init(), Apps.init()])
+            .then(Background.init, loadFromRemotes)
+            .then(null, Background.setup)
             .then(initializeApp)
             .then(reportDone);
 
