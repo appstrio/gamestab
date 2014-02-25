@@ -214,7 +214,7 @@ angular.module('aio.launcher').factory('Apps', [
          * @return
          */
         var setup = function () {
-            var getDials = [$q.when(getOrganizedWebApps()), Chrome.management.getAll()];
+            var getDials = [getOrganizedWebApps(), Chrome.management.getAll()];
             isCacheNeededFlag = true;
 
             $log.log('[Apps] - starting setup');
@@ -237,7 +237,7 @@ angular.module('aio.launcher').factory('Apps', [
         var getOrganizedWebApps = function () {
             // if sorted web apps are sorted are already there, just return them
             if (cachedSortedWebApps) {
-                return cachedSortedWebApps;
+                return $q.when(cachedSortedWebApps);
             }
             return Helpers.loadRemoteJson(C.WEB_APPS_DB).then(parseWebApps);
         };
