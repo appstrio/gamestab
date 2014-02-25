@@ -54,7 +54,6 @@ angular.module('aio.settings').factory('Background', [
             var newBg = getCustomBgObj(url);
             return Image.generateThumbnail('url', thumbnailResizeParams, [newBg])
                 .then(function (newBackground) {
-                    console.log('Filename: background.js', 'Line: 57', 'newBackground:',  newBackground);
                     //make it the active one
                     return setNewBackground(newBackground[0]);
                 })
