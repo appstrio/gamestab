@@ -86,8 +86,6 @@ gulp.task('scripts', function () {
     gulp.src(paths.origin.js)
         .pipe(gulp.dest(paths.dist.js));
 
-    console.log(paths.origin.unchangedJs, paths.dist.unchangedJs);
-
     return gulp.src(paths.origin.unchangedJs)
         .pipe(gulp.dest(paths.dist.unchangedJs));
 });

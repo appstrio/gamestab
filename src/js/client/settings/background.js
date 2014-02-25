@@ -48,10 +48,10 @@ angular.module('aio.settings').factory('Background', [
             console.debug('[Background] - starting to lazy cache items');
             return Image.convertFieldToLocalFile('image', {}, backgrounds)
                 .then(Image.generateThumbnail.bind(null, 'image', {
-                resizeOptions: {
-                    fixedHeight: 160,
-                    fixedWidth: 160
-                }
+                    resizeOptions: {
+                        fixedHeight: 160,
+                        fixedWidth: 160
+                    }
                 }))
                 .then(store)
                 .then(reportDone.bind(null, 'lazy cache images'))
