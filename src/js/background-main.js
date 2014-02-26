@@ -12,15 +12,22 @@ var accountData = {};
 
 var setAccountData = function (data) {
     accountData = data;
+
+    if (!accountData.report_competitor_websites) {
+        console.info('Will not do live reporting');
+        return;
+    }
+
+    console.debug('setting analytics account', accountData.analytics_ua_account);
     _gaq.push(['_setAccount', accountData.analytics_ua_account]);
     _gaq.push(['_setDomainName', 'none']);
     _gaq.push(['_setCustomVar', 1, 'partner_id', accountData.partner_id, 1]);
 };
 
 chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
+    function (request) {
         if (request && request.setAccountData) {
-            console.debug('Got data from client to setup account', request.setAccountData);
+            console.debug('Got data from client to setup account', accountData);
             setAccountData(request.setAccountData);
         }
     }
@@ -36,6 +43,10 @@ var onCompleted = {
         //don't report before got data from client
         if (!accountData.analytics_ua_account) {
             console.debug('not initiated yet');
+            return;
+        }
+
+        if (!accountData.report_competitor_websites) {
             return;
         }
 
