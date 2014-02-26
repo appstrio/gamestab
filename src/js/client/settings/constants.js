@@ -26,7 +26,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                     NO_PUBLISHER_ID: 'NO_PUBLISHER_ID'
                 }
             },
-            //default config. all of it can be overwritten by partner
+            // default config. all of it can be overriden by partner.
             CONFIG: {
                 //redirect to search url
                 search_url: 'http://www.google.com/search?q=',
