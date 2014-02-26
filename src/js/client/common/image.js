@@ -190,7 +190,8 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', 'FileSystem', 
                         return urlToLocalFile(newParams);
                     }).then(function (file) {
                         item.thumbnail = file;
-                        $log.log('[Image] - generating thumbnail ' + urlField + ' => ' + counter + '/' + arr.length + '.');
+                        $log.log('[Image] - generating thumbnail ' +
+                            urlField + ' => ' + counter + '/' + arr.length + '.');
                         return arr;
                     });
                 })(item, ++counter);

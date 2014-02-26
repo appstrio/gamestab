@@ -24,7 +24,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                         label: app.title || app.url,
                         waitForFinish: true
                     }).then(function () {
-                        window.location = app.url;
+                        window.parent.location = app.url;
                     });
                     return;
                 }
@@ -89,11 +89,22 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
 
                 Apps.uninstallApp(app, function () {
                     console.debug('deleted app');
+                    //reassign scope vars
+                    scope.refreshScope();
+                    verifyCurScreen();
                     //report analytics
                     Analytics.reportEvent(103, {
                         label: app.title || app.url
                     });
                 });
+            };
+
+            //move screen left if needed
+            var verifyCurScreen = function () {
+                if (scope.rawScreens.length && scope.curScreen >= scope.rawScreens.length) {
+                    --scope.curScreen;
+                    moveViewport();
+                }
             };
 
             var getScreenWidth = function (numberOfScreen) {
@@ -167,7 +178,6 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                     return;
                 }
                 if (scope.curScreen < scope.rawScreens.length - 1) {
-                    console.log('here');
                     ++scope.curScreen;
                     $draggingHelper.animate({
                         left: '+=' + screenWidth + 'px'
@@ -193,7 +203,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                 }
 
                 checkArrows();
-            });
+            }, true);
 
             var $draggingItem, $draggingHelper, $draggingPlaceholder;
             scope.sortableOptions = {

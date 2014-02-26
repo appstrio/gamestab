@@ -154,8 +154,7 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
          */
         $scope.install = function (app, e) {
             e.stopPropagation();
-            Apps.addNewApp(app);
-            getAppsAndFlatten();
+            Apps.addNewApp(app).then(getAppsAndFlatten);
             Analytics.reportEvent(603, {
                 label: app.title || app.url
             });

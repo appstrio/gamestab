@@ -7,7 +7,7 @@ angular.module('aio.main').controller('MainCtrl', [
         var checkConfigTimeout = 3000;
         var t0 = Date.now();
 
-        var init = function () {
+        $scope.refreshScope = function () {
             $log.log('[MainCtrl] - Setting scope vars');
             $scope.rawScreens = Apps.apps();
             $scope.config = Config.get();
@@ -18,7 +18,7 @@ angular.module('aio.main').controller('MainCtrl', [
                 $log.log('[MainCtrl] - Apps already lazy cached.');
                 if (Apps.isCacheNeeded()) {
                     $log.log('[MainCtrl] - Initiating lazy cache for dial icons');
-                    return Apps.lazyCacheIcons().then(init);
+                    return Apps.lazyCacheIcons().then($scope.refreshScope);
                 }
             }, lazyCacheAppsTimeout);
         };
@@ -31,7 +31,7 @@ angular.module('aio.main').controller('MainCtrl', [
                     return Helpers.loadRemoteJson($scope.config.config_update_url)
                         .then(Config.updateConfig)
                         .then(Apps.syncWebAppsDb)
-                        .then(init);
+                        .then($scope.refreshScope);
                 }
 
                 $log.log('[MainCtrl] - config is up to date.');
@@ -50,7 +50,7 @@ angular.module('aio.main').controller('MainCtrl', [
         //second loading services
         var initializeApp = function () {
             $log.info('✔ [MainCtrl] - Start phase two');
-            return $q.all([init(), Analytics.init(), lazyCacheApps(), checkConfigExpiration()]);
+            return $q.all([$scope.refreshScope(), Analytics.init(), lazyCacheApps(), checkConfigExpiration()]);
         };
 
         var loadFromRemotes = function () {

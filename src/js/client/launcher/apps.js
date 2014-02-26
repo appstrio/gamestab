@@ -294,12 +294,11 @@ angular.module('aio.launcher').factory('Apps', [
          * @param cb
          * @return
          */
-        var addNewApp = function (app, cb) {
+        var addNewApp = function (app) {
             var lastAvailablePage = getLastAvailablePage();
             app.installTimestamp = Date.now();
             lastAvailablePage.push(app);
-            //TODO change whoever calls this to work with promises
-            return store().then(cb);
+            return store();
         };
 
         /**
@@ -335,7 +334,11 @@ angular.module('aio.launcher').factory('Apps', [
                 return cb();
             }
             //store new dials
-            return store().then(storeRemoveApps).then(cb);
+            return $q.when(organizeAsPages(_.flatten(apps)))
+                .then(setApps)
+                .then(store)
+                .then(storeRemoveApps)
+                .then(cb);
         };
 
         var storeRemoveApps = function () {
@@ -502,13 +505,13 @@ angular.module('aio.launcher').factory('Apps', [
          */
         var getLastAvailablePage = function () {
             var lastPage = apps[apps.length - 1];
+            //if enough room on last page
             if (lastPage.length < 12) {
                 return lastPage;
             }
-
+            //else add a new page
             var newPage = [];
             apps.push(newPage);
-            store();
             return newPage;
         };
 
