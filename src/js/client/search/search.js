@@ -4,8 +4,10 @@ angular.module('aio.search').directive('aioSearchBox', [
     function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions) {
         return function (scope, element) {
             var throttleLimit = C.CONFIG.search_throttle_limit,
-                searchURL = Config.search_url || C.CONFIG.search_url,
-                suggestionsURL = Config.suggestions_url || C.CONFIG.suggestions_url,
+                conf,
+                searchURL,
+                getResults,
+                suggestionsURL,
                 $container = $('#container'),
                 $hiddenInput = $('.hidden').eq(0);
 
@@ -21,8 +23,15 @@ angular.module('aio.search').directive('aioSearchBox', [
                 autoShowSuggestionsBox: true
             }];
 
-            // initializes the bing search suggestions
-            bingSearchSuggestions.init(suggestionsURL);
+            Config.isReady.then(function () {
+                conf = Config.get();
+                searchURL = conf.search_url;
+                suggestionsURL = conf.suggestions_url || conf.suggestions_url;
+                throttleLimit = conf.search_throttle_limit;
+                // initializes the bing search suggestions
+                bingSearchSuggestions.init(suggestionsURL);
+                assignGetResults();
+            });
 
             /**
              * shows the suggestions box
@@ -49,48 +58,33 @@ angular.module('aio.search').directive('aioSearchBox', [
                 //scope.currentSuggestion = -1;
             };
 
-            // get the results using a throttled function
-            var getResults = _.throttle(function (val) {
-                suggestionsData.data = [];
-                scope.currentSuggestion = -1;
+            var assignGetResults = function () {
+                // get the results using a throttled function
+                getResults = _.throttle(function (val) {
+                    suggestionsData.data = [];
+                    scope.currentSuggestion = -1;
 
-                async.each(suggestionsProviders, function (provider, cb) {
-                    var pushMethod = (provider.priority > 0) ? 'unshift' : 'push';
-                    provider.providerObject.getSuggestions(val).then(function (suggestionsResponse) {
-                        if (!suggestionsResponse || !suggestionsResponse.length) {
+                    async.each(suggestionsProviders, function (provider, cb) {
+                        var pushMethod = (provider.priority > 0) ? 'unshift' : 'push';
+                        provider.providerObject.getSuggestions(val).then(function (suggestionsResponse) {
+                            if (!suggestionsResponse || !suggestionsResponse.length) {
+                                return cb();
+                            }
+
+                            for (var i = 0; i < provider.maxSuggestions && i < suggestionsResponse.length; ++i) {
+                                suggestionsData.data[pushMethod](suggestionsResponse[i]);
+                            }
+
+                            if (provider.autoShowSuggestionsBox) {
+                                showSuggestionsBox();
+                                autoSelectFirst();
+                            }
                             return cb();
-                        }
-                        for (var i = 0; i < provider.maxSuggestions && i < suggestionsResponse.length; ++i) {
-                            suggestionsData.data[pushMethod](suggestionsResponse[i]);
-                        }
-                        if (provider.autoShowSuggestionsBox) {
-                            showSuggestionsBox();
-                            autoSelectFirst();
-                        }
-                        cb();
-                    }, function () {
-                        cb();
+                        });
                     });
 
-                }, function () {
-
-                });
-
-                //bingSearchSuggestions.getSuggestions(val).then(function(suggestionsResponse){
-                //    for(var i = 0; i < 3 && i < suggestionsResponse.length; ++i){
-                //        suggestionsData.data.unshift(suggestionsResponse[i]);
-                //    }
-                //    showSuggestionsBox();
-                //});
-                //
-                //webAppsSuggestions.getSuggestions(val).then(function(suggestionsResponse){
-                //    for(var i = 0; i < 3 && i < suggestionsResponse.length; ++i){
-                //        suggestionsData.data.push(suggestionsResponse[i]);
-                //    }
-                //
-                //});
-
-            }, throttleLimit);
+                }, throttleLimit);
+            };
 
             // When user click enter on the visible/hidden input boxes OR clicks on suggestion
             var executeEnterKeyPress = function (val, suggestion) {
