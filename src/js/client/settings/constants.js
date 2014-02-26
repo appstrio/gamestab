@@ -7,14 +7,18 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             WEB_APPS_DB: 'https://s3.amazonaws.com/Gamestab/JSONs/webAppsDb.json',
             //default config if not partner found
             DEFAULT_REMOTE_CONFIG: 'https://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
+            //background to fallback in case partner json doesn't contain background image
             FALLBACK_BACKGROUND_URL: 'img/wallpapers/default.jpg',
+            //app version is gotten from manifest
             APP_VERSION: Chrome.getVersion(),
+            //storage keys to use
             STORAGE_KEYS: {
                 CONFIG: 'gt.config',
                 APPS: 'gt.apps',
                 DELETED_APPS: 'gt.deleted.apps',
                 ACCOUNT: 'gt.account',
                 BACKGROUNDS: 'gt.backgrounds',
+                //current active background
                 BACKGROUND: 'gt.background'
             },
             ERRORS: {
@@ -34,8 +38,13 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 use_chrome_apps: false,
                 //where to get backgrounds from
                 backgrounds_json_url: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
+                //whether to report user's surf to competitor's websites
+                report_competitor_websites: true,
+                //analytics UA account to use
                 analytics_ua_account: 'UA-47928276-1',
+                //what engine to use suggestions from
                 suggestions_type: 'bing',
+                //the partner id. this is the default
                 partner_id: 'default',
                 //how many dials should be displayed per page
                 dials_per_page: 12,
@@ -47,11 +56,15 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 lazy_cache_dials_timeout: 10000, // 10 seconds
                 //how often should config be updated
                 config_expiration_time: 14400000, //4 hours
+                //when updating config from partner/default - override user preferences.
+                //set to false unless you are sure
+                override_user_preferences: false,
+                //custom user preferences. can be overriden only by a switch
                 user_preferences: {
+                    //should the search box be shown
                     show_search_box: true
                 }
-            },
-            DEBUG: {}
+            }
         };
     }
 ]);

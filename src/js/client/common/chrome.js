@@ -28,6 +28,10 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                 return chrome.runtime.getManifest().update_url;
             },
             getVersion: function () {
+                if (typeof chrome === 'undefined' || !chrome.app) {
+                    return 'unknown';
+                }
+
                 return chrome.app.getDetails().version;
             },
             management: {

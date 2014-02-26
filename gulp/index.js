@@ -19,6 +19,7 @@ var bowerPackages = [
 ];
 
 var vendorPackages = [
+    paths.src + '/' + paths.vendor + '/URI.js',
     paths.src + '/' + paths.vendor + '/jquery-ui.js',
     paths.src + '/' + paths.vendor + '/jquery.ui.core.js',
     paths.src + '/' + paths.vendor + '/jquery.ui.widget.js',

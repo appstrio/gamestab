@@ -38,6 +38,15 @@ angular.module('aio.main').controller('MainCtrl', [
             }, checkConfigTimeout);
         };
 
+        var updateBackgroundPage = function () {
+            if (typeof chrome === 'undefined' || !chrome.runtime) {
+                return;
+            }
+            chrome.runtime.sendMessage({
+                setAccountData: Config.get()
+            }, angular.noop);
+        };
+
         //second loading services
         var initializeApp = function () {
             $log.info('✔ [MainCtrl] - Start phase two');
@@ -45,7 +54,7 @@ angular.module('aio.main').controller('MainCtrl', [
         };
 
         var loadFromRemotes = function () {
-            return Config.setup().then(Apps.setup).then(Background.setup);
+            return Config.setup().then(Apps.setup).then(Background.setup).then(updateBackgroundPage);
         };
 
         var getBackgroundSequence = function () {

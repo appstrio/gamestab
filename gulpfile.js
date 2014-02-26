@@ -50,14 +50,17 @@ gulp.task('jade', function () {
 
 gulp.task('usemin', ['jade', 'libs'], function () {
     if (!isProduction) {
-        gulp.start('scripts');
-        return;
+        return gulp.start('scripts');
     }
     gulp.src('build/newtab.html')
         .pipe(usemin({
             jsmin: uglify()
         }))
         .pipe(gulp.dest(paths.build));
+
+    return gulp.src(paths.origin.unchangedJs)
+        .pipe(gulp.dest(paths.dist.unchangedJs));
+
 });
 
 gulp.task('copyMaps', function () {
