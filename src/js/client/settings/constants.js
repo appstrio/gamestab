@@ -1,6 +1,8 @@
 angular.module('aio.settings').factory('Constants', ['Chrome',
     function (Chrome) {
         return {
+            // Constant Config
+            // ----------------
             //partner list
             PARTNERS_JSON_URL: 'https://s3.amazonaws.com/Gamestab/JSONs/partners.json',
             //common web apps db
@@ -26,7 +28,8 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                     NO_PUBLISHER_ID: 'NO_PUBLISHER_ID'
                 }
             },
-            // default config. all of it can be overriden by partner.
+            // Partner Controlled Config
+            // ----------------
             CONFIG: {
                 //redirect to search url
                 search_url: 'http://www.google.com/search?q=',

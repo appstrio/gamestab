@@ -43,11 +43,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>partner list</p>
+              <h2 id="constant-config">Constant Config</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>            PARTNERS_JSON_URL: <span class="hljs-string">'https://s3.amazonaws.com/Gamestab/JSONs/partners.json'</span>,</pre></div></div>
             
         </li>
         
@@ -58,11 +56,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>common web apps db</p>
+              <p>partner list</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            WEB_APPS_DB: <span class="hljs-string">'https://s3.amazonaws.com/Gamestab/JSONs/webAppsDb.json'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            PARTNERS_JSON_URL: <span class="hljs-string">'https://s3.amazonaws.com/Gamestab/JSONs/partners.json'</span>,</pre></div></div>
             
         </li>
         
@@ -73,11 +71,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>default config if not partner found</p>
+              <p>common web apps db</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            DEFAULT_REMOTE_CONFIG: <span class="hljs-string">'https://s3.amazonaws.com/Gamestab/JSONs/default_config.json'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            WEB_APPS_DB: <span class="hljs-string">'https://s3.amazonaws.com/Gamestab/JSONs/webAppsDb.json'</span>,</pre></div></div>
             
         </li>
         
@@ -88,11 +86,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>background to fallback in case partner json doesn’t contain background image</p>
+              <p>default config if not partner found</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            FALLBACK_BACKGROUND_URL: <span class="hljs-string">'img/wallpapers/default.jpg'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            DEFAULT_REMOTE_CONFIG: <span class="hljs-string">'https://s3.amazonaws.com/Gamestab/JSONs/default_config.json'</span>,</pre></div></div>
             
         </li>
         
@@ -103,11 +101,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>app version is gotten from manifest</p>
+              <p>background to fallback in case partner json doesn’t contain background image</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            APP_VERSION: Chrome.getVersion(),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            FALLBACK_BACKGROUND_URL: <span class="hljs-string">'img/wallpapers/default.jpg'</span>,</pre></div></div>
             
         </li>
         
@@ -117,6 +115,21 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>app version is gotten from manifest</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            APP_VERSION: Chrome.getVersion(),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>storage keys to use</p>
 
@@ -132,11 +145,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>current active background</p>
 
@@ -153,32 +166,15 @@
         </li>
         
         
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>default config. all of it can be overriden by partner.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            CONFIG: {</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>redirect to search url</p>
+              <h2 id="partner-controlled-config">Partner Controlled Config</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>                search_url: <span class="hljs-string">'http://www.google.com/search?q='</span>,</pre></div></div>
             
         </li>
         
@@ -189,11 +185,10 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>suggestions url</p>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>                suggestions_url: <span class="hljs-string">'http://api.bing.com/osjson.aspx?Market=en-us&amp;query='</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            CONFIG: {</pre></div></div>
             
         </li>
         
@@ -204,11 +199,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>where to update from</p>
+              <p>redirect to search url</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                partner_config_json_url: <span class="hljs-string">'http://s3.amazonaws.com/Gamestab/JSONs/default_config.json'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                search_url: <span class="hljs-string">'http://www.google.com/search?q='</span>,</pre></div></div>
             
         </li>
         
@@ -219,11 +214,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>should app show chrome apps</p>
+              <p>suggestions url</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                use_chrome_apps: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                suggestions_url: <span class="hljs-string">'http://api.bing.com/osjson.aspx?Market=en-us&amp;query='</span>,</pre></div></div>
             
         </li>
         
@@ -234,11 +229,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>where to get backgrounds from</p>
+              <p>where to update from</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                backgrounds_json_url: <span class="hljs-string">'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                partner_config_json_url: <span class="hljs-string">'http://s3.amazonaws.com/Gamestab/JSONs/default_config.json'</span>,</pre></div></div>
             
         </li>
         
@@ -249,11 +244,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>whether to report user’s surf to competitor’s websites</p>
+              <p>should app show chrome apps</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                report_competitor_websites: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                use_chrome_apps: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -264,11 +259,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>analytics UA account to use</p>
+              <p>where to get backgrounds from</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                analytics_ua_account: <span class="hljs-string">'UA-47928276-1'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                backgrounds_json_url: <span class="hljs-string">'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json'</span>,</pre></div></div>
             
         </li>
         
@@ -279,11 +274,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>what engine to use suggestions from</p>
+              <p>whether to report user’s surf to competitor’s websites</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                suggestions_type: <span class="hljs-string">'bing'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                report_competitor_websites: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -294,11 +289,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>the partner id. this is the default</p>
+              <p>analytics UA account to use</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                partner_id: <span class="hljs-string">'default'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                analytics_ua_account: <span class="hljs-string">'UA-47928276-1'</span>,</pre></div></div>
             
         </li>
         
@@ -309,11 +304,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>how many dials should be displayed per page</p>
+              <p>what engine to use suggestions from</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                dials_per_page: <span class="hljs-number">12</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                suggestions_type: <span class="hljs-string">'bing'</span>,</pre></div></div>
             
         </li>
         
@@ -324,11 +319,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>maximum number of initial apps + partner apps + [other game apps]</p>
+              <p>the partner id. this is the default</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                initial_dials_size: <span class="hljs-number">26</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                partner_id: <span class="hljs-string">'default'</span>,</pre></div></div>
             
         </li>
         
@@ -339,11 +334,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>throttling limit for searches</p>
+              <p>how many dials should be displayed per page</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                search_throttle_limit: <span class="hljs-number">100</span>, <span class="hljs-comment">//100 ms</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>                dials_per_page: <span class="hljs-number">12</span>,</pre></div></div>
             
         </li>
         
@@ -354,11 +349,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>when to start lazy caching app icons after load</p>
+              <p>maximum number of initial apps + partner apps + [other game apps]</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                lazy_cache_dials_timeout: <span class="hljs-number">10000</span>, <span class="hljs-comment">// 10 seconds</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>                initial_dials_size: <span class="hljs-number">26</span>,</pre></div></div>
             
         </li>
         
@@ -369,11 +364,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>how often should config be updated</p>
+              <p>throttling limit for searches</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                config_expiration_time: <span class="hljs-number">14400000</span>, <span class="hljs-comment">//4 hours</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>                search_throttle_limit: <span class="hljs-number">100</span>, <span class="hljs-comment">//100 ms</span></pre></div></div>
             
         </li>
         
@@ -383,6 +378,36 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>when to start lazy caching app icons after load</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                lazy_cache_dials_timeout: <span class="hljs-number">10000</span>, <span class="hljs-comment">// 10 seconds</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>how often should config be updated</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                config_expiration_time: <span class="hljs-number">14400000</span>, <span class="hljs-comment">//4 hours</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>when updating config from partner/default - override user preferences.
 set to false unless you are sure</p>
@@ -394,11 +419,11 @@ set to false unless you are sure</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>custom user preferences. can be overriden only by a switch</p>
 
@@ -409,11 +434,11 @@ set to false unless you are sure</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>should the search box be shown</p>
 
