@@ -407,7 +407,6 @@ angular.module('aio.launcher').factory('Apps', [
 
         //remove if not existant. add if not found
         var syncPartnerApps = function (flattenedApps, partnerApps) {
-            //add missing non-deleted chromeApps
             partnerApps.forEach(function (pApp) {
                 var isPartnerAppFound = _.findWhere(flattenedApps, {
                     url: pApp.url
@@ -430,6 +429,7 @@ angular.module('aio.launcher').factory('Apps', [
                 }
 
                 //else add it
+                //TODO decide at what spot
                 flattenedApps.push(pApp);
             });
 
