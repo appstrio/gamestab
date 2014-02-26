@@ -36,7 +36,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                         waitForFinish: true
                     }).then(function () {
                         // window.location = app.url;
-                        window.parent.location= app.url;
+                        window.parent.location = app.url;
                     });
                     return;
                 }
@@ -77,13 +77,15 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                     //can't allow them to uninstall system apps, even by error
                     return;
                 }
-                if (app.chromeId) {
-                    //need to confirm before delete
-                    var response = window.confirm('Are you sure you want to delete your Chrome App ' + app.title + '?');
-                    if (!response) {
-                        return;
-                    }
-                }
+
+                //deprecated
+                // if (app.chromeId) {
+                // need to confirm before delete
+                // var response = window.confirm('Are you sure you want to delete your Chrome App ' + app.title + '?');
+                // if (!response) {
+                // return;
+                // }
+                // }
 
                 Apps.uninstallApp(app, function () {
                     console.debug('deleted app');

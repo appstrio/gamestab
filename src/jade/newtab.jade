@@ -48,7 +48,7 @@ html(ng-csp='ng-csp')
         //----------------
     body(ng-controller='MainCtrl')
     #container
-        #search-wrapper
+        #search-wrapper(ng-show="rawScreens.length")
             .search1(ng-show="displayTopSearchBox")
                 iframe.blurred-background
                 .search-input
@@ -63,8 +63,11 @@ html(ng-csp='ng-csp')
                         span.details
                             span.title(ng-bind="suggestion.title")
                             span.description(ng-show="suggestion.description", ng-bind="suggestion.description")
-
-        #wrapper(hl-background)
+        #loading(ng-show="!rawScreens.length", style="position:fixed;width:100%;height:100;left:0;right:0;top:0;bottom:0;z-index:99999999;background:rgba(1, 0, 7, 0.94);")
+            .centered-block(style="width: 400px; height: 400px; color:white; border-radius: 15px; padding: 10px; margin: auto; position: absolute; text-align: center; top: 0; max-width: 100%; left: 0; bottom: 0; right: 0; max-height: 100%; overflow: hidden;")
+                h1(style="text-align:center;vertical-align:middle") Loading...
+                img(style="height:80px;width:80px;" src="./img/loader2.gif")
+        #wrapper(hl-background, ng-show="rawScreens.length")
             #search-placeholder
             .main
                 section(hl-launcher)
