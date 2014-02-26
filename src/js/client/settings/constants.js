@@ -13,16 +13,24 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             FALLBACK_BACKGROUND_URL: 'img/wallpapers/default.jpg',
             //app version is gotten from manifest
             APP_VERSION: Chrome.getVersion(),
-            //storage keys to use
+            // Local storage keys
+            // ----------------
             STORAGE_KEYS: {
+                //general config key
                 CONFIG: 'gt.config',
+                //dials key
                 APPS: 'gt.apps',
+                //deleted dials key
                 DELETED_APPS: 'gt.deleted.apps',
+                //account key (Unused currently)
                 ACCOUNT: 'gt.account',
+                //user custom backgrounds key
                 BACKGROUNDS: 'gt.backgrounds',
                 //current active background
                 BACKGROUND: 'gt.background'
             },
+            // Error messages
+            // ----------------
             ERRORS: {
                 SETUP: {
                     NO_PUBLISHER_ID: 'NO_PUBLISHER_ID'
