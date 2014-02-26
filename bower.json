@@ -26,6 +26,7 @@
     "async": "~0.2.5",
     "angular-fallback-src": "~0.1.2",
     "ngprogress": "~1.0.4",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "uri.js": "~1.12.0"
   }
 }

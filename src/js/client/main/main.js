@@ -45,15 +45,16 @@ angular.module('aio.main').controller('MainCtrl', [
         };
 
         var loadFromRemotes = function () {
-            return Config.setup()
-                .then(Apps.setup)
-                .then(Background.setup);
+            return Config.setup().then(Apps.setup).then(Background.setup);
+        };
+
+        var getBackgroundSequence = function () {
+            return Background.init().then(null, Background.setup);
         };
 
         //load config from local or remote
         $q.all([Config.init(), Apps.init()])
-            .then(Background.init, loadFromRemotes)
-            .then(null, Background.setup)
+            .then(getBackgroundSequence, loadFromRemotes)
             .then(initializeApp)
             .then(function () {
                 console.debug('%c✔[MainCtrl] - entire startup process took ' +

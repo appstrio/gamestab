@@ -203,8 +203,14 @@ angular.module('aio.launcher').factory('Apps', [
             });
         };
 
+        var getAllChromeApps = function () {
+            if (Config.get().use_chrome_apps) {
+                return Chrome.management.getAll();
+            }
+        };
+
         var fetchDials = function () {
-            return $q.all([getOrganizedWebApps(), Chrome.management.getAll()]);
+            return $q.all([getOrganizedWebApps(), getAllChromeApps()]);
         };
         /**
          * setup
@@ -461,6 +467,7 @@ angular.module('aio.launcher').factory('Apps', [
             return flattenedApps;
         };
 
+        //sync web apps db
         var syncWebAppsDb = function () {
             var flattenedApps = _.flatten(apps);
             var partnerApps = Config.get().web_apps_db || [];

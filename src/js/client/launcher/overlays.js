@@ -69,7 +69,7 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
         $scope.selectBackground = function (bg, e) {
             e.stopPropagation();
             //report analytics
-            if (bg.url === Background.background.url) {
+            if (!bg.url || bg.url === Background.background.url) {
                 return;
             }
 
@@ -80,9 +80,8 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
             });
 
             Background.setNewBackground(bg)
-                .then(function (background) {
+                .then(function () {
                     //assign the new url to the image
-                    bg.url = background.url;
                     $scope.loading = false;
                 });
         };

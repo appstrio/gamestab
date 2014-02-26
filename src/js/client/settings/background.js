@@ -46,11 +46,17 @@ angular.module('aio.settings').factory('Background', [
         };
 
         var setup = function () {
-            console.info('[Backgorund] - starting setup');
             //get config
             var conf = Config.get();
             //background image is what user selects, or the default one (our default or partner's)
-            var url = conf.user_preferences.background_image || C.DEFAULT_BACKGROUND_URL;
+            var url = conf.user_preferences &&
+            //user selected background
+            conf.user_preferences.background_image ||
+            //or partner/default background
+            conf.default_background_url ||
+            //or hard-set background
+            C.FALLBACK_BACKGROUND_URL;
+            console.debug('[Backgorund] - using the following url for background:', url);
             var newBg = getCustomBgObj(url);
             return Image.generateThumbnail('url', thumbnailResizeParams, [newBg])
                 .then(function (newBackground) {

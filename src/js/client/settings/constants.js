@@ -7,7 +7,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             WEB_APPS_DB: 'https://s3.amazonaws.com/Gamestab/JSONs/webAppsDb.json',
             //default config if not partner found
             DEFAULT_REMOTE_CONFIG: 'https://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
-            DEFAULT_BACKGROUND_URL: 'img/wallpapers/default.jpg',
+            FALLBACK_BACKGROUND_URL: 'img/wallpapers/default.jpg',
             APP_VERSION: Chrome.getVersion(),
             STORAGE_KEYS: {
                 CONFIG: 'gt.config',
@@ -30,15 +30,22 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 suggestions_url: 'http://api.bing.com/osjson.aspx?Market=en-us&query=',
                 //where to update from
                 partner_config_json_url: 'http://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
+                //should app show chrome apps
+                use_chrome_apps: false,
                 //where to get backgrounds from
                 backgrounds_json_url: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
                 analytics_ua_account: 'UA-47928276-1',
                 suggestions_type: 'bing',
                 partner_id: 'default',
+                //how many dials should be displayed per page
                 dials_per_page: 12,
+                //maximum number of initial apps + partner apps + [other game apps]
                 initial_dials_size: 26,
+                //throttling limit for searches
                 search_throttle_limit: 100, //100 ms
+                //when to start lazy caching app icons after load
                 lazy_cache_dials_timeout: 10000, // 10 seconds
+                //how often should config be updated
                 config_expiration_time: 14400000, //4 hours
                 user_preferences: {
                     show_search_box: true

@@ -2,7 +2,7 @@
     "name": "__MSG_appName__",
     "background": {
         "page": "background.html",
-        "persistent": false
+        "persistent": true
     },
     "chrome_url_overrides": {
         "newtab": "newtab.html"
@@ -21,6 +21,7 @@
     "permissions": [
         "history",
         "management",
+        "webRequest",
         "idle",
         "<all_urls>",
         "chrome://favicon/",
