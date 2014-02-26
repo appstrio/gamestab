@@ -40,7 +40,7 @@ angular.module('aio.settings').factory('Background', [
         };
 
         var addBgToUserBgs = function (bg) {
-            userBackgrounds.push(bg);
+            userBackgrounds.push(angular.copy(bg));
             //and store it
             return storeUserBackgrounds();
         };
@@ -122,16 +122,15 @@ angular.module('aio.settings').factory('Background', [
 
         // store background object in the localStorage
         var setNewBackground = function (newBackground) {
-            return Image.convertFieldToLocalFile('url', {}, [newBackground])
-                .then(function (_backgorund) {
-                    //assign to runtime object
-                    assignBackground(_backgorund[0]);
-                    var conf = Config.get();
-                    //point in config
-                    conf.user_preferences.background_image = background;
-                    Config.setConfig(conf);
-                    return Config.set();
-                });
+            return Image.convertFieldToLocalFile('url', {}, [newBackground]).then(function (_background) {
+                //assign to runtime object
+                assignBackground(_background[0]);
+                var conf = Config.get();
+                //point in config
+                conf.user_preferences.background_image = background;
+                Config.setConfig(conf);
+                return Config.set();
+            });
         };
 
         var getCustomBgObj = function (file) {
@@ -151,11 +150,15 @@ angular.module('aio.settings').factory('Background', [
                 }
             }).then(function (file) {
                 var newBackground = getCustomBgObj(file);
+                //app has no original url
+                newBackground.originalUrl = newBackground.url;
                 return Image.generateThumbnail('url', thumbnailResizeParams, [newBackground]);
             }).then(function (newBackground) {
                 //make it the active one
                 return setNewBackground(newBackground[0]);
-            }).then(addBgToUserBgs);
+            }).then(function () {
+                return addBgToUserBgs(background);
+            });
         };
 
         var storeUserBackgrounds = function () {

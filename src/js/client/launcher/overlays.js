@@ -42,8 +42,7 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
         ngProgress.start();
 
         //assign scope backgrounds
-        Background.isReady
-            .then(Background.fetchBackgrounds)
+        Background.isReady.then(Background.fetchBackgrounds)
             .then(function () {
                 ngProgress.complete();
                 $scope.loading = false;
@@ -55,6 +54,7 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
             });
 
         $scope.refreshBackgrounds = function () {
+            console.debug('refreshing backgrounds');
             $scope.backgrounds = Background.getBackgrounds();
         };
 
@@ -79,11 +79,10 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
                 label: bg.originalUrl || bg.url
             });
 
-            Background.setNewBackground(bg)
-                .then(function () {
-                    //assign the new url to the image
-                    $scope.loading = false;
-                });
+            Background.setNewBackground(bg).then(function () {
+                //assign the new url to the image
+                $scope.loading = false;
+            });
         };
     }
 ]).controller('StoreCtrl', ['$scope', 'Apps', '$log', 'Analytics',
