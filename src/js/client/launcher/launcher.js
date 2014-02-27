@@ -1,6 +1,6 @@
 /* global _ */
-angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome', '$document',
-    function (Apps, $log, $timeout, Analytics, Chrome, $document) {
+angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome',
+    function (Apps, $log, $timeout, Analytics, Chrome) {
         return function (scope, element) {
             //jshint unused:false
 
@@ -11,11 +11,6 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
             var $arrowRight = element.find('.icon-right-open-big').eq(0);
             var screenWidth = 880;
             scope.isDragging = false;
-
-
-            $document.on('keyup', function (e) {
-                console.log('Filename: launcher.js', 'Line: 16', 'e.keyCode:', e.keyCode);
-            });
 
             scope.launchApp = function (app) {
                 //user is editing dials. don't launch
