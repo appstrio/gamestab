@@ -1,6 +1,6 @@
 /* global _ */
-angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome',
-    function (Apps, $log, $timeout, Analytics, Chrome) {
+angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome', '$document',
+    function (Apps, $log, $timeout, Analytics, Chrome, $document) {
         return function (scope, element) {
             //jshint unused:false
 
@@ -11,6 +11,11 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
             var $arrowRight = element.find('.icon-right-open-big').eq(0);
             var screenWidth = 880;
             scope.isDragging = false;
+
+
+            $document.on('keyup', function (e) {
+                console.log('Filename: launcher.js', 'Line: 16', 'e.keyCode:', e.keyCode);
+            });
 
             scope.launchApp = function (app) {
                 //user is editing dials. don't launch
@@ -77,15 +82,6 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                     //can't allow them to uninstall system apps, even by error
                     return;
                 }
-
-                //deprecated
-                // if (app.chromeId) {
-                // need to confirm before delete
-                // var response = window.confirm('Are you sure you want to delete your Chrome App ' + app.title + '?');
-                // if (!response) {
-                // return;
-                // }
-                // }
 
                 Apps.uninstallApp(app, function () {
                     console.debug('deleted app');

@@ -173,10 +173,11 @@ angular.module('aio.search').directive('aioSearchBox', [
                     return;
                 }
 
+                e.preventDefault();
+                e.stopPropagation();
+
                 switch (e.keyCode) {
                 case 40: //down key
-                    e.preventDefault();
-                    e.stopPropagation();
                     if (scope.currentSuggestion < suggestionsData.data.length - 1) {
                         scope.$apply(function () {
                             ++scope.currentSuggestion;
@@ -185,8 +186,6 @@ angular.module('aio.search').directive('aioSearchBox', [
 
                     break;
                 case 38: //up key
-                    e.preventDefault();
-                    e.stopPropagation();
 
                     //go back to search element
                     if (scope.currentSuggestion === 0) {
