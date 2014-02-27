@@ -187,12 +187,18 @@ angular.module('aio.search').directive('aioSearchBox', [
                 case 38: //up key
                     e.preventDefault();
                     e.stopPropagation();
+
+                    if (scope.currentSuggestion === 0) {
+                        element.focus();
+                        return;
+                    }
+
                     if (scope.currentSuggestion > 0) {
+
                         scope.$apply(function () {
                             --scope.currentSuggestion;
                         });
                     }
-
                     break;
                 case 13: //enter
                     executeEnterKeyPress();
