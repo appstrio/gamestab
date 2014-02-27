@@ -188,13 +188,13 @@ angular.module('aio.search').directive('aioSearchBox', [
                     e.preventDefault();
                     e.stopPropagation();
 
+                    //go back to search element
                     if (scope.currentSuggestion === 0) {
-                        element.focus();
-                        return;
+                        return element.focus();
                     }
 
+                    //go up in suggestions
                     if (scope.currentSuggestion > 0) {
-
                         scope.$apply(function () {
                             --scope.currentSuggestion;
                         });
