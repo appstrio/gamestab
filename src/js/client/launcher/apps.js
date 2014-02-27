@@ -353,20 +353,24 @@ angular.module('aio.launcher').factory('Apps', [
             });
         };
 
-        var syncChromeApps = function (flattenedApps, chromeApps) {
+        //mark item to delete in srcArr if not in targetArr
+        var deleteIfNotFound = function (srcArr, targetArr, srcField, targetField) {
+            //loop through local chrome apps finding redundant apps
+            srcArr.forEach(function (ourApp) {
+                var query = {};
+                query[targetField] = ourApp[srcField];
+                if (!_.findWhere(targetArr, query)) {
+                    console.info('marking app for deletion', ourApp);
+                    ourApp.toDelete = true;
+                }
+            });
+        };
 
-            var appsObject = {};
+        var syncChromeApps = function (flattenedApps, chromeApps) {
+            //get only the chrome apps from all apps
             var ourChromeApps = _.filter(flattenedApps, 'chromeId');
 
-            _.chain(ourChromeApps)
-                .pluck('chromeId')
-                .values()
-                .each(function (i) {
-                    appsObject[i] = false;
-                })
-                .value();
-
-            //add missing non-deleted chromeApps
+            //loop through system chrome apps finding and syncing apps
             chromeApps.forEach(function (cApp) {
                 var newChromeApp;
                 var isChromeAppRemoved = _.findWhere(removedApps, {
@@ -386,9 +390,8 @@ angular.module('aio.launcher').factory('Apps', [
                 newChromeApp = chromeAppToObject(cApp);
 
                 if (isChromeAppFound) {
-                    appsObject[cApp.id] = true;
                     //sync it
-                    isChromeAppFound = newChromeApp;
+                    isChromeAppFound = angular.extend(isChromeAppFound, newChromeApp);
                     return;
                 }
 
@@ -396,26 +399,14 @@ angular.module('aio.launcher').factory('Apps', [
                 flattenedApps.push(newChromeApp);
             });
 
-            //find our apps that user uninstalled externally
-            var redundantApps = [];
-            _.each(appsObject, function (value, key) {
-                if (!value) {
-                    redundantApps.push(key);
-                }
-            });
-
-            _.each(redundantApps, function (chromeId) {
-                var toDelete = _.findWhere(flattenedApps, {
-                    chromeId: chromeId
-                });
-                toDelete.toDelete = true;
-            });
-
+            deleteIfNotFound(ourChromeApps, chromeApps, 'chromeId', 'id');
             return flattenedApps;
         };
 
         //remove if not existant. add if not found
         var syncPartnerApps = function (flattenedApps, partnerApps) {
+
+            //loop through remote partner apps finding and syncing apps
             partnerApps.forEach(function (pApp) {
                 var isPartnerAppFound = _.findWhere(flattenedApps, {
                     url: pApp.url
@@ -423,7 +414,7 @@ angular.module('aio.launcher').factory('Apps', [
 
                 //sync it
                 if (isPartnerAppFound) {
-                    isPartnerAppFound = pApp;
+                    isPartnerAppFound = angular.extend(isPartnerAppFound, pApp);
                     return;
                 }
 
@@ -439,16 +430,20 @@ angular.module('aio.launcher').factory('Apps', [
 
                 //else add it
                 //TODO decide at what spot
+                console.info('adding new partner app', pApp);
                 flattenedApps.push(pApp);
             });
 
+            //loop through local partner apps finding redundant apps
+            var ourPartnerApps = _.reduce(flattenedApps, 'owner_partner_id');
+
+            deleteIfNotFound(ourPartnerApps, partnerApps, 'url', 'url');
             return flattenedApps;
         };
 
         //remove app if not found in web apps db
         var syncAllApps = function (flattenedApps, allApps) {
-
-            flattenedApps.forEach(function (app, index) {
+            flattenedApps.forEach(function (app) {
                 //skip partner & chrome apps
                 if (app.owner_partner_id || app.chromeId || app.overlay) {
                     return;
@@ -460,11 +455,12 @@ angular.module('aio.launcher').factory('Apps', [
 
                 //sync it
                 if (isAppFound) {
-                    isAppFound = app;
+                    app = angular.extend(app, isAppFound);
                     return;
                 }
 
-                flattenedApps.splice(index, 1);
+                //otherwise delete it
+                app.toDelete = true;
             });
 
             return flattenedApps;
