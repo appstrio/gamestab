@@ -354,7 +354,7 @@ angular.module('aio.launcher').factory('Apps', [
         };
 
         //mark item to delete in srcArr if not in targetArr
-        var deleteIfNotFound = function (srcArr, targetArr, srcField, targetField) {
+        var markDeletedIfNotFound = function (srcArr, targetArr, srcField, targetField) {
             //loop through local chrome apps finding redundant apps
             srcArr.forEach(function (ourApp) {
                 var query = {};
@@ -399,7 +399,7 @@ angular.module('aio.launcher').factory('Apps', [
                 flattenedApps.push(newChromeApp);
             });
 
-            deleteIfNotFound(ourChromeApps, chromeApps, 'chromeId', 'id');
+            markDeletedIfNotFound(ourChromeApps, chromeApps, 'chromeId', 'id');
             return flattenedApps;
         };
 
@@ -435,9 +435,9 @@ angular.module('aio.launcher').factory('Apps', [
             });
 
             //loop through local partner apps finding redundant apps
-            var ourPartnerApps = _.reduce(flattenedApps, 'owner_partner_id');
+            var ourPartnerApps = _.filter(flattenedApps, 'owner_partner_id');
 
-            deleteIfNotFound(ourPartnerApps, partnerApps, 'url', 'url');
+            markDeletedIfNotFound(ourPartnerApps, partnerApps, 'url', 'url');
             return flattenedApps;
         };
 
