@@ -10,9 +10,6 @@ angular.module('aio.common', [
 ]);
 angular.module('aio.main', []);
 
-/*
- * main module
- */
 angular.module('myApp', ['aio.main', 'aio.settings', 'ui.sortable',
     'aio.common', 'aio.launcher', 'aio.search', 'fallback.src', 'ngProgress'
 ]);
