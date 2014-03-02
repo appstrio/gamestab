@@ -1,3 +1,4 @@
+angular.module('aio.common.helpers', []);
 angular.module('aio.common.helpers').factory('Helpers', [
     '$q', '$log', '$http', '$rootScope', 'Storage',
     function ($q, $log, $http, $rootScope, Storage) {

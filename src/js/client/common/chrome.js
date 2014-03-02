@@ -1,3 +1,5 @@
+angular.module('aio.chrome', []);
+
 angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
     function ($rootScope, $timeout, $q, $log) {
         return {

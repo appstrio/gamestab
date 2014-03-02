@@ -1,12 +1,12 @@
-var isDev = false; //jshint ignore:line
-var isWebsite = false;
+var isDev = true; //jshint ignore:line
+var isWebsite = true;
 
 angular.module('aio.settings', []);
 angular.module('aio.search', []);
 angular.module('aio.launcher', []);
 angular.module('aio.common', [
     'aio.common.helpers', 'aio.chrome', 'aio.file', 'aio.image', 'aio.interactions',
-    'aio.overlay', 'aio.storage', 'aio.analytics'
+    'aio.overlay', 'aio.storage', 'aio.analytics', 'communications'
 ]);
 angular.module('aio.main', []);
 

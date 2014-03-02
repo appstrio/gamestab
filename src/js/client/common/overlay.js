@@ -1,3 +1,5 @@
+angular.module('aio.overlay', []);
+
 angular.module('aio.overlay').directive('aioOverlay', ['$timeout', '$log',
     function ($timeout, $log) {
         return {

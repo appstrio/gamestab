@@ -1,29 +1,43 @@
 var gulp = require('gulp');
+var htmlmin = require('gulp-htmlmin');
+var path = require('path');
+var inject = require('gulp-inject');
 var openBrowser = require('open');
 var gutil = require('gulp-util');
 var clean = require('gulp-clean');
 var jade = require('gulp-jade');
-// var gulpFilter = require('gulp-filter');
-// var using = require('gulp-using');
-var usemin = require('gulp-usemin');
 var flatten = require('gulp-flatten');
 var cssmin = require('gulp-cssmin');
-// var gulpif = require('gulp-if');
 var semver = require('semver');
-// var imagemin = require('gulp-imagemin');
-// var concat = require('gulp-concat');
+var imagemin = require('gulp-imagemin');
+var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 var bump = require('gulp-bump');
 var less = require('gulp-less');
 var config = require('./gulp');
+var es = require('event-stream');
 var pkg;
 
 //get paths from config file
 var paths = config.paths;
 var bowerPackages = config.bowerPackages;
-var vendorPackages = config.vendorPackages;
-var libs = bowerPackages.concat(vendorPackages);
+var vendorLibs = bowerPackages.concat(['src/js/vendor/*.js']);
+//default target dir
+var targetDir = 'build/';
+var isProduction = false;
+
+//params for gulp-inject
+var vendorParams = {
+    addRootSlash: false,
+    starttag: '<!-- inject:vendors:{{ext}} -->',
+    ignorePath: ['src', 'build', 'dist']
+};
+
+var scriptsParams = {
+    addRootSlash: false,
+    ignorePath: ['src', 'build', 'dist']
+};
 
 var getPackageJson = function () {
     var fs = require('fs');
@@ -32,76 +46,86 @@ var getPackageJson = function () {
     return pkg;
 };
 
-// var imageFilter = gulpFilter(['**/*.{png,jpeg,jpg,gif}']);
-
-//to set production env use --production in command line
-//production will minify & concat scripts/libs
-var isProduction = Boolean(gutil.env.production);
-
 //jade -> html
 gulp.task('jade', function () {
-    return gulp.src(paths.origin.jade)
+    return gulp.src('src/jade/**/*.jade')
         .pipe(flatten())
         .pipe(jade({
-            pretty: !isProduction
+            pretty: true
         }))
-        .pipe(gulp.dest(paths.build));
-});
-
-gulp.task('usemin', ['jade', 'libs'], function () {
-    if (!isProduction) {
-        return gulp.start('scripts');
-    }
-    gulp.src('build/newtab.html')
-        .pipe(usemin({
-            jsmin: uglify()
-        }))
-        .pipe(gulp.dest(paths.build));
-
-    return gulp.src(paths.origin.unchangedJs)
-        .pipe(gulp.dest(paths.dist.unchangedJs));
-
+        .pipe(gulp.dest(targetDir));
 });
 
 gulp.task('copyMaps', function () {
-    gulp.src('src/bower_components/jquery/jquery.min.map')
+    return gulp.src('src/bower_components/jquery/jquery.min.map')
         .pipe(gulp.dest('build/js/vendor/'));
 });
 
 //less -> css
 gulp.task('less', function () {
-    return gulp.src(paths.origin.less)
+    var cssTarget = path.join(targetDir, 'css');
+
+    return gulp.src('src/less/*.less')
         .pipe(less())
         .pipe(cssmin())
-        .pipe(gulp.dest(paths.dist.less));
+        .pipe(gulp.dest(cssTarget));
 });
 
 // zip build folder. buggy
 gulp.task('zip', function () {
     var _pkg = getPackageJson();
-    gulp.src('build/**/*')
+    gulp.src('dist/**/*')
         .pipe(zip('gamesTab.' + _pkg.version + '.zip'))
         .pipe(gulp.dest('builds'));
 });
 
-// copy & uglify js scripts
-gulp.task('scripts', function () {
-    gulp.src(paths.origin.js)
-        .pipe(gulp.dest(paths.dist.js));
+//concat/uglify scripts & vendors. needs to run after jade task
+gulp.task('scripts', ['jade'], function () {
+    var vendorTarget = path.join(targetDir, 'js/vendor/');
+    var clientScripts = path.join(targetDir, 'js/client/');
+    var bgScripts = path.join(targetDir, 'js/background/');
 
-    return gulp.src(paths.origin.unchangedJs)
-        .pipe(gulp.dest(paths.dist.unchangedJs));
+    //get src for streams
+    var vendorStream = gulp.src(vendorLibs);
+    var clientStream = gulp.src(['src/js/client/**/*.js']);
+    var bgStream = gulp.src(['src/js/background/**/*.js']);
+
+    //handle production deploy
+    if (isProduction) {
+        vendorStream = vendorStream.pipe(concat('vendors.min.js'));
+        clientStream = clientStream
+            .pipe(concat('scripts.min.js'))
+            .pipe(uglify());
+
+        bgStream = bgStream
+            .pipe(concat('backscripts.min.js'))
+            .pipe(uglify());
+    }
+
+    //ouput scripts
+    vendorStream.pipe(gulp.dest(vendorTarget));
+    clientStream.pipe(gulp.dest(clientScripts));
+    bgStream.pipe(gulp.dest(bgScripts));
+
+    gulp.src(targetDir + '/background.html')
+        .pipe(inject(bgStream, scriptsParams))
+        .pipe(gulp.dest(targetDir));
+
+    //inject scripts to jade/html
+    return gulp.src(targetDir + '/newtab.html')
+        .pipe(inject(vendorStream, vendorParams))
+        .pipe(inject(clientStream, scriptsParams))
+        .pipe(gulp.dest(targetDir));
 });
 
-//copy manifest
-gulp.task('manifest', function () {
-    return gulp.src(paths.origin.manifest)
-        .pipe(gulp.dest(paths.build));
+gulp.task('cleanDev', function () {
+    return gulp.src('build/', {
+        read: false
+    }).pipe(clean());
 });
 
-//clean build folder
-gulp.task('clean', function () {
-    return gulp.src(paths.build, {
+gulp.task('cleanProd', function () {
+    return gulp.src('dist/', {
         read: false
     }).pipe(clean());
 });
@@ -132,14 +156,15 @@ gulp.task('bump', function () {
 //handle assets
 gulp.task('assets', function () {
     //copy regular assets
-    gulp.src(paths.origin.assets)
-        .pipe(gulp.dest(paths.build));
+    return gulp.src(paths.origin.assets)
+        .pipe(gulp.dest(targetDir));
 });
 
-//copy libs
-gulp.task('libs', function () {
-    return gulp.src(libs)
-        .pipe(gulp.dest(paths.dist.libs));
+//imagemin only in deploy
+gulp.task('images', function () {
+    return gulp.src('dist/**/*.{jpeg,png,gif,jpg}')
+        .pipe(imagemin())
+        .pipe(gulp.dest('dist/'));
 });
 
 //use alongside with chrome extension reload-extension
@@ -147,18 +172,32 @@ gulp.task('reload', function () {
     openBrowser('http://reload.extensions');
 });
 
+//only in production
+gulp.task('html', ['scripts'], function () {
+    return gulp.src(targetDir + '*.html')
+        .pipe(htmlmin({
+            collapseWhitespace: true
+        }))
+        .pipe(gulp.dest(targetDir));
+});
+
 //all tasks are watch -> bump patch version -> reload extension (globally enabled)
 gulp.task('watch', function () {
-    var afterTasks = [];
+    gulp.watch(['./src/**/*', './assets/**/*'], ['build']);
+});
 
-    gulp.watch(libs, ['libs'].concat(afterTasks));
-    gulp.watch(paths.origin.assets, ['assets'].concat(afterTasks));
-    gulp.watch(paths.origin.js, ['scripts'].concat(afterTasks));
-    gulp.watch(paths.src + '/less/**/*.less', ['less'].concat(afterTasks));
-    gulp.watch(paths.origin.jade, ['jade'].concat(afterTasks));
+gulp.task('build', ['cleanDev'], function () {
+    targetDir = 'build/';
+    return gulp.start('scripts', 'assets', 'copyMaps', 'less');
+});
+
+gulp.task('deploy', ['cleanProd'], function () {
+    targetDir = 'dist/';
+    isProduction = true;
+    return gulp.start('scripts', 'assets', 'copyMaps', 'less', 'images', 'html');
 });
 
 //default task
-gulp.task('default', ['clean'], function () {
-    gulp.start('assets', 'copyMaps', 'jade', 'libs', 'less', 'manifest', 'usemin', 'watch');
+gulp.task('default', function () {
+    gulp.start('build', 'watch');
 });
