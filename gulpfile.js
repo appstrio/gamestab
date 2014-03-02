@@ -189,6 +189,6 @@ gulp.task('deploy', ['cleanProd'], function () {
 });
 
 //default task
-gulp.task('default', ['clean'], function () {
-    gulp.start('assets', 'copyMaps', 'jade', 'libs', 'less', 'manifest', 'usemin', 'watch');
+gulp.task('default', function () {
+    gulp.start('build', 'watch');
 });

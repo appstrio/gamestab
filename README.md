@@ -31,6 +31,10 @@ Gamestab
     - `workspace/` : random non-production things
     - `test/` : app-level js files
 
+## Start a developing flow
+
+Simply run `gulp` and and a development version will be built in the `build/` folder, and a watch for dev files will run.
+
 ## Build a development version
 
 Run: `gulp build`. This will output a minified & concated version.
