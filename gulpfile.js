@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var openBrowser = require('open');
 var gutil = require('gulp-util');
 var clean = require('gulp-clean');
 var jade = require('gulp-jade');
@@ -6,7 +7,6 @@ var jade = require('gulp-jade');
 // var using = require('gulp-using');
 var usemin = require('gulp-usemin');
 var flatten = require('gulp-flatten');
-var gulpOpen = require('gulp-open');
 var cssmin = require('gulp-cssmin');
 // var gulpif = require('gulp-if');
 var semver = require('semver');
@@ -144,12 +144,7 @@ gulp.task('libs', function () {
 
 //use alongside with chrome extension reload-extension
 gulp.task('reloadExtension', function () {
-    gulp.src('README.md', {
-        read: false
-    }).pipe(gulpOpen('', {
-        url: 'http://reload.extensions',
-        app: 'chrome'
-    }));
+    openBrowser('http://reload.extensions');
 });
 
 //all tasks are watch -> bump patch version -> reload extension (globally enabled)
