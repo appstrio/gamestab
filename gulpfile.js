@@ -143,7 +143,7 @@ gulp.task('libs', function () {
 });
 
 //use alongside with chrome extension reload-extension
-gulp.task('reloadExtension', function () {
+gulp.task('reload', function () {
     openBrowser('http://reload.extensions');
 });
 

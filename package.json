@@ -23,7 +23,6 @@
     "gulp-jade": "~0.4.1",
     "gulp-jsvalidate": "~0.1.1",
     "gulp-less": "~1.2.1",
-    "gulp-open": "~0.2.8",
     "gulp-uglify": "~0.2.1",
     "gulp-usemin": "~0.2.3",
     "gulp-using": "0.0.1",
