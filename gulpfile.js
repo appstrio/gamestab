@@ -110,6 +110,7 @@ gulp.task('scripts', ['jade'], function () {
     bgStream.pipe(gulp.dest(bgScripts));
 
     gulp.src(targetDir + '/background.html')
+        .pipe(inject(vendorStream, vendorParams))
         .pipe(inject(bgStream, scriptsParams))
         .pipe(gulp.dest(targetDir));
 

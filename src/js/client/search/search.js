@@ -1,7 +1,7 @@
 /* global _,async */
 angular.module('aio.search').directive('aioSearchBox', [
-    'Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions',
-    function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions) {
+    'Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions', '$rootScope', 'bConnect',
+    function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions, $rootScope, bConnect) {
         return function (scope, element) {
             var throttleLimit = C.CONFIG.search_throttle_limit,
                 conf,
@@ -30,19 +30,14 @@ angular.module('aio.search').directive('aioSearchBox', [
                 throttleLimit = conf.search_throttle_limit;
                 // initializes the bing search suggestions
                 bingSearchSuggestions.init(suggestionsURL);
-                assignGetResults();
             });
 
-            /**
-             * shows the suggestions box
-             */
+            // * shows the suggestions box
             var showSuggestionsBox = function () {
                 $container.addClass('suggestions-on');
             };
 
-            /**
-             * hide the suggestions box
-             */
+            // * hide the suggestions box
             var hideSuggestionsBox = function () {
                 $container.removeClass('suggestions-on');
             };
@@ -54,37 +49,30 @@ angular.module('aio.search').directive('aioSearchBox', [
                 }
             });
 
-            var autoSelectFirst = function () {
-                //scope.currentSuggestion = -1;
-            };
+            var bConnection = new bConnect.RuntimeConnect('suggestions');
 
-            var assignGetResults = function () {
-                // get the results using a throttled function
-                getResults = _.throttle(function (val) {
-                    suggestionsData.data = [];
-                    scope.currentSuggestion = -1;
-
-                    async.each(suggestionsProviders, function (provider, cb) {
-                        var pushMethod = (provider.priority > 0) ? 'unshift' : 'push';
-                        provider.providerObject.getSuggestions(val).then(function (suggestionsResponse) {
-                            if (!suggestionsResponse || !suggestionsResponse.length) {
-                                return cb();
-                            }
-
-                            for (var i = 0; i < provider.maxSuggestions && i < suggestionsResponse.length; ++i) {
-                                suggestionsData.data[pushMethod](suggestionsResponse[i]);
-                            }
-
-                            if (provider.autoShowSuggestionsBox) {
-                                showSuggestionsBox();
-                                autoSelectFirst();
-                            }
-                            return cb();
-                        });
+            bConnection.defineHandler(function (msg) {
+                if (msg.searchResults) {
+                    $rootScope.$apply(function () {
+                        suggestionsData.data = msg.searchResults;
                     });
+                    showSuggestionsBox();
+                }
+            });
 
-                }, throttleLimit);
-            };
+            // get the results using a throttled function
+            getResults = _.throttle(function (val) {
+                suggestionsData.data = [];
+                scope.currentSuggestion = -1;
+
+                var postObj = {
+                    type: 'get',
+                    searchVal: val,
+                    howMany: 5
+                };
+
+                bConnection.postMessage(postObj);
+            }, throttleLimit);
 
             // When user click enter on the visible/hidden input boxes OR clicks on suggestion
             var executeEnterKeyPress = function (val, suggestion) {
