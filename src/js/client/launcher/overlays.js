@@ -39,23 +39,24 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
     function ($scope, Background, Analytics, ngProgress) {
 
         $scope.loading = true;
+        ngProgress.start();
 
         //assign scope backgrounds
-        Background.isReady.then(function () {
-            if (Background.isCacheNeeded()) {
-                //start progress bar
-                ngProgress.start();
-                Background.lazyCacheImages().then(function () {
-                    $scope.loading = false;
-                    $scope.backgrounds = Background.backgrounds();
-                    //finish progress bar
-                    ngProgress.complete();
-                });
-            } else {
+        Background.isReady.then(Background.fetchBackgrounds)
+            .then(function () {
+                ngProgress.complete();
                 $scope.loading = false;
-                $scope.backgrounds = Background.backgrounds();
-            }
-        });
+                $scope.refreshBackgrounds();
+
+                $scope.isActiveBg = function (bg) {
+                    return Background.background.originalUrl === bg.originalUrl ? 'selected' : '';
+                };
+            });
+
+        $scope.refreshBackgrounds = function () {
+            console.debug('refreshing backgrounds');
+            $scope.backgrounds = Background.getBackgrounds();
+        };
 
         /**
          * selectBackground
@@ -68,10 +69,20 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
         $scope.selectBackground = function (bg, e) {
             e.stopPropagation();
             //report analytics
+            if (!bg.url || bg.url === Background.background.url) {
+                return;
+            }
+
+            $scope.loading = true;
+
             Analytics.reportEvent(704, {
-                label: bg.originalUrl || bg.image
+                label: bg.originalUrl || bg.url
             });
-            Background.selectBackground(bg);
+
+            Background.setNewBackground(bg).then(function () {
+                //assign the new url to the image
+                $scope.loading = false;
+            });
         };
     }
 ]).controller('StoreCtrl', ['$scope', 'Apps', '$log', 'Analytics',
@@ -142,8 +153,7 @@ angular.module('aio.launcher').controller('SettingsCtrl', ['$scope', 'Constants'
          */
         $scope.install = function (app, e) {
             e.stopPropagation();
-            Apps.addNewApp(app);
-            getAppsAndFlatten();
+            Apps.addNewApp(app).then(getAppsAndFlatten);
             Analytics.reportEvent(603, {
                 label: app.title || app.url
             });

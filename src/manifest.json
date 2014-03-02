@@ -1,42 +1,43 @@
 {
-    "name": "__MSG_appName__",
-    "background": {
-        "page": "background.html",
-        "persistent": false
-    },
-    "chrome_url_overrides": {
-        "newtab": "redirect.html"
-    },
-    "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self'",
-    "default_locale": "en",
-    "description": "__MSG_appDescription__",
-    "icons": {
-        "16": "img/favicons/16x16.png",
-        "48": "img/favicons/48x48.png",
-        "128": "img/favicons/128x128.png"
-    },
-    "optional_permissions": [
-        "bookmarks"
-    ],
-    "permissions": [
-        "history",
-        "management",
-        "idle",
-        "<all_urls>",
-        "chrome://favicon/",
-        "alarms",
-        "storage",
-        "notifications",
-        "unlimitedStorage",
-        "background",
-        "contextMenus"
-    ],
-    "web_accessible_resources": [
-        "newtab.html",
-        "img/wallpapers/default.jpg",
-        "js/vendor/jquery.min.map",
-        "css/bg-iframe.css"
-    ],
-    "version": "1.1.4",
-    "manifest_version": 2
+  "name": "__MSG_appName__",
+  "background": {
+    "page": "background.html",
+    "persistent": true
+  },
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self'",
+  "default_locale": "en",
+  "description": "__MSG_appDescription__",
+  "icons": {
+    "16": "img/favicons/16x16.png",
+    "48": "img/favicons/48x48.png",
+    "128": "img/favicons/128x128.png"
+  },
+  "optional_permissions": [
+    "bookmarks"
+  ],
+  "permissions": [
+    "history",
+    "management",
+    "webRequest",
+    "idle",
+    "<all_urls>",
+    "chrome://favicon/",
+    "alarms",
+    "storage",
+    "notifications",
+    "unlimitedStorage",
+    "background",
+    "contextMenus"
+  ],
+  "web_accessible_resources": [
+    "newtab.html",
+    "img/wallpapers/default.jpg",
+    "js/vendor/jquery.min.map",
+    "css/bg-iframe.css"
+  ],
+  "version": "1.1.7",
+  "manifest_version": 2
 }

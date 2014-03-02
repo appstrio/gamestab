@@ -1,20 +1,15 @@
-//determines whether to report analytics
-var isDev = true;
-//whether running on website version
-var isWebsite = true;
+var isDev = false; //jshint ignore:line
+var isWebsite = false;
 
 angular.module('aio.settings', []);
 angular.module('aio.search', []);
 angular.module('aio.launcher', []);
 angular.module('aio.common', [
     'aio.common.helpers', 'aio.chrome', 'aio.file', 'aio.image', 'aio.interactions',
-    'aio.overlay', 'aio.storage', 'aio.analytics', 'communications'
+    'aio.overlay', 'aio.storage', 'aio.analytics'
 ]);
 angular.module('aio.main', []);
 
-/*
- * main module
- */
 angular.module('myApp', ['aio.main', 'aio.settings', 'ui.sortable',
     'aio.common', 'aio.launcher', 'aio.search', 'fallback.src', 'ngProgress'
 ]);

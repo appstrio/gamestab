@@ -3,6 +3,7 @@ angular.module('aio.settings').factory('Config', [
     'Constants', 'Storage', '$http', '$q', '$log', '$rootScope', 'Chrome', 'Helpers', 'bConnect',
     function (C, Storage, $http, $q, $log, $rootScope, Chrome, Helpers, bConnect) {
         var data = {},
+            isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.CONFIG;
 
         /**
@@ -23,7 +24,10 @@ angular.module('aio.settings').factory('Config', [
             //get remote partner's json
             .then(Helpers.loadRemoteJson)
             //update config
-            .then(updateConfig, onError);
+            .then(updateConfig, onError)
+                .then(function () {
+                    return isReady.resolve(data);
+                });
         };
 
         var assignData = function (_data) {
@@ -38,7 +42,10 @@ angular.module('aio.settings').factory('Config', [
         var init = function () {
             console.debug('[Config] - init');
             //load config from storage, or run setup to get from remotes
-            return loadFromStorage().then(assignData);
+            return loadFromStorage().then(assignData).then(function () {
+                isReady.resolve();
+                return data;
+            });
         };
 
         var getLastVisitedPartner = function (results) {
@@ -111,6 +118,10 @@ angular.module('aio.settings').factory('Config', [
             return $q.all(promises);
         };
 
+        var setConfig = function (newConfig) {
+            data = newConfig;
+        };
+
         var store = function () {
             return Helpers.store(storageKey, data);
         };
@@ -164,12 +175,14 @@ angular.module('aio.settings').factory('Config', [
 
         return {
             init: init,
+            isReady: isReady.promise,
             updateConfig: updateConfig,
             loadFromStorage: loadFromStorage,
             get: function () {
                 return data;
             },
             set: store,
+            setConfig: setConfig,
             setup: setup
         };
     }

@@ -1,10 +1,13 @@
+/* global _,async */
 angular.module('aio.search').directive('aioSearchBox', [
-    'Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions', '$rootScope', 'bConnect',
-    function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions, $rootScope, bConnect) {
+    'Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions',
+    function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions) {
         return function (scope, element) {
             var throttleLimit = C.CONFIG.search_throttle_limit,
-                searchURL = Config.search_url || C.CONFIG.search_url,
-                suggestionsURL = Config.suggestions_url || C.CONFIG.suggestions_url,
+                conf,
+                searchURL,
+                getResults,
+                suggestionsURL,
                 $container = $('#container'),
                 $hiddenInput = $('.hidden').eq(0);
 
@@ -20,15 +23,26 @@ angular.module('aio.search').directive('aioSearchBox', [
                 autoShowSuggestionsBox: true
             }];
 
-            // initializes the bing search suggestions
-            bingSearchSuggestions.init(suggestionsURL);
+            Config.isReady.then(function () {
+                conf = Config.get();
+                searchURL = conf.search_url;
+                suggestionsURL = conf.suggestions_url || conf.suggestions_url;
+                throttleLimit = conf.search_throttle_limit;
+                // initializes the bing search suggestions
+                bingSearchSuggestions.init(suggestionsURL);
+                assignGetResults();
+            });
 
-            //shows the suggestions box
+            /**
+             * shows the suggestions box
+             */
             var showSuggestionsBox = function () {
                 $container.addClass('suggestions-on');
             };
 
-            //hide the suggestions box
+            /**
+             * hide the suggestions box
+             */
             var hideSuggestionsBox = function () {
                 $container.removeClass('suggestions-on');
             };
@@ -40,30 +54,37 @@ angular.module('aio.search').directive('aioSearchBox', [
                 }
             });
 
-            var bConnection = new bConnect.RuntimeConnect('suggestions');
+            var autoSelectFirst = function () {
+                //scope.currentSuggestion = -1;
+            };
 
-            bConnection.defineHandler(function (msg) {
-                if (msg.searchResults) {
-                    $rootScope.$apply(function () {
-                        suggestionsData.data = msg.searchResults;
+            var assignGetResults = function () {
+                // get the results using a throttled function
+                getResults = _.throttle(function (val) {
+                    suggestionsData.data = [];
+                    scope.currentSuggestion = -1;
+
+                    async.each(suggestionsProviders, function (provider, cb) {
+                        var pushMethod = (provider.priority > 0) ? 'unshift' : 'push';
+                        provider.providerObject.getSuggestions(val).then(function (suggestionsResponse) {
+                            if (!suggestionsResponse || !suggestionsResponse.length) {
+                                return cb();
+                            }
+
+                            for (var i = 0; i < provider.maxSuggestions && i < suggestionsResponse.length; ++i) {
+                                suggestionsData.data[pushMethod](suggestionsResponse[i]);
+                            }
+
+                            if (provider.autoShowSuggestionsBox) {
+                                showSuggestionsBox();
+                                autoSelectFirst();
+                            }
+                            return cb();
+                        });
                     });
-                    showSuggestionsBox();
-                }
-            });
 
-            // get the results using a throttled function
-            var getResults = _.throttle(function (val) {
-                suggestionsData.data = [];
-                scope.currentSuggestion = -1;
-
-                var postObj = {
-                    type: 'get',
-                    searchVal: val,
-                    howMany: 5
-                };
-
-                bConnection.postMessage(postObj);
-            }, throttleLimit);
+                }, throttleLimit);
+            };
 
             // When user click enter on the visible/hidden input boxes OR clicks on suggestion
             var executeEnterKeyPress = function (val, suggestion) {
@@ -100,11 +121,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     label: val,
                     waitForFinish: true
                 }).then(function () {
-                    if (window.parent !== window.self) {
-                        window.parent.location = searchURL + val;
-                    } else {
-                        window.location = searchURL + val;
-                    }
+                    window.location = searchURL + val;
                 });
             };
 
@@ -156,10 +173,11 @@ angular.module('aio.search').directive('aioSearchBox', [
                     return;
                 }
 
+                e.preventDefault();
+                e.stopPropagation();
+
                 switch (e.keyCode) {
                 case 40: //down key
-                    e.preventDefault();
-                    e.stopPropagation();
                     if (scope.currentSuggestion < suggestionsData.data.length - 1) {
                         scope.$apply(function () {
                             ++scope.currentSuggestion;
@@ -168,14 +186,18 @@ angular.module('aio.search').directive('aioSearchBox', [
 
                     break;
                 case 38: //up key
-                    e.preventDefault();
-                    e.stopPropagation();
+
+                    //go back to search element
+                    if (scope.currentSuggestion === 0) {
+                        return element.focus();
+                    }
+
+                    //go up in suggestions
                     if (scope.currentSuggestion > 0) {
                         scope.$apply(function () {
                             --scope.currentSuggestion;
                         });
                     }
-
                     break;
                 case 13: //enter
                     executeEnterKeyPress();
@@ -246,7 +268,7 @@ angular.module('aio.search').directive('aioSearchBox', [
         var getSuggestions = function (q) {
             var urlBuildParams = {}, httpMethod = 'get';
             if (baseURL) {
-                if (!Chrome.isExtension || isIframe) {
+                if (!Chrome.isChrome() || isIframe) {
                     urlBuildParams.jsonp = true;
                     httpMethod = 'jsonp';
                 }

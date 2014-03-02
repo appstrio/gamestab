@@ -1,20 +1,14 @@
 # Libraries
 node_modules
-workspace
+workspace/amazon
 src/bower_components
 
 # Builds
 builds
 build
-tmp-*
-
-# My own stuff
-debugSettings.js
+tmp*
 
 # Bullshit
-temp
-.tmp
-.sass-cache
 .idea
 .DS_Store
 *.sublime-workspace

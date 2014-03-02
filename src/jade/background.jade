@@ -1,16 +1,10 @@
-html(ng-csp='ng-csp', ng-app='background')
+html(ng-csp='ng-csp')
     head
         meta(charset="utf-8")
         link(href='img/favicons/favicongray16.png', rel='shortcut icon')
         meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
         meta(name='google', content='notranslate')
 
-        script(src='./js/vendor/jquery.min.js')
-        script(src='./js/vendor/angular.min.js')
-        script(src='./js/vendor/lodash.min.js')
-
-        //include main scripts
-
-        <!-- inject:js -->
-        <!-- endinject -->
-    body(ng-controller="MainCtrl")
+        script(src="js/vendor/URI.js")
+        script(src="js/background-main.js")
+    body

@@ -6,7 +6,6 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
         //vars
         var fs = null,
             fsReady = false,
-            isInitting = false,
             initting = $q.defer();
 
         /**
@@ -16,7 +15,7 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
          * @return
          */
         var errorHandler = function (deferred) {
-            return function filesStorageService_errorHandler(e) {
+            return function (e) {
                 var msg = '';
                 switch (e.code) {
                 case FileError.QUOTA_EXCEEDED_ERR:
@@ -100,7 +99,7 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
                         fileWriter.write(blob);
                     }, errorHandler(deferred));
                 }, errorHandler(deferred));
-            }, deferred.reject);
+            }, errorHandler(deferred));
 
             return deferred.promise;
         };
@@ -196,7 +195,7 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
         var remove = function filesStorageService_remove(fileName) {
             var deferred = $q.defer();
 
-            init.then(function () {
+            init().then(function () {
                 try {
                     fs.root.getFile(fileName, {
                         create: false
@@ -228,7 +227,7 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
         var removeByPath = function filesStorageService_removeByPath(path) {
             var deferred = $q.defer();
 
-            init.then(function () {
+            init().then(function () {
                 if (path) {
                     var split = path.split('/');
                     if (split.length > 0) {
@@ -287,13 +286,6 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
          * @return
          */
         var init = function filesStorageService_init() {
-            if (fs || isInitting) {
-                return initting.promise;
-            }
-
-            if (!isInitting) {
-                isInitting = true;
-            }
 
             //support change in file system api prefix
             window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
@@ -322,9 +314,11 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
                     }, errorHandler(initting));
                 }, function fileStorageService_init_requestQuota_error(e) {
                     $log.error('Error init file system api', e);
+                    initting.reject(e);
                 });
             } catch (e) {
                 $log.error('Error init file system api, caught an error : ', e);
+                initting.reject(e);
             }
 
             return initting.promise;
