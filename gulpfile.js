@@ -144,11 +144,12 @@ gulp.task('libs', function () {
 
 //use alongside with chrome extension reload-extension
 gulp.task('reloadExtension', function () {
-    gulp.src('README.md')
-        .pipe(gulpOpen('', {
-            url: 'http://reload.extensions',
-            app: 'chrome'
-        }));
+    gulp.src('README.md', {
+        read: false
+    }).pipe(gulpOpen('', {
+        url: 'http://reload.extensions',
+        app: 'chrome'
+    }));
 });
 
 //all tasks are watch -> bump patch version -> reload extension (globally enabled)
