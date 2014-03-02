@@ -1,7 +1,7 @@
-angular.module('background').factory('chromeWrapper', ['$rootScope', '$timeout', '$q', '$log',
+angular.module('background').factory('Chrome', ['$rootScope', '$timeout', '$q', '$log',
     function ($rootScope, $timeout, $q, $log) {
         //detect if chrome
-        var isChrome = typeof chrome !== 'undefined';
+        var isChrome = (typeof chrome !== 'undefined');
 
         //detect if chrome extension
         var isExtension = isChrome && Boolean(chrome.extension);
@@ -26,14 +26,16 @@ angular.module('background').factory('chromeWrapper', ['$rootScope', '$timeout',
                 return deferred.promise;
             }
         };
+
         var storage = {
-            local: chrome.storage.local
+            local: isChrome && chrome.storage.local
         };
+
         var getUpdateUrl = function () {
-            return chrome.runtime.getManifest().update_url;
+            return isChrome && chrome.runtime.getManifest().update_url;
         };
         var getVersion = function () {
-            return chrome.app.getDetails().version;
+            return isChrome && chrome.app.getDetails().version;
         };
         var management = {
             getAll: function () {
@@ -47,18 +49,23 @@ angular.module('background').factory('chromeWrapper', ['$rootScope', '$timeout',
                     });
                 } else {
                     $log.warn('[Chrome] - no permission for chrome management');
-                    deferred.resolve();
+                    deferred.reject();
                 }
 
                 return deferred.promise;
             },
             launchApp: function (chromeId) {
                 var deferred = $q.defer();
-                chrome.management.launchApp(chromeId, function () {
-                    $rootScope.$apply(function () {
-                        deferred.resolve();
+                if (isChrome && chrome.management) {
+                    chrome.management.launchApp(chromeId, function () {
+                        $rootScope.$apply(function () {
+                            deferred.resolve(chromeId);
+                        });
                     });
-                });
+                } else {
+                    $log.warn('[Chrome] - no permission for chrome management');
+                    deferred.reject();
+                }
 
                 return deferred.promise;
             }

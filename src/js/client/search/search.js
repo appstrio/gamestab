@@ -1,7 +1,7 @@
 /* global _,async */
 angular.module('aio.search').directive('aioSearchBox', [
-    'Analytics', 'Constants', 'Config', 'bingSearchSuggestions', 'suggestionsData', 'webAppsSuggestions', '$rootScope', 'bConnect',
-    function (Analytics, C, Config, bingSearchSuggestions, suggestionsData, webAppsSuggestions, $rootScope, bConnect) {
+    'Analytics', 'Constants', 'Config', 'suggestionsData', 'webAppsSuggestions', '$rootScope', 'bConnect',
+    function (Analytics, C, Config, suggestionsData, webAppsSuggestions, $rootScope, bConnect) {
         return function (scope, element) {
             var throttleLimit = C.CONFIG.search_throttle_limit,
                 conf,
@@ -11,17 +11,30 @@ angular.module('aio.search').directive('aioSearchBox', [
                 $container = $('#container'),
                 $hiddenInput = $('.hidden').eq(0);
 
-            // each provider should have getSuggestions(q) method that returns a promise
-            var suggestionsProviders = [{
-                providerObject: webAppsSuggestions,
-                priority: 0,
-                maxSuggestions: 3
-            }, {
-                providerObject: bingSearchSuggestions,
-                priority: 1,
-                maxSuggestions: 3,
-                autoShowSuggestionsBox: true
-            }];
+            /*
+             * // each provider should have getSuggestions(q) method that returns a promise
+             * var suggestionsProviders = [{
+             *     providerObject: webAppsSuggestions,
+             *     priority: 0,
+             *     maxSuggestions: 3
+             * }, {
+             *     providerObject: bingSearchSuggestions,
+             *     priority: 1,
+             *     maxSuggestions: 3,
+             *     autoShowSuggestionsBox: true
+             * }];
+             */
+
+            var bConnection = new bConnect.RuntimeConnect('suggestions');
+
+            bConnection.defineHandler(function (msg) {
+                if (msg.searchResults) {
+                    $rootScope.$apply(function () {
+                        suggestionsData.data = msg.searchResults;
+                    });
+                    showSuggestionsBox();
+                }
+            });
 
             Config.isReady.then(function () {
                 conf = Config.get();
@@ -29,7 +42,13 @@ angular.module('aio.search').directive('aioSearchBox', [
                 suggestionsURL = conf.suggestions_url || conf.suggestions_url;
                 throttleLimit = conf.search_throttle_limit;
                 // initializes the bing search suggestions
-                bingSearchSuggestions.init(suggestionsURL);
+                var postObj = {
+                    type: 'init',
+                    params: {
+                        suggestionsURL: suggestionsURL
+                    }
+                };
+                bConnection.postMessage(postObj);
             });
 
             // * shows the suggestions box
@@ -49,16 +68,6 @@ angular.module('aio.search').directive('aioSearchBox', [
                 }
             });
 
-            var bConnection = new bConnect.RuntimeConnect('suggestions');
-
-            bConnection.defineHandler(function (msg) {
-                if (msg.searchResults) {
-                    $rootScope.$apply(function () {
-                        suggestionsData.data = msg.searchResults;
-                    });
-                    showSuggestionsBox();
-                }
-            });
 
             // get the results using a throttled function
             getResults = _.throttle(function (val) {
@@ -205,92 +214,6 @@ angular.module('aio.search').directive('aioSearchBox', [
 
         return {
 
-        };
-    }
-]).factory('bingSearchSuggestions', ['$http', 'Constants', 'Config', 'Chrome', '$q',
-    function ($http, C, Config, Chrome, $q) {
-        /**
-         * Bing Suggestions Provider
-         */
-        var baseURL;
-
-        /**
-         *
-         * @param _baseURL
-         */
-        var init = function (_baseURL) {
-            baseURL = _baseURL;
-        };
-
-        /**
-         *
-         * @param q
-         * @returns {*}
-         */
-        var bingURLBuilder = function (params, q) {
-            params = angular.extend({
-                jsonp: false
-            }, params);
-
-            if (params.jsonp) {
-                return baseURL + q + '&JsonType=callback&JsonCallback=JSON_CALLBACK';
-            } else {
-                return baseURL + q;
-            }
-        };
-
-        var isIframe = (function (window) {
-            var test;
-            try {
-                test = window.top !== window.self;
-            } catch (e) {
-                test = false;
-            }
-            return test;
-        }(window));
-
-        /**
-         * if chrome extension - use regular GET call
-         * if website - use jsnop
-         */
-        var getSuggestions = function (q) {
-            var urlBuildParams = {}, httpMethod = 'get';
-            if (baseURL) {
-                if (!Chrome.isChrome() || isIframe) {
-                    urlBuildParams.jsonp = true;
-                    httpMethod = 'jsonp';
-                }
-
-                var url = bingURLBuilder(urlBuildParams, q);
-
-                return $http[httpMethod](url).then(function (response) {
-                    if (response && response.data && response.data.length && response.data[1]) {
-                        return _.map(response.data[1], wrapSuggestion);
-                    } else {
-                        return [];
-                    }
-                }, function (e) {
-                    console.log('e', e);
-                    return false;
-                });
-            }
-
-            var defer = $q.defer;
-            defer.reject();
-            return defer.promise;
-        };
-
-        // wrap a suggestion so it will conform the structure of the suggestion object
-        var wrapSuggestion = function (suggestion) {
-            return {
-                title: suggestion,
-                description: 'Search'
-            };
-        };
-
-        return {
-            init: init,
-            getSuggestions: getSuggestions
         };
     }
 ]).factory('webAppsSuggestions', ['Apps', '$filter', '$q',

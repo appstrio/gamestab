@@ -1,21 +1,21 @@
-var gulp = require('gulp');
-var htmlmin = require('gulp-htmlmin');
-var path = require('path');
-var inject = require('gulp-inject');
-var openBrowser = require('open');
-var gutil = require('gulp-util');
+var bump = require('gulp-bump');
 var clean = require('gulp-clean');
-var jade = require('gulp-jade');
-var flatten = require('gulp-flatten');
-var cssmin = require('gulp-cssmin');
-var semver = require('semver');
-var imagemin = require('gulp-imagemin');
 var concat = require('gulp-concat');
+var config = require('./gulp');
+var cssmin = require('gulp-cssmin');
+var flatten = require('gulp-flatten');
+var gulp = require('gulp');
+var gutil = require('gulp-util');
+var htmlmin = require('gulp-htmlmin');
+var imagemin = require('gulp-imagemin');
+var inject = require('gulp-inject');
+var jade = require('gulp-jade');
+var less = require('gulp-less');
+var openBrowser = require('open');
+var path = require('path');
+var semver = require('semver');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
-var bump = require('gulp-bump');
-var less = require('gulp-less');
-var config = require('./gulp');
 var pkg;
 
 //get paths from config file
@@ -186,7 +186,7 @@ gulp.task('html', ['jade', 'scripts'], function () {
 
 //all tasks are watch -> bump patch version -> reload extension (globally enabled)
 gulp.task('watch', function () {
-    gulp.watch(['./src/**/*', './assets/**/*'], ['build']);
+    gulp.watch(['src/**/*', 'assets/**/*'], ['build']);
 });
 
 gulp.task('build', ['cleanDev'], function () {

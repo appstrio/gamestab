@@ -1,8 +1,8 @@
 angular.module('background', []);
 
 angular.module('background').controller('MainCtrl', [
-    'searchSuggestions', 'chromeWrapper',
-    function (searchSuggestions, chromeWrapper) {
+    'searchSuggestions', 'Chrome',
+    function (searchSuggestions, Chrome) {
 
         var maxSuggestions = 3;
         /**
@@ -25,6 +25,10 @@ angular.module('background').controller('MainCtrl', [
                             searchResults: returnResults
                         });
                     });
+                }
+            } else if (msg.type === 'init') {
+                if (msg.params) {
+                    searchSuggestions.init(msg.params);
                 }
             }
         }

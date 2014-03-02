@@ -1,12 +1,12 @@
 angular.module('background').factory('searchSuggestions', [
     'bingSearchSuggestions',
     function (bingSearchSuggestions) {
-
         //stores latest search results
         var searchResults = [];
 
-        //fixme custom url for now
-        bingSearchSuggestions.init('http://api.bing.com/osjson.aspx?Market=en-us&query=');
+        var init = function (params) {
+            bingSearchSuggestions.init(params.suggestionsURL);
+        };
 
         // get the results using a throttled function
         var getResults = function (val, howMany) {
@@ -23,6 +23,7 @@ angular.module('background').factory('searchSuggestions', [
         };
 
         return {
+            init: init,
             getResults: getResults
         };
     }
