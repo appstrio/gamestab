@@ -5,7 +5,7 @@
         "persistent": true
     },
     "chrome_url_overrides": {
-        "newtab": "newtab.html"
+        "newtab": "redirect.html"
     },
     "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self'",
     "default_locale": "en",

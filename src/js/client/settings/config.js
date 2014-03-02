@@ -49,6 +49,10 @@ angular.module('aio.settings').factory('Config', [
         };
 
         var getLastVisitedPartner = function (results) {
+            results = _.compact(results);
+            if (!results || !results.length) {
+                return null;
+            }
             //get only results with valid lastVisitTime
             results = _.filter(results, 'lastVisitTime');
             if (!results || !results.length) {

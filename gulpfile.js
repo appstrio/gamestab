@@ -16,7 +16,6 @@ var zip = require('gulp-zip');
 var bump = require('gulp-bump');
 var less = require('gulp-less');
 var config = require('./gulp');
-var es = require('event-stream');
 var pkg;
 
 //get paths from config file
@@ -56,7 +55,10 @@ gulp.task('jade', function () {
         .pipe(gulp.dest(targetDir));
 });
 
-gulp.task('copyMaps', function () {
+gulp.task('copy', function () {
+    gulp.src('src/js/redirect.js')
+        .pipe(gulp.dest('build/js'));
+
     return gulp.src('src/bower_components/jquery/jquery.min.map')
         .pipe(gulp.dest('build/js/vendor/'));
 });
@@ -188,13 +190,13 @@ gulp.task('watch', function () {
 
 gulp.task('build', ['cleanDev'], function () {
     targetDir = 'build/';
-    return gulp.start('scripts', 'assets', 'copyMaps', 'less');
+    return gulp.start('scripts', 'assets', 'copy', 'less');
 });
 
 gulp.task('deploy', ['cleanProd'], function () {
     targetDir = 'dist/';
     isProduction = true;
-    return gulp.start('scripts', 'assets', 'copyMaps', 'less', 'images', 'html');
+    return gulp.start('scripts', 'assets', 'copy', 'less', 'images', 'html');
 });
 
 //default task
