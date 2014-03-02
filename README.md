@@ -10,9 +10,38 @@ Gamestab
 5. run `gulp` and start developing.
 6. App is built into the `build` directory, and also changes are watched.
 
-## Building a production version
+## Path Structure
 
-Run: `gulp --production`. This will output a minified & concated version.
+- Structure :
+    - `src/`
+        - `js/`
+            - `js/common/` : common utilities, services, directives
+            - `js/launcher/` : main launcher business-logic, controllers, directives, everything related to apps
+            - `js/search/` : search box logic including auto complete
+            - `js/settings/` : setup, config, settings logics, including appearance, customization of the UI and remote update
+            - `js/vendor/` : modified 3rd party libs
+        - `bower_components/`
+        - `jade/`
+        - `less/`
+    - `build/` : development deployment directory
+    - `dist/` : production deployment directory
+    - `assets/` - all app non-src assets
+    - `node_modules/`
+    - `gulp/` : gulp related tasks
+    - `workspace/` : random non-production things
+    - `test/` : app-level js files
+
+## Build a development version
+
+Run: `gulp build`. This will output a minified & concated version.
+
+## Watch files when in development mode
+
+Run: `gulp watch`. On any change in source files `gulp build` will be exectued.
+
+## Build a production version
+
+Run: `gulp deploy`. This will output a minified & concated version.
 
 ## Bumping versions
 

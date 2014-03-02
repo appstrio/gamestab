@@ -5,6 +5,7 @@ src/bower_components
 
 # Builds
 builds
+dist
 build
 tmp*
 
