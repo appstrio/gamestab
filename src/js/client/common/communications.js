@@ -1,5 +1,4 @@
 angular.module('communications', []);
-
 angular.module('communications').factory('bConnect', [
 
     function () {

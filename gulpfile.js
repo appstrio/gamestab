@@ -28,18 +28,15 @@ var targetDir = 'build/';
 var isProduction = false;
 
 //params for gulp-inject
-var injectParams = {
+var vendorParams = {
     addRootSlash: false,
-    ignorePath: ['src', 'build', 'dist'],
-    sort: function (a, b) {
-        if (/vendor/.test(a.filepath)) {
-            return -1;
-        }
-        if (/vendor/.test(b.filepath)) {
-            return 1;
-        }
-        return 0;
-    }
+    starttag: '<!-- inject:vendors:{{ext}} -->',
+    ignorePath: ['src', 'build', 'dist']
+};
+
+var scriptsParams = {
+    addRootSlash: false,
+    ignorePath: ['src', 'build', 'dist']
 };
 
 var getPackageJson = function () {
@@ -85,11 +82,13 @@ gulp.task('zip', function () {
 //concat/uglify scripts & vendors. needs to run after jade task
 gulp.task('scripts', ['jade'], function () {
     var vendorTarget = path.join(targetDir, 'js/vendor/');
-    var scriptsTarget = path.join(targetDir, 'js/');
+    var clientScripts = path.join(targetDir, 'js/client/');
+    var bgScripts = path.join(targetDir, 'js/background/');
 
     //get src for streams
     var vendorStream = gulp.src(vendorLibs);
-    var clientStream = gulp.src(['src/js/**/*.js', '!src/js/vendor/**']);
+    var clientStream = gulp.src(['src/js/client/**/*.js']);
+    var bgStream = gulp.src(['src/js/background/**/*.js']);
 
     //handle production deploy
     if (isProduction) {
@@ -97,15 +96,25 @@ gulp.task('scripts', ['jade'], function () {
         clientStream = clientStream
             .pipe(concat('scripts.min.js'))
             .pipe(uglify());
+
+        bgStream = bgStream
+            .pipe(concat('backscripts.min.js'))
+            .pipe(uglify());
     }
 
     //ouput scripts
     vendorStream.pipe(gulp.dest(vendorTarget));
-    clientStream.pipe(gulp.dest(scriptsTarget));
+    clientStream.pipe(gulp.dest(clientScripts));
+    bgStream.pipe(gulp.dest(bgScripts));
+
+    gulp.src(targetDir + '/background.html')
+        .pipe(inject(bgStream, scriptsParams))
+        .pipe(gulp.dest(targetDir));
 
     //inject scripts to jade/html
     return gulp.src(targetDir + '/newtab.html')
-        .pipe(inject(es.merge(vendorStream, clientStream), injectParams))
+        .pipe(inject(vendorStream, vendorParams))
+        .pipe(inject(clientStream, scriptsParams))
         .pipe(gulp.dest(targetDir));
 });
 

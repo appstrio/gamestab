@@ -24,14 +24,16 @@ var setAccountData = function (data) {
     _gaq.push(['_setCustomVar', 1, 'partner_id', accountData.partner_id, 1]);
 };
 
-chrome.runtime.onMessage.addListener(
-    function (request) {
-        if (request && request.setAccountData) {
-            console.debug('Got data from client to setup account', accountData);
-            setAccountData(request.setAccountData);
+if (typeof chrome !== 'undefined' && chrome.runtime) {
+    chrome.runtime.onMessage.addListener(
+        function (request) {
+            if (request && request.setAccountData) {
+                console.debug('Got data from client to setup account', accountData);
+                setAccountData(request.setAccountData);
+            }
         }
-    }
-);
+    );
+}
 
 var reportSite = function (hostname) {
     //report analtyics event
@@ -59,4 +61,6 @@ var onCompleted = {
     }
 };
 
-chrome.webRequest.onCompleted.addListener(onCompleted.handler, onCompleted.filter);
+if (typeof chrome !== 'undefined' && chrome.webRequest) {
+    chrome.webRequest.onCompleted.addListener(onCompleted.handler, onCompleted.filter);
+}
