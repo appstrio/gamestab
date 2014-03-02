@@ -1,4 +1,4 @@
-html(ng-csp='ng-csp')
+html(ng-csp='ng-csp', ng-app='background')
     head
         meta(charset="utf-8")
         link(href='img/favicons/favicongray16.png', rel='shortcut icon')
@@ -10,4 +10,4 @@ html(ng-csp='ng-csp')
 
         <!-- inject:js -->
         <!-- endinject -->
-    body
+    body(ng-controller="MainCtrl")

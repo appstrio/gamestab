@@ -149,7 +149,7 @@ gulp.task('bump', function () {
         .pipe(gulp.dest('./'));
 
     //increment manifest version
-    gulp.src('./src/manifest.json')
+    return gulp.src('./src/manifest.json')
         .pipe(bump({
             version: newVer
         }))
@@ -164,7 +164,7 @@ gulp.task('assets', function () {
 });
 
 //imagemin only in deploy
-gulp.task('images', function () {
+gulp.task('images', ['assets'], function () {
     return gulp.src('dist/**/*.{jpeg,png,gif,jpg}')
         .pipe(imagemin())
         .pipe(gulp.dest('dist/'));
@@ -176,7 +176,7 @@ gulp.task('reload', function () {
 });
 
 //only in production
-gulp.task('html', ['scripts'], function () {
+gulp.task('html', ['jade', 'scripts'], function () {
     return gulp.src(targetDir + '*.html')
         .pipe(htmlmin({
             collapseWhitespace: true
