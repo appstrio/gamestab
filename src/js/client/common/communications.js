@@ -1,6 +1,5 @@
 angular.module('communications', []);
 angular.module('communications').factory('bConnect', [
-
     function () {
         /**
          * RuntimeConnect
@@ -9,16 +8,25 @@ angular.module('communications').factory('bConnect', [
          * @param name Port name
          * @return
          */
-        function RuntimeConnect(name) {
+        function BackgroundApi(name) {
+            if (!name) {
+                return console.error('Missing name from Background Api');
+            }
+            if (typeof chrome === 'undefined' || !chrome.runtime) {
+                return console.error('Chrome Api is missing. Use a different api');
+            }
+
+            //assign port name
             this.name = name;
 
+            //assign port from chrome api
             this.port = chrome.runtime.connect({
                 name: name
             });
 
             this.port.onDisconnect = function (e) {
                 console.log('disc', e);
-            }
+            };
 
             this.defineHandler = function (handler) {
                 if (typeof handler !== 'function') {
@@ -37,7 +45,7 @@ angular.module('communications').factory('bConnect', [
         }
 
         return {
-            RuntimeConnect: RuntimeConnect
+            BackgroundApi: BackgroundApi
         };
     }
 ]);

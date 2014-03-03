@@ -3,7 +3,7 @@ angular.module('aio.main').controller('MainCtrl', [
     function ($scope, Apps, Config, $log, Constants, Background, Analytics, $q, $timeout, Helpers) {
 
         console.debug('[MainCtrl] - init with version', Constants.APP_VERSION);
-        var lazyCacheAppsTimeout = Constants.CONFIG.lazy_cache_dials_timeout;
+        var lazyCacheAppsTimeout;
         var checkConfigTimeout = 3000;
         var t0 = Date.now();
 
@@ -11,6 +11,7 @@ angular.module('aio.main').controller('MainCtrl', [
             $log.log('[MainCtrl] - Setting scope vars');
             $scope.rawScreens = Apps.apps();
             $scope.config = Config.get();
+            lazyCacheAppsTimeout = $scope.config.lazy_cache_dials_timeout;
         };
 
         var lazyCacheApps = function () {
@@ -73,13 +74,7 @@ angular.module('aio.main').controller('MainCtrl', [
         //get from settings
         $scope.displayTopSearchBox = 1;
 
-        /**
-         * setOverlay
-         * Sets the scope overlay
-         *
-         * @param overlay
-         * @return
-         */
+        //set the scope overlay
         $scope.setOverlay = function (overlay) {
             $scope.overlay = {
                 name: overlay

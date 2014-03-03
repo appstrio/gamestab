@@ -6,12 +6,8 @@ angular.module('aio.analytics').factory('Analytics', [
     '$rootScope', '$log', '$q', 'Constants', '$timeout', 'Config', 'AnalyticsEvents',
     function ($rootScope, $log, $q, C, $timeout, Config, AnalyticsEvents) {
         var events = AnalyticsEvents;
-        /**
-         * init
-         * Load the analytics script
-         *
-         * @return
-         */
+
+        //Load the analytics script
         var init = function () {
             $log.log('[Analytics] - init');
             //init account
@@ -30,10 +26,13 @@ angular.module('aio.analytics').factory('Analytics', [
                 s.parentNode.insertBefore(ga, s);
             })();
 
+            //current version of config
+            var __config = Config.get();
+
             //register account
             if (!isDev) {
-                console.debug('Setting up online analytics ID of ' + Config.get().analytics_ua_account);
-                _gaq.push(['_setAccount', Config.get().analytics_ua_account]);
+                console.debug('Setting up online analytics ID of ' + __config.analytics_ua_account);
+                _gaq.push(['_setAccount', __config.analytics_ua_account]);
             } else {
                 //push bad account on purpose
                 console.debug('Not working with live analytics - running dev mode');
@@ -44,7 +43,7 @@ angular.module('aio.analytics').factory('Analytics', [
             //track pageview
             _gaq.push(['_trackPageview']);
             //track partnerid or default
-            _gaq.push(['_setCustomVar', 1, 'partner_id', Config.get().partner_id, 1]);
+            _gaq.push(['_setCustomVar', 1, 'partner_id', __config.partner_id, 1]);
             //report app_load
             reportEvent(501, {
                 label: C.APP_VERSION

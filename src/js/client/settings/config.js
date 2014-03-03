@@ -6,10 +6,7 @@ angular.module('aio.settings').factory('Config', [
             isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.CONFIG;
 
-        /**
-         * Setup config for the first time
-         * @returns {promise}
-         */
+        //setup config from remote
         var setup = function () {
             function onError(e) {
                 $log.warn('Error getting remote config json', e);

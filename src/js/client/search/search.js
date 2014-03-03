@@ -25,7 +25,7 @@ angular.module('aio.search').directive('aioSearchBox', [
              * }];
              */
 
-            var bConnection = new bConnect.RuntimeConnect('suggestions');
+            var bConnection = new bConnect.BackgroundApi('suggestions');
 
             bConnection.defineHandler(function (msg) {
                 if (msg.searchResults) {
@@ -67,7 +67,6 @@ angular.module('aio.search').directive('aioSearchBox', [
                     hideSuggestionsBox();
                 }
             });
-
 
             // get the results using a throttled function
             getResults = _.throttle(function (val) {
