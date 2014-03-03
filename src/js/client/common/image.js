@@ -94,6 +94,7 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', 'FileSystem', 
                 });
             };
 
+            img.crossOrigin = 'anonymous';
             img.src = url;
 
             return deferred.promise;
