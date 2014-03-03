@@ -133,14 +133,6 @@ angular.module('aio.launcher').factory('Apps', [
             //add the required number of games
             games = numOfGamesToAdd > 0 ? games = getGamesFromAppsDb(_appsDb, numOfGamesToAdd) : [];
             $log.log('[Apps] - got # game dials', games.length);
-
-            if (chromeApps && chromeApps.length) {
-                //filter apps & convert to object
-                chromeApps = _.chain(chromeApps)
-                    .filter(Helpers.isAppEnabled)
-                    .map(Helpers.chromeAppToObject)
-                    .value();
-            }
             $log.log('[Apps] - got # chromeApps', chromeApps.length);
 
             returnArr = [].concat(systemApps)
