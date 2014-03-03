@@ -67,16 +67,16 @@ angular.module('aio.settings').factory('Config', [
         var getMatchingPartner = function (results) {
             var remoteUrl;
             results = results || {};
-            var partner = getLastVisitedPartner(results);
+            var matchingPartner = getLastVisitedPartner(results);
 
             //no partner found
-            if (!partner) {
+            if (!matchingPartner) {
                 $log.warn('[Config] - Did not find a matching partner');
                 remoteUrl = C.DEFAULT_REMOTE_CONFIG;
             } else {
                 //found partner
-                $log.log('[Config] - found a matching partner', partner.partner_id);
-                remoteUrl = partner.partner_config_json_url;
+                $log.log('[Config] - found a matching partner', matchingPartner.partner.partner_id);
+                remoteUrl = matchingPartner.partner.partner_config_json_url;
             }
 
             return remoteUrl;
@@ -92,28 +92,61 @@ angular.module('aio.settings').factory('Config', [
             var halfHourAgo = Date.now() - 1000 * 60 * 30;
 
             var bConnection = new bConnect.BackgroundApi('chrome');
-            bConnection.postMessage('hello');
+
+            function historyListener(data) {
+                if (!data || !data.partner_id) {
+                    return console.error('critical error - no partner id', data);
+                }
+
+                //find matching partner
+                var matchingPartner = _.findWhere(partnersList, {
+                    partner_id: data.partner_id
+                });
+
+                if (!matchingPartner) {
+                    console.error('critical error - no matching partner in list');
+                }
+
+                //data is found
+                var result = data.result;
+                var returnData;
+
+                if (result && result[0]) {
+                    returnData = {
+                        partner: matchingPartner,
+                        lastVisitTime: result[0].lastVisitTime
+                    };
+                }
+
+                //resolve with nothing
+                $rootScope.$apply(function () {
+                    return matchingPartner.isReady.resolve(returnData);
+                });
+            }
+
+            bConnection.addListener(historyListener);
 
             function searchHistoryForPartner(partner) {
-                promises.push(Chrome.history.search({
-                    text: partner.partner_install_url_snippit,
-                    startTime: halfHourAgo,
-                    maxResults: 1
-                }).then(function (result) {
-                    //build return object
-                    return {
-                        partner: partner,
-                        lastVisitTime: result && result[0] && result[0].lastVisitTime
-                    };
-                }, function (e) {
-                    console.warn('Bad partner search', partner.partner_id, e);
-                    return;
-                }));
+                partner.isReady = $q.defer();
+
+                var postObj = {
+                    api: 'historySearch',
+                    partner_id: partner.partner_id,
+                    searchParams: {
+                        text: partner.partner_install_url_snippit,
+                        startTime: halfHourAgo,
+                        maxResults: 1
+                    }
+                };
+
+                bConnection.postMessage(postObj);
+
+                return partner.isReady.promise;
             }
 
             $log.log('[Config] - got the partnersList', partnersList);
             //loop through each partner and search in parallel chrome.history
-            partnersList.forEach(searchHistoryForPartner);
+            promises = _.map(partnersList, searchHistoryForPartner);
 
             //when all searching in chrome history finishes
             return $q.all(promises);

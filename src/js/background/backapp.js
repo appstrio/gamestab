@@ -30,7 +30,20 @@ angular.module('background').controller('MainCtrl', [
         }
 
         function chromeHandler(port, msg) {
-            console.log('Filename: backapp.js', 'Line: 33', 'msg:', msg);
+            if (msg.api === 'historySearch') {
+                Chrome.history.search(msg.searchParams).then(function (result) {
+                    var responseObj = {
+                        partner_id: msg.partner_id,
+                        result: result
+                    };
+                    return port.postMessage(responseObj);
+                }, function (e) {
+                    console.warn('Bad partner search or no api', msg.partner_id, e);
+                    return port.postMessage({
+                        partner_id: msg.partner_id
+                    });
+                });
+            }
         }
 
         //Wrapper for chrome runtime communications with client

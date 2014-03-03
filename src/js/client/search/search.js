@@ -21,7 +21,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                 }
             };
 
-            bConnection.defineHandler(function (msg) {
+            bConnection.addListener(function (msg) {
                 if (msg && msg.searchResults) {
                     //reverse items because they will be unshifted into array
                     var results = msg.searchResults.reverse();

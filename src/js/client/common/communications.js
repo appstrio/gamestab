@@ -1,5 +1,6 @@
 angular.module('communications', []);
 angular.module('communications').factory('bConnect', [
+
     function () {
         /**
          * RuntimeConnect
@@ -26,15 +27,20 @@ angular.module('communications').factory('bConnect', [
 
             this.port.onDisconnect = function (e) {
                 console.log('disc', e);
+                this.removeListener();
             };
 
-            this.defineHandler = function (handler) {
+            this.addListener = function (handler) {
                 if (typeof handler !== 'function') {
                     return console.error('Handler must be a function');
                 }
 
                 this.msgHandler = handler;
                 this.port.onMessage.addListener(handler);
+            };
+
+            this.removeListener = function () {
+                this.port.removeListener(this.msgHandler);
             };
 
             this.postMessage = function (params) {

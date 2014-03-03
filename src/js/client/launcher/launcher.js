@@ -73,8 +73,9 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
              * @return
              */
             scope.uninstallApp = function (app) {
-                if (app.overlay && _.contains(app.overlay, ['settings', 'store'])) {
+                if (app.permanent) {
                     //can't allow them to uninstall system apps, even by error
+                    console.info('can\'t delete system apps');
                     return;
                 }
 
