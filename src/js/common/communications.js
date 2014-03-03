@@ -27,7 +27,7 @@ angular.module('communications').factory('bConnect', [
 
             this.port.onDisconnect = function (e) {
                 console.log('disc', e);
-                this.removeListener();
+                this.port.onMessage.removeListener();
             };
 
             this.addListener = function (handler) {
@@ -40,7 +40,7 @@ angular.module('communications').factory('bConnect', [
             };
 
             this.removeListener = function () {
-                this.port.removeListener(this.msgHandler);
+                this.port.onMessage.removeListener(this.msgHandler);
             };
 
             this.postMessage = function (params) {

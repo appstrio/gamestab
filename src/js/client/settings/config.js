@@ -149,7 +149,10 @@ angular.module('aio.settings').factory('Config', [
             promises = _.map(partnersList, searchHistoryForPartner);
 
             //when all searching in chrome history finishes
-            return $q.all(promises);
+            return $q.all(promises).then(function (results) {
+                bConnection.removeListener();
+                return results;
+            });
         };
 
         var setConfig = function (newConfig) {

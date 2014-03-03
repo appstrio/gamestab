@@ -17,6 +17,7 @@ var path = require('path');
 var semver = require('semver');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
+var es = require('event-stream');
 var pkg;
 
 //get paths from config file
@@ -86,11 +87,13 @@ gulp.task('zip', function () {
 gulp.task('scripts', ['jade'], function () {
     var vendorTarget = path.join(targetDir, 'js/vendor/');
     var clientScripts = path.join(targetDir, 'js/client/');
+    var commonScripts = path.join(targetDir, 'js/common/');
     var bgScripts = path.join(targetDir, 'js/background/');
 
     //get src for streams
     var vendorStream = gulp.src(vendorLibs);
     var clientStream = gulp.src(['src/js/client/**/*.js']);
+    var commonStream = gulp.src(['src/js/common/**/*.js']);
     var bgStream = gulp.src(['src/js/background/**/*.js']);
 
     //handle production deploy
@@ -109,22 +112,28 @@ gulp.task('scripts', ['jade'], function () {
             .pipe(concat('backscripts.min.js'))
             .pipe(uglify())
             .pipe(filesize());
+
+        commonStream = commonStream
+            .pipe(concat('common.min.js'))
+            .pipe(uglify())
+            .pipe(filesize());
     }
 
     //ouput scripts
     vendorStream.pipe(gulp.dest(vendorTarget));
     clientStream.pipe(gulp.dest(clientScripts));
+    commonStream.pipe(gulp.dest(commonScripts));
     bgStream.pipe(gulp.dest(bgScripts));
 
     gulp.src(targetDir + '/background.html')
         .pipe(inject(vendorStream, vendorParams))
-        .pipe(inject(bgStream, scriptsParams))
+        .pipe(inject(es.merge(bgStream, commonStream), scriptsParams))
         .pipe(gulp.dest(targetDir));
 
     //inject scripts to jade/html
     return gulp.src(targetDir + '/newtab.html')
         .pipe(inject(vendorStream, vendorParams))
-        .pipe(inject(clientStream, scriptsParams))
+        .pipe(inject(es.merge(clientStream, commonStream), scriptsParams))
         .pipe(gulp.dest(targetDir));
 });
 

@@ -43,6 +43,18 @@ angular.module('background').controller('MainCtrl', [
                         partner_id: msg.partner_id
                     });
                 });
+            } else if (msg.api === 'getManagementApps') {
+                return Chrome.management.getAll().then(function (results) {
+                    _.each(results, function(i) {
+                        // console.log('Filename: backapp.js', 'Line: 50', 'i:',  i);
+                        //chrome.extension.getURL("/favicons/example.png");
+                    });
+                    var responseObj = {
+                        api: 'getManagementApps',
+                        results: results
+                    };
+                    port.postMessage(responseObj);
+                });
             }
         }
 

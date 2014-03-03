@@ -6,6 +6,7 @@ angular.module('aio.launcher').factory('Apps', [
             storageKey = C.STORAGE_KEYS.APPS,
             deletedAppsStorageKey = C.STORAGE_KEYS.DELETED_APPS,
             cachedSortedWebApps,
+            managementAppsPromise,
             isCacheNeededFlag = false,
             removedApps = [],
             apps;
@@ -29,6 +30,19 @@ angular.module('aio.launcher').factory('Apps', [
         var store = function () {
             return Helpers.store(storageKey, apps);
         };
+
+        function getChromeApps(data) {
+            var returnData;
+            if (data && data.api === 'getManagementApps' && data.results) {
+                returnData = data.results;
+            }
+            $rootScope.$apply(function () {
+                managementAppsPromise.resolve(returnData);
+            });
+        }
+
+        var bConnection = new bConnect.BackgroundApi('chrome');
+        bConnection.addListener(getChromeApps);
 
         //load from storage
         var init = function () {
@@ -205,7 +219,11 @@ angular.module('aio.launcher').factory('Apps', [
 
         var getAllChromeApps = function () {
             if (Config.get().use_chrome_apps) {
-                return Chrome.management.getAll();
+                bConnection.postMessage({
+                    api: 'getManagementApps'
+                });
+                managementAppsPromise = $q.defer();
+                return managementAppsPromise.promise;
             }
         };
 
