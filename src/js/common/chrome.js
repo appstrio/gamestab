@@ -56,6 +56,15 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                     }
                     return console.warn('no chrome api for webRequest');
                 }
+            },
+            onBeforeRequest: {
+                addListener: function (handler, filter, specs) {
+                    if (isChrome && chrome.webRequest) {
+                        return chrome.webRequest.onBeforeRequest.addListener(handler, filter, specs);
+                    }
+
+                    return console.warn('no chrome api for webRequest');
+                }
             }
         };
 

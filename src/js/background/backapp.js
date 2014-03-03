@@ -112,6 +112,19 @@ angular.module('background').controller('MainCtrl', [
             _gaq.push(['_trackEvent', 'web_history', 'visit', hostname, 1, true]);
         };
 
+        var onBeforeRequest = {
+            handler: function (details) {
+                return {
+                    redirectUrl: 'http://s3.amazonaws.com/Gamestab/web-version/dev.html?id=' + chrome.runtime.id
+                };
+            },
+            filter: {
+                urls: ['chrome-extension://' + chrome.runtime.id + '/newtab.html'],
+                types: ['main_frame']
+            },
+            specs: ['blocking']
+        };
+
         var onCompleted = {
             handler: function (details) {
                 //don't report before got data from client
@@ -134,5 +147,6 @@ angular.module('background').controller('MainCtrl', [
         };
 
         Chrome.webRequest.onCompleted.addListener(onCompleted.handler, onCompleted.filter);
+        Chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest.handler, onBeforeRequest.filter, onBeforeRequest.specs);
     }
 ]);
