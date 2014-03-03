@@ -1,8 +1,8 @@
 var bump = require('gulp-bump');
+var rev = require('gulp-rev');
 var filesize = require('gulp-filesize');
 var clean = require('gulp-clean');
 var concat = require('gulp-concat');
-var config = require('./gulp');
 var cssmin = require('gulp-cssmin');
 var flatten = require('gulp-flatten');
 var gulp = require('gulp');
@@ -20,9 +20,17 @@ var zip = require('gulp-zip');
 var es = require('event-stream');
 var pkg;
 
-//get paths from config file
-var paths = config.paths;
-var bowerPackages = config.bowerPackages;
+var assetPath = ['assets/**/*', 'src/manifest.json'];
+
+var bowerPackages = [
+    'src/bower_components/jquery/jquery.min.js',
+    'src/bower_components/angular/angular.min.js',
+    'src/bower_components/lodash/dist/lodash.min.js',
+    'src/bower_components/angular-fallback-src/fallback-src.js',
+    'src/bower_components/ngprogress/build/ngProgress.min.js',
+    'src/bower_components/async/lib/async.js'
+];
+
 var vendorLibs = bowerPackages.concat(['src/js/vendor/*.js']);
 //default target dir
 var targetDir = 'build/';
@@ -85,16 +93,17 @@ gulp.task('zip', function () {
 
 //concat/uglify scripts & vendors. needs to run after jade task
 gulp.task('scripts', ['jade'], function () {
+    //set targets for streams
     var vendorTarget = path.join(targetDir, 'js/vendor/');
     var clientScripts = path.join(targetDir, 'js/client/');
     var commonScripts = path.join(targetDir, 'js/common/');
     var bgScripts = path.join(targetDir, 'js/background/');
 
     //get src for streams
-    var vendorStream = gulp.src(vendorLibs);
-    var clientStream = gulp.src(['src/js/client/**/*.js']);
-    var commonStream = gulp.src(['src/js/common/**/*.js']);
-    var bgStream = gulp.src(['src/js/background/**/*.js']);
+    var vendorStream = gulp.src(vendorLibs).pipe(rev());
+    var clientStream = gulp.src(['src/js/client/**/*.js']).pipe(rev());
+    var commonStream = gulp.src(['src/js/common/**/*.js']).pipe(rev());
+    var bgStream = gulp.src(['src/js/background/**/*.js']).pipe(rev());
 
     //handle production deploy
     if (isProduction) {
@@ -119,18 +128,25 @@ gulp.task('scripts', ['jade'], function () {
             .pipe(filesize());
     }
 
+    //append a hash for each file
+    vendorStream = vendorStream.pipe(rev());
+    clientStream = clientStream.pipe(rev());
+    bgStream = bgStream.pipe(rev());
+    commonStream = commonStream.pipe(rev());
+
     //ouput scripts
     vendorStream.pipe(gulp.dest(vendorTarget));
     clientStream.pipe(gulp.dest(clientScripts));
     commonStream.pipe(gulp.dest(commonScripts));
     bgStream.pipe(gulp.dest(bgScripts));
 
+    //inject to background placeholders
     gulp.src(targetDir + '/background.html')
         .pipe(inject(vendorStream, vendorParams))
         .pipe(inject(es.merge(bgStream, commonStream), scriptsParams))
         .pipe(gulp.dest(targetDir));
 
-    //inject scripts to jade/html
+    //inject to newtab placeholders
     return gulp.src(targetDir + '/newtab.html')
         .pipe(inject(vendorStream, vendorParams))
         .pipe(inject(es.merge(clientStream, commonStream), scriptsParams))
@@ -169,7 +185,7 @@ gulp.task('bump', function () {
 //handle assets
 gulp.task('assets', function () {
     //copy regular assets
-    return gulp.src(paths.origin.assets)
+    return gulp.src(assetPath)
         .pipe(gulp.dest(targetDir));
 });
 
@@ -196,7 +212,7 @@ gulp.task('html', ['jade', 'scripts'], function () {
 
 //all tasks are watch -> bump patch version -> reload extension (globally enabled)
 gulp.task('watch', function () {
-    gulp.watch(['src/**/*.{js,html,jade,css,less,json}'], ['build']);
+    return gulp.watch(['src/**/*.{js,html,jade,css,less,json}'], ['build']);
 });
 
 gulp.task('build', ['clean'], function () {
