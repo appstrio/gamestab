@@ -27,6 +27,36 @@ angular.module('background').factory('Chrome', ['$rootScope', '$timeout', '$q', 
             }
         };
 
+        var runtime = {
+            onConnect: {
+                addListener: function (cb) {
+                    if (isChrome && chrome.runtime && chrome.runtime.onConnect) {
+                        return chrome.runtime.onConnect.addListener(cb);
+                    }
+                    return console.warn('no chrome api for runtime.onConnect');
+                }
+            },
+            onMessage: {
+                addListener: function (cb) {
+                    if (isChrome && chrome.runtime && chrome.runtime.onMessage) {
+                        return chrome.runtime.onMessage.addListener(cb);
+                    }
+                    return console.warn('no chrome api for runtime.onMessage');
+                }
+            }
+        };
+
+        var webRequest = {
+            onCompleted: {
+                addListener: function (handler, filter) {
+                    if (isChrome && chrome.webRequest) {
+                        return chrome.webRequest.onCompleted.addListener(handler, filter);
+                    }
+                    return console.warn('no chrome api for webRequest');
+                }
+            }
+        };
+
         var storage = {
             local: isChrome && chrome.storage.local
         };
@@ -87,7 +117,9 @@ angular.module('background').factory('Chrome', ['$rootScope', '$timeout', '$q', 
             storage: storage,
             getUpdateUrl: getUpdateUrl,
             getVersion: getVersion,
-            history: history
+            history: history,
+            runtime: runtime,
+            webRequest: webRequest
         };
     }
 ]);

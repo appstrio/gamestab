@@ -1,4 +1,4 @@
-/* global _,async */
+/* global _*/
 angular.module('aio.search').directive('aioSearchBox', [
     'Analytics', 'Constants', 'Config', 'suggestionsData', 'webAppsSuggestions', '$rootScope', 'bConnect',
     function (Analytics, C, Config, suggestionsData, webAppsSuggestions, $rootScope, bConnect) {
@@ -45,6 +45,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                 var postObj = {
                     type: 'init',
                     params: {
+                        provider: conf.suggestions_type || 'bing',
                         suggestionsURL: suggestionsURL
                     }
                 };
@@ -107,7 +108,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     label: appSuggestion.title,
                     waitForFinish: true
                 }).then(function () {
-                    window.location = appSuggestion.url;
+                    window.parent.location = appSuggestion.url;
                 });
             };
 
@@ -117,7 +118,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     label: val,
                     waitForFinish: true
                 }).then(function () {
-                    window.location = searchURL + val;
+                    window.parent.location = searchURL + val;
                 });
             };
 
@@ -205,14 +206,6 @@ angular.module('aio.search').directive('aioSearchBox', [
                     });
                 }
             });
-        };
-    }
-]).factory('searchSuggestions', [
-
-    function () {
-
-        return {
-
         };
     }
 ]).factory('webAppsSuggestions', ['Apps', '$filter', '$q',

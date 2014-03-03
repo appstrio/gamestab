@@ -1,16 +1,27 @@
 angular.module('background').factory('searchSuggestions', [
-    'bingSearchSuggestions',
-    function (bingSearchSuggestions) {
+    'bing',
+    function (bing) {
         //stores latest search results
         var searchResults = [];
+        //list of valid providers and their respected service
+        var providers = {
+            bing: bing
+        };
+        //there can be only one ;-)
+        var activeProvider;
 
         var init = function (params) {
-            bingSearchSuggestions.init(params.suggestionsURL);
+            if (!providers[params.provider]) {
+                return console.error('bad provider', params.provider);
+            }
+
+            activeProvider = providers[params.provider];
+            activeProvider.init(params.suggestionsURL);
         };
 
         // get the results using a throttled function
         var getResults = function (val, howMany) {
-            return bingSearchSuggestions.getSuggestions(val, howMany).then(function (response) {
+            return activeProvider.getSuggestions(val, howMany).then(function (response) {
                 //got no response back
                 if (!response || !response.length) {
                     searchResults.length = [];
@@ -29,8 +40,8 @@ angular.module('background').factory('searchSuggestions', [
     }
 ]);
 
-angular.module('background').factory('bingSearchSuggestions', ['$http',
-    function ($http) {
+angular.module('background').factory('bing', ['$http', '$q',
+    function ($http, $q) {
         /**
          * Bing Suggestions Provider
          */
@@ -46,6 +57,9 @@ angular.module('background').factory('bingSearchSuggestions', ['$http',
         };
 
         var getSuggestions = function (q) {
+            if (!baseURL) {
+                return $q.when(null);
+            }
             var url = bingURLBuilder(q);
             //encode entire search string
             url = encodeURI(url);

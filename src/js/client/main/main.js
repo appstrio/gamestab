@@ -43,9 +43,10 @@ angular.module('aio.main').controller('MainCtrl', [
             if (typeof chrome === 'undefined' || !chrome.runtime) {
                 return;
             }
-            chrome.runtime.sendMessage({
+            var postObj = {
                 setAccountData: Config.get()
-            }, angular.noop);
+            };
+            chrome.runtime.sendMessage(postObj, angular.noop);
         };
 
         //second loading services

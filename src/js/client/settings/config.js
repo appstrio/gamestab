@@ -91,7 +91,7 @@ angular.module('aio.settings').factory('Config', [
             var promises = [];
             var halfHourAgo = Date.now() - 1000 * 60 * 30;
 
-            var bConnection = new bConnect.RuntimeConnect('chrome');
+            var bConnection = new bConnect.BackgroundApi('chrome');
             bConnection.postMessage('hello');
 
             function searchHistoryForPartner(partner) {
