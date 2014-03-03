@@ -96,9 +96,9 @@ gulp.task('scripts', ['jade'], function () {
     //handle production deploy
     if (isProduction) {
         vendorStream = vendorStream
-            // .pipe(concat('vendors.min.js'))
-            // .pipe(uglify())
-            .pipe(filesize());
+        // .pipe(concat('vendors.min.js'))
+        // .pipe(uglify())
+        .pipe(filesize());
 
         clientStream = clientStream
             .pipe(concat('scripts.min.js'))
