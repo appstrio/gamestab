@@ -1,9 +1,9 @@
 var _gaq = window._gaq || [];
-angular.module('background', []);
+angular.module('background', ['aio.storage', 'aio.image', 'aio.file', 'aio.chrome', 'aio.common.helpers']);
 
 angular.module('background').controller('MainCtrl', [
-    'searchSuggestions', 'Chrome',
-    function (searchSuggestions, Chrome) {
+    'searchSuggestions', 'Chrome', 'Helpers', 'Image',
+    function (searchSuggestions, Chrome, Helpers, Image) {
 
         var defaultMaxSuggestions = 3;
 
@@ -45,15 +45,19 @@ angular.module('background').controller('MainCtrl', [
                 });
             } else if (msg.api === 'getManagementApps') {
                 return Chrome.management.getAll().then(function (results) {
-                    _.each(results, function(i) {
-                        // console.log('Filename: backapp.js', 'Line: 50', 'i:',  i);
-                        //chrome.extension.getURL("/favicons/example.png");
-                    });
-                    var responseObj = {
-                        api: 'getManagementApps',
-                        results: results
-                    };
-                    port.postMessage(responseObj);
+                    var chromeApps = [];
+                    if (results && results.length) {
+                        //filter apps & convert to object
+                        chromeApps = _.filter(results, Helpers.isAppEnabled);
+                        chromeApps = _.map(chromeApps, Helpers.chromeAppToObject);
+                        Image.convertFieldToLocalFile('icon', {}, chromeApps).then(function (cachedChromeApps) {
+                            var responseObj = {
+                                api: 'getManagementApps',
+                                results: cachedChromeApps
+                            };
+                            port.postMessage(responseObj);
+                        });
+                    }
                 });
             }
         }

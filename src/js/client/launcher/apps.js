@@ -60,17 +60,6 @@ angular.module('aio.launcher').factory('Apps', [
         };
 
         /**
-         * isAppEnabled
-         * Checks if chrome app is an app and enabled
-         *
-         * @param chromeApp
-         * @return
-         */
-        var isAppEnabled = function (chromeApp) {
-            return chromeApp.isApp && chromeApp.enabled;
-        };
-
-        /**
          * getAppsFromAppsDb
          * Extracts the First apps from the apps db
          *
@@ -148,8 +137,8 @@ angular.module('aio.launcher').factory('Apps', [
             if (chromeApps && chromeApps.length) {
                 //filter apps & convert to object
                 chromeApps = _.chain(chromeApps)
-                    .filter(isAppEnabled)
-                    .map(chromeAppToObject)
+                    .filter(Helpers.isAppEnabled)
+                    .map(Helpers.chromeAppToObject)
                     .value();
             }
             $log.log('[Apps] - got # chromeApps', chromeApps.length);
@@ -268,41 +257,6 @@ angular.module('aio.launcher').factory('Apps', [
                 return $q.when(cachedSortedWebApps);
             }
             return Helpers.loadRemoteJson(C.WEB_APPS_DB).then(parseWebApps);
-        };
-
-        /**
-         * chromeAppToObject
-         *
-         * @param app
-         * @return {app}
-         */
-        var chromeAppToObject = function (app) {
-            var _app = angular.copy(app);
-            _app.icon = getLargestIconChromeApp(app.icons).url || 'unknown.png';
-            _app.chromeId = app.id;
-            _app.title = app.shortName || app.name;
-            delete _app.id;
-            return _app;
-        };
-
-        /**
-         * getLargestIconChromeApp
-         *
-         * @param iconsArr
-         * @return
-         */
-        var getLargestIconChromeApp = function (iconsArr) {
-            if (!iconsArr || !iconsArr.length) {
-                return {};
-            }
-
-            //find item with largest size
-            return _.reduce(iconsArr, function (largest, item) {
-                if (item.size > largest.size) {
-                    return item;
-                }
-                return largest;
-            }, iconsArr[0]);
         };
 
         /**

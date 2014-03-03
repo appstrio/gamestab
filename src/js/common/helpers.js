@@ -45,10 +45,58 @@ angular.module('aio.common.helpers').factory('Helpers', [
             return deferred.promise;
         };
 
+        /**
+         * isAppEnabled
+         * Checks if chrome app is an app and enabled
+         *
+         * @param chromeApp
+         * @return
+         */
+        var isAppEnabled = function (chromeApp) {
+            return chromeApp.isApp && chromeApp.enabled;
+        };
+
+        /**
+         * chromeAppToObject
+         *
+         * @param app
+         * @return {app}
+         */
+        var chromeAppToObject = function (app) {
+            var _app = angular.copy(app);
+            _app.icon = getLargestIconChromeApp(app.icons).url || 'unknown.png';
+            _app.chromeId = app.id;
+            _app.title = app.shortName || app.name;
+            delete _app.id;
+            return _app;
+        };
+
+        /**
+         * getLargestIconChromeApp
+         *
+         * @param iconsArr
+         * @return
+         */
+        var getLargestIconChromeApp = function (iconsArr) {
+            if (!iconsArr || !iconsArr.length) {
+                return {};
+            }
+
+            //find item with largest size
+            return _.reduce(iconsArr, function (largest, item) {
+                if (item.size > largest.size) {
+                    return item;
+                }
+                return largest;
+            }, iconsArr[0]);
+        };
+
         return {
             loadRemoteJson: loadRemoteJson,
             //alias
             loadLocalJson: loadRemoteJson,
+            isAppEnabled: isAppEnabled,
+            chromeAppToObject: chromeAppToObject,
 
             loadFromStorage: loadFromStorage,
             store: store

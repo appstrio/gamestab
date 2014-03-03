@@ -1,6 +1,6 @@
 angular.module('aio.image', []);
-angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileSystem', 'Chrome',
-    function ($q, $rootScope, $log, FileSystem, Chrome) {
+angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileSystem',
+    function ($q, $rootScope, $log, FileSystem) {
 
         var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
         /**
@@ -163,7 +163,7 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
                 return /^https?/.test(field);
             },
             isPathChrome: function (field) {
-                return /^chrome/.test(field);
+                return /^chrome(?!:\/\/extension-icon)/.test(field);
             }
         };
 
@@ -233,12 +233,15 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
                     return logAndReturn(item);
                 }
 
-                //is path a local one?
-                if (!helpers.isPathRemote(url)) {
-                    //save absolute chrome path
-                    item[fieldToConvert] = Chrome.extension.getURL(url);
-                    return logAndReturn(item);
-                }
+                /*
+                 * DEPRECATED 3.3.14 - using background to cache all local images
+                 * //is path a local one?
+                 * if (!helpers.isPathRemote(url)) {
+                 *     //save absolute chrome path
+                 *     item[fieldToConvert] = Chrome.extension.getURL(url);
+                 *     return logAndReturn(item);
+                 * }
+                 */
                 (function (counter) {
                     $log.log('[image] - caching ' + fieldToConvert + '=> ' + counter + '/' + arr.length + '.');
                     //return promise
