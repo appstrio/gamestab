@@ -1,4 +1,5 @@
 var bump = require('gulp-bump');
+var filesize = require('gulp-filesize');
 var clean = require('gulp-clean');
 var concat = require('gulp-concat');
 var config = require('./gulp');
@@ -30,12 +31,12 @@ var isProduction = false;
 var vendorParams = {
     addRootSlash: false,
     starttag: '<!-- inject:vendors:{{ext}} -->',
-    ignorePath: ['src', 'build', 'dist']
+    ignorePath: ['src', 'build']
 };
 
 var scriptsParams = {
     addRootSlash: false,
-    ignorePath: ['src', 'build', 'dist']
+    ignorePath: ['src', 'build']
 };
 
 var getPackageJson = function () {
@@ -56,11 +57,11 @@ gulp.task('jade', function () {
 });
 
 gulp.task('copy', function () {
-    gulp.src('src/js/redirect.js')
-        .pipe(gulp.dest('build/js'));
+    gulp.src('src/js/*.js')
+        .pipe(gulp.dest(targetDir + 'js/'));
 
     return gulp.src('src/bower_components/jquery/jquery.min.map')
-        .pipe(gulp.dest('build/js/vendor/'));
+        .pipe(gulp.dest(targetDir + 'js/vendor/'));
 });
 
 //less -> css
@@ -76,7 +77,7 @@ gulp.task('less', function () {
 // zip build folder. buggy
 gulp.task('zip', function () {
     var _pkg = getPackageJson();
-    gulp.src('dist/**/*')
+    gulp.src(targetDir + '**/*')
         .pipe(zip('gamesTab.' + _pkg.version + '.zip'))
         .pipe(gulp.dest('builds'));
 });
@@ -94,14 +95,20 @@ gulp.task('scripts', ['jade'], function () {
 
     //handle production deploy
     if (isProduction) {
-        vendorStream = vendorStream.pipe(concat('vendors.min.js'));
+        vendorStream = vendorStream
+            // .pipe(concat('vendors.min.js'))
+            // .pipe(uglify())
+            .pipe(filesize());
+
         clientStream = clientStream
             .pipe(concat('scripts.min.js'))
-            .pipe(uglify());
+            .pipe(uglify())
+            .pipe(filesize());
 
         bgStream = bgStream
             .pipe(concat('backscripts.min.js'))
-            .pipe(uglify());
+            .pipe(uglify())
+            .pipe(filesize());
     }
 
     //ouput scripts
@@ -121,14 +128,8 @@ gulp.task('scripts', ['jade'], function () {
         .pipe(gulp.dest(targetDir));
 });
 
-gulp.task('cleanDev', function () {
-    return gulp.src('build/', {
-        read: false
-    }).pipe(clean());
-});
-
-gulp.task('cleanProd', function () {
-    return gulp.src('dist/', {
+gulp.task('clean', function () {
+    return gulp.src(targetDir, {
         read: false
     }).pipe(clean());
 });
@@ -165,9 +166,9 @@ gulp.task('assets', function () {
 
 //imagemin only in deploy
 gulp.task('images', ['assets'], function () {
-    return gulp.src('dist/**/*.{jpeg,png,gif,jpg}')
+    return gulp.src(targetDir + '**/*.{jpeg,png,gif,jpg}')
         .pipe(imagemin())
-        .pipe(gulp.dest('dist/'));
+        .pipe(gulp.dest(targetDir));
 });
 
 //use alongside with chrome extension reload-extension
@@ -189,13 +190,11 @@ gulp.task('watch', function () {
     gulp.watch(['src/**/*', 'assets/**/*'], ['build']);
 });
 
-gulp.task('build', ['cleanDev'], function () {
-    targetDir = 'build/';
+gulp.task('build', ['clean'], function () {
     return gulp.start('scripts', 'assets', 'copy', 'less');
 });
 
-gulp.task('deploy', ['cleanProd'], function () {
-    targetDir = 'dist/';
+gulp.task('deploy', ['clean'], function () {
     isProduction = true;
     return gulp.start('scripts', 'assets', 'copy', 'less', 'images', 'html');
 });

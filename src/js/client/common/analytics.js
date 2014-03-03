@@ -17,7 +17,7 @@ angular.module('aio.analytics').factory('Analytics', [
                 ga.async = true;
                 if (isWebsite) {
                     //use local version
-                    ga.src = 'js/vendor/ga.js';
+                    ga.src = 'js/ga.js';
                 } else {
                     //use remote version
                     ga.src = 'https://ssl.google-analytics.com/ga.js';

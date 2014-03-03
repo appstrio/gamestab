@@ -11,6 +11,7 @@ angular.module('aio.search').directive('aioSearchBox', [
             var bConnection = new bConnect.BackgroundApi('suggestions');
 
             var addResults = function (results, method) {
+                //push is default. unshift to place items in beginning
                 method = method || 'push';
                 if (results && results.length) {
                     _.each(results, function (item) {
@@ -22,6 +23,7 @@ angular.module('aio.search').directive('aioSearchBox', [
 
             bConnection.defineHandler(function (msg) {
                 if (msg && msg.searchResults) {
+                    //reverse items because they will be unshifted into array
                     var results = msg.searchResults.reverse();
                     $rootScope.$apply(function () {
                         addResults(results, 'unshift');
