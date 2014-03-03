@@ -351,7 +351,7 @@ angular.module('aio.launcher').factory('Apps', [
                     chromeId: cApp.id
                 });
 
-                newChromeApp = chromeAppToObject(cApp);
+                newChromeApp = Helpers.chromeAppToObject(cApp);
 
                 if (isChromeAppFound) {
                     //sync it
@@ -449,7 +449,9 @@ angular.module('aio.launcher').factory('Apps', [
                 //make sure web apps db are synced
                 flattenedApps = syncAllApps(flattenedApps, webApps);
                 //make sure chrome apps are synced
-                flattenedApps = syncChromeApps(flattenedApps, chromeApps);
+
+                //DEPRECATED for now
+                // flattenedApps = syncChromeApps(flattenedApps, chromeApps);
 
                 flattenedApps = _.filter(flattenedApps, function (i) {
                     return (i && !i.toDelete);

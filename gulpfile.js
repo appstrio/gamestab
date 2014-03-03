@@ -196,7 +196,7 @@ gulp.task('html', ['jade', 'scripts'], function () {
 
 //all tasks are watch -> bump patch version -> reload extension (globally enabled)
 gulp.task('watch', function () {
-    gulp.watch(['src/**/*', 'assets/**/*'], ['build']);
+    gulp.watch(['src/**/*.{js,html,jade,css,less,json}'], ['build']);
 });
 
 gulp.task('build', ['clean'], function () {
