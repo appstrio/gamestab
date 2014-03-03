@@ -1,46 +1,68 @@
 /* global _*/
 angular.module('aio.search').directive('aioSearchBox', [
-    'Analytics', 'Constants', 'Config', 'suggestionsData', 'webAppsSuggestions', '$rootScope', 'bConnect',
-    function (Analytics, C, Config, suggestionsData, webAppsSuggestions, $rootScope, bConnect) {
+    'Analytics', 'Constants', 'Config', 'suggestionsData', 'webAppsSuggestions', '$rootScope', 'bConnect', '$q',
+    function (Analytics, C, Config, suggestionsData, webAppsSuggestions, $rootScope, bConnect, $q) {
         return function (scope, element) {
             var throttleLimit = C.CONFIG.search_throttle_limit,
-                conf,
-                searchURL,
-                getResults,
-                suggestionsURL,
+                conf, searchURL, lastSearch, getResults, suggestionsURL,
                 $container = $('#container'),
                 $hiddenInput = $('.hidden').eq(0);
 
-            /*
-             * // each provider should have getSuggestions(q) method that returns a promise
-             * var suggestionsProviders = [{
-             *     providerObject: webAppsSuggestions,
-             *     priority: 0,
-             *     maxSuggestions: 3
-             * }, {
-             *     providerObject: bingSearchSuggestions,
-             *     priority: 1,
-             *     maxSuggestions: 3,
-             *     autoShowSuggestionsBox: true
-             * }];
-             */
-
             var bConnection = new bConnect.BackgroundApi('suggestions');
 
-            bConnection.defineHandler(function (msg) {
-                if (msg.searchResults) {
-                    $rootScope.$apply(function () {
-                        suggestionsData.data = msg.searchResults;
+            var addResults = function (results, method) {
+                method = method || 'push';
+                if (results && results.length) {
+                    _.each(results, function (item) {
+                        suggestionsData.data[method](item);
                     });
-                    showSuggestionsBox();
+                    setSuggestionsVisibility(true);
+                }
+            };
+
+            bConnection.defineHandler(function (msg) {
+                if (msg && msg.searchResults) {
+                    var results = msg.searchResults.reverse();
+                    $rootScope.$apply(function () {
+                        addResults(results, 'unshift');
+                    });
+
+                    setSuggestionsVisibility(true);
                 }
             });
+
+            var getBingSuggestions = function (val, howMany) {
+                var postObj = {
+                    type: 'get',
+                    searchVal: val,
+                    howMany: howMany
+                };
+
+                bConnection.postMessage(postObj);
+            };
+
+            //each provider should have getSuggestions(q) method that returns a promise
+            var providers = [{
+                name: 'webApps',
+                get: webAppsSuggestions.getSuggestions,
+                handler: addResults,
+                priority: 0,
+                maxSuggestions: 2
+            }, {
+                name: 'bing',
+                get: getBingSuggestions,
+                priority: 1,
+                maxSuggestions: 5,
+                //is handled in port connection
+                handler: angular.noop
+            }];
 
             Config.isReady.then(function () {
                 conf = Config.get();
                 searchURL = conf.search_url;
                 suggestionsURL = conf.suggestions_url || conf.suggestions_url;
                 throttleLimit = conf.search_throttle_limit;
+
                 // initializes the bing search suggestions
                 var postObj = {
                     type: 'init',
@@ -50,45 +72,46 @@ angular.module('aio.search').directive('aioSearchBox', [
                     }
                 };
                 bConnection.postMessage(postObj);
+
+                // get the results using a throttled function
+                getResults = _.throttle(function (val) {
+                    if (!val || val === lastSearch) {
+                        return;
+                    }
+                    lastSearch = val;
+                    //clear current results
+                    suggestionsData.data.length = 0;
+                    //clear selected result
+                    scope.currentSuggestion = -1;
+
+                    _.each(providers, function (provider) {
+                        $q.when(provider.get(val, provider.maxSuggestions)).then(provider.handler);
+                    });
+                }, throttleLimit);
+
             });
 
-            // * shows the suggestions box
-            var showSuggestionsBox = function () {
-                $container.addClass('suggestions-on');
-            };
-
             // * hide the suggestions box
-            var hideSuggestionsBox = function () {
-                $container.removeClass('suggestions-on');
+            var setSuggestionsVisibility = function (status) {
+                if (status) {
+                    $container.addClass('suggestions-on');
+                } else {
+                    $container.removeClass('suggestions-on');
+                }
             };
 
             // watches whether the suggestion box was emptied
             scope.$watch('searchQuery', function (newVal) {
                 if (!newVal) {
-                    hideSuggestionsBox();
+                    setSuggestionsVisibility(false);
                 }
             });
-
-            // get the results using a throttled function
-            getResults = _.throttle(function (val) {
-                suggestionsData.data = [];
-                scope.currentSuggestion = -1;
-
-                var postObj = {
-                    type: 'get',
-                    searchVal: val,
-                    howMany: 5
-                };
-
-                bConnection.postMessage(postObj);
-            }, throttleLimit);
 
             // When user click enter on the visible/hidden input boxes OR clicks on suggestion
             var executeEnterKeyPress = function (val, suggestion) {
                 if (!val) {
-                    if (!suggestion) {
-                        suggestion = suggestionsData.data[scope.currentSuggestion];
-                    }
+                    suggestion = suggestion || suggestionsData.data[scope.currentSuggestion];
+
                     if (!suggestion) {
                         return;
                     }
@@ -144,7 +167,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                         executeEnterKeyPress(val);
                         break;
                     case 27: //esc
-                        hideSuggestionsBox();
+                        setSuggestionsVisibility(false);
                         break;
                     case 40:
                         // down
@@ -183,9 +206,11 @@ angular.module('aio.search').directive('aioSearchBox', [
 
                     break;
                 case 38: //up key
-
                     //go back to search element
-                    if (scope.currentSuggestion === 0) {
+                    if (scope.currentSuggestion <= 0) {
+                        scope.$apply(function () {
+                            scope.currentSuggestion = -1;
+                        });
                         return element.focus();
                     }
 
@@ -212,9 +237,7 @@ angular.module('aio.search').directive('aioSearchBox', [
     function (Apps, $filter, $q) {
         var webAppsDB;
 
-        /**
-         *  get the web apps db either from memory or from the apps service
-         */
+        //get the web apps db either from memory or from the apps service
         var getWebAppsDb = function () {
             var defer = $q.defer();
 
@@ -229,9 +252,11 @@ angular.module('aio.search').directive('aioSearchBox', [
             return defer.promise;
         };
 
-        var getSuggestions = function (q) {
+        var getSuggestions = function (q, howMany) {
             return getWebAppsDb().then(function () {
+                howMany = howMany || 3;
                 var filteredApps = $filter('filter')(webAppsDB, q);
+                filteredApps = _.first(filteredApps, howMany);
                 return _.map(filteredApps, wrapSuggestion);
             });
         };
