@@ -93,63 +93,65 @@ gulp.task('zip', function () {
 
 //concat/uglify scripts & vendors. needs to run after jade task
 gulp.task('scripts', ['jade'], function () {
-    //set targets for streams
-    var vendorTarget = path.join(targetDir, 'js/vendor/');
-    var clientScripts = path.join(targetDir, 'js/client/');
-    var commonScripts = path.join(targetDir, 'js/common/');
-    var bgScripts = path.join(targetDir, 'js/background/');
 
-    //get src for streams
-    var vendorStream = gulp.src(vendorLibs).pipe(rev());
-    var clientStream = gulp.src(['src/js/client/**/*.js']).pipe(rev());
-    var commonStream = gulp.src(['src/js/common/**/*.js']).pipe(rev());
-    var bgStream = gulp.src(['src/js/background/**/*.js']).pipe(rev());
+    var streams = {
+        vendor: {
+            target: path.join(targetDir, 'js/vendor/'),
+            stream: gulp.src(vendorLibs)
+        },
+        client: {
+            target: path.join(targetDir, 'js/client/'),
+            stream: gulp.src(['src/js/client/**/*.js'])
+        },
+        common: {
+            target: path.join(targetDir, 'js/common/'),
+            stream: gulp.src(['src/js/common/**/*.js'])
+        },
+        bg: {
+            target: path.join(targetDir, 'js/background/'),
+            stream: gulp.src(['src/js/background/**/*.js'])
+        }
+    };
+
+    var uglifyConcat = function (stream, targetName) {
+        return stream
+            .pipe(concat(targetName))
+            .pipe(uglify())
+            .pipe(filesize());
+    };
 
     //handle production deploy
     if (isProduction) {
-        vendorStream = vendorStream
+        streams.vendor.stream = streams.vendor.stream
         // .pipe(concat('vendors.min.js'))
         // .pipe(uglify())
         .pipe(filesize());
 
-        clientStream = clientStream
-            .pipe(concat('scripts.min.js'))
-            .pipe(uglify())
-            .pipe(filesize());
-
-        bgStream = bgStream
-            .pipe(concat('backscripts.min.js'))
-            .pipe(uglify())
-            .pipe(filesize());
-
-        commonStream = commonStream
-            .pipe(concat('common.min.js'))
-            .pipe(uglify())
-            .pipe(filesize());
+        streams.client.stream = uglifyConcat(streams.client.stream, 'scripts.min.js');
+        streams.bg.stream = uglifyConcat(streams.bg.stream, 'backscripts.min.js');
+        streams.common.stream = uglifyConcat(streams.common.stream, 'common.min.js');
     }
 
-    //append a hash for each file
-    vendorStream = vendorStream.pipe(rev());
-    clientStream = clientStream.pipe(rev());
-    bgStream = bgStream.pipe(rev());
-    commonStream = commonStream.pipe(rev());
-
-    //ouput scripts
-    vendorStream.pipe(gulp.dest(vendorTarget));
-    clientStream.pipe(gulp.dest(clientScripts));
-    commonStream.pipe(gulp.dest(commonScripts));
-    bgStream.pipe(gulp.dest(bgScripts));
+    for (var i in streams) {
+        if (streams.hasOwnProperty(i)) {
+            var stream = streams[i];
+            //generate hash for each file
+            stream.stream = stream.stream.pipe(rev());
+            //output file to build/
+            stream.stream.pipe(gulp.dest(stream.target));
+        }
+    }
 
     //inject to background placeholders
     gulp.src(targetDir + '/background.html')
-        .pipe(inject(vendorStream, vendorParams))
-        .pipe(inject(es.merge(bgStream, commonStream), scriptsParams))
+        .pipe(inject(streams.vendor.stream, vendorParams))
+        .pipe(inject(es.merge(streams.bg.stream, streams.common.stream), scriptsParams))
         .pipe(gulp.dest(targetDir));
 
     //inject to newtab placeholders
     return gulp.src(targetDir + '/newtab.html')
-        .pipe(inject(vendorStream, vendorParams))
-        .pipe(inject(es.merge(clientStream, commonStream), scriptsParams))
+        .pipe(inject(streams.vendor.stream, vendorParams))
+        .pipe(inject(es.merge(streams.client.stream, streams.common.stream), scriptsParams))
         .pipe(gulp.dest(targetDir));
 });
 
