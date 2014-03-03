@@ -14,11 +14,18 @@ angular.module('aio.search').directive('aioSearchBox', [
                 //push is default. unshift to place items in beginning
                 method = method || 'push';
                 if (results && results.length) {
+                    clearOldSuggestions(results[0].origin);
                     _.each(results, function (item) {
                         suggestionsData.data[method](item);
                     });
                     setSuggestionsVisibility(true);
                 }
+            };
+
+            var clearOldSuggestions = function (origin) {
+                suggestionsData.data = _.reject(suggestionsData.data, function (item) {
+                    return item.origin === origin;
+                });
             };
 
             bConnection.addListener(function (msg) {
@@ -266,6 +273,7 @@ angular.module('aio.search').directive('aioSearchBox', [
         // wrap a suggestion so it will conform the structure of the suggestion object
         var wrapSuggestion = function (app) {
             app.description = app.tags && app.tags[0];
+            app.origin = 'webApps';
             return app;
         };
 

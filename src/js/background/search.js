@@ -78,7 +78,8 @@ angular.module('background').factory('bing', ['$http', '$q',
         var wrapSuggestion = function (suggestion) {
             return {
                 title: suggestion,
-                description: 'Search'
+                description: 'Search',
+                origin: 'bing'
             };
         };
 
