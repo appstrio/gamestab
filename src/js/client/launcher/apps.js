@@ -1,7 +1,7 @@
 /* global _ */
 angular.module('aio.launcher').factory('Apps', [
-    '$rootScope', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Image', 'Helpers',
-    function ($rootScope, Storage, $q, Chrome, C, Config, $log, Image, Helpers) {
+    '$rootScope', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Image', 'Helpers', 'bConnect',
+    function ($rootScope, Storage, $q, Chrome, C, Config, $log, Image, Helpers, bConnect) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
             deletedAppsStorageKey = C.STORAGE_KEYS.DELETED_APPS,
