@@ -2,7 +2,6 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
     function (Apps, $log, $timeout, Analytics, Chrome) {
         return function (scope, element) {
             //jshint unused:false
-
             scope.curScreen = 0;
 
             var $viewport = element.find('.viewport').eq(0);
