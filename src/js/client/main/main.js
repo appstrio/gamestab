@@ -1,11 +1,12 @@
+/* global isDev */
 angular.module('aio.main').controller('MainCtrl', [
-    '$scope', 'Apps', 'Config', '$log', 'Constants', 'Background', 'Analytics', '$q', '$timeout', 'Helpers',
-    function ($scope, Apps, Config, $log, Constants, Background, Analytics, $q, $timeout, Helpers) {
-
-        console.debug('[MainCtrl] - init with version', Constants.APP_VERSION);
+    '$scope', '$log', '$q', '$timeout', 'Apps', 'Config', 'Constants', 'Background', 'Analytics', 'Helpers',
+    function ($scope, $log, $q, $timeout, Apps, Config, Constants, Background, Analytics, Helpers) {
+        console.debug('[MainCtrl] - start v' + Constants.APP_VERSION + ' dev:' + isDev);
         var lazyCacheAppsTimeout;
         var checkConfigTimeout = 3000;
-        var t0 = Date.now();
+
+        $scope.firstBoot = false;
 
         $scope.refreshScope = function () {
             // $log.log('[MainCtrl] - Setting scope vars');
@@ -24,7 +25,7 @@ angular.module('aio.main').controller('MainCtrl', [
             }, lazyCacheAppsTimeout);
         };
 
-        var checkConfigExpiration = function () {
+        var lazyCheckConfig = function () {
             $timeout(function () {
                 //check if config needs update
                 if ($scope.config.updatedAt + $scope.config.config_expiration_time < Date.now()) {
@@ -51,26 +52,20 @@ angular.module('aio.main').controller('MainCtrl', [
 
         //second loading services
         var initializeApp = function () {
-            return $q.all([$scope.refreshScope(), Analytics.init(), lazyCacheApps(), checkConfigExpiration()]);
+            $scope.firstBoot = false;
+            return $q.all([$scope.refreshScope(), Analytics.init(), lazyCacheApps(), lazyCheckConfig()]);
         };
 
         var loadFromRemotes = function () {
+            $scope.firstBoot = true;
             return Config.setup().then(Apps.setup).then(Background.setup).then(updateBackgroundPage);
         };
 
-        var getBackgroundSequence = function () {
+        var initBackground = function () {
             return Background.init().then(null, Background.setup);
         };
 
-        //load config from local or remote
-        $q.all([Config.init(), Apps.init()])
-            .then(getBackgroundSequence, loadFromRemotes)
-            .then(initializeApp)
-            .then(function () {
-                console.debug('[MainCtrl] - entire startup process took ' + (Date.now() - t0) + ' ms.');
-            });
-
-        //get from settings
+        //TODO get from settings
         $scope.displayTopSearchBox = 1;
 
         //set the scope overlay
@@ -79,5 +74,15 @@ angular.module('aio.main').controller('MainCtrl', [
                 name: overlay
             };
         };
+
+        var t0 = Date.now();
+        //load configs from local
+        $q.all([Config.init(), Apps.init()])
+        //load background or from remotes if no local configs
+        .then(initBackground, loadFromRemotes)
+            .then(initializeApp)
+            .then(function () {
+                console.debug('[MainCtrl] - boot took ' + (Date.now() - t0) + ' ms.');
+            });
     }
 ]);

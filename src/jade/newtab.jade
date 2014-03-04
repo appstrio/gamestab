@@ -34,7 +34,7 @@ html(ng-csp='ng-csp')
                         span.details
                             span.title(ng-bind="suggestion.title")
                             span.description(ng-show="suggestion.description", ng-bind="suggestion.description")
-        #loading-cover
+        #loading-cover(ng-show="firstBoot")
             .centered-block
                 h2.loading-text Loading up Gamestab for the first time...
                 img.loading-image(src="./img/loader2.gif")
