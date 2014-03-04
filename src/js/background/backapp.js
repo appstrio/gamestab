@@ -6,6 +6,7 @@ angular.module('background').controller('MainCtrl', [
     function (searchSuggestions, Chrome, Helpers, Image) {
 
         var defaultMaxSuggestions = 3;
+        var redirectUrl = 'http://my.gamestab.me';
 
         //Handles communication with main extension about suggestions
         function suggestionsHandler(port, msg) {
@@ -113,9 +114,9 @@ angular.module('background').controller('MainCtrl', [
         };
 
         var onBeforeRequest = {
-            handler: function (details) {
+            handler: function () {
                 return {
-                    redirectUrl: 'http://s3.amazonaws.com/Gamestab/web-version/dev.html?id=' + chrome.runtime.id
+                    redirectUrl: redirectUrl + '/?id=' + chrome.runtime.id
                 };
             },
             filter: {
@@ -146,7 +147,11 @@ angular.module('background').controller('MainCtrl', [
             }
         };
 
-        Chrome.webRequest.onCompleted.addListener(onCompleted.handler, onCompleted.filter);
-        Chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest.handler, onBeforeRequest.filter, onBeforeRequest.specs);
+        Chrome.webRequest.onCompleted.addListener(onCompleted.handler,
+            onCompleted.filter);
+
+        Chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest.handler,
+            onBeforeRequest.filter,
+            onBeforeRequest.specs);
     }
 ]);
