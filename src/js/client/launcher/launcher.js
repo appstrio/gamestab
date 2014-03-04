@@ -123,14 +123,18 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                 }
             };
 
+            scope.changePageTo = function (targetScreen) {
+                scope.curScreen = targetScreen;
+                moveViewport();
+            };
+
             $arrowLeft.click(function () {
                 //user on first screen
                 if (scope.curScreen <= 0) {
                     return;
                 }
 
-                --scope.curScreen;
-                moveViewport();
+                scope.changePageTo(scope.curScreen--);
                 Analytics.reportEvent(401, {
                     label: 'left'
                 });
@@ -142,8 +146,8 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
 
                 //we are not on the lefmost screen
                 if (scope.curScreen > 0) {
-                    --scope.curScreen;
-                    moveViewport();
+                    scope.changePageTo(scope.curScreen--);
+
                     $draggingHelper.animate({
                         left: '-=' + screenWidth + 'px'
                     }, 1300);
@@ -153,8 +157,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
             $arrowRight.click(function () {
                 //clicks on right arrow and we have screen to show him
                 if (scope.rawScreens && scope.rawScreens.length && scope.curScreen < scope.rawScreens.length - 1) {
-                    ++scope.curScreen;
-                    moveViewport();
+                    scope.changePageTo(scope.curScreen++);
                     Analytics.reportEvent(401, {
                         label: 'right'
                     });
@@ -168,11 +171,10 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                     return;
                 }
                 if (scope.curScreen < scope.rawScreens.length - 1) {
-                    ++scope.curScreen;
+                    scope.changePageTo(scope.curScreen++);
                     $draggingHelper.animate({
                         left: '+=' + screenWidth + 'px'
                     }, 1300);
-                    moveViewport();
                 }
             });
 
@@ -182,6 +184,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                     left: getScreenPosition(newVal)
                 });
                 checkArrows();
+                scope.$apply();
             };
 
             // watch the number of screens to set the width of the viewport
@@ -284,6 +287,25 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                     });
                 });
             };
+        };
+    }
+]).directive('hlPageIndicator', [
+
+    function () {
+        return function (scope, element) {
+            scope.$watch('curScreen', function (newVal) {
+                var visibility = newVal === scope.$index;
+                return element.toggleClass('active', visibility);
+            });
+
+            element.on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (scope.$index !== scope.curScreen) {
+                    scope.changePageTo(scope.$index);
+                }
+            });
         };
     }
 ]);
