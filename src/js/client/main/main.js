@@ -13,7 +13,17 @@ angular.module('aio.main').controller('MainCtrl', [
             $scope.rawScreens = Apps.apps();
             $scope.config = Config.get();
             lazyCacheAppsTimeout = $scope.config.lazy_cache_dials_timeout;
+            $scope.displayTopSearchBox = $scope.config.user_preferences.show_search_box;
+            watchPrefs();
         };
+
+        var watchPrefs = _.once(function () {
+            $scope.$watch('config.user_preferences', function (newVal) {
+                if (newVal) {
+                    $scope.refreshScope();
+                }
+            }, true);
+        });
 
         var lazyCacheApps = function () {
             $timeout(function () {
@@ -64,9 +74,6 @@ angular.module('aio.main').controller('MainCtrl', [
         var initBackground = function () {
             return Background.init().then(null, Background.setup);
         };
-
-        //TODO get from settings
-        $scope.displayTopSearchBox = 1;
 
         //set the scope overlay
         $scope.setOverlay = function (overlay) {
