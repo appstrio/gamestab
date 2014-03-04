@@ -1,4 +1,3 @@
-/* global _ */
 angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome',
     function (Apps, $log, $timeout, Analytics, Chrome) {
         return function (scope, element) {
@@ -108,7 +107,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
             };
 
             var checkArrows = function () {
-                if (!scope.rawScreens) {
+                if (!scope.rawScreens || !scope.rawScreens.length) {
                     return;
                 }
 
