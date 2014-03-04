@@ -43,6 +43,8 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 search_url: 'http://www.google.com/search?q=',
                 //suggestions url
                 suggestions_url: 'http://api.bing.com/osjson.aspx?Market=en-us&query=',
+                //default background url
+                default_background_url: '',
                 //where to update from
                 partner_config_json_url: 'http://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
                 //should app show chrome apps
