@@ -1,5 +1,5 @@
-angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome',
-    function (Apps, $log, $timeout, Analytics, Chrome) {
+angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome', '$document',
+    function (Apps, $log, $timeout, Analytics, Chrome, $document) {
         return function (scope, element) {
             //jshint unused:false
             scope.curScreen = 0;
@@ -134,7 +134,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                     return;
                 }
 
-                scope.changePageTo(scope.curScreen--);
+                scope.changePageTo(--scope.curScreen);
                 Analytics.reportEvent(401, {
                     label: 'left'
                 });
@@ -146,7 +146,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
 
                 //we are not on the lefmost screen
                 if (scope.curScreen > 0) {
-                    scope.changePageTo(scope.curScreen--);
+                    scope.changePageTo(--scope.curScreen);
 
                     $draggingHelper.animate({
                         left: '-=' + screenWidth + 'px'
@@ -157,7 +157,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
             $arrowRight.click(function () {
                 //clicks on right arrow and we have screen to show him
                 if (scope.rawScreens && scope.rawScreens.length && scope.curScreen < scope.rawScreens.length - 1) {
-                    scope.changePageTo(scope.curScreen++);
+                    scope.changePageTo(++scope.curScreen);
                     Analytics.reportEvent(401, {
                         label: 'right'
                     });
@@ -171,7 +171,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                     return;
                 }
                 if (scope.curScreen < scope.rawScreens.length - 1) {
-                    scope.changePageTo(scope.curScreen++);
+                    scope.changePageTo(++scope.curScreen);
                     $draggingHelper.animate({
                         left: '+=' + screenWidth + 'px'
                     }, 1300);
@@ -186,6 +186,24 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                 checkArrows();
                 scope.$apply();
             };
+
+            //watch left & right keys
+            $document.on('keyup', function (e) {
+                var arrow;
+                //left key
+                if (e.keyCode === 37) {
+                    arrow = $arrowLeft;
+                }
+                if (e.keyCode === 39) {
+                    arrow = $arrowRight;
+                }
+
+                if (arrow) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    arrow.click();
+                }
+            });
 
             // watch the number of screens to set the width of the viewport
             scope.$watch('rawScreens', function (newVal) {
