@@ -28,7 +28,6 @@ var bowerPackages = [
     'src/bower_components/lodash/dist/lodash.min.js',
     'src/bower_components/angular-fallback-src/fallback-src.js',
     'src/bower_components/ngprogress/build/ngProgress.min.js',
-    'src/bower_components/async/lib/async.js'
 ];
 
 var vendorLibs = bowerPackages.concat(['src/js/vendor/*.js']);
