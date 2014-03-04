@@ -5,8 +5,8 @@ html(ng-csp='ng-csp')
         meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
         meta(name='google', content='notranslate')
 
-        link(href='fonts/fontello/css/fontello.css', rel='stylesheet')
-        link(href='css/style.css', rel='stylesheet')
+        link(rel='stylesheet', href='fonts/fontello/css/fontello.css')
+        link(rel='stylesheet', href='css/style.css')
         link(rel='icon', type='image/png', href="img/favicons/32x32.png")
 
         <!-- inject:vendors:js -->
@@ -34,9 +34,9 @@ html(ng-csp='ng-csp')
                         span.details
                             span.title(ng-bind="suggestion.title")
                             span.description(ng-show="suggestion.description", ng-bind="suggestion.description")
-        #loading-cover(ng-show="!rawScreens.length")
+        #loading-cover
             .centered-block
-                h2.loading-text Please wait while setting up for the first time...
+                h2.loading-text Loading up Gamestab for the first time...
                 img.loading-image(src="./img/loader2.gif")
         #wrapper(hl-background, ng-show="rawScreens.length")
             #search-placeholder

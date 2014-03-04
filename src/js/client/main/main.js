@@ -8,7 +8,7 @@ angular.module('aio.main').controller('MainCtrl', [
         var t0 = Date.now();
 
         $scope.refreshScope = function () {
-            $log.log('[MainCtrl] - Setting scope vars');
+            // $log.log('[MainCtrl] - Setting scope vars');
             $scope.rawScreens = Apps.apps();
             $scope.config = Config.get();
             lazyCacheAppsTimeout = $scope.config.lazy_cache_dials_timeout;
@@ -16,11 +16,11 @@ angular.module('aio.main').controller('MainCtrl', [
 
         var lazyCacheApps = function () {
             $timeout(function () {
-                $log.log('[MainCtrl] - Apps already lazy cached.');
                 if (Apps.isCacheNeeded()) {
                     $log.log('[MainCtrl] - Initiating lazy cache for dial icons');
                     return Apps.lazyCacheIcons().then($scope.refreshScope);
                 }
+                // $log.log('[MainCtrl] - Apps already lazy cached.');
             }, lazyCacheAppsTimeout);
         };
 
@@ -35,7 +35,7 @@ angular.module('aio.main').controller('MainCtrl', [
                         .then($scope.refreshScope);
                 }
 
-                $log.log('[MainCtrl] - config is up to date.');
+                // $log.log('[MainCtrl] - config is up to date.');
             }, checkConfigTimeout);
         };
 
@@ -51,7 +51,6 @@ angular.module('aio.main').controller('MainCtrl', [
 
         //second loading services
         var initializeApp = function () {
-            $log.info('✔ [MainCtrl] - Start phase two');
             return $q.all([$scope.refreshScope(), Analytics.init(), lazyCacheApps(), checkConfigExpiration()]);
         };
 
@@ -68,8 +67,7 @@ angular.module('aio.main').controller('MainCtrl', [
             .then(getBackgroundSequence, loadFromRemotes)
             .then(initializeApp)
             .then(function () {
-                console.debug('%c✔[MainCtrl] - entire startup process took ' +
-                    (Date.now() - t0) + ' ms.', 'background:black;color:yellow;');
+                console.debug('[MainCtrl] - entire startup process took ' + (Date.now() - t0) + ' ms.');
             });
 
         //get from settings

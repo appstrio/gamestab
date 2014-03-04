@@ -71,7 +71,7 @@ angular.module('aio.settings').factory('Background', [
 
         //try to get user preferences from config object
         var init = function () {
-            console.debug('[Background] - init');
+            // console.debug('[Background] - init');
             var deferred = $q.defer();
 
             var conf = Config.get();

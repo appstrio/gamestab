@@ -9,7 +9,7 @@ angular.module('aio.analytics').factory('Analytics', [
 
         //Load the analytics script
         var init = function () {
-            $log.log('[Analytics] - init');
+            // $log.log('[Analytics] - init');
             //init account
             (function () {
                 var ga = document.createElement('script');

@@ -37,7 +37,7 @@ angular.module('aio.settings').factory('Config', [
         };
 
         var init = function () {
-            console.debug('[Config] - init');
+            // console.debug('[Config] - init');
             //load config from storage, or run setup to get from remotes
             return loadFromStorage().then(assignData).then(function () {
                 isReady.resolve();

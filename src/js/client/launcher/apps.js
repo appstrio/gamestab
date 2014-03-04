@@ -46,9 +46,9 @@ angular.module('aio.launcher').factory('Apps', [
 
         //load from storage
         var init = function () {
-            console.debug('[Apps] - init');
+            // console.debug('[Apps] - init');
             return loadFromStorage().then(function (_apps) {
-                $log.info('[Apps] - Done with loading from storage');
+                // $log.info('[Apps] - Done with loading from storage');
                 setApps(_apps);
                 return isReady.resolve(_apps);
             });
@@ -439,9 +439,9 @@ angular.module('aio.launcher').factory('Apps', [
 
             loadRemovedApps().then(fetchDials).then(function (results) {
                 var webApps = results[0] || [];
-                var chromeApps = results[1] || [];
+                // var chromeApps = results[1] || [];
 
-                chromeApps = _.filter(chromeApps, isAppEnabled);
+                // chromeApps = _.filter(chromeApps, isAppEnabled);
 
                 $log.info('Done getting remote apps. Now syncing', flattenedApps.length);
                 //make sure all partner dials are synced
@@ -478,9 +478,9 @@ angular.module('aio.launcher').factory('Apps', [
         };
 
         return {
+            init: init,
             isReady: isReady.promise,
             setup: setup,
-            init: init,
             isCacheNeeded: function () {
                 //return true if flag is up, or if any items pass the remote url check
                 return isCacheNeededFlag || isCacheNeeded();
@@ -489,12 +489,12 @@ angular.module('aio.launcher').factory('Apps', [
             apps: function () {
                 return apps;
             },
-            store: store,
-            organizeAsPages: organizeAsPages,
-            getWebAppsDb: getOrganizedWebApps,
-            syncWebAppsDb: syncWebAppsDb,
-            lazyCacheIcons: lazyCacheIcons,
             addNewApp: addNewApp,
+            getWebAppsDb: getOrganizedWebApps,
+            lazyCacheIcons: lazyCacheIcons,
+            organizeAsPages: organizeAsPages,
+            store: store,
+            syncWebAppsDb: syncWebAppsDb,
             uninstallApp: uninstallApp
         };
     }
