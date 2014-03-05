@@ -1,7 +1,6 @@
 /* global _gaq:true,URI */
 var _gaq = window._gaq || [];
 angular.module('background', ['aio.storage', 'aio.image', 'aio.file', 'aio.chrome', 'aio.common.helpers']);
-
 angular.module('background').controller('MainCtrl', [
     'searchSuggestions', 'Chrome', 'Helpers', 'Image',
     function (searchSuggestions, Chrome, Helpers, Image) {
@@ -94,6 +93,7 @@ angular.module('background').controller('MainCtrl', [
             }
         };
 
+        //client sends us the account data directly
         var setAccountData = function (data) {
             //set global var
             accountData = data;
