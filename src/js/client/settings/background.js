@@ -122,13 +122,18 @@ angular.module('aio.settings').factory('Background', [
 
         // store background object in the localStorage
         var setNewBackground = function (newBackground) {
+            var __conf;
             return Image.convertFieldToLocalFile('url', {}, [newBackground]).then(function (_background) {
                 //assign to runtime object
                 assignBackground(_background[0]);
                 var conf = Config.get();
                 //point in config
                 conf.user_preferences.background_image = background;
-                Config.setConfig(conf);
+                __conf = conf;
+                return Image.useBlackAsContrast(background.url);
+            }).then(function (blackArrows) {
+                __conf.user_preferences.use_black_arrows = blackArrows;
+                Config.setConfig(__conf);
                 return Config.set();
             });
         };

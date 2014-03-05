@@ -10,6 +10,20 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
             var screenWidth = 880;
             scope.isDragging = false;
 
+            scope.$watch('config.user_preferences.use_black_arrows', function (newVal) {
+
+                if (typeof newVal !== 'undefined') {
+                    var $pageIndicators = element.find('.page-indicator-container .dot');
+                    var colorStr = newVal ? 'black' : 'white';
+
+                    $arrowLeft
+                        .add($arrowRight)
+                        .css('color', colorStr);
+
+                    $pageIndicators.css('background', colorStr);
+                }
+            });
+
             scope.launchApp = function (app) {
                 //user is editing dials. don't launch
                 if (scope.isEditing) {

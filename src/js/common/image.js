@@ -1,56 +1,46 @@
 angular.module('aio.image', []);
-angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileSystem',
-    function ($q, $rootScope, $log, FileSystem) {
+angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileSystem', 'ImageLib',
+    function ($q, $rootScope, $log, FileSystem, ImageLib) {
 
-        var isBlackContrast = function (rgb) {
-            var gamma = 2.2;
-            var l = 0.2126 * Math.pow(rgb.red / 100, gamma) +
-                0.7152 * Math.pow(rgb.green / 100, gamma) +
-                0.0722 * Math.pow(rgb.blue / 100, gamma);
+        var useBlackAsContrast = function (imageUrl) {
+            var deferred = $q.defer();
+            var img;
 
-            return l > 0.5;
+            // Create original image
+            img = new Image();
+
+            //img load event
+            img.onload = function () {
+                var comp,
+                    canvasCopy = document.createElement('canvas'),
+                    ctxCopy = canvasCopy.getContext('2d');
+
+                // Draw original image in second canvas
+                canvasCopy.width = img.width;
+                canvasCopy.height = img.height;
+                ctxCopy.drawImage(img, 0, 0);
+
+                var imageData = ctxCopy.getImageData(0, 0, img.width, img.height);
+                var imageRgb = ImageLib.parseImage(imageData.data, img.width, img.height);
+
+                comp = ImageLib.isBlackContrast(imageRgb);
+
+                $rootScope.$apply(function () {
+                    deferred.resolve(comp);
+                });
+            };
+            img.onerror = function (e) {
+                $rootScope.$apply(function () {
+                    deferred.reject(e);
+                });
+            };
+
+            //need for web cross domain requests
+            img.crossOrigin = 'anonymous';
+            img.src = imageUrl;
+
+            return deferred.promise;
         };
-
-        //todo extract
-        function loop(x, y, callback) {
-            var i, j;
-
-            for (i = 0; i < x; i++) {
-                for (j = 0; j < y; j++) {
-                    callback(i, j);
-                }
-            }
-        }
-
-        //todo extract
-        function parseImage(sourceImageData, width, height) {
-            var data = {};
-
-            var pixelCount = 0;
-            var redTotal = 0;
-            var greenTotal = 0;
-            var blueTotal = 0;
-
-
-            loop(height, width, function (verticalPos, horizontalPos) {
-                var offset = (verticalPos * width + horizontalPos) * 4;
-                var red = sourceImageData[offset];
-                var green = sourceImageData[offset + 1];
-                var blue = sourceImageData[offset + 2];
-
-                pixelCount++;
-
-                redTotal += red / 255 * 100;
-                greenTotal += green / 255 * 100;
-                blueTotal += blue / 255 * 100;
-            });
-
-            data.red = Math.floor(redTotal / pixelCount);
-            data.green = Math.floor(greenTotal / pixelCount);
-            data.blue = Math.floor(blueTotal / pixelCount);
-
-            return data;
-        }
 
         var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
         /**
@@ -70,11 +60,7 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
             var options = params.options || {};
             var url = params.url;
 
-            var canvas = document.createElement('canvas'),
-                ctx = canvas.getContext('2d'),
-                canvasCopy = document.createElement('canvas'),
-                ctxCopy = canvasCopy.getContext('2d'),
-                img,
+            var img,
                 deferred = $q.defer();
 
             //exit nicely
@@ -97,7 +83,10 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
 
             //img load event
             img.onload = function () {
-                var comp;
+                var canvas, ctx,
+                    canvasCopy = document.createElement('canvas'),
+                    ctxCopy = canvasCopy.getContext('2d');
+
                 // Draw original image in second canvas
                 canvasCopy.width = img.width;
                 canvasCopy.height = img.height;
@@ -119,6 +108,10 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
                         deferred.resolve(canvasCopy.toDataURL());
                     });
                 }
+
+                //use the resize copy
+                canvas = document.createElement('canvas');
+                ctx = canvas.getContext('2d');
 
                 //resize is needed
                 if (options.fixedWidth || options.fixedHeight) {
@@ -359,7 +352,65 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
             convertFieldToLocalFile: convertFieldToLocalFile,
             generateThumbnail: generateThumbnail,
 
+            useBlackAsContrast: useBlackAsContrast,
+
             helpers: helpers
         };
     }
-]);
+]).factory('ImageLib', function () {
+
+    var isBlackContrast = function (rgb) {
+        var gamma = 2.2;
+        var l = 0.2126 * Math.pow(rgb.red / 100, gamma) +
+            0.7152 * Math.pow(rgb.green / 100, gamma) +
+            0.0722 * Math.pow(rgb.blue / 100, gamma);
+
+        return l > 0.5;
+    };
+
+    //todo extract
+    var loop = function (x, y, callback) {
+        var i, j;
+
+        for (i = 0; i < x; i++) {
+            for (j = 0; j < y; j++) {
+                callback(i, j);
+            }
+        }
+    };
+
+    //todo extract
+    var parseImage = function (sourceImageData, width, height) {
+        var data = {};
+
+        var pixelCount = 0;
+        var redTotal = 0;
+        var greenTotal = 0;
+        var blueTotal = 0;
+
+
+        loop(height, width, function (verticalPos, horizontalPos) {
+            var offset = (verticalPos * width + horizontalPos) * 4;
+            var red = sourceImageData[offset];
+            var green = sourceImageData[offset + 1];
+            var blue = sourceImageData[offset + 2];
+
+            pixelCount++;
+
+            redTotal += red / 255 * 100;
+            greenTotal += green / 255 * 100;
+            blueTotal += blue / 255 * 100;
+        });
+
+        data.red = Math.floor(redTotal / pixelCount);
+        data.green = Math.floor(greenTotal / pixelCount);
+        data.blue = Math.floor(blueTotal / pixelCount);
+
+        return data;
+    };
+
+    return {
+        isBlackContrast: isBlackContrast,
+        parseImage: parseImage
+    };
+});

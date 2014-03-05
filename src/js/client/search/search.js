@@ -3,8 +3,7 @@ angular.module('aio.search').directive('aioSearchBox', [
     'Analytics', 'Constants', 'Config', 'suggestionsData', 'webAppsSuggestions', '$rootScope', 'bConnect', '$q',
     function (Analytics, C, Config, suggestionsData, webAppsSuggestions, $rootScope, bConnect, $q) {
         return function (scope, element) {
-            var throttleLimit = C.CONFIG.search_throttle_limit,
-                conf, searchURL, lastSearch, getResults, suggestionsURL,
+            var throttleLimit, conf, searchURL, lastSearch, getResults, suggestionsURL,
                 $container = $('#container'),
                 $hiddenInput = $('.hidden').eq(0);
 
@@ -144,26 +143,32 @@ angular.module('aio.search').directive('aioSearchBox', [
                 });
             };
 
+            var getExitUrl = function (val) {
+                var exitUrl;
+                if (/(^https?:)/.test(val)) {
+                    exitUrl = val;
+                } else if (/(^chrome:)|(^file:)/.test(val)) {
+                    //can't open in same menu otherwise:
+                    //"Not allowed to load local resource: chrome://extensions/"
+                    //current - send user to search
+                    //TODO - find a solution for this.
+                    exitUrl = searchURL + val;
+                } else if (/^www\./.test(val)) {
+                    exitUrl = 'http://' + val;
+                } else {
+                    exitUrl = searchURL + val;
+                }
+                return exitUrl;
+            };
+
             // Execute Search
             var executeSearch = function (val) {
                 Analytics.reportEvent(301, {
                     label: val,
                     waitForFinish: true
                 }).then(function () {
-                    var exitValue;
-                    if (/(^https?:)/.test(val)) {
-                        exitValue = val;
-                    } else if (/(^chrome:)|(^file:)/.test(val)) {
-                        //can't open in same menu otherwise:
-                        //"Not allowed to load local resource: chrome://extensions/"
-                        //TODO - find a solution for this.
-                        exitValue = val;
-                    } else if (/^www\./.test(val)) {
-                        exitValue = 'http://' + val;
-                    } else {
-                        exitValue = searchURL + val;
-                    }
-                    window.parent.location.href = exitValue;
+                    var exitUrl = getExitUrl(val);
+                    window.parent.location.href = exitUrl;
                 });
             };
 
