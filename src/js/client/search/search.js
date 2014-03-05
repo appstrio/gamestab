@@ -17,7 +17,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     _.each(results, function (item) {
                         suggestionsData.data[method](item);
                     });
-                    setSuggestionsVisibility(true);
+                    scope.setSuggestionsVisibility(true);
                 }
             };
 
@@ -35,7 +35,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                         addResults(results, 'unshift');
                     });
 
-                    setSuggestionsVisibility(true);
+                    scope.setSuggestionsVisibility(true);
                 }
             });
 
@@ -100,18 +100,14 @@ angular.module('aio.search').directive('aioSearchBox', [
             });
 
             // * hide the suggestions box
-            var setSuggestionsVisibility = function (status) {
-                if (status) {
-                    $container.addClass('suggestions-on');
-                } else {
-                    $container.removeClass('suggestions-on');
-                }
+            scope.setSuggestionsVisibility = function (status) {
+                $container.toggleClass('suggestions-on', status);
             };
 
             // watches whether the suggestion box was emptied
             scope.$watch('searchQuery', function (newVal) {
                 if (!newVal) {
-                    setSuggestionsVisibility(false);
+                    scope.setSuggestionsVisibility(false);
                 }
             });
 
@@ -194,7 +190,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                         executeEnterKeyPress(val);
                         break;
                     case 27: //esc
-                        setSuggestionsVisibility(false);
+                        scope.setSuggestionsVisibility(false);
                         break;
                     case 40:
                         // down
@@ -308,7 +304,13 @@ angular.module('aio.search').directive('aioSearchBox', [
     }
 ).directive('aioSearchSuggestions', ['suggestionsData',
     function (suggestionsData) {
-        return function (scope) {
+        return function (scope, element) {
+            //if element click then it's outside of suggestions
+            element.on('click', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                scope.setSuggestionsVisibility(false);
+            });
             scope.suggestions = suggestionsData;
         };
     }
