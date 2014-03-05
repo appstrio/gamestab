@@ -47,7 +47,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 default_background_url: '',
                 //where to update from
                 partner_config_json_url: 'http://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
-                //should app show chrome apps
+                //should app show chrome apps - requires mangement
                 use_chrome_apps: true,
                 //where to get backgrounds from
                 backgrounds_json_url: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
