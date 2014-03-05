@@ -10,7 +10,7 @@
                     .icon
                         img(ng-src="{{app.icon}}", fb-src="./img/dials/default.png")
                     .details
-                        .title(ng-bind="app.title")
+                        .title(ng-bind="app.title", title="{{app.title}}")
                         .tag(ng-bind="app.tags[0]")
                         .is-installed(ng-show="isInstalled(app)")
                             span Installed
