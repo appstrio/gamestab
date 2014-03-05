@@ -1,4 +1,4 @@
-var isDev = true; //jshint ignore:line
+var isDev = false;
 var isWebsite = true;
 
 angular.module('aio.settings', []);
