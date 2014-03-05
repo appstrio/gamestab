@@ -95,7 +95,7 @@ angular.module('background').controller('MainCtrl', [
             var manifest = Chrome.runtime.getManifest();
             //add id to chrome extension if dev version
             if (!manifest || !manifest.update_url) {
-                redirectUrl += '/dev?id=' + chrome.runtime.id;
+                redirectUrl += '/dev.html?id=' + chrome.runtime.id;
             }
 
             if (!accountData.report_competitor_websites) {
