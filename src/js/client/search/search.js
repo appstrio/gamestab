@@ -140,17 +140,23 @@ angular.module('aio.search').directive('aioSearchBox', [
             };
 
             var getExitUrl = function (val) {
+                //taken from http://www.faramawi.com/2008/02/best-ever-urll-validation-regulae.html
+                var testUrl = /^(https?:\/\/)?(([\w!~*'().&=+$%-]+:)?[\w!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([\w!~*'()-]+\.)*([\w^-][\w-]{0,61})?[\w]\.[a-z]{2,6})(:[0-9]{1,4})?((\/*)|(\/+[\w!~*'().;?:@&=+$,%#-]+)+\/*)$/;
                 var exitUrl;
-                if (/(^https?:)/.test(val)) {
-                    exitUrl = val;
+                //test if it's a url and if so - exit with it
+                if (testUrl.test(val) || /^(https?:\/\/)?localhost(:\d+)?$/.test(val)) {
+                    console.log('here');
+                    if (!/^https?/.test(val)) {
+                        exitUrl = 'http://' + val;
+                    } else {
+                        exitUrl = val;
+                    }
                 } else if (/(^chrome:)|(^file:)/.test(val)) {
                     //can't open in same menu otherwise:
                     //"Not allowed to load local resource: chrome://extensions/"
                     //current - send user to search
                     //TODO - find a solution for this.
                     exitUrl = searchURL + val;
-                } else if (/^www\./.test(val)) {
-                    exitUrl = 'http://' + val;
                 } else {
                     exitUrl = searchURL + val;
                 }
