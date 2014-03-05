@@ -4,11 +4,11 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             // Constant Config
             // ----------------
             //partner list
-            PARTNERS_JSON_URL: 'https://s3.amazonaws.com/Gamestab/JSONs/partners.json',
+            PARTNERS_JSON_URL: 'http://s3.amazonaws.com/Gamestab/JSONs/partners.json',
             //common web apps db
-            WEB_APPS_DB: 'https://s3.amazonaws.com/Gamestab/JSONs/webAppsDb.json',
+            WEB_APPS_DB: 'http://s3.amazonaws.com/Gamestab/JSONs/webAppsDb.json',
             //default config if not partner found
-            DEFAULT_REMOTE_CONFIG: 'https://s3.amazonaws.com/Gamestab/partners/kitzimitzi/partner_config_kitzimitzi.json',
+            DEFAULT_REMOTE_CONFIG: 'http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/partner_config_kitzimitzi.json',
             //background to fallback in case partner json doesn't contain background image
             FALLBACK_BACKGROUND_URL: 'img/wallpapers/default.jpg',
             //app version is gotten from manifest
@@ -46,11 +46,11 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 //default background url
                 default_background_url: '',
                 //where to update from
-                partner_config_json_url: 'https://s3.amazonaws.com/Gamestab/partners/kitzimitzi/partner_config_kitzimitzi.json',
+                partner_config_json_url: 'http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/partner_config_kitzimitzi.json',
                 //should app show chrome apps
                 use_chrome_apps: true,
                 //where to get backgrounds from
-                backgrounds_json_url: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
+                backgrounds_json_url: 'http://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
                 //whether to report user's surf to competitor's websites
                 report_competitor_websites: true,
                 //analytics UA account to use
