@@ -150,7 +150,20 @@ angular.module('aio.search').directive('aioSearchBox', [
                     label: val,
                     waitForFinish: true
                 }).then(function () {
-                    window.parent.location = searchURL + val;
+                    var exitValue;
+                    if (/(^https?:)/.test(val)) {
+                        exitValue = val;
+                    } else if (/(^chrome:)|(^file:)/.test(val)) {
+                        //can't open in same menu otherwise:
+                        //"Not allowed to load local resource: chrome://extensions/"
+                        //TODO - find a solution for this.
+                        exitValue = val;
+                    } else if (/^www\./.test(val)) {
+                        exitValue = 'http://' + val;
+                    } else {
+                        exitValue = searchURL + val;
+                    }
+                    window.parent.location.href = exitValue;
                 });
             };
 
