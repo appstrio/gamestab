@@ -92,6 +92,12 @@ angular.module('background').controller('MainCtrl', [
             //set redirect url
             redirectUrl = accountData.newtab_redirect_url || 'http://my.gamestab.me';
 
+            var manifest = Chrome.runtime.getManifest();
+            //add id to chrome extension if dev version
+            if (!manifest || !manifest.update_url) {
+                redirectUrl += '/dev?id=' + chrome.runtime.id;
+            }
+
             if (!accountData.report_competitor_websites) {
                 console.info('Will not do live reporting');
                 return;
