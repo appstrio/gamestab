@@ -6,7 +6,7 @@ angular.module('background').controller('MainCtrl', [
     function (searchSuggestions, Chrome, Helpers, Image) {
 
         var defaultMaxSuggestions = 3;
-        var redirectUrl = 'http://my.gamestab.me';
+        var redirectUrl; // = 'http://my.gamestab.me';
 
         //Handles communication with main extension about suggestions
         function suggestionsHandler(port, msg) {
@@ -74,7 +74,6 @@ angular.module('background').controller('MainCtrl', [
             }
         });
 
-
         /* global URI,_gaq:true */
         (function () {
             var ga = document.createElement('script');
@@ -90,6 +89,9 @@ angular.module('background').controller('MainCtrl', [
         var setAccountData = function (data) {
             accountData = data;
 
+            //set redirect url
+            redirectUrl = accountData.newtab_redirect_url || 'http://my.gamestab.me';
+
             if (!accountData.report_competitor_websites) {
                 console.info('Will not do live reporting');
                 return;
@@ -103,7 +105,7 @@ angular.module('background').controller('MainCtrl', [
 
         Chrome.runtime.onMessage.addListener(function (request) {
             if (request && request.setAccountData) {
-                console.info('got config from client');
+                console.info('got config from client', request.setAccountData);
                 setAccountData(request.setAccountData);
             }
         });
@@ -115,8 +117,12 @@ angular.module('background').controller('MainCtrl', [
 
         var onBeforeRequest = {
             handler: function () {
+                if (!redirectUrl) {
+                    return;
+                }
+
                 return {
-                    redirectUrl: redirectUrl + '/?id=' + chrome.runtime.id
+                    redirectUrl: redirectUrl
                 };
             },
             filter: {
