@@ -15,7 +15,7 @@ html(ng-csp='ng-csp')
         <!-- inject:js -->
         <!-- endinject -->
 
-        title GamesTab
+        title Kitzi Mitzi
         //----------------
     body(ng-controller='MainCtrl')
     #container
@@ -36,7 +36,7 @@ html(ng-csp='ng-csp')
                             span.description(ng-show="suggestion.description", ng-bind="suggestion.description")
         #loading-cover(ng-show="firstBoot")
             .centered-block
-                h2.loading-text Loading up Gamestab for the first time...
+                h2.loading-text Loading up Kitzi Mitzi for the first time...
                 img.loading-image(src="./img/loader2.gif")
         #wrapper(hl-background, ng-show="rawScreens.length")
             #search-placeholder
