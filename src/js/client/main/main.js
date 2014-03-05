@@ -8,6 +8,14 @@ angular.module('aio.main').controller('MainCtrl', [
 
         $scope.firstBoot = false;
 
+        $scope.useBlackText = function () {
+            if ($scope.config && $scope.config.user_preferences.use_black_arrows) {
+                return {
+                    color: '#272842'
+                };
+            }
+        };
+
         $scope.refreshScope = function () {
             // $log.log('[MainCtrl] - Setting scope vars');
             $scope.rawScreens = Apps.apps();
