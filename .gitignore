@@ -1,12 +1,11 @@
 # Libraries
 node_modules
-workspace/amazon
 src/bower_components
 
 # Builds
+build
 builds
 dist
-build
 tmp*
 
 # Bullshit
