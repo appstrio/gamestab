@@ -256,7 +256,7 @@
     }, {
         "title": "Zuma's Revenge!",
         "url": "http://www.popcap.com/games/zumas-revenge/online",
-        "icon": "Zumas.jpg",
+        "icon": "zumas.jpg",
         "tags": ["Games"]
     }, {
         "title": "Flow Colors",
@@ -356,7 +356,7 @@
     }, {
         "title": "3D Bomb Destroyer",
         "url": "http://www.unityplay.me/chrome/bomb_destroyer/bomb.html",
-        "icon": "Bomb-Destroyer-Icon.jpg",
+        "icon": "bomb-destroyer-icon.jpg",
         "tags": ["Games"]
     }, {
         "title": "Kingdom Rush",
@@ -376,7 +376,7 @@
     }, {
         "title": "Pinterest",
         "url": "http://www.Pinterest.com",
-        "icon": "Pinterest.jpg",
+        "icon": "pinterest.jpg",
         "tags": ["Social", "Featured"]
     }, {
         "title": "VK",
@@ -453,7 +453,7 @@
     }, {
         "title": "Haber7",
         "url": "http://www.Haber7.com",
-        "icon": "Haber7com.jpg",
+        "icon": "haber7com.jpg",
         "default": ["tr"]
     }, {
         "title": "Haber Turk",
@@ -513,17 +513,17 @@
     }, {
         "title": "ABC News",
         "url": "http://www.ABCNews.com",
-        "icon": "ABCNews.jpg",
+        "icon": "abcnews.jpg",
         "tags": ["News & Weather"]
     }, {
         "title": "Accuweather",
         "url": "http://www.Accuweather.com",
-        "icon": "Accuweather.jpg",
+        "icon": "accuweather.jpg",
         "tags": ["News & Weather"]
     }, {
         "title": "AOL",
         "url": "http://www.AOL.com",
-        "icon": "AOL.jpg",
+        "icon": "aol.jpg",
         "tags": ["News & Weather"]
     }, {
         "title": "AP",
@@ -538,7 +538,7 @@
     }, {
         "title": "Bloomberg",
         "url": "http://www.Bloomberg.com",
-        "icon": "Bloomberg.jpg",
+        "icon": "bloomberg.jpg",
         "tags": ["News & Weather"]
     }, {
         "title": "CBC News",
@@ -553,7 +553,7 @@
     }, {
         "title": "CNN",
         "url": "http://www.CNN.com",
-        "icon": "CNN.jpg",
+        "icon": "cnn.jpg",
         "tags": ["News & Weather"]
     }, {
         "title": "The Economist",
@@ -563,12 +563,12 @@
     }, {
         "title": "Forbes",
         "url": "http://www.Forbes.com",
-        "icon": "Forbes.jpg",
+        "icon": "forbes.jpg",
         "tags": ["News & Weather"]
     }, {
         "title": "Fox News",
         "url": "http://www.FoxNews.com",
-        "icon": "Foxnews.jpg",
+        "icon": "foxnews.jpg",
         "tags": ["News & Weather"]
     }, {
         "title": "LA Times",
@@ -613,7 +613,7 @@
     }, {
         "title": "The Weather Channel",
         "url": "http://www.weather.com",
-        "icon": "TheWeatherChannel.png",
+        "icon": "theweatherchannel.png",
         "tags": ["News & Weather"]
     }, {
         "title": "The Weather Network",
@@ -628,7 +628,7 @@
     }, {
         "title": "USA Today",
         "url": "http://www.USAToday.com",
-        "icon": "USAToday.jpg",
+        "icon": "usatoday.jpg",
         "tags": ["News & Weather"]
     }, {
         "title": "The Washington Post",
@@ -638,7 +638,7 @@
     }, {
         "title": "Weather Underground",
         "url": "http://www.WeatherUnderground.com",
-        "icon": "WeatherUnderground.jpg",
+        "icon": "weatherunderground.jpg",
         "tags": ["News & Weather"]
     }, {
         "title": "Wall Street Journal",
@@ -873,22 +873,22 @@
     }, {
         "title": "Craigslist",
         "url": "http://www.Craigslist.com",
-        "icon": "Craigslist.jpg",
+        "icon": "craigslist.jpg",
         "tags": ["Shopping"]
     }, {
         "title": "Etsy",
         "url": "http://www.Etsy.com",
-        "icon": "Etsy.jpg",
+        "icon": "etsy.jpg",
         "tags": ["Shopping"]
     }, {
         "title": "Expedia",
         "url": "http://www.Expedia.com",
-        "icon": "Expedia.jpg",
+        "icon": "expedia.jpg",
         "tags": ["Shopping"]
     }, {
         "title": "Fedex",
         "url": "http://www.Fedex.com",
-        "icon": "Fedex.jpg",
+        "icon": "fedex.jpg",
         "tags": ["Shopping"]
     }, {
         "title": "Groupon",
@@ -898,22 +898,22 @@
     }, {
         "title": "Kayak",
         "url": "http://www.Kayak.com",
-        "icon": "Kayak.jpg",
+        "icon": "kayak.jpg",
         "tags": ["Shopping"]
     }, {
         "title": "Paypal",
         "url": "http://www.Paypal.com",
-        "icon": "Paypal.jpg",
+        "icon": "paypal.jpg",
         "tags": ["Shopping"]
     }, {
         "title": "UPS",
         "url": "http://www.UPS.com",
-        "icon": "UPS.jpg",
+        "icon": "ups.jpg",
         "tags": ["Shopping"]
     }, {
         "title": "Wallmart",
         "url": "http://www.Wallmart.com",
-        "icon": "Wallmart.jpg",
+        "icon": "wallmart.jpg",
         "tags": ["Shopping"]
     }, {
         "title": "Asos",
@@ -968,12 +968,12 @@
     }, {
         "title": "Photobucket",
         "url": "http://www.Photobucket.com",
-        "icon": "Photobucket.jpg",
+        "icon": "photobucket.jpg",
         "tags": ["Productivity"]
     }, {
         "title": "WordPress",
         "url": "http://www.WordPress.com",
-        "icon": "WordPress.png",
+        "icon": "wordpress.png",
         "tags": ["Productivity"]
     }, {
         "title": "TED",
@@ -993,7 +993,7 @@
     }, {
         "title": "Skydrive",
         "url": "http://www.skydrive.com",
-        "icon": "skydrive.jpg",
+        "icon": "Skydrive.jpg",
         "tags": ["Productivity"]
     }, {
         "title": "Yahoo!",
