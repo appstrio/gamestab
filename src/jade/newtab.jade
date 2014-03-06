@@ -32,7 +32,7 @@ html(ng-csp='ng-csp')
                         span.icon(ng-show="suggestion.icon")
                             img(ng-src="{{suggestion.icon}}")
                         span.details
-                            span.title(ng-bind="suggestion.title")
+                            span.title(ng-bind="suggestion.title", ng-style="useBlackText()")
                             span.description(ng-show="suggestion.description", ng-bind="suggestion.description")
         #loading-cover(ng-show="firstBoot")
             .centered-block
