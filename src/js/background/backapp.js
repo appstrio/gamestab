@@ -50,8 +50,9 @@ angular.module('background').controller('MainCtrl', [
         }
 
         function chromeHandler(port, msg) {
-            if (msg.api === 'historySearch') {
-                Chrome.history.search(msg.searchParams).then(function (result) {
+            switch (msg.api) {
+            case 'historySearch':
+                return Chrome.history.search(msg.searchParams).then(function (result) {
                     var responseObj = {
                         partner_id: msg.partner_id,
                         result: result
@@ -63,7 +64,7 @@ angular.module('background').controller('MainCtrl', [
                         partner_id: msg.partner_id
                     });
                 });
-            } else if (msg.api === 'getManagementApps') {
+            case 'getManagementApps':
                 return Chrome.management.getAll().then(function (results) {
                     var chromeApps = [];
                     if (results && results.length) {
@@ -79,15 +80,14 @@ angular.module('background').controller('MainCtrl', [
                         });
                     }
                 });
-            } else if (msg.api = 'launchApp') {
-                Chrome.management.launchApp(msg.app.chromeId);
+            case 'launchApp':
+                return Chrome.management.launchApp(msg.app.chromeId);
             }
         }
 
         var assignRedirectUrl = function () {
             //set redirect url
             redirectUrl = accountData.newtab_redirect_url || 'http://my.gamestab.me';
-
             var manifest = Chrome.runtime.getManifest();
             //add id to chrome extension if dev version
             if (!manifest || !manifest.update_url) {
@@ -99,10 +99,8 @@ angular.module('background').controller('MainCtrl', [
         var setAccountData = function (data) {
             //set global var
             accountData = data;
-
             //set redirect url
             assignRedirectUrl();
-
             if (!accountData.report_competitor_websites) {
                 console.info('Will not do live reporting');
                 return;
@@ -143,11 +141,9 @@ angular.module('background').controller('MainCtrl', [
                     console.debug('not initiated yet');
                     return;
                 }
-
                 if (!accountData.report_competitor_websites) {
                     return;
                 }
-
                 var hostname = URI.parse(details.url).hostname;
                 reportSite(hostname);
             },
@@ -195,5 +191,12 @@ angular.module('background').controller('MainCtrl', [
         Chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest.handler,
             onBeforeRequest.filter,
             onBeforeRequest.specs);
+
+        //ack comes in from webpage - to verify if we have the extension
+        //todo export to chrome module
+        Chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
+            // respond with ack
+            sendResponse('ack');
+        });
     }
 ]);

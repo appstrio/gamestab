@@ -35,7 +35,7 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                     if (isChrome && chrome.runtime && chrome.runtime.onConnect) {
                         return chrome.runtime.onConnect.addListener(cb);
                     }
-                    return console.warn('no chrome api for runtime.onConnect');
+                    console.warn('no chrome api for runtime.onConnect');
                 }
             },
             onMessage: {
@@ -44,7 +44,6 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                         return chrome.runtime.onMessage.addListener(cb);
                     }
                     console.warn('no chrome api for runtime.onMessage');
-                    return;
                 }
             },
             getManifest: function () {
@@ -52,7 +51,14 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                     return chrome.runtime.getManifest();
                 }
                 console.warn('no chrome api for runtime.getManifest');
-                return;
+            },
+            onMessageExternal: {
+                addListener: function (cb) {
+                    if (isChrome && chrome.runtime && chrome.runtime.onMessageExternal) {
+                        return chrome.runtime.onMessageExternal.addListener(cb);
+                    }
+                    console.warn('no chrome api for runtime.onMessageExternal');
+                }
             }
         };
 
