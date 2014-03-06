@@ -1,0 +1,33 @@
+[{
+    "path": "https://s3.amazonaws.com/Gamestab/assets/img/wallpapers/",
+    "thumbnail_path": "thumbnails/",
+    "files": [{
+        "image": "Elegant_Background-4.jpg"
+    }, {
+        "image": "Elegant_Background-5.jpg"
+    }, {
+        "image": "abstract_0010.jpg"
+    }, {
+        "image": "abstract_0015.jpg"
+    }, {
+        "image": "abstract_0017.jpg"
+    }, {
+        "image": "abstract_0023.jpg"
+    }, {
+        "image": "abstract_0036.jpg"
+    }, {
+        "image": "bg1.jpg"
+    }, {
+        "image": "bg102.jpg"
+    }, {
+        "image": "bg105.jpg"
+    }, {
+        "image": "bg107.jpg"
+    }, {
+        "image": "bg108.jpg"
+    }, {
+        "image": "bg6.jpg"
+    }, {
+        "image": "lake_unsplash.jpg"
+    }]
+}]

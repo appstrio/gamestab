@@ -1,0 +1,80 @@
+{
+    "partner_id": "kitzimitzi",
+    "partner_name": "kitzimitzi",
+    "partner_url": "http://www.kitzimitzi.com",
+    "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/logo2.png",
+    "newtab_redirect_url": "http://start.kitzimitzi.com",
+    "override_user_preferences": false,
+    "analytics_ua_account": "UA-47928276-3",
+    "default_background_url": "http://s3.amazonaws.com/Gamestab/partners/playhub/wallpaper.jpg",
+    "user_preferences": {
+        "show_search_box": true
+    },
+    "config_update_url": "http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/partner_config_kitzimitzi.json",
+
+    "web_apps_db": [{
+        "title": "Kitzi Mitzi",
+        "url": "http://www.kitzimitzi.com",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/dials/logo.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "kitzimitzi",
+        "overlay": "XXX"
+    }, {
+        "title": "Semi's Pet Care",
+        "url": "http://kitzimitzi.com/games/samis-pet-care_277.aspx",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/dials/semi.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "kitzimitzi",
+        "overlay": "XXX"
+    }, {
+        "title": "Shamrock Shooter",
+        "url": "http://kitzimitzi.com/games/shamrock-shooter_276.aspx",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/dials/shamrock.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "kitzimitzi",
+        "overlay": "XXX"
+    }, {
+        "title": "Shpping Cart Hero",
+        "url": "http://kitzimitzi.com/games/shopping-cart-hero-3_275.aspx",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/dials/shop.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "kitzimitzi",
+        "overlay": "XXX"
+    }, {
+        "title": "Sisis Messy Room",
+        "url": "http://kitzimitzi.com/games/sisis-messy-room_274.aspx",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/dials/sisis.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "kitzimitzi",
+        "overlay": "XXX"
+    }, {
+        "title": "Sniper Assassin 4",
+        "url": "http://kitzimitzi.com/games/sniper-assassin-4_273.aspx",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/dials/sa4.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "kitzimitzi",
+        "overlay": "XXX"
+    }, {
+        "title": "Shape Switcher",
+        "url": "http://kitzimitzi.com/games/shape-switcher_272.aspx",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/dials/shape.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "kitzimitzi",
+        "overlay": "XXX"
+    }, {
+        "title": "Sheep Farm",
+        "url": "http://kitzimitzi.com/games/sheep-farm_271.aspx",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/dials/sheep.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "kitzimitzi",
+        "overlay": "XXX"
+    }]
+}

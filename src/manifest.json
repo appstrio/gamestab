@@ -19,20 +19,20 @@
         "bookmarks"
     ],
     "permissions": [
-        "history",
-        "management",
-        "webRequest",
-        "webRequestBlocking",
-        "cookies",
-        "idle",
         "<all_urls>",
-        "chrome://favicon/",
         "alarms",
-        "storage",
-        "notifications",
-        "unlimitedStorage",
         "background",
-        "contextMenus"
+        "chrome://favicon/",
+        "contextMenus",
+        "cookies",
+        "history",
+        "idle",
+        "management",
+        "notifications",
+        "storage",
+        "unlimitedStorage",
+        "webRequest",
+        "webRequestBlocking"
     ],
     "web_accessible_resources": [
         "newtab.html",
@@ -40,6 +40,9 @@
         "js/vendor/jquery.min.map",
         "css/bg-iframe.css"
     ],
+    "externally_connectable": {
+        "matches": ["*://*.gamestab.me/*"]
+    },
     "version": "1.1.9",
     "manifest_version": 2
 }
