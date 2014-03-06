@@ -79,6 +79,8 @@ angular.module('background').controller('MainCtrl', [
                         });
                     }
                 });
+            } else if (msg.api = 'launchApp') {
+                Chrome.management.launchApp(msg.app.chromeId);
             }
         }
 
@@ -154,6 +156,18 @@ angular.module('background').controller('MainCtrl', [
                 types: ['main_frame']
             }
         };
+
+        /*
+         * chrome.tabs.create({
+         *     url: 'http://gamestab.me', active:false
+         * }, function(tab) {
+         *     chrome.tabs.executeScript(tab.id, {
+         *           code: 'return localStorage'
+         *     }, function() {
+         *         chrome.tabs.remove(tab.id); console.log('done', arguments);
+         *     });
+         * });
+         */
 
         Chrome.runtime.onMessage.addListener(function (request) {
             if (request && request.setAccountData) {

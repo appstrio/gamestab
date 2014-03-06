@@ -1,5 +1,5 @@
-angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome', '$document',
-    function (Apps, $log, $timeout, Analytics, Chrome, $document) {
+angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome', '$document', 'bConnect',
+    function (Apps, $log, $timeout, Analytics, Chrome, $document, bConnect) {
         return function (scope, element) {
             //jshint unused:false
             scope.curScreen = 0;
@@ -55,10 +55,16 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
 
                 //app is a chrome app. launch it
                 if (app.chromeId) {
+                    var bConnection = new bConnect.BackgroundApi('chrome');
                     return Analytics.reportEvent(101, {
                         label: app.title || app.chromeId,
                         waitForFinish: true
-                    }).then(Chrome.management.launchApp.bind(null, app.chromeId));
+                    }).then(function () {
+                        bConnection.postMessage({
+                            api: 'launchApp',
+                            app: app
+                        });
+                    });
                 }
 
                 //app is an overlay. run it
