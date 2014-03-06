@@ -1,6 +1,6 @@
-angular.module('aio.image', ['img.tools']);
-angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileSystem', 'ImageTools',
-    function ($q, $rootScope, $log, FileSystem, ImageTools) {
+angular.module('aio.image', ['aio.black-contrast']);
+angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileSystem', 'aioBlackContrast',
+    function ($q, $rootScope, $log, FileSystem, aioBlackContrast) {
 
         var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
         /**
@@ -312,7 +312,7 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
             convertFieldToLocalFile: convertFieldToLocalFile,
             generateThumbnail: generateThumbnail,
 
-            useBlackAsContrast: ImageTools.useBlackAsContrast,
+            contrastFromUrl: aioBlackContrast.contrastFromUrl,
 
             helpers: helpers
         };

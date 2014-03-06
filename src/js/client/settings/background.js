@@ -130,7 +130,7 @@ angular.module('aio.settings').factory('Background', [
                 //point in config
                 conf.user_preferences.background_image = background;
                 __conf = conf;
-                return Image.useBlackAsContrast(background.url);
+                return Image.contrastFromUrl(background.url);
             }).then(function (blackArrows) {
                 __conf.user_preferences.use_black_arrows = blackArrows;
                 Config.setConfig(__conf);

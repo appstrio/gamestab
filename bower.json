@@ -1,34 +1,33 @@
 {
-  "name": "gamestab",
-  "version": "1.1.9",
-  "description": "Games oriented Chrome Extension Newtab",
-  "homepage": "https://github.com/appstrio/gamestab",
-  "authors": [
-    "WildEyes <xwildeyes@gmail.com>",
-    "pgilad <giladp007@gmail.com>"
-  ],
-  "license": "MIT",
-  "private": true,
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "jquery": "~2.0.3",
-    "underscore": "~1.5.2",
-    "typeahead.js": "~0.9.3",
-    "angular": "~1.2.6",
-    "jquery-ui": "~1.10.3",
-    "angular-ui-sortable": "https://github.com/hlandao/ui-sortable.git#~0.10.0",
-    "angular-fallback-src": "~0.1.2",
-    "ngprogress": "~1.0.4",
-    "lodash": "~2.4.1"
-  },
-  "resolutions": {
-    "angular": "~1.0.x",
-    "jquery": "~1.9"
-  }
+    "name": "gamestab",
+    "version": "1.1.9",
+    "description": "Games oriented Chrome Extension Newtab",
+    "homepage": "https://github.com/appstrio/gamestab",
+    "authors": [
+        "WildEyes <xwildeyes@gmail.com>",
+        "pgilad <giladp007@gmail.com>"
+    ],
+    "license": "MIT",
+    "private": true,
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "angular": "~1.2.6",
+        "angular-fallback-src": "~0.1.2",
+        "angular-ui-sortable": "https://github.com/hlandao/ui-sortable.git#~0.10.0",
+        "jquery": "~2.0.3",
+        "jquery-ui": "~1.10.3",
+        "lodash": "~2.4.1",
+        "ngprogress": "~1.0.4",
+        "typeahead.js": "~0.9.3"
+    },
+    "resolutions": {
+        "angular": "~1.0.x",
+        "jquery": "~1.9"
+    }
 }

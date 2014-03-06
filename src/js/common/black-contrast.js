@@ -1,6 +1,5 @@
-//todo extract to angular component
-angular.module('img.tools', []);
-angular.module('img.tools').factory('ImageTools', ['$q', '$rootScope',
+angular.module('aio.black-contrast', []);
+angular.module('aio.black-contrast').factory('aioBlackContrast', ['$q', '$rootScope',
     function ($q, $rootScope) {
 
         var isBlackContrast = function (rgb) {
@@ -53,17 +52,25 @@ angular.module('img.tools').factory('ImageTools', ['$q', '$rootScope',
             return data;
         };
 
-        var useBlackAsContrast = function (imageUrl) {
+        //use imagedata to determine if image best contrast is black (or white)
+        var contrastFromImageData = function (imageData, width, height) {
+            var imageRgb = parseImage(imageData.data, width, height);
+            return isBlackContrast(imageRgb);
+        };
+
+        var contrastFromUrl = function (imageUrl, isCrossDomain) {
             var deferred = $q.defer();
             var img;
+
+            //default is to use crossdomain image
+            isCrossDomain = typeof isCrossDomain !== 'undefined' ? isCrossDomain : true;
 
             // Create original image
             img = new Image();
 
             //img load event
             img.onload = function () {
-                var comp,
-                    canvasCopy = document.createElement('canvas'),
+                var canvasCopy = document.createElement('canvas'),
                     ctxCopy = canvasCopy.getContext('2d');
 
                 // Draw original image in second canvas
@@ -72,12 +79,10 @@ angular.module('img.tools').factory('ImageTools', ['$q', '$rootScope',
                 ctxCopy.drawImage(img, 0, 0);
 
                 var imageData = ctxCopy.getImageData(0, 0, img.width, img.height);
-                var imageRgb = parseImage(imageData.data, img.width, img.height);
-
-                comp = isBlackContrast(imageRgb);
+                var shouldUseBlack = contrastFromImageData(imageData, img.width, img.height);
 
                 $rootScope.$apply(function () {
-                    deferred.resolve(comp);
+                    deferred.resolve(shouldUseBlack);
                 });
             };
             img.onerror = function (e) {
@@ -87,14 +92,17 @@ angular.module('img.tools').factory('ImageTools', ['$q', '$rootScope',
             };
 
             //need for web cross domain requests
-            img.crossOrigin = 'anonymous';
-            img.src = imageUrl;
+            if (isCrossDomain) {
+                img.crossOrigin = 'anonymous';
+            }
 
+            img.src = imageUrl;
             return deferred.promise;
         };
 
         return {
-            useBlackAsContrast: useBlackAsContrast,
+            contrastFromUrl: contrastFromUrl,
+            contrastFromImageData: contrastFromImageData,
         };
     }
 ]);
