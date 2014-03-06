@@ -11,10 +11,12 @@ angular.module('communications').factory('bConnect', [
          */
         function BackgroundApi(name) {
             if (!name) {
-                return console.error('Missing name from Background Api');
+                console.error('Missing name from Background Api');
+                return null;
             }
             if (typeof chrome === 'undefined' || !chrome.runtime) {
-                return console.error('Chrome Api is missing. Use a different api');
+                console.error('Chrome Api is missing. Use a different api');
+                return null;
             }
 
             //assign port name

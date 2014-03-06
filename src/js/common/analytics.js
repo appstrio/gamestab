@@ -1,4 +1,3 @@
-/* global isWebsite,isDev */
 var _gaq = _gaq || [];
 
 angular.module('aio.analytics', ['aio.analyticsEvents']);
@@ -15,13 +14,8 @@ angular.module('aio.analytics').factory('Analytics', [
                 var ga = document.createElement('script');
                 ga.type = 'text/javascript';
                 ga.async = true;
-                if (isWebsite) {
-                    //use local version
-                    ga.src = 'js/ga.js';
-                } else {
-                    //use remote version
-                    ga.src = 'https://ssl.google-analytics.com/ga.js';
-                }
+                //use remote version
+                ga.src = 'https://ssl.google-analytics.com/ga.js';
                 var s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(ga, s);
             })();

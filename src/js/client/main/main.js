@@ -2,7 +2,7 @@
 angular.module('aio.main').controller('MainCtrl', [
     '$scope', '$log', '$q', '$timeout', 'Apps', 'Config', 'Constants', 'Background', 'Analytics', 'Helpers',
     function ($scope, $log, $q, $timeout, Apps, Config, Constants, Background, Analytics, Helpers) {
-        console.debug('[MainCtrl] - start v' + Constants.APP_VERSION + ' dev:' + isDev);
+        console.debug('[MainCtrl] - start');
         var lazyCacheAppsTimeout;
         var checkConfigTimeout = 3000;
 

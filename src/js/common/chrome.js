@@ -85,14 +85,14 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
         };
 
         var storage = {
-            local: isChrome && chrome.storage.local
+            local: isChrome && chrome.storage && chrome.storage.local
         };
 
         var getUpdateUrl = function () {
-            return isChrome && chrome.runtime.getManifest().update_url;
+            return isChrome && chrome.runtime && chrome.runtime.getManifest && chrome.runtime.getManifest().update_url;
         };
         var getVersion = function () {
-            return isChrome && chrome.app.getDetails().version;
+            return isChrome && chrome.app && chrome.app.getDetails() && chrome.app.getDetails().version;
         };
         var management = {
             getAll: function () {
@@ -138,12 +138,12 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
         };
 
         return {
+            getVersion: getVersion,
             isExtension: isExtension,
             management: management,
             extension: extension,
             storage: storage,
             getUpdateUrl: getUpdateUrl,
-            getVersion: getVersion,
             history: history,
             runtime: runtime,
             webRequest: webRequest

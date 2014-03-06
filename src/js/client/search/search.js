@@ -7,7 +7,6 @@ angular.module('aio.search').directive('aioSearchBox', [
                 $container = $('#container'),
                 $hiddenInput = $('.hidden').eq(0);
 
-            var bConnection = new bConnect.BackgroundApi('suggestions');
 
             var addResults = function (results, method) {
                 //push is default. unshift to place items in beginning
@@ -27,17 +26,19 @@ angular.module('aio.search').directive('aioSearchBox', [
                 });
             };
 
-            bConnection.addListener(function (msg) {
-                if (msg && msg.searchResults) {
-                    //reverse items because they will be unshifted into array
-                    var results = msg.searchResults.reverse();
-                    $rootScope.$apply(function () {
-                        addResults(results, 'unshift');
-                    });
-
-                    scope.setSuggestionsVisibility(true);
-                }
-            });
+            /*
+             *             bConnection.addListener(function (msg) {
+             *                 if (msg && msg.searchResults) {
+             *                     //reverse items because they will be unshifted into array
+             *                     var results = msg.searchResults.reverse();
+             *                     $rootScope.$apply(function () {
+             *                         addResults(results, 'unshift');
+             *                     });
+             *
+             *                     scope.setSuggestionsVisibility(true);
+             *                 }
+             *             });
+             */
 
             var getBingSuggestions = function (val, howMany) {
                 var postObj = {
@@ -46,7 +47,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     howMany: howMany
                 };
 
-                bConnection.postMessage(postObj);
+                // bConnection.postMessage(postObj);
             };
 
             //each provider should have getSuggestions(q) method that returns a promise
@@ -79,7 +80,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                         suggestionsURL: suggestionsURL
                     }
                 };
-                bConnection.postMessage(postObj);
+                // bConnection.postMessage(postObj);
 
                 // get the results using a throttled function
                 getResults = _.throttle(function (val) {

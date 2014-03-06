@@ -1,12 +1,11 @@
 /* global _ */
 angular.module('aio.launcher').factory('Apps', [
-    '$rootScope', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Image', 'Helpers', 'bConnect',
-    function ($rootScope, Storage, $q, Chrome, C, Config, $log, Image, Helpers, bConnect) {
+    '$rootScope', 'Storage', '$q', 'Chrome', 'Constants', 'Config', '$log', 'Image', 'Helpers',
+    function ($rootScope, Storage, $q, Chrome, C, Config, $log, Image, Helpers) {
         var isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.APPS,
             deletedAppsStorageKey = C.STORAGE_KEYS.DELETED_APPS,
             cachedSortedWebApps,
-            managementAppsPromise,
             isCacheNeededFlag = false,
             removedApps = [],
             apps;
@@ -30,19 +29,6 @@ angular.module('aio.launcher').factory('Apps', [
         var store = function () {
             return Helpers.store(storageKey, apps);
         };
-
-        function getChromeApps(data) {
-            var returnData;
-            if (data && data.api === 'getManagementApps' && data.results) {
-                returnData = data.results;
-            }
-            $rootScope.$apply(function () {
-                managementAppsPromise.resolve(returnData);
-            });
-        }
-
-        var bConnection = new bConnect.BackgroundApi('chrome');
-        bConnection.addListener(getChromeApps);
 
         //load from storage
         var init = function () {
@@ -198,18 +184,8 @@ angular.module('aio.launcher').factory('Apps', [
             });
         };
 
-        var getAllChromeApps = function () {
-            if (Config.get().use_chrome_apps) {
-                bConnection.postMessage({
-                    api: 'getManagementApps'
-                });
-                managementAppsPromise = $q.defer();
-                return managementAppsPromise.promise;
-            }
-        };
-
         var fetchDials = function () {
-            return $q.all([getOrganizedWebApps(), getAllChromeApps()]);
+            return $q.all([getOrganizedWebApps()]);
         };
         /**
          * setup
@@ -328,43 +304,6 @@ angular.module('aio.launcher').factory('Apps', [
                     ourApp.toDelete = true;
                 }
             });
-        };
-
-        var syncChromeApps = function (flattenedApps, chromeApps) {
-            //get only the chrome apps from all apps
-            var ourChromeApps = _.filter(flattenedApps, 'chromeId');
-
-            //loop through system chrome apps finding and syncing apps
-            chromeApps.forEach(function (cApp) {
-                var newChromeApp;
-                var isChromeAppRemoved = _.findWhere(removedApps, {
-                    chromeId: cApp.id
-                });
-
-                //if it's removed - don't re add it
-                if (isChromeAppRemoved) {
-                    return;
-                }
-
-                //if it's found in ours
-                var isChromeAppFound = _.findWhere(ourChromeApps, {
-                    chromeId: cApp.id
-                });
-
-                newChromeApp = Helpers.chromeAppToObject(cApp);
-
-                if (isChromeAppFound) {
-                    //sync it
-                    isChromeAppFound = angular.extend(isChromeAppFound, newChromeApp);
-                    return;
-                }
-
-                //app is new and needs to be inserted
-                flattenedApps.push(newChromeApp);
-            });
-
-            markDeletedIfNotFound(ourChromeApps, chromeApps, 'chromeId', 'id');
-            return flattenedApps;
         };
 
         //remove if not existant. add if not found

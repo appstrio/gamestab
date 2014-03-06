@@ -12,6 +12,11 @@ angular.module('aio.settings').factory('Config', [
                 $log.warn('Error getting remote config json', e);
                 updateConfig();
             }
+
+            return updateConfig().then(function () {
+                return isReady.resolve(data);
+            });
+
             //load local partners config json
             return Helpers.loadRemoteJson(C.PARTNERS_JSON_URL)
             //decide which partner
