@@ -6,7 +6,7 @@ angular.module('aio.overlay').directive('aioOverlay', ['$timeout', '$log',
             scope: {
                 overlayOptions: '='
             },
-            link: function (scope, element, attrs) {
+            link: function (scope, element) {
                 var $overlay = element;
                 scope.$watch('overlayOptions', function (newVal) {
                     if (!newVal || !newVal.name) {
@@ -30,6 +30,9 @@ angular.module('aio.overlay').directive('aioOverlay', ['$timeout', '$log',
                     $overlay.removeClass('enlarged');
                     scope.templateURL = '';
                     scope.overlayOptions = null;
+                    if (typeof done === 'function') {
+                        done();
+                    }
                 };
                 /**
                  * show
@@ -43,7 +46,7 @@ angular.module('aio.overlay').directive('aioOverlay', ['$timeout', '$log',
                     $overlay.addClass('enlarged');
                 };
 
-                element.on('click', function (e) {
+                element.on('click', function () {
                     hide();
                 }).on('click', '.main', function (e) {
                     e.stopPropagation();
