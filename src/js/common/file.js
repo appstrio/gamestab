@@ -1,4 +1,3 @@
-/* global FileError */
 angular.module('aio.file', []);
 
 angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
@@ -16,32 +15,8 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
          */
         var errorHandler = function (deferred) {
             return function (e) {
-                var msg = '';
-                switch (e.code) {
-                case FileError.QUOTA_EXCEEDED_ERR:
-                    msg = 'QUOTA_EXCEEDED_ERR';
-                    break;
-                case FileError.NOT_FOUND_ERR:
-                    msg = 'NOT_FOUND_ERR';
-                    break;
-                case FileError.SECURITY_ERR:
-                    msg = 'SECURITY_ERR';
-                    break;
-                case FileError.INVALID_MODIFICATION_ERR:
-                    msg = 'INVALID_MODIFICATION_ERR';
-                    break;
-                case FileError.INVALID_STATE_ERR:
-                    msg = 'INVALID_STATE_ERR';
-                    break;
-                default:
-                    msg = 'Unknown Error';
-                    break;
-                }
-
-                $log.info('Filesystem error: ' + msg);
-                $rootScope.$apply(function () {
-                    deferred.reject(msg);
-                });
+                $log.error('[Filesystem]', e.name, e.message);
+                deferred.reject(e.name);
             };
         };
 
