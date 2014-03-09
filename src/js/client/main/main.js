@@ -2,7 +2,7 @@
 angular.module('aio.main').controller('MainCtrl', [
     '$scope', '$log', '$q', '$timeout', 'Apps', 'Config', 'Constants', 'Background', 'Analytics', 'Helpers',
     function ($scope, $log, $q, $timeout, Apps, Config, Constants, Background, Analytics, Helpers) {
-        console.debug('[MainCtrl] - start v' + Constants.APP_VERSION);
+        console.debug('[MainCtrl] - start');
         var lazyCacheAppsTimeout;
         var checkConfigTimeout = 3000;
 
@@ -81,7 +81,6 @@ angular.module('aio.main').controller('MainCtrl', [
             var analyticsParams = {
                 devMode: false,
                 useLocalGa: isWebsite,
-                partnerId: Config.get().partner_id,
                 analyticsId: Config.get().analytics_ua_account,
                 appVersion: Constants.APP_VERSION
             };

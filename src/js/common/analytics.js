@@ -14,8 +14,6 @@ angular.module('aio.analytics').factory('Analytics', [
             devMode = params.devMode || false;
             //use local ga file (needed for website version)
             var useLocalGa = typeof params.useLocalGa !== 'undefined' ? params.useLocalGa : true;
-            //partner id to report as variable
-            var partnerId = params.partnerId;
             // analytics id
             var analyticsId = params.analyticsId;
             //app version to log
@@ -48,8 +46,6 @@ angular.module('aio.analytics').factory('Analytics', [
             _gaq.push(['_setDomainName', 'none']);
             //track pageview
             _gaq.push(['_trackPageview']);
-            //track partnerid or default
-            _gaq.push(['_setCustomVar', 1, 'partner_id', partnerId, 1]);
             //report app_load
             reportEvent(501, {
                 label: appVersion
