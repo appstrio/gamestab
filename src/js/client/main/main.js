@@ -1,4 +1,3 @@
-/* global isWebsite */
 angular.module('aio.main').controller('MainCtrl', [
     '$scope', '$log', '$q', '$timeout', 'Apps', 'Config', 'Constants', 'Background', 'Analytics', 'Helpers',
     function ($scope, $log, $q, $timeout, Apps, Config, Constants, Background, Analytics, Helpers) {
@@ -39,16 +38,6 @@ angular.module('aio.main').controller('MainCtrl', [
             }, true);
         });
 
-        var lazyCacheApps = function () {
-            $timeout(function () {
-                if (Apps.isCacheNeeded()) {
-                    $log.log('[MainCtrl] - Initiating lazy cache for dial icons');
-                    return Apps.lazyCacheIcons();
-                }
-                console.info('All app icons are cached and OK.');
-            }, lazyCacheAppsTimeout);
-        };
-
         var lazyCheckConfig = function () {
             $timeout(function () {
                 //check if config needs update
@@ -59,8 +48,6 @@ angular.module('aio.main').controller('MainCtrl', [
                         .then(Apps.syncWebAppsDb)
                         .then($scope.refreshScope);
                 }
-
-                // $log.log('[MainCtrl] - config is up to date.');
             }, checkConfigTimeout);
         };
 
@@ -80,11 +67,11 @@ angular.module('aio.main').controller('MainCtrl', [
 
             var analyticsParams = {
                 devMode: false,
-                useLocalGa: isWebsite,
+                useLocalGa: false,
                 analyticsId: Config.get().analytics_ua_account,
                 appVersion: Constants.APP_VERSION
             };
-            return $q.all([$scope.refreshScope(), Analytics.init(analyticsParams), lazyCacheApps(), lazyCheckConfig()]);
+            return $q.all([$scope.refreshScope(), Analytics.init(analyticsParams), lazyCheckConfig()]);
         };
 
         var loadFromRemotes = function () {
