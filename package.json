@@ -28,7 +28,7 @@
     "gulp-jsvalidate": "~0.1.1",
     "gulp-less": "^1.2.2",
     "gulp-order": "^1.0.6",
-    "gulp-rev": "^0.2.1",
+    "gulp-rev": "^0.3.0",
     "gulp-uglify": "~0.2.1",
     "gulp-using": "0.0.1",
     "gulp-util": "~2.2.14",
