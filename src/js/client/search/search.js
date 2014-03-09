@@ -101,6 +101,7 @@ angular.module('aio.search').directive('aioSearchBox', [
 
             // * hide the suggestions box
             scope.setSuggestionsVisibility = function (status) {
+                element.parent().toggleClass('focused', status);
                 $container.toggleClass('suggestions-on', status);
             };
 
@@ -191,6 +192,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                 if (element.val()) {
                     onReFocus();
                 }
+                element.parent().toggleClass('focused', true);
                 Analytics.reportEvent(302);
             });
 
