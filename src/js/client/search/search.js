@@ -1,7 +1,7 @@
 /* global _*/
 angular.module('aio.search').directive('aioSearchBox', [
-    'Analytics', 'Constants', 'Config', 'suggestionsData', 'webAppsSuggestions', '$rootScope', '$q', '$http',
-    function (Analytics, C, Config, suggestionsData, webAppsSuggestions, $rootScope, $q, $http) {
+    'Analytics', 'Constants', 'Config', 'suggestionsData', 'webAppsSuggestions', '$q', 'bingSearchSuggestions',
+    function (Analytics, C, Config, suggestionsData, webAppsSuggestions, $q, bingSearchSuggestions) {
         return function (scope, element) {
             var throttleLimit, conf, searchURL, lastSearch, getResults, suggestionsURL,
                 $container = $('#container'),
@@ -26,28 +26,11 @@ angular.module('aio.search').directive('aioSearchBox', [
                 });
             };
 
-            /*
-             *             bConnection.addListener(function (msg) {
-             *                 if (msg && msg.searchResults) {
-             *                     //reverse items because they will be unshifted into array
-             *                     var results = msg.searchResults.reverse();
-             *                     $rootScope.$apply(function () {
-             *                         addResults(results, 'unshift');
-             *                     });
-             *
-             *                     scope.setSuggestionsVisibility(true);
-             *                 }
-             *             });
-             */
-
             var getBingSuggestions = function (val, howMany) {
-                var url = 'http://api.bing.com/osjson.aspx?Market=en-us&query=' + val +
-                 '&JsonType=callback&JsonCallback=JSON_CALLBACK';
-                $http.jsonp(url).success(function(data){
-                    console.log('Filename: search.js', 'Line: 47', 'data:',  data);
-                });
+                bingSearchSuggestions.getSuggestions(val).then(function (data) {
 
-                // bConnection.postMessage(postObj);
+                    console.log('Filename: search.js', 'Line: 32', 'data:', data);
+                });
             };
 
             //each provider should have getSuggestions(q) method that returns a promise
@@ -72,15 +55,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                 suggestionsURL = conf.suggestions_url || conf.suggestions_url;
                 throttleLimit = conf.search_throttle_limit;
 
-                // initializes the bing search suggestions
-                var postObj = {
-                    type: 'init',
-                    params: {
-                        provider: conf.suggestions_type || 'bing',
-                        suggestionsURL: suggestionsURL
-                    }
-                };
-                // bConnection.postMessage(postObj);
+                bingSearchSuggestions.init(suggestionsURL);
 
                 // get the results using a throttled function
                 getResults = _.throttle(function (val) {
@@ -262,6 +237,93 @@ angular.module('aio.search').directive('aioSearchBox', [
                     });
                 }
             });
+        };
+    }
+]).factory('bingSearchSuggestions', ['$http', 'Constants', 'Config', 'Chrome', '$q',
+    function ($http, C, Config, Chrome, $q) {
+        /**
+         * Bing Suggestions Provider
+         */
+        var baseURL;
+
+        /**
+         *
+         * @param _baseURL
+         */
+        var init = function (_baseURL) {
+            baseURL = _baseURL;
+        };
+
+        /**
+         *
+         * @param q
+         * @returns {*}
+         */
+        var bingURLBuilder = function (params, q) {
+            params = angular.extend({
+                jsonp: false
+            }, params);
+
+            if (params.jsonp) {
+                return baseURL + q + '&JsonType=callback&JsonCallback=JSON_CALLBACK';
+            } else {
+                return baseURL + q;
+            }
+        };
+
+        var isIframe = (function (window) {
+            var test;
+            try {
+                test = window.top !== window.self;
+            } catch (e) {
+                test = false;
+            }
+            return test;
+        }(window));
+
+        /**
+         * if chrome extension - use regular GET call
+         * if website - use jsnop
+         */
+        var getSuggestions = function (q) {
+            var urlBuildParams = {}, httpMethod = 'get';
+            if (baseURL) {
+                if (!Chrome.isChrome() || isIframe) {
+                    urlBuildParams.jsonp = true;
+                    httpMethod = 'jsonp';
+                }
+
+                var url = bingURLBuilder(urlBuildParams, q);
+
+                return $http[httpMethod](url).then(function (response) {
+                    if (response && response.data && response.data.length && response.data[1]) {
+                        return _.map(response.data[1], wrapSuggestion);
+                    } else {
+                        return [];
+                    }
+                }, function (e) {
+                    console.log('e', e);
+                    return false;
+                });
+            }
+
+            var defer = $q.defer;
+            defer.reject();
+            return defer.promise;
+        };
+
+        // wrap a suggestion so it will conform the structure of the suggestion object
+        var wrapSuggestion = function (suggestion) {
+            return {
+                title: suggestion,
+                origin: 'bing',
+                description: 'Search'
+            };
+        };
+
+        return {
+            init: init,
+            getSuggestions: getSuggestions
         };
     }
 ]).factory('webAppsSuggestions', ['Apps', '$filter', '$q',
