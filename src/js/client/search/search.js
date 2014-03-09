@@ -141,12 +141,11 @@ angular.module('aio.search').directive('aioSearchBox', [
 
             var getExitUrl = function (val) {
                 //taken from http://www.faramawi.com/2008/02/best-ever-urll-validation-regulae.html
-                var testUrl = /^(https?:\/\/)?(([\w!~*'().&=+$%-]+:)?[\w!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([\w!~*'()-]+\.)*([\w^-][\w-]{0,61})?[\w]\.[a-z]{2,6})(:[0-9]{1,4})?((\/*)|(\/+[\w!~*'().;?:@&=+$,%#-]+)+\/*)$/; //jshint ignore:line
+                var testUrl = /^(https?:\/\/)?(([\w!~*'().&=+$%-]+:)?[\w!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([\w!~*'()-]+\.)*([\w^-][\w-]{0,61})?[\w]\.[a-z]{2,6})(:[0-9]{1,4})?((\/*)|(\/+[\w!~*'().;?:@&=+$,%#-]+)+\/*)$/; /*jshint ignore:line*/
                 //what url to exit with
                 var exitUrl;
                 //test if it's a url and if so - exit with it
                 if (testUrl.test(val) || /^(https?:\/\/)?localhost(:\d+)?$/.test(val)) {
-                    console.log('here');
                     if (!/^https?/.test(val)) {
                         exitUrl = 'http://' + val;
                     } else {
@@ -207,6 +206,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                         $hiddenInput.focus();
                         scope.$apply(function () {
                             scope.currentSuggestion = 0;
+                            setElementDisplayText();
                         });
                         break;
                     case 38: //up arrow
@@ -216,6 +216,13 @@ angular.module('aio.search').directive('aioSearchBox', [
                     }
                 }
             });
+
+            var setElementDisplayText = function () {
+                var suggestionsText = suggestionsData.data[scope.currentSuggestion].title;
+                if (suggestionsText) {
+                    element.val(suggestionsText);
+                }
+            };
 
             //keydown is pressed in HIDDEN search box
             $hiddenInput.on('keyup', function (e) {
@@ -231,6 +238,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     if (scope.currentSuggestion < suggestionsData.data.length - 1) {
                         scope.$apply(function () {
                             ++scope.currentSuggestion;
+                            setElementDisplayText();
                         });
                     }
 
@@ -239,6 +247,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     //go back to search element
                     if (scope.currentSuggestion <= 0) {
                         scope.$apply(function () {
+                            element.val(lastSearch);
                             scope.currentSuggestion = -1;
                         });
                         return element.focus();
@@ -248,6 +257,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     if (scope.currentSuggestion > 0) {
                         scope.$apply(function () {
                             --scope.currentSuggestion;
+                            setElementDisplayText();
                         });
                     }
                     break;
