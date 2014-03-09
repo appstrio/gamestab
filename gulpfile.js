@@ -23,7 +23,7 @@ var pkg;
 var assetPath = ['assets/**/*', 'src/manifest.json'];
 
 var bowerPackages = [
-    'src/bower_components/jquery/jquery.min.js',
+    'src/bower_components/jquery/dist/jquery.min.js',
     'src/bower_components/angular/angular.min.js',
     'src/bower_components/lodash/dist/lodash.min.js',
     'src/bower_components/angular-fallback-src/fallback-src.js',
@@ -68,7 +68,7 @@ gulp.task('copy', function () {
     gulp.src('src/js/*.js')
         .pipe(gulp.dest(targetDir + 'js/'));
 
-    return gulp.src('src/bower_components/jquery/jquery.min.map')
+    return gulp.src('src/bower_components/jquery/dist/jquery.min.map')
         .pipe(gulp.dest(targetDir + 'js/vendor/'));
 });
 
