@@ -1,8 +1,8 @@
-/* global isDev */
+/* global isWebsite */
 angular.module('aio.main').controller('MainCtrl', [
     '$scope', '$log', '$q', '$timeout', 'Apps', 'Config', 'Constants', 'Background', 'Analytics', 'Helpers',
     function ($scope, $log, $q, $timeout, Apps, Config, Constants, Background, Analytics, Helpers) {
-        console.debug('[MainCtrl] - start v' + Constants.APP_VERSION + ' dev:' + isDev);
+        console.debug('[MainCtrl] - start v' + Constants.APP_VERSION);
         var lazyCacheAppsTimeout;
         var checkConfigTimeout = 3000;
 
@@ -71,7 +71,15 @@ angular.module('aio.main').controller('MainCtrl', [
         //second loading services
         var initializeApp = function () {
             $scope.firstBoot = false;
-            return $q.all([$scope.refreshScope(), Analytics.init(), lazyCacheApps(), lazyCheckConfig()]);
+
+            var analyticsParams = {
+                devMode: false,
+                useLocalGa: isWebsite,
+                partnerId: Config.get().partner_id,
+                analyticsId: Config.get().analytics_ua_account,
+                appVersion: Constants.APP_VERSION
+            };
+            return $q.all([$scope.refreshScope(), Analytics.init(analyticsParams), lazyCacheApps(), lazyCheckConfig()]);
         };
 
         var loadFromRemotes = function () {
