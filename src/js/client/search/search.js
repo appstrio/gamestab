@@ -181,8 +181,16 @@ angular.module('aio.search').directive('aioSearchBox', [
                 return executeEnterKeyPress(null, suggestion);
             };
 
+            var onReFocus = _.throttle(function () {
+                scope.setSuggestionsVisibility(true);
+            }, 200);
+
             //search box is focused
             element.on('focus', function () {
+                //if there is already text in the input box - display results
+                if (element.val()) {
+                    onReFocus();
+                }
                 Analytics.reportEvent(302);
             });
 
