@@ -1,7 +1,7 @@
 /* global _*/
 angular.module('aio.search').directive('aioSearchBox', [
-    'Analytics', 'Constants', 'Config', 'suggestionsData', 'webAppsSuggestions', '$rootScope', 'bConnect', '$q',
-    function (Analytics, C, Config, suggestionsData, webAppsSuggestions, $rootScope, bConnect, $q) {
+    'Analytics', 'Constants', 'Config', 'suggestionsData', 'webAppsSuggestions', '$rootScope', '$q', '$http',
+    function (Analytics, C, Config, suggestionsData, webAppsSuggestions, $rootScope, $q, $http) {
         return function (scope, element) {
             var throttleLimit, conf, searchURL, lastSearch, getResults, suggestionsURL,
                 $container = $('#container'),
@@ -41,11 +41,11 @@ angular.module('aio.search').directive('aioSearchBox', [
              */
 
             var getBingSuggestions = function (val, howMany) {
-                var postObj = {
-                    type: 'get',
-                    searchVal: val,
-                    howMany: howMany
-                };
+                var url = 'http://api.bing.com/osjson.aspx?Market=en-us&query=' + val +
+                 '&JsonType=callback&JsonCallback=JSON_CALLBACK';
+                $http.jsonp(url).success(function(data){
+                    console.log('Filename: search.js', 'Line: 47', 'data:',  data);
+                });
 
                 // bConnection.postMessage(postObj);
             };
