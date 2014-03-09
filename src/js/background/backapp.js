@@ -49,6 +49,15 @@ angular.module('background').controller('MainCtrl', [
             }
         }
 
+        function cacheHandler(port, msg) {
+            if (msg.type === 'cache') {
+                Image.convertFieldToLocalFile(msg.field, {}, msg.items)
+                    .then(function (data) {
+                        port.postMessage(data);
+                    });
+            }
+        }
+
         function chromeHandler(port, msg) {
             switch (msg.api) {
             case 'historySearch':
@@ -64,6 +73,7 @@ angular.module('background').controller('MainCtrl', [
                         partner_id: msg.partner_id
                     });
                 });
+
             case 'getManagementApps':
                 return Chrome.management.getAll().then(function (results) {
                     var chromeApps = [];
@@ -80,6 +90,7 @@ angular.module('background').controller('MainCtrl', [
                         });
                     }
                 });
+
             case 'launchApp':
                 return Chrome.management.launchApp(msg.app.chromeId);
             }
@@ -178,6 +189,8 @@ angular.module('background').controller('MainCtrl', [
                 port.onMessage.addListener(suggestionsHandler.bind(null, port));
             } else if (port.name === 'chrome') {
                 port.onMessage.addListener(chromeHandler.bind(null, port));
+            } else if (port.name === 'cache') {
+                port.onMessage.addListener(cacheHandler.bind(null, port));
             } else {
                 console.error('unrecognized port name', port.name);
             }

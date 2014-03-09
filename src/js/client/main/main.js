@@ -16,9 +16,15 @@ angular.module('aio.main').controller('MainCtrl', [
             }
         };
 
+        $scope.$watch(function () {
+            return Apps.apps();
+        }, function (newVal) {
+            if (newVal && newVal.length) {
+                $scope.rawScreens = Apps.apps();
+            }
+        }, true);
+
         $scope.refreshScope = function () {
-            // $log.log('[MainCtrl] - Setting scope vars');
-            $scope.rawScreens = Apps.apps();
             $scope.config = Config.get();
             lazyCacheAppsTimeout = $scope.config.lazy_cache_dials_timeout;
             $scope.displayTopSearchBox = $scope.config.user_preferences.show_search_box;
@@ -37,9 +43,9 @@ angular.module('aio.main').controller('MainCtrl', [
             $timeout(function () {
                 if (Apps.isCacheNeeded()) {
                     $log.log('[MainCtrl] - Initiating lazy cache for dial icons');
-                    return Apps.lazyCacheIcons().then($scope.refreshScope);
+                    return Apps.lazyCacheIcons();
                 }
-                // $log.log('[MainCtrl] - Apps already lazy cached.');
+                console.info('All app icons are cached and OK.');
             }, lazyCacheAppsTimeout);
         };
 

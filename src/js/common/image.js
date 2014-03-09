@@ -98,7 +98,7 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
             };
 
             //need for web cross domain requests
-            img.crossOrigin = 'anonymous';
+            img.crossOrigin = 'Anonymous';
             img.src = url;
 
             return deferred.promise;
@@ -241,8 +241,7 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
                         item[fieldToConvert] = file;
                         return item;
                     }, function (e) {
-                        console.log('Filename: image.js', 'Line: 246', 'e:', e);
-
+                        console.warn('failed to cache image' + url, e);
                     }));
                 })(counter);
             });
