@@ -7,7 +7,6 @@ angular.module('aio.search').directive('aioSearchBox', [
                 $container = $('#container'),
                 $hiddenInput = $('.hidden').eq(0);
 
-
             var addResults = function (results, method) {
                 //push is default. unshift to place items in beginning
                 method = method || 'push';
@@ -27,9 +26,8 @@ angular.module('aio.search').directive('aioSearchBox', [
             };
 
             var getBingSuggestions = function (val, howMany) {
-                bingSearchSuggestions.getSuggestions(val).then(function (data) {
-
-                    console.log('Filename: search.js', 'Line: 32', 'data:', data);
+                bingSearchSuggestions.getSuggestions(val, howMany).then(function (data) {
+                    addResults(data, 'unshift');
                 });
             };
 
@@ -72,7 +70,6 @@ angular.module('aio.search').directive('aioSearchBox', [
                         $q.when(provider.get(val, provider.maxSuggestions)).then(provider.handler);
                     });
                 }, throttleLimit);
-
             });
 
             // * hide the suggestions box
@@ -251,6 +248,7 @@ angular.module('aio.search').directive('aioSearchBox', [
          * @param _baseURL
          */
         var init = function (_baseURL) {
+            console.log('Filename: search.js', 'Line: 254', '_baseURL:', _baseURL);
             baseURL = _baseURL;
         };
 
@@ -271,33 +269,21 @@ angular.module('aio.search').directive('aioSearchBox', [
             }
         };
 
-        var isIframe = (function (window) {
-            var test;
-            try {
-                test = window.top !== window.self;
-            } catch (e) {
-                test = false;
-            }
-            return test;
-        }(window));
-
         /**
          * if chrome extension - use regular GET call
          * if website - use jsnop
          */
-        var getSuggestions = function (q) {
+        var getSuggestions = function (q, howMany) {
             var urlBuildParams = {}, httpMethod = 'get';
             if (baseURL) {
-                if (!Chrome.isChrome() || isIframe) {
-                    urlBuildParams.jsonp = true;
-                    httpMethod = 'jsonp';
-                }
+                urlBuildParams.jsonp = true;
+                httpMethod = 'jsonp';
 
                 var url = bingURLBuilder(urlBuildParams, q);
-
                 return $http[httpMethod](url).then(function (response) {
                     if (response && response.data && response.data.length && response.data[1]) {
-                        return _.map(response.data[1], wrapSuggestion);
+                        var results = _.first(response.data[1], howMany || 5);
+                        return _.map(results, wrapSuggestion);
                     } else {
                         return [];
                     }
@@ -307,9 +293,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                 });
             }
 
-            var defer = $q.defer;
-            defer.reject();
-            return defer.promise;
+            return $q.when([]);
         };
 
         // wrap a suggestion so it will conform the structure of the suggestion object

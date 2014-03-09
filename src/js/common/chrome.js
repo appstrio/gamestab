@@ -138,6 +138,7 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
         };
 
         return {
+            isChrome: isChrome,
             getVersion: getVersion,
             isExtension: isExtension,
             management: management,

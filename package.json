@@ -1,45 +1,45 @@
 {
-  "name": "gamesTab",
-  "version": "1.1.9",
-  "description": "Games oriented Chrome Extension Newtab",
-  "homepage": "https://github.com/appstrio/gamestab",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/appstrio/gamestab"
-  },
-  "bugs": "https://github.com/appstrio/gamestab/issues",
-  "private": true,
-  "dependencies": {},
-  "devDependencies": {
-    "event-stream": "^3.1.0",
-    "gulp": "~3.5.2",
-    "gulp-bump": "~0.1.4",
-    "gulp-clean": "~0.2.4",
-    "gulp-concat": "^2.1.7",
-    "gulp-cssmin": "^0.1.3",
-    "gulp-filesize": "0.0.6",
-    "gulp-filter": "^0.3.1",
-    "gulp-flatten": "0.0.2",
-    "gulp-htmlmin": "^0.1.2",
-    "gulp-if": "0.0.5",
-    "gulp-imagemin": "~0.1.5",
-    "gulp-inject": "^0.4.1",
-    "gulp-jade": "~0.4.1",
-    "gulp-jsvalidate": "~0.1.1",
-    "gulp-less": "^1.2.2",
-    "gulp-order": "^1.0.6",
-    "gulp-rev": "^0.3.0",
-    "gulp-uglify": "~0.2.1",
-    "gulp-using": "0.0.1",
-    "gulp-util": "~2.2.14",
-    "gulp-watch": "~0.5.0",
-    "gulp-zip": "~0.1.2",
-    "mocha": "~1.17.1",
-    "open": "0.0.4",
-    "semver": "~2.2.1",
-    "shelljs": "~0.2.6"
-  },
-  "engines": {
-    "node": ">=0.8.0"
-  }
+    "name": "gamesTab",
+    "version": "1.1.9",
+    "description": "Games oriented Chrome Extension Newtab",
+    "homepage": "https://github.com/appstrio/gamestab",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/appstrio/gamestab"
+    },
+    "bugs": "https://github.com/appstrio/gamestab/issues",
+    "private": true,
+    "dependencies": {},
+    "devDependencies": {
+        "event-stream": "^3.1.0",
+        "gulp": "~3.5.2",
+        "gulp-bump": "~0.1.4",
+        "gulp-clean": "~0.2.4",
+        "gulp-concat": "^2.1.7",
+        "gulp-cssmin": "^0.1.3",
+        "gulp-filesize": "0.0.6",
+        "gulp-filter": "^0.3.1",
+        "gulp-flatten": "0.0.2",
+        "gulp-htmlmin": "^0.1.2",
+        "gulp-if": "0.0.5",
+        "gulp-imagemin": "~0.1.5",
+        "gulp-inject": "^0.4.1",
+        "gulp-jade": "~0.4.1",
+        "gulp-jsvalidate": "~0.1.1",
+        "gulp-less": "^1.2.2",
+        "gulp-order": "^1.0.6",
+        "gulp-rev": "^0.3.0",
+        "gulp-uglify": "~0.2.1",
+        "gulp-using": "0.0.1",
+        "gulp-util": "~2.2.14",
+        "gulp-watch": "~0.5.0",
+        "gulp-zip": "~0.1.2",
+        "mocha": "~1.17.1",
+        "open": "0.0.4",
+        "semver": "~2.2.1",
+        "shelljs": "~0.2.6"
+    },
+    "engines": {
+        "node": ">=0.8.0"
+    }
 }
