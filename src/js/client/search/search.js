@@ -224,7 +224,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     default:
                         if (bubbled && bubbled.keyCode) {
                             element.focus();
-                            element.val(val + String.charAt(keyCode));
+                            element.val(val + String.charCodeAt(keyCode));
                         }
                         getResults(val);
                     }
