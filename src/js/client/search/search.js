@@ -222,6 +222,10 @@ angular.module('aio.search').directive('aioSearchBox', [
                     case 38: //up arrow
                         break;
                     default:
+                        if (bubbled && bubbled.keyCode) {
+                            element.focus();
+                            element.val(val + String.charAt(keyCode));
+                        }
                         getResults(val);
                     }
                 }
