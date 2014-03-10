@@ -65,7 +65,9 @@ angular.module('aio.settings').factory('Background', [
                 })
                 .then(function () {
                     isReady.resolve(background);
-                    return addBgToUserBgs(background);
+                    if (background.thumbnail) {
+                        return addBgToUserBgs(background);
+                    }
                 });
         };
 
@@ -133,6 +135,10 @@ angular.module('aio.settings').factory('Background', [
                 return Image.contrastFromUrl(background.url);
             }).then(function (blackArrows) {
                 __conf.user_preferences.use_black_arrows = blackArrows;
+                Config.setConfig(__conf);
+                return Config.set();
+            }, function (e) {
+                console.warn('problems with setting new background', e);
                 Config.setConfig(__conf);
                 return Config.set();
             });
