@@ -224,7 +224,9 @@ angular.module('aio.search').directive('aioSearchBox', [
                     default:
                         if (bubbled && bubbled.keyCode) {
                             element.focus();
-                            element.val(val + String.charCodeAt(keyCode));
+                            //if shift key isn't pressed when we need to add 32 to charcode to correct lowercase
+                            var newChar = String.fromCharCode(keyCode + (bubbled.shiftKey ? 0 : 32));
+                            element.val(val + newChar);
                         }
                         getResults(val);
                     }
@@ -281,7 +283,8 @@ angular.module('aio.search').directive('aioSearchBox', [
                 default:
                     //bubble up the key
                     element.trigger('keyup', {
-                        keyCode: e.keyCode
+                        keyCode: e.keyCode,
+                        shiftKey: e.shiftKey
                     });
                 }
             });
