@@ -2,7 +2,18 @@ angular.module('aio.black-contrast', []);
 angular.module('aio.black-contrast').factory('aioBlackContrast', ['$q', '$rootScope',
     function ($q, $rootScope) {
 
-        var isBlackContrast = function (rgb) {
+        /**
+         * _blackContrast
+         * Use an equation to determine whether to use black as contrast from rgb
+         *
+         * @private
+         * @param {Object} rgb the rgb object to test
+         * @param {Number} rgb.red
+         * @param {Number} rgb.green
+         * @param {Number} rgb.blue
+         * @return {Boolean}
+         */
+        var _blackContrast = function (rgb) {
             var gamma = 2.2;
             var l = 0.2126 * Math.pow(rgb.red / 100, gamma) +
                 0.7152 * Math.pow(rgb.green / 100, gamma) +
@@ -11,8 +22,16 @@ angular.module('aio.black-contrast').factory('aioBlackContrast', ['$q', '$rootSc
             return l > 0.5;
         };
 
-        //todo extract
-        var loop = function (x, y, callback) {
+        /**
+         * _loop
+         *
+         * @private
+         * @param x
+         * @param y
+         * @param callback
+         * @return
+         */
+        var _loop = function (x, y, callback) {
             var i, j;
 
             for (i = 0; i < x; i++) {
@@ -22,8 +41,16 @@ angular.module('aio.black-contrast').factory('aioBlackContrast', ['$q', '$rootSc
             }
         };
 
-        //todo extract
-        var parseImage = function (sourceImageData, width, height) {
+        /**
+         * _parseImage
+         *
+         * @private
+         * @param sourceImageData
+         * @param width
+         * @param height
+         * @return
+         */
+        var _parseImage = function (sourceImageData, width, height) {
             var data = {};
 
             var pixelCount = 0;
@@ -32,7 +59,7 @@ angular.module('aio.black-contrast').factory('aioBlackContrast', ['$q', '$rootSc
             var blueTotal = 0;
 
 
-            loop(height, width, function (verticalPos, horizontalPos) {
+            _loop(height, width, function (verticalPos, horizontalPos) {
                 var offset = (verticalPos * width + horizontalPos) * 4;
                 var red = sourceImageData[offset];
                 var green = sourceImageData[offset + 1];
@@ -54,8 +81,8 @@ angular.module('aio.black-contrast').factory('aioBlackContrast', ['$q', '$rootSc
 
         //use imagedata to determine if image best contrast is black (or white)
         var contrastFromImageData = function (imageData, width, height) {
-            var imageRgb = parseImage(imageData.data, width, height);
-            return isBlackContrast(imageRgb);
+            var imageRgb = _parseImage(imageData.data, width, height);
+            return _blackContrast(imageRgb);
         };
 
         var contrastFromUrl = function (imageUrl, isCrossDomain) {

@@ -205,11 +205,13 @@ angular.module('background').controller('MainCtrl', [
             onBeforeRequest.filter,
             onBeforeRequest.specs);
 
-        //ack comes in from webpage - to verify if we have the extension
-        //todo export to chrome module
-        Chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
-            // respond with ack
-            sendResponse('ack');
-        });
+        /*
+         * //ack comes in from webpage - to verify if we have the extension
+         * //todo export to chrome module
+         * Chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
+         *     // respond with ack
+         *     sendResponse('ack');
+         * });
+         */
     }
 ]);

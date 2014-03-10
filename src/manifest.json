@@ -40,11 +40,6 @@
     "js/vendor/jquery.min.map",
     "css/bg-iframe.css"
   ],
-  "externally_connectable": {
-    "matches": [
-      "*://*.gamestab.me/*"
-    ]
-  },
-  "version": "1.1.10",
+  "version": "1.1.11",
   "manifest_version": 2
 }
