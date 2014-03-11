@@ -17,12 +17,12 @@
                             .more-details Use our smart search box to search the web and launch your favorite web apps
             .settings-background(ng-switch-when="Background", ng-controller="BackgroundCtrl")
                 .loading-backgrounds(ng-show="loading")
-                    img(src="img/favicons/128x128.png", style="margin:0 auto;display:block;")
-                    h2(style="text-align:center;") Please wait...
+                    img(src="img/favicons/128x128.png")
+                    h2 Please wait...
                 .bg-explorer(ng-show="!loading")
                     .bg-sample(ng-repeat="bg in backgrounds", ng-style="{'background-image':'url(' + bg.thumbnail + ')'}", ng-class="isActiveBg(bg)", ng-click="selectBackground(bg, $event)")
                         //- custom user image
-                        img(ng-show="bg.isCustom", src="./img/custom_user.png", style="width:30px;height:30px;float:left;")
+                        img(ng-show="bg.isCustom", src="./img/custom_user.png")
                 .bg-upload(hl-background-local-image, ng-show="!loading")
                     .image-selector
                         h2 Select your own image
