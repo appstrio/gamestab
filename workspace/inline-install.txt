@@ -1,0 +1,22 @@
+How to implement inline install:
+
+1. Add the following inside your <head> tag:
+
+<!-- Establish relation with Chrome With Store -->
+<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/apdfllckaahabafndbhieahigkjlhalf">
+
+
+2. Add the following script inside your <body> tag:
+<script>
+    function installSuccess() {
+        console.log('install');
+    }
+
+    function installError() {
+        console.log('error');
+    }
+
+    document.getElementById('#buttonDownload').click(function() {
+        chrome.webstore.install('https://chrome.google.com/webstore/detail/apdfasdfasdf', installSuccess, installError);
+    })
+</script>
