@@ -1,4 +1,4 @@
-angular.module('aio.image', ['aio.black-contrast']);
+angular.module('aio.image', ['aio.image.black-contrast']);
 angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileSystem', 'aioBlackContrast',
     function ($q, $rootScope, $log, FileSystem, aioBlackContrast) {
 
