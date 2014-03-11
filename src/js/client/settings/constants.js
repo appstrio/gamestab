@@ -39,6 +39,8 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             // Partner Controlled Config
             // ----------------
             CONFIG: {
+                //application name
+                app_name: 'Gamestab',
                 //redirect to search url
                 search_url: 'http://www.google.com/search?q=',
                 //suggestions url
