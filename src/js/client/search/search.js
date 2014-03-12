@@ -70,10 +70,12 @@ angular.module('aio.search').directive('aioSearchBox', [
                         $q.when(provider.get(val, provider.maxSuggestions)).then(provider.handler);
                     });
                 }, throttleLimit);
+
             });
 
             // * hide the suggestions box
             scope.setSuggestionsVisibility = function (status) {
+                element.parent().toggleClass('focused', status);
                 $container.toggleClass('suggestions-on', status);
             };
 
@@ -119,7 +121,6 @@ angular.module('aio.search').directive('aioSearchBox', [
                 var exitUrl;
                 //test if it's a url and if so - exit with it
                 if (testUrl.test(val) || /^(https?:\/\/)?localhost(:\d+)?$/.test(val)) {
-                    console.log('here');
                     if (!/^https?/.test(val)) {
                         exitUrl = 'http://' + val;
                     } else {
@@ -155,8 +156,17 @@ angular.module('aio.search').directive('aioSearchBox', [
                 return executeEnterKeyPress(null, suggestion);
             };
 
+            var onReFocus = _.throttle(function () {
+                scope.setSuggestionsVisibility(true);
+            }, 200);
+
             //search box is focused
             element.on('focus', function () {
+                //if there is already text in the input box - display results
+                if (element.val()) {
+                    onReFocus();
+                }
+                element.parent().toggleClass('focused', true);
                 Analytics.reportEvent(302);
             });
 
@@ -180,15 +190,29 @@ angular.module('aio.search').directive('aioSearchBox', [
                         $hiddenInput.focus();
                         scope.$apply(function () {
                             scope.currentSuggestion = 0;
+                            setElementDisplayText();
                         });
                         break;
                     case 38: //up arrow
                         break;
                     default:
+                        if (bubbled && bubbled.keyCode) {
+                            element.focus();
+                            //if shift key isn't pressed when we need to add 32 to charcode to correct lowercase
+                            var newChar = String.fromCharCode(keyCode + (bubbled.shiftKey ? 0 : 32));
+                            element.val(val + newChar);
+                        }
                         getResults(val);
                     }
                 }
             });
+
+            var setElementDisplayText = function () {
+                var suggestionsText = suggestionsData.data[scope.currentSuggestion].title;
+                if (suggestionsText) {
+                    element.val(suggestionsText);
+                }
+            };
 
             //keydown is pressed in HIDDEN search box
             $hiddenInput.on('keyup', function (e) {
@@ -204,6 +228,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     if (scope.currentSuggestion < suggestionsData.data.length - 1) {
                         scope.$apply(function () {
                             ++scope.currentSuggestion;
+                            setElementDisplayText();
                         });
                     }
 
@@ -212,6 +237,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     //go back to search element
                     if (scope.currentSuggestion <= 0) {
                         scope.$apply(function () {
+                            element.val(lastSearch);
                             scope.currentSuggestion = -1;
                         });
                         return element.focus();
@@ -221,6 +247,7 @@ angular.module('aio.search').directive('aioSearchBox', [
                     if (scope.currentSuggestion > 0) {
                         scope.$apply(function () {
                             --scope.currentSuggestion;
+                            setElementDisplayText();
                         });
                     }
                     break;
@@ -230,7 +257,8 @@ angular.module('aio.search').directive('aioSearchBox', [
                 default:
                     //bubble up the key
                     element.trigger('keyup', {
-                        keyCode: e.keyCode
+                        keyCode: e.keyCode,
+                        shiftKey: e.shiftKey
                     });
                 }
             });
