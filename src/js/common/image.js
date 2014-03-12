@@ -1,6 +1,6 @@
-angular.module('aio.image', ['img.tools']);
-angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileSystem', 'ImageTools',
-    function ($q, $rootScope, $log, FileSystem, ImageTools) {
+angular.module('aio.image', ['aio.image.black-contrast']);
+angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileSystem', 'aioBlackContrast',
+    function ($q, $rootScope, $log, FileSystem, aioBlackContrast) {
 
         var base64Regex = /data:image\/(jpeg|jpg|png);base64,/;
         /**
@@ -53,15 +53,6 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
 
                 ctxCopy.drawImage(img, 0, 0);
 
-                /*
-                 *                 if (params.checkContrast) {
-                 *                     var imageData = ctxCopy.getImageData(0, 0, img.width, img.height);
-                 *                     var imageRgb = parseImage(imageData.data, img.width, img.height);
-                 *
-                 *                     comp = isBlackContrast(imageRgb);
-                 *                 }
-                 */
-
                 //check if resize is not needed
                 if (!options.maxWidth && !options.maxHeight && !options.fixedHeight && !options.fixedWidth) {
                     return $rootScope.$apply(function () {
@@ -107,7 +98,7 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
             };
 
             //need for web cross domain requests
-            img.crossOrigin = 'anonymous';
+            img.crossOrigin = 'Anonymous';
             img.src = url;
 
             return deferred.promise;
@@ -141,6 +132,12 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
             //get unique hash
             var fileName = _getHashFromUrl(params.url);
 
+            var errorHandler = function (e) {
+                //error handling
+                console.warn('[Image] - error saving remote image', e);
+                deferred.reject(e);
+            };
+
             //if url is already base64
             if (isBase64(params.url)) {
                 type = getTypeFromBase64(params.url);
@@ -148,20 +145,16 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
                 //generate unique name to each thumbnail
                 FileSystem.write(fileName, params.url, type).then(function (file) {
                     deferred.resolve(file);
-                });
+                }, errorHandler);
             } else {
                 //file doesn't exist, generate it as base64
                 urlToBase64(params).then(function (base64) {
                     type = getTypeFromBase64(base64);
                     //generate unique name to each thumbnail
-                    FileSystem.write(fileName, base64, type).then(function (file) {
+                    return FileSystem.write(fileName, base64, type).then(function (file) {
                         deferred.resolve(file);
                     });
-                }).then(angular.noop, function (e) {
-                    //error handling
-                    $log.log('[Image] - error saving remote image', e);
-                    deferred.reject(e);
-                });
+                }).then(angular.noop, errorHandler);
             }
 
             return deferred.promise;
@@ -201,7 +194,9 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
                     }, params);
 
                     promiseChain = promiseChain.then(function () {
-                        return urlToLocalFile(newParams);
+                        return urlToLocalFile(newParams).then(null, function (e) {
+                            return null;
+                        });
                     }).then(function (file) {
                         item.thumbnail = file;
                         $log.log('[Image] - generating thumbnail ' +
@@ -229,11 +224,6 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
 
             params = params || {};
 
-            function logAndReturn(item) {
-                $log.log('[image] - caching ' + fieldToConvert + '=> ' + counter + '/' + arr.length + '.');
-                return promises.push(item);
-            }
-
             arr.forEach(function (item) {
                 var url = item[fieldToConvert];
                 ++counter;
@@ -242,26 +232,20 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
 
                 //check if path starts with chrome or filesystem
                 if (helpers.isPathChrome(url) || helpers.isPathFileSystem(url)) {
-                    return logAndReturn(item);
+                    $log.log('[image] - skipping ' + url + '=> ' + counter + '/' + arr.length + '.');
+                    return promises.push(item);
                 }
-
-                /*
-                 * DEPRECATED 3.3.14 - using background to cache all local images
-                 * //is path a local one?
-                 * if (!helpers.isPathRemote(url)) {
-                 *     //save absolute chrome path
-                 *     item[fieldToConvert] = Chrome.extension.getURL(url);
-                 *     return logAndReturn(item);
-                 * }
-                 */
                 (function (counter) {
-                    $log.log('[image] - caching ' + fieldToConvert + '=> ' + counter + '/' + arr.length + '.');
+                    $log.log('[image] - caching ' + url + '=> ' + counter + '/' + arr.length + '.');
                     //return promise
                     promises.push(urlToLocalFile(angular.extend({
                         url: url
                     }, params)).then(function (file) {
                         //save new url
                         item[fieldToConvert] = file;
+                        return item;
+                    }, function (e) {
+                        console.warn('failed to cache image' + url, e);
                         return item;
                     }));
                 })(counter);
@@ -312,7 +296,7 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
             convertFieldToLocalFile: convertFieldToLocalFile,
             generateThumbnail: generateThumbnail,
 
-            useBlackAsContrast: ImageTools.useBlackAsContrast,
+            contrastFromUrl: aioBlackContrast.contrastFromUrl,
 
             helpers: helpers
         };

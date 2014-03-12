@@ -44,6 +44,11 @@ angular.module('aio.launcher').factory('Apps', [
         var bConnection = new bConnect.BackgroundApi('chrome');
         bConnection.addListener(getChromeApps);
 
+        var setApps = function (_apps) {
+            apps = _apps;
+            return apps;
+        };
+
         //load from storage
         var init = function () {
             // console.debug('[Apps] - init');
@@ -54,10 +59,6 @@ angular.module('aio.launcher').factory('Apps', [
             });
         };
 
-        var setApps = function (_apps) {
-            apps = _apps;
-            return apps;
-        };
 
         /**
          * getAppsFromAppsDb
@@ -167,17 +168,26 @@ angular.module('aio.launcher').factory('Apps', [
             return _.values(_.groupBy(dials, getPageIndex));
         };
 
+        var receiveCachedItems = function (items) {
+            var newApps = organizeAsPages(items);
+            setApps(newApps);
+            store().then(function () {
+                console.debug('[Apps] - got cached icons', items.length);
+                isCacheNeededFlag = false;
+            });
+        };
+
         var lazyCacheIcons = function () {
             console.debug('[Apps] - starting to lazy cache items');
+            var cacheConnection = new bConnect.BackgroundApi('cache');
+            cacheConnection.addListener(receiveCachedItems);
+
             var arr = angular.copy(_.flatten(apps));
-            return Image.convertFieldToLocalFile('icon', {}, arr)
-                .then(organizeAsPages)
-                .then(setApps)
-                .then(store)
-                .then(function () {
-                    reportDone('lazy cache icons');
-                    isCacheNeededFlag = false;
-                });
+            cacheConnection.postMessage({
+                type: 'cache',
+                field: 'icon',
+                items: arr
+            });
         };
 
         var reportDone = function (activity) {
@@ -194,7 +204,7 @@ angular.module('aio.launcher').factory('Apps', [
             var arr = _.flatten(apps);
 
             return _.some(arr, function (item) {
-                return Image.helpers.isPathRemote(item.icon);
+                return item && item.icon && Image.helpers.isPathRemote(item.icon);
             });
         };
 

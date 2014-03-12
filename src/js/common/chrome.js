@@ -35,7 +35,7 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                     if (isChrome && chrome.runtime && chrome.runtime.onConnect) {
                         return chrome.runtime.onConnect.addListener(cb);
                     }
-                    return console.warn('no chrome api for runtime.onConnect');
+                    console.warn('no chrome api for runtime.onConnect');
                 }
             },
             onMessage: {
@@ -44,7 +44,6 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                         return chrome.runtime.onMessage.addListener(cb);
                     }
                     console.warn('no chrome api for runtime.onMessage');
-                    return;
                 }
             },
             getManifest: function () {
@@ -52,7 +51,14 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                     return chrome.runtime.getManifest();
                 }
                 console.warn('no chrome api for runtime.getManifest');
-                return;
+            },
+            onMessageExternal: {
+                addListener: function (cb) {
+                    if (isChrome && chrome.runtime && chrome.runtime.onMessageExternal) {
+                        return chrome.runtime.onMessageExternal.addListener(cb);
+                    }
+                    console.warn('no chrome api for runtime.onMessageExternal');
+                }
             }
         };
 
@@ -79,14 +85,14 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
         };
 
         var storage = {
-            local: isChrome && chrome.storage.local
+            local: isChrome && chrome.storage && chrome.storage.local
         };
 
         var getUpdateUrl = function () {
-            return isChrome && chrome.runtime.getManifest().update_url;
+            return isChrome && chrome.runtime && chrome.runtime.getManifest && chrome.runtime.getManifest().update_url;
         };
         var getVersion = function () {
-            return isChrome && chrome.app.getDetails().version;
+            return isChrome && chrome.app && chrome.app.getDetails() && chrome.app.getDetails().version;
         };
         var management = {
             getAll: function () {
@@ -132,12 +138,13 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
         };
 
         return {
+            isChrome: isChrome,
+            getVersion: getVersion,
             isExtension: isExtension,
             management: management,
             extension: extension,
             storage: storage,
             getUpdateUrl: getUpdateUrl,
-            getVersion: getVersion,
             history: history,
             runtime: runtime,
             webRequest: webRequest

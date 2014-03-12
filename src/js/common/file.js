@@ -1,4 +1,3 @@
-/* global FileError */
 angular.module('aio.file', []);
 
 angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
@@ -16,32 +15,8 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
          */
         var errorHandler = function (deferred) {
             return function (e) {
-                var msg = '';
-                switch (e.code) {
-                case FileError.QUOTA_EXCEEDED_ERR:
-                    msg = 'QUOTA_EXCEEDED_ERR';
-                    break;
-                case FileError.NOT_FOUND_ERR:
-                    msg = 'NOT_FOUND_ERR';
-                    break;
-                case FileError.SECURITY_ERR:
-                    msg = 'SECURITY_ERR';
-                    break;
-                case FileError.INVALID_MODIFICATION_ERR:
-                    msg = 'INVALID_MODIFICATION_ERR';
-                    break;
-                case FileError.INVALID_STATE_ERR:
-                    msg = 'INVALID_STATE_ERR';
-                    break;
-                default:
-                    msg = 'Unknown Error';
-                    break;
-                }
-
-                $log.info('Filesystem error: ' + msg);
-                $rootScope.$apply(function () {
-                    deferred.reject(msg);
-                });
+                $log.error('[Filesystem]', e.name, e.message);
+                deferred.reject(e);
             };
         };
 
@@ -55,7 +30,6 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
          */
         var write = function (fileName, content, type) {
             var deferred = $q.defer();
-
             init().then(function () {
                 fs.root.getFile(fileName, {
                     create: true
@@ -63,7 +37,6 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
                     // Create a FileWriter object for our FileEntry (log.txt).
                     fileEntry.createWriter(function (fileWriter) {
                         fileWriter.onwriteend = function () {
-                            //$log.info('Write completed -> ' + fileEntry.toURL());
                             $rootScope.$apply(function () {
                                 deferred.resolve(fileEntry.toURL());
                             });
@@ -99,7 +72,9 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
                         fileWriter.write(blob);
                     }, errorHandler(deferred));
                 }, errorHandler(deferred));
-            }, errorHandler(deferred));
+            }, function (e) {
+                deferred.reject(e);
+            });
 
             return deferred.promise;
         };
@@ -292,7 +267,6 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
             var fileSystemSize = 10 * 1024 * 1024, // in byts =10 megabits
                 apiType = window.PERSISTENT, // or window.TEMPORARY
 
-                //TODO need more research as to what type is better for us to store
                 storageType = {
                     persistent: 'webkitPersistentStorage',
                     temporary: 'temporaryStorage'
@@ -311,7 +285,11 @@ angular.module('aio.file').factory('FileSystem', ['$rootScope', '$log', '$q',
                             $log.info('Opened file system: ' + fs.name);
                         });
 
-                    }, errorHandler(initting));
+                    }, function (e) {
+                        $rootScope.$apply(function () {
+                            errorHandler(initting)(e);
+                        });
+                    });
                 }, function fileStorageService_init_requestQuota_error(e) {
                     $log.error('Error init file system api', e);
                     initting.reject(e);
