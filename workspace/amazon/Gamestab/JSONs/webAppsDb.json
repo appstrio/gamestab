@@ -285,17 +285,17 @@
         "tags": ["Games"]
     }, {
         "title": "8 Ball Multiplayer",
-        "url": "http://start.gamestab.me/games/play?8-ball-pool-multiplayer",
+        "url": "http://start.gamestab.me/games/play.html?8-ball-pool-multiplayer",
         "icon": "8ball.jpg",
         "tags": ["Games"]
     }, {
         "title": "Western Front 1914",
-        "url": "http://start.gamestab.me/games/play?western-front-1914",
+        "url": "http://start.gamestab.me/games/play.html?western-front-1914",
         "icon": "wf1914.jpg",
         "tags": ["Games"]
     }, {
         "title": "Motocross Nitro",
-        "url": "http://start.gamestab.me/games/play?motocross-nitro",
+        "url": "http://start.gamestab.me/games/play.html?motocross-nitro",
         "icon": "mnitro.jpg",
         "tags": ["Games"]
     }, {
@@ -310,12 +310,12 @@
         "tags": ["Games"]
     }, {
         "title": "Rail Rush Worlds",
-        "url": "http://start.gamestab.me/games/play?rail-rush-worlds",
+        "url": "http://start.gamestab.me/games/play.html?rail-rush-worlds",
         "icon": "rrworlds.jpg",
         "tags": ["Games"]
     }, {
         "title": "Urban Basketball",
-        "url": "http://start.gamestab.me/games/play?urban-basketball",
+        "url": "http://start.gamestab.me/games/play.html?urban-basketball",
         "icon": "urbanbasketball.jpg",
         "tags": ["Games"]
     }, {
@@ -325,7 +325,7 @@
         "tags": ["Games"]
     }, {
         "title": "Saloon Brawl",
-        "url": "http://start.gamestab.me/games/play?saloon-brawl-2",
+        "url": "http://start.gamestab.me/games/play.html?saloon-brawl-2",
         "icon": "sb2.jpg",
         "tags": ["Games"]
     }, {
