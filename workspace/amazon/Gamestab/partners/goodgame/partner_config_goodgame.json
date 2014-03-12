@@ -1,0 +1,55 @@
+{
+    "partner_id": "goodgame",
+    "partner_name": "goodgame.com",
+    "partner_url": "http://www.goodgamestudios.com",
+    "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/goodgame/partner_logo.jpg",
+    "default_background_url": "http://s3.amazonaws.com/Gamestab/partners/goodgame/defaultbackground.png",
+    "override_user_preferences": false,
+    "user_preferences": {
+        "show_search_box": true
+    },
+    "config_update_url": "http://s3.amazonaws.com/Gamestab/partners/goodgame/partner_config_goodgame.json",
+    "web_apps_db": [{
+        "title": "GOODGAME Studios",
+        "url": "http://www.goodgamestudios.com/",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/goodgame/dials/logo.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "goodgame"
+    }, {
+        "title": "GOODGAME Empire",
+        "url": "http://empire.goodgamestudios.com/",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/goodgame/dials/ggempire.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "goodgame"
+    }, {
+        "title": "GOODGAME Big Farm",
+        "url": "http://bigfarm.goodgamestudios.com/",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/goodgame/dials/bigfarm.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "goodgame"
+    }, {
+        "title": "GOODGAME Poker",
+        "url": "http://bigfarm.goodgamestudios.com",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/goodgame/dials/poker.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "goodgame"
+    }, {
+        "title": "GOODGAME Galaxy",
+        "url": "http://galaxy.goodgamestudios.com/",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/goodgame/dials/galaxy.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "goodgame"
+    }, {
+        "title": "GOODGAME Gangster",
+        "url": "http://gangster.goodgamestudios.com/",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/goodgame/dials/gangster.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "goodgame"
+    }]
+}

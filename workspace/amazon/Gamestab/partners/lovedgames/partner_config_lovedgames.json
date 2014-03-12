@@ -1,0 +1,104 @@
+{
+    "partner_id": "lovedgames",
+    "partner_name": "LovedGames.com",
+    "partner_url": "http://www.lovedgames.com",
+    "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/lovedgames_logo.jpg",
+    "default_background_url": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/lovedgames-background.jpg",
+    "override_user_preferences": false,
+    "user_preferences": {
+        "show_search_box": true
+    },
+    "config_update_url": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/partner_config_lovedgames.json",
+    "web_apps_db": [{
+        "title": "LovedGames.com",
+        "url": "http://www.lovedgames.com/",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/logo.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Cactus McCoy",
+        "url": "http://www.lovedgames.com/games/cactusmccoy",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/CactusMcCoy.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Home Sheep Home",
+        "url": "http://www.lovedgames.com/home_sheep_home",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/Home-Sheep-Home.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Agent Bean",
+        "url": "http://www.lovedgames.com/agentbean",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/agentbean.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Aliens Kidnapped Betty",
+        "url": "http://www.lovedgames.com/games/alienskidnappedbetty",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/aliens-kidnapped-betty-game.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Amigo Pancho 2",
+        "url": "http://www.lovedgames.com/games/amigo_pancho_2",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/amigo-pancho.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Army Of Ages",
+        "url": "http://www.lovedgames.com/games/army-of-ages",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/army.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Ashes 2 Ashes",
+        "url": "http://www.lovedgames.com/games/ashes2ashes",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/ashes2ashes.gif",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Bomb It",
+        "url": "http://www.lovedgames.com/games/bomb_it",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/bomb.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Cloudy",
+        "url": "http://www.lovedgames.com/games/cloudyspil",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/cloudy-game.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Cupid Forever 2",
+        "url": "http://www.lovedgames.com/games/cupid_forever_2",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/cupid_forever.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Intrusion",
+        "url": "http://www.lovedgames.com/games/intrusion",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/intrusion.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }, {
+        "title": "Penguing Dinner 2",
+        "url": "http://www.lovedgames.com/games/penguin-diner-2",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/dials/penguin-diner.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "lovedgames"
+    }]
+}

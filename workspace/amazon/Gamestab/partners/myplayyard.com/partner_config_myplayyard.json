@@ -1,0 +1,69 @@
+{
+    "partner_id": "myplayyard",
+    "partner_name": "My Play Yard",
+    "partner_url": "http://www.myplayyard.com",
+    "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/myplayyard_logo.png",
+    "override_user_preferences": false,
+    "default_background_url": "",
+    "user_preferences": {
+        "show_search_box": true
+    },
+    "config_update_url": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/partner_config_myplayyard.json",
+    "web_apps_db": [{
+        "title": "My Play Yard",
+        "url": "http://www.myplayyard.com",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/dials/mpllogo.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "mylpayyard",
+        "overlay": "XXX"
+    }, {
+        "title": "Pinata Hunter 2",
+        "url": "http://www.myplayyard.com/funny-games/play-pinata-hunter-2",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/dials/pinata2.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "mylpayyard",
+        "overlay": "XXX"
+    }, {
+        "title": "Cheese Barn",
+        "url": "http://www.myplayyard.com/funny-games/play-cheese-barn",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/dials/cheesebarn.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "mylpayyard",
+        "overlay": "XXX"
+    }, {
+        "title": "On The Wheels",
+        "url": "http://www.myplayyard.com/funny-games/play-on-the-wheels",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/dials/on-the-wheels.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "mylpayyard",
+        "overlay": "XXX"
+    }, {
+        "title": "Parking Hooligan 2",
+        "url": "http://www.myplayyard.com/funny-games/play-parking-hooligan-2",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/dials/parking2.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "mylpayyard",
+        "overlay": "XXX"
+    }, {
+        "title": "Polkafriz",
+        "url": "http://www.myplayyard.com/funny-games/play-Polkafriz",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/dials/Polkafriz.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "mylpayyard",
+        "overlay": "XXX"
+    }, {
+        "title": "Cat Around Europe",
+        "url": "http://www.myplayyard.com/funny-games/play-cat-around-europe",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/dials/cat-around-europe.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "mylpayyard",
+        "overlay": "XXX"
+    }]
+}
