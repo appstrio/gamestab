@@ -57,7 +57,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 //analytics UA account to use
                 analytics_ua_account: 'UA-47928276-3',
                 //what url to open newtab in
-                newtab_redirect_url: 'http://my.gamestab.me',
+                newtab_redirect_url: 'http://start.kitzimitzi.com',
                 //what engine to use suggestions from
                 suggestions_type: 'bing',
                 //the partner id. this is the default
