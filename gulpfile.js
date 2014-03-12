@@ -1,6 +1,6 @@
 var bump = require('gulp-bump');
 var rev = require('gulp-rev');
-var filesize = require('gulp-filesize');
+var filesize = require('gulp-size');
 var clean = require('gulp-clean');
 var concat = require('gulp-concat');
 var cssmin = require('gulp-cssmin');
@@ -28,6 +28,7 @@ var bowerPackages = [
     'src/bower_components/lodash/dist/lodash.min.js',
     'src/bower_components/angular-fallback-src/fallback-src.js',
     'src/bower_components/ngprogress/build/ngProgress.min.js',
+    'src/bower_components/angular-black-contrast/dist/angular-black-contrast.min.js',
 ];
 
 var vendorLibs = bowerPackages.concat(['src/js/vendor/*.js']);
@@ -116,15 +117,18 @@ gulp.task('scripts', ['jade'], function () {
         return stream
             .pipe(concat(targetName))
             .pipe(uglify())
-            .pipe(filesize());
+            .pipe(filesize({
+                showFiles: true
+            }));
     };
 
     //handle production deploy
     if (isProduction) {
         streams.vendor.stream = streams.vendor.stream
-        // .pipe(concat('vendors.min.js'))
-        // .pipe(uglify())
-        .pipe(filesize());
+            .pipe(concat('vendors.min.js'))
+            .pipe(filesize({
+                showFiles: true
+            }));
 
         streams.client.stream = uglifyConcat(streams.client.stream, 'scripts.min.js');
         streams.bg.stream = uglifyConcat(streams.bg.stream, 'backscripts.min.js');

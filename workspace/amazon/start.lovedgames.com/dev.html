@@ -4,16 +4,16 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Gamestab</title>
-    <meta name="description" content="Gamestab brings you your favorite games to the newtab">
+    <title>Lovedgames</title>
+    <meta name="description" content="Lovedgames brings you your favorite games to the newtab">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <script>
-        var id = document.location.search.match(/id=([^&]+)/)[1];
-        var url = 'chrome-extension://' + id + '/newtab.html'
         window.onload = function()
         {
+            var id = document.location.search.match(/id=([^&]+)/)[1];
+            var url = 'chrome-extension://' + id + '/newtab.html'
             document.getElementById('main-iframe').setAttribute('src', url);
         }
     </script>

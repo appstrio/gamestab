@@ -1,4 +1,4 @@
-angular.module('aio.image', ['aio.black-contrast']);
+angular.module('aio.image', ['aio.image.black-contrast']);
 angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileSystem', 'aioBlackContrast',
     function ($q, $rootScope, $log, FileSystem, aioBlackContrast) {
 
@@ -132,6 +132,12 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
             //get unique hash
             var fileName = _getHashFromUrl(params.url);
 
+            var errorHandler = function (e) {
+                //error handling
+                console.warn('[Image] - error saving remote image', e);
+                deferred.reject(e);
+            };
+
             //if url is already base64
             if (isBase64(params.url)) {
                 type = getTypeFromBase64(params.url);
@@ -139,20 +145,16 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
                 //generate unique name to each thumbnail
                 FileSystem.write(fileName, params.url, type).then(function (file) {
                     deferred.resolve(file);
-                });
+                }, errorHandler);
             } else {
                 //file doesn't exist, generate it as base64
                 urlToBase64(params).then(function (base64) {
                     type = getTypeFromBase64(base64);
                     //generate unique name to each thumbnail
-                    FileSystem.write(fileName, base64, type).then(function (file) {
+                    return FileSystem.write(fileName, base64, type).then(function (file) {
                         deferred.resolve(file);
                     });
-                }).then(angular.noop, function (e) {
-                    //error handling
-                    $log.log('[Image] - error saving remote image', e);
-                    deferred.reject(e);
-                });
+                }).then(angular.noop, errorHandler);
             }
 
             return deferred.promise;
@@ -192,7 +194,9 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
                     }, params);
 
                     promiseChain = promiseChain.then(function () {
-                        return urlToLocalFile(newParams);
+                        return urlToLocalFile(newParams).then(null, function (e) {
+                            return null;
+                        });
                     }).then(function (file) {
                         item.thumbnail = file;
                         $log.log('[Image] - generating thumbnail ' +
@@ -242,6 +246,7 @@ angular.module('aio.image').factory('Image', ['$q', '$rootScope', '$log', 'FileS
                         return item;
                     }, function (e) {
                         console.warn('failed to cache image' + url, e);
+                        return item;
                     }));
                 })(counter);
             });

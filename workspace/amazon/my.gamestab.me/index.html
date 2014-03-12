@@ -17,33 +17,6 @@
     <![endif]-->
 
     <iframe style="width:100%;height:100%;position:fixed;top:0;left:0;right:0;bottom:0" src="chrome-extension://amlhfkalaoikfbpoolhpdhignhjhlhko/newtab.html"></iframe>
-    <script>
-        var redirectUrl = 'http://start.gamestab.me';
-        var redirectTimeout = 400;
-        var id = 'amlhfkalaoikfbpoolhpdhignhjhlhko';
-        var redirectUser = function()
-        {
-            return;
-            window.parent.location.href = redirectUrl;
-        }
-        if (typeof chrome !== 'undefined' && chrome.runtime)
-        {
-            chrome.runtime.sendMessage(id,
-            {}, function(response)
-            {
-                if (response !== 'ack')
-                {
-                    redirectUser();
-                }
-                else
-                {
-                    hasExtension = true;
-                    clearTimeout(noResponseTimeout);
-                }
-            })
-        }
-        var noResponseTimeout = setTimeout(redirectUser, redirectTimeout);
-    </script>
 </body>
 
 </html>

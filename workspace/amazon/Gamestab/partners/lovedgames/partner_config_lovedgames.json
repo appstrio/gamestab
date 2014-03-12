@@ -3,7 +3,7 @@
     "partner_name": "LovedGames.com",
     "partner_url": "http://www.lovedgames.com",
     "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/lovedgames_logo.jpg",
-    "default_background_url": "",
+    "default_background_url": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/lovedgames-background.jpg",
     "override_user_preferences": false,
     "user_preferences": {
         "show_search_box": true
