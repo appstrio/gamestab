@@ -39,6 +39,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             // Partner Controlled Config
             // ----------------
             CONFIG: {
+                app_name: 'Kitzi Mitzi',
                 //redirect to search url
                 search_url: 'http://www.google.com/search?q=',
                 //suggestions url
