@@ -326,11 +326,21 @@ section{
                     width:90px;
                     height: 90px;
                     cursor:pointer;
+                    &:active{
+                        opacity:0.75;
+                        transition:0.2s ease opacity;
+                    }
                 }
+                border-radius: 15px;
                 width:90px;
                 cursor:pointer;
                 height: 90px;
                 margin:auto;
+                border:0;
+                &:active {
+                    background:black;
+                    box-shadow: 0 0 15px rgba(0, 0, 255, 0.4);
+                }
             }
             .title{
                 margin-top:20px;
