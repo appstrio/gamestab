@@ -3,7 +3,7 @@
     "partner_name": "GameOff.com",
     "partner_url": "http://www.gameoff.com",
     "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/gameoff.com/gameoff_logo.png",
-    "default_background_url": "",
+    "default_background_url": "https://s3.amazonaws.com/Gamestab/partners/gameoff.com/defaultbackground.png",
     "override_user_preferences": false,
     "user_preferences": {
         "show_search_box": true

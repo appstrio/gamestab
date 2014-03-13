@@ -326,11 +326,21 @@ section{
                     width:90px;
                     height: 90px;
                     cursor:pointer;
+                    &:active{
+                        opacity:0.75;
+                        transition:0.2s ease opacity;
+                    }
                 }
+                border-radius: 15px;
                 width:90px;
                 cursor:pointer;
                 height: 90px;
                 margin:auto;
+                border:0;
+                &:active {
+                    background:black;
+                    box-shadow: 0 0 15px rgba(0, 0, 255, 0.4);
+                }
             }
             .title{
                 margin-top:20px;
@@ -528,11 +538,28 @@ footer{
             }
         }
         .settings-background{
+            .loading-backgrounds {
+                img{
+                    margin:0 auto;
+                    display:block;
+                }
+                h2 {
+                    text-align:center;
+                }
+            }
             .bg-explorer{
                 width:100%;
                 height: 302px;
                 overflow-y: auto;
                 border-bottom: 1px solid rgb(234,234,234);
+
+                .bg.sample {
+                    img {
+                        width:30px;
+                        height:30px;
+                        float:left;
+                    }
+                }
             }
             .bg-sample{
                 width:80px;

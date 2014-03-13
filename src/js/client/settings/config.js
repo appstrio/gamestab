@@ -1,7 +1,7 @@
 /* global _ */
 angular.module('aio.settings').factory('Config', [
-    'Constants', 'Storage', '$http', '$q', '$log', '$rootScope', 'Chrome', 'Helpers',
-    function (C, Storage, $http, $q, $log, $rootScope, Chrome, Helpers) {
+    'Constants', 'Storage', '$http', '$q', '$log', '$rootScope', 'Chrome', 'Helpers', 'bConnect',
+    function (C, Storage, $http, $q, $log, $rootScope, Chrome, Helpers, bConnect) {
         var data = {},
             isReady = $q.defer(),
             storageKey = C.STORAGE_KEYS.CONFIG;
@@ -12,9 +12,9 @@ angular.module('aio.settings').factory('Config', [
                 $log.warn('Error getting remote config json', e);
                 updateConfig();
             }
-
             return Helpers.loadRemoteJson(C.DEFAULT_REMOTE_CONFIG)
-                .then(updateConfig, onError)
+            //update config
+            .then(updateConfig, onError)
                 .then(function () {
                     return isReady.resolve(data);
                 });
@@ -35,6 +35,116 @@ angular.module('aio.settings').factory('Config', [
             return loadFromStorage().then(assignData).then(function () {
                 isReady.resolve();
                 return data;
+            });
+        };
+
+        var getLastVisitedPartner = function (results) {
+            results = _.compact(results);
+            if (!results || !results.length) {
+                return null;
+            }
+            //get only results with valid lastVisitTime
+            results = _.filter(results, 'lastVisitTime');
+            if (!results || !results.length) {
+                return null;
+            }
+
+            function findLatestVisitTime(memo, item) {
+                return item.lastVisitTime > memo.lastVisitTime ? item : memo;
+            }
+
+            //find latest visited partner
+            return _.reduce(results, findLatestVisitTime, results[0]);
+        };
+
+        var getMatchingPartner = function (results) {
+            var remoteUrl;
+            results = results || {};
+            var matchingPartner = getLastVisitedPartner(results);
+
+            //no partner found
+            if (!matchingPartner) {
+                $log.warn('[Config] - Did not find a matching partner');
+                remoteUrl = C.DEFAULT_REMOTE_CONFIG;
+            } else {
+                //found partner
+                $log.log('[Config] - found a matching partner', matchingPartner.partner.partner_id);
+                remoteUrl = matchingPartner.partner.partner_config_json_url;
+            }
+
+            return remoteUrl;
+        };
+
+        /**
+         * Decide which partner "owns" the app by the partner object install_url_snippit
+         * @returns {promise(PARTNER_SETUP_OBJECT)}
+         */
+        var getHistoryByPartner = function (partnersList) {
+            partnersList = partnersList.data;
+            var promises = [];
+            var halfHourAgo = Date.now() - 1000 * 60 * 30;
+
+            var bConnection = new bConnect.BackgroundApi('chrome');
+
+            function historyListener(data) {
+                if (!data || !data.partner_id) {
+                    return console.error('critical error - no partner id', data);
+                }
+
+                //find matching partner
+                var matchingPartner = _.findWhere(partnersList, {
+                    partner_id: data.partner_id
+                });
+
+                if (!matchingPartner) {
+                    console.error('critical error - no matching partner in list');
+                }
+
+                //data is found
+                var result = data.result;
+                var returnData;
+
+                if (result && result[0]) {
+                    returnData = {
+                        partner: matchingPartner,
+                        lastVisitTime: result[0].lastVisitTime
+                    };
+                }
+
+                //resolve with nothing
+                $rootScope.$apply(function () {
+                    return matchingPartner.isReady.resolve(returnData);
+                });
+            }
+
+            bConnection.addListener(historyListener);
+
+            function searchHistoryForPartner(partner) {
+                partner.isReady = $q.defer();
+
+                var postObj = {
+                    api: 'historySearch',
+                    partner_id: partner.partner_id,
+                    searchParams: {
+                        text: partner.partner_install_url_snippit,
+                        startTime: halfHourAgo,
+                        maxResults: 1
+                    }
+                };
+
+                bConnection.postMessage(postObj);
+
+                return partner.isReady.promise;
+            }
+
+            $log.log('[Config] - got the partnersList', partnersList);
+            //loop through each partner and search in parallel chrome.history
+            promises = _.map(partnersList, searchHistoryForPartner);
+
+            //when all searching in chrome history finishes
+            return $q.all(promises).then(function (results) {
+                bConnection.removeListener();
+                return results;
             });
         };
 
