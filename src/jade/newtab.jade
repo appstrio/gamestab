@@ -15,7 +15,7 @@ html(ng-csp='ng-csp')
         <!-- inject:js -->
         <!-- endinject -->
 
-        title Kitzi Mitzi
+        title #{appName}
         //----------------
     body(ng-controller='MainCtrl')
     #container
@@ -36,7 +36,7 @@ html(ng-csp='ng-csp')
                             span.description(ng-show="suggestion.description", ng-bind="suggestion.description")
         #loading-cover(ng-show="firstBoot")
             .centered-block
-                h2.loading-text Loading up Kitzi Mitzi for the first time...
+                h2.loading-text Loading up #{appName} for the first time...
                 img.loading-image(src="./img/loader2.gif")
         #wrapper(hl-background, ng-show="rawScreens.length")
             #search-placeholder
@@ -59,7 +59,7 @@ html(ng-csp='ng-csp')
                                         .title(ng-bind="app.title")
                     .page-indicator-container
                         span.dot(ng-repeat="page in rawScreens", hl-page-indicator)
-                .partner-logo(ng-show="config.partner_url")
+                .partner-logo(ng-show="config.partner_logo")
                     a(ng-href="{{config.partner_url}}", target="_self", title="{{config.partner_name}}")
                         img(ng-src="{{config.partner_logo}}", style="cursor:pointer;")
     #overlay(aio-overlay, overlay-options="overlay", ng-include="templateURL")

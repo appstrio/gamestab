@@ -66,7 +66,7 @@ angular.module('aio.settings').factory('Background', [
                 .then(function () {
                     isReady.resolve(background);
                     if (background.thumbnail) {
-                    return addBgToUserBgs(background);
+                        return addBgToUserBgs(background);
                     }
                 });
         };
