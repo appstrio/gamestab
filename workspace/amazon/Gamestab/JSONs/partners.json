@@ -19,7 +19,11 @@
     "partner_install_url_snippit": "playhub.gamestab.me",
     "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/playhub/partner_config_playhub.json"
 }, {
-    "partner_id": "goodgame",
-    "partner_install_url_snippit": "goodgame.gamestab.me",
-    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/goodgame/partner_config_goodgame.json"
+    "partner_id": "atarata",
+    "partner_install_url_snippit": "atarata.gamestab.me",
+    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/atarata/partner_config_atarata.json"
+}, {
+    "partner_id": "gamesfree",
+    "partner_install_url_snippit": "gamesfree.gamestab.me",
+    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/gamesfree/partner_config_gamesfree.json"
 }]
