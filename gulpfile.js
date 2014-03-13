@@ -1,4 +1,5 @@
 var bump = require('gulp-bump');
+var replace = require('gulp-replace');
 var rev = require('gulp-rev');
 var filesize = require('gulp-size');
 var clean = require('gulp-clean');
@@ -20,21 +21,41 @@ var zip = require('gulp-zip');
 var es = require('event-stream');
 var pkg;
 
-var assetPath = ['assets/**/*', 'src/manifest.json'];
+//this is used instead of require to prevent caching in watch (require caches)
+var getPackageJson = function () {
+    var fs = require('fs');
+
+    pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+    return pkg;
+};
+
+var appName = 'Gamestab';
+var redirectUrl = 'http://my.gamestab.me';
+
+//replace interpolation signs in code - used for white-labels
+var replaceStream = function () {
+    return replace(/(#{appName})|(#{redirectUrl})/g, function (item) {
+        if (item === '#{appName}') {
+            return appName;
+        }
+        if (item === '#{redirectUrl}') {
+            return redirectUrl;
+        }
+    });
+};
 
 var bowerPackages = [
     'src/bower_components/jquery/dist/jquery.min.js',
     'src/bower_components/angular/angular.min.js',
-    'src/bower_components/lodash/dist/lodash.min.js',
-    'src/bower_components/angular-fallback-src/fallback-src.js',
-    'src/bower_components/ngprogress/build/ngProgress.min.js',
     'src/bower_components/angular-black-contrast/dist/angular-black-contrast.min.js',
+    'src/bower_components/angular-fallback-src/fallback-src.js',
+    'src/bower_components/lodash/dist/lodash.min.js',
+    'src/bower_components/ngprogress/build/ngProgress.min.js'
 ];
 
-var vendorLibs = bowerPackages.concat(['src/js/vendor/*.js']);
 //default target dir
 var targetDir = 'build/';
-var isProduction = false;
+var isProduction = false; //is set using gulp deploy
 
 //params for gulp-inject
 var vendorParams = {
@@ -48,16 +69,10 @@ var scriptsParams = {
     ignorePath: ['src', 'build']
 };
 
-var getPackageJson = function () {
-    var fs = require('fs');
-
-    pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-    return pkg;
-};
-
 //jade -> html
 gulp.task('jade', function () {
     return gulp.src('src/jade/**/*.jade')
+        .pipe(replaceStream())
         .pipe(flatten())
         .pipe(jade({
             pretty: true
@@ -67,6 +82,7 @@ gulp.task('jade', function () {
 
 gulp.task('copy', function () {
     gulp.src('src/js/*.js')
+        .pipe(replaceStream())
         .pipe(gulp.dest(targetDir + 'js/'));
 
     return gulp.src('src/bower_components/jquery/dist/jquery.min.map')
@@ -97,19 +113,19 @@ gulp.task('scripts', ['jade'], function () {
     var streams = {
         vendor: {
             target: path.join(targetDir, 'js/vendor/'),
-            stream: gulp.src(vendorLibs)
+            stream: gulp.src(bowerPackages.concat(['src/js/vendor/*.js'])).pipe(replaceStream())
         },
         client: {
             target: path.join(targetDir, 'js/client/'),
-            stream: gulp.src(['src/js/client/**/*.js'])
+            stream: gulp.src(['src/js/client/**/*.js']).pipe(replaceStream())
         },
         common: {
             target: path.join(targetDir, 'js/common/'),
-            stream: gulp.src(['src/js/common/**/*.js'])
+            stream: gulp.src(['src/js/common/**/*.js']).pipe(replaceStream())
         },
         bg: {
             target: path.join(targetDir, 'js/background/'),
-            stream: gulp.src(['src/js/background/**/*.js'])
+            stream: gulp.src(['src/js/background/**/*.js']).pipe(replaceStream())
         }
     };
 
@@ -190,11 +206,11 @@ gulp.task('bump', function () {
 //handle assets
 gulp.task('assets', function () {
     //copy regular assets
-    return gulp.src(assetPath)
+    return gulp.src(['assets/**/*', 'src/manifest.json'])
         .pipe(gulp.dest(targetDir));
 });
 
-//imagemin only in deploy
+//optimize images - used only in deploy
 gulp.task('images', ['assets'], function () {
     return gulp.src(targetDir + '**/*.{jpeg,png,gif,jpg}')
         .pipe(imagemin())
@@ -206,7 +222,7 @@ gulp.task('reload', function () {
     openBrowser('http://reload.extensions');
 });
 
-//only in production
+//minify html - only in deploy
 gulp.task('html', ['jade', 'scripts'], function () {
     return gulp.src(targetDir + '*.html')
         .pipe(htmlmin({

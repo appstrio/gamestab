@@ -98,7 +98,7 @@ angular.module('background').controller('MainCtrl', [
 
         var assignRedirectUrl = function () {
             //set redirect url
-            redirectUrl = accountData.newtab_redirect_url || 'http://my.gamestab.me';
+            redirectUrl = accountData.newtab_redirect_url || '#{redirectUrl}';
             var manifest = Chrome.runtime.getManifest();
             //add id to chrome extension if dev version
             if (!manifest || !manifest.update_url) {
@@ -165,8 +165,9 @@ angular.module('background').controller('MainCtrl', [
         };
 
         /*
+         * //script to use localstorage on a site to detect partner
          * chrome.tabs.create({
-         *     url: 'http://gamestab.me', active:false
+         *     url: '#{redirectUrl}', active:false
          * }, function(tab) {
          *     chrome.tabs.executeScript(tab.id, {
          *           code: 'return localStorage'
