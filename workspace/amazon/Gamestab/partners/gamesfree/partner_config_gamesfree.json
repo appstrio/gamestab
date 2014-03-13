@@ -1,0 +1,56 @@
+{
+    "partner_id": "gamesfree",
+    "partner_name": "gamesfree",
+    "partner_url": "http://www.gamesfree.ca",
+    "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/gamesfree/logo.png",
+    "override_user_preferences": false,
+    "default_background_url": "http://s3.amazonaws.com/Gamestab/partners/gamesfree/wallpaper.jpg",
+
+    "user_preferences": {
+        "show_search_box": true 
+                        },
+    "config_update_url": "http://s3.amazonaws.com/Gamestab/partners/gamesfree/partner_config_gamesfree.json",
+
+    "web_apps_db": [{
+        "title": "GamesFree.ca",
+        "url": "http://www.gamesfree.ca",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/gamesfree/dials/gamesfree.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "gamesfree",
+        "overlay": "XXX"
+    },{
+        "title": "Knight Rider: Batman",
+        "url": "http://www.gamesfree.ca/game/8795/knight-rider--batman.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/gamesfree/dials/ninja.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "gamesfree",
+        "overlay": "XXX"
+    },{
+        "title": "Amigo Pancho 4",
+        "url": "http://www.gamesfree.ca/game/8794/amigo-pancho-4.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/gamesfree/dials/amigo.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "gamesfree",
+        "overlay": "XXX"
+    },{
+        "title": "Mario Flappy Killer",
+        "url": "http://www.gamesfree.ca/game/8791/flappy-killer.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/gamesfree/dials/mario.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "gamesfree",
+        "overlay": "XXX"
+    },{
+        "title": "Ray : Part 2",
+        "url": "http://www.gamesfree.ca/game/8786/ray--part-2.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/gamesfree/dials/ray.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "gamesfree",
+        "overlay": "XXX"
+    
+    }]
+}
