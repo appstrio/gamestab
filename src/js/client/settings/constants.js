@@ -16,6 +16,8 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             FALLBACK_BACKGROUND_URL: 'img/wallpapers/default.jpg',
             //app version is gotten from manifest
             APP_VERSION: Chrome.getVersion(),
+            //where appstr.io installs store the partner cookie (named app_id)
+            COOKIES_DOMAIN: 'gamestab.me',
             // Local storage keys
             // ----------------
             STORAGE_KEYS: {

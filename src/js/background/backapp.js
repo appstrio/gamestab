@@ -74,6 +74,18 @@ angular.module('background').controller('MainCtrl', [
                     });
                 });
 
+            case 'cookieSearch':
+                return Chrome.cookies.getAll(msg.searchParams).then(function (result) {
+                    var responseObj = {
+                        result: result
+                    };
+
+                    return port.postMessage(responseObj);
+                }, function (e) {
+                    console.warn('Bad partner search or no api', msg, e);
+                    return port.postMessage({});
+                });
+
             case 'getManagementApps':
                 return Chrome.management.getAll().then(function (results) {
                     var chromeApps = [];

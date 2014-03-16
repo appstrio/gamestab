@@ -29,6 +29,23 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
             }
         };
 
+        var cookies = {
+            getAll: function (params) {
+                var deferred = $q.defer();
+                if (isChrome && chrome.cookies) {
+                    chrome.cookies.getAll(params, function (results) {
+                        $rootScope.$apply(function () {
+                            deferred.resolve(results);
+                        });
+                    });
+                } else {
+                    $log.warn('[Chrome] - no permission for chrome cookies');
+                    deferred.reject();
+                }
+                return deferred.promise;
+            }
+        };
+
         var runtime = {
             onConnect: {
                 addListener: function (cb) {
@@ -138,15 +155,16 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
         };
 
         return {
-            isChrome: isChrome,
+            cookies: cookies,
+            extension: extension,
+            getUpdateUrl: getUpdateUrl,
             getVersion: getVersion,
+            history: history,
+            isChrome: isChrome,
             isExtension: isExtension,
             management: management,
-            extension: extension,
-            storage: storage,
-            getUpdateUrl: getUpdateUrl,
-            history: history,
             runtime: runtime,
+            storage: storage,
             webRequest: webRequest
         };
     }
