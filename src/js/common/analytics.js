@@ -50,9 +50,16 @@ angular.module('aio.analytics').factory('Analytics', [
             _gaq.push(['_trackPageview']);
             //track partnerid or default
             _gaq.push(['_setCustomVar', 1, 'partner_id', partnerId, 1]);
+
+            //report partner id on first boot
+            if (params.firstBoot) {
+                reportEvent(510, {
+                    label: partnerId
+                });
+            }
             //report app_load
             reportEvent(501, {
-                label: appVersion
+                label: partnerId
             });
             $log.log('[Analytics] - done loading...');
         };
@@ -84,10 +91,14 @@ angular.module('aio.analytics').factory('Analytics', [
             //report label as string
             _event.label = typeof params.label !== 'undefined' ? String(params.label) : '';
 
+            //custom overrides
             switch (eventId) {
 
             case 501:
                 //set as non-interaction
+                _event.opt_noninteraction = true;
+                break;
+            case 510:
                 _event.opt_noninteraction = true;
                 break;
             default:
