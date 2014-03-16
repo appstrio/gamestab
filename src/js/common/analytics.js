@@ -14,8 +14,6 @@ angular.module('aio.analytics').factory('Analytics', [
             devMode = params.devMode || false;
             //use local ga file (needed for website version)
             var useLocalGa = typeof params.useLocalGa !== 'undefined' ? params.useLocalGa : true;
-            //partner id to report as variable
-            var partnerId = params.partnerId;
             // analytics id
             var analyticsId = params.analyticsId;
             //app version to log
