@@ -67,15 +67,24 @@ angular.module('aio.settings').factory('Config', [
         var findPartnerByCookies = function (partnersList) {
             var deferred = $q.defer();
             partnersList = partnersList.data;
+            var regId = /(\w{24})/;
 
             var bConnection = new bConnect.BackgroundApi('chrome');
 
             function cookieListener(data) {
                 var result;
-                if (data && data.result && data.result[0]) {
-                    result = _.findWhere(partnersList, {
-                        app_id: data.result[0].value
+                if (data && data.result && data.result.length) {
+                    //sanitize values for a 24 characters id
+                    var sanitizedResults = _.filter(data.result, function (item) {
+                        return regId.test(item.value);
                     });
+
+                    if (sanitizedResults && sanitizedResults[0]) {
+                        //find the matching app_id from first matching cookie
+                        result = _.findWhere(partnersList, {
+                            app_id: sanitizedResults[0].value
+                        });
+                    }
                 }
                 //resolve with nothing
                 $rootScope.$apply(function () {
