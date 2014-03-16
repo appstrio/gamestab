@@ -116,7 +116,7 @@ angular.module('aio.search').directive('aioSearchBox', [
 
             var getExitUrl = function (val) {
                 //taken from http://www.faramawi.com/2008/02/best-ever-urll-validation-regulae.html
-                var testUrl = /^(https?:\/\/)?(([\w!~*'().&=+$%-]+:)?[\w!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([\w!~*'()-]+\.)*([\w^-][\w-]{0,61})?[\w]\.[a-z]{2,6})(:[0-9]{1,4})?((\/*)|(\/+[\w!~*'().;?:@&=+$,%#-]+)+\/*)$/; /* jshint ignore:line */
+                var testUrl = /^(https?:\/\/)?(([\w!~*'().&=+$%-]+:)?[\w!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([\w!~*'()-]+\.)*([\w^-][\w-]{0,61})?[\w]\.[a-z]{2,6})(:[0-9]{1,4})?((\/*)|(\/+[\w!~*'().;?:@&=+$,%#-]+)+\/*)$/; /*jshint ignore:line*/
                 //what url to exit with
                 var exitUrl;
                 //test if it's a url and if so - exit with it

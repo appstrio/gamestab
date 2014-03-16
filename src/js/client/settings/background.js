@@ -135,6 +135,10 @@ angular.module('aio.settings').factory('Background', [
                 __conf.user_preferences.use_black_arrows = blackArrows;
                 Config.setConfig(__conf);
                 return Config.set();
+            }, function (e) {
+                console.warn('problems with setting new background', e);
+                Config.setConfig(__conf);
+                return Config.set();
             });
         };
 

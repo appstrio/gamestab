@@ -14,6 +14,8 @@ angular.module('aio.analytics').factory('Analytics', [
             devMode = params.devMode || false;
             //use local ga file (needed for website version)
             var useLocalGa = typeof params.useLocalGa !== 'undefined' ? params.useLocalGa : true;
+            //partner id to report as variable
+            var partnerId = params.partnerId;
             // analytics id
             var analyticsId = params.analyticsId;
             //app version to log
@@ -80,10 +82,14 @@ angular.module('aio.analytics').factory('Analytics', [
             //report label as string
             _event.label = typeof params.label !== 'undefined' ? String(params.label) : '';
 
+            //custom overrides
             switch (eventId) {
 
             case 501:
                 //set as non-interaction
+                _event.opt_noninteraction = true;
+                break;
+            case 510:
                 _event.opt_noninteraction = true;
                 break;
             default:

@@ -1,14 +1,17 @@
 angular.module('aio.settings').factory('Constants', ['Chrome',
     function (Chrome) {
+        //set the base of where to load jsons from
+        var baseJsonsUrl = 'https://s3.amazonaws.com/Gamestab/JSONs/';
+
         return {
             // Constant Config
             // ----------------
             //partner list
-            PARTNERS_JSON_URL: 'https://s3.amazonaws.com/Gamestab/JSONs/partners.json',
+            PARTNERS_JSON_URL: baseJsonsUrl + 'partners.json',
             //common web apps db
-            WEB_APPS_DB: 'https://s3.amazonaws.com/Gamestab/JSONs/webAppsDb.json',
+            WEB_APPS_DB: baseJsonsUrl + 'webAppsDb.json',
             //default config if not partner found
-            DEFAULT_REMOTE_CONFIG: 'https://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
+            DEFAULT_REMOTE_CONFIG: baseJsonsUrl + 'default_config.json',
             //background to fallback in case partner json doesn't contain background image
             FALLBACK_BACKGROUND_URL: 'img/wallpapers/default.jpg',
             //app version is gotten from manifest
@@ -40,7 +43,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             // ----------------
             CONFIG: {
                 //application name
-                app_name: 'Gamestab',
+                app_name: '#{appName}',
                 //redirect to search url
                 search_url: 'http://www.google.com/search?q=',
                 //suggestions url
@@ -48,17 +51,17 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 //default background url
                 default_background_url: '',
                 //where to update from
-                partner_config_json_url: 'http://s3.amazonaws.com/Gamestab/JSONs/default_config.json',
+                partner_config_json_url: baseJsonsUrl + 'default_config.json',
                 //should app show chrome apps - requires mangement
                 use_chrome_apps: false,
                 //where to get backgrounds from
-                backgrounds_json_url: 'https://s3.amazonaws.com/Gamestab/JSONs/backgrounds.json',
+                backgrounds_json_url: baseJsonsUrl + 'backgrounds.json',
                 //whether to report user's surf to competitor's websites
                 report_competitor_websites: true,
                 //analytics UA account to use
                 analytics_ua_account: 'UA-47928276-1',
                 //what url to open newtab in
-                newtab_redirect_url: 'http://my.gamestab.me',
+                newtab_redirect_url: '#{redirectUrl}',
                 //what engine to use suggestions from
                 suggestions_type: 'bing',
                 //the partner id. this is the default
