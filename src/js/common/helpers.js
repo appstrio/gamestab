@@ -64,7 +64,7 @@ angular.module('aio.common.helpers').factory('Helpers', [
          */
         var chromeAppToObject = function (app) {
             var _app = angular.copy(app);
-            _app.icon = getLargestIconChromeApp(app.icons).url || 'img/preset_dials/default.png';
+            _app.icon = getLargestIconChromeApp(app.icons).url || 'img/dials/default.png';
             _app.chromeId = app.id;
             _app.title = app.shortName || app.name;
             delete _app.id;

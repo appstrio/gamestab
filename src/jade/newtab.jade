@@ -55,7 +55,7 @@ html(ng-csp='ng-csp')
                                     .wrapper
                                         .remove-button(ng-click="uninstallApp(app, $event)") X
                                         .icon
-                                            img(ng-src="{{app.icon}}", fb-src="./img/preset_dials/default.png", alt="{{app.title}} Logo")
+                                            img(ng-src="{{app.icon}}", fb-src="./img/dials/default.png", alt="{{app.title}} Logo")
                                         .title(ng-bind="app.title")
                     .page-indicator-container
                         span.dot(ng-repeat="page in rawScreens", hl-page-indicator)

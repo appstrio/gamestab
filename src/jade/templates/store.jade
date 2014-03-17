@@ -8,7 +8,7 @@
             .store-explorer
                 .app(ng-repeat="app in selectedTagApps", ng-class-odd="'odd'")
                     .icon
-                        img(ng-src="{{app.icon}}", fb-src="./img/preset_dials/default.png")
+                        img(ng-src="{{app.icon}}", fb-src="./img/dials/default.png")
                     .details
                         .title(ng-bind="app.title", title="{{app.title}}")
                         .tag(ng-bind="app.tags[0]")
