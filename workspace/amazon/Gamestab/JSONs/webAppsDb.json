@@ -106,7 +106,7 @@
     }, {
         "title": "Abril",
         "url": "http://www.abril.com.br",
-        "icon": "abril.com.br.jpg",
+        "icon": "abril.com.br.png",
         "default": ["BR"]
     }, {
         "title": "Globo TV",
@@ -161,7 +161,7 @@
     }, {
         "title": "Ynet",
         "url": "http://www.ynet.co.il",
-        "icon": "ynet.jpg",
+        "icon": "ynet.png",
         "default": ["IL"]
     }, {
         "title": "Walla",
@@ -201,7 +201,7 @@
     }, {
         "title": "LIBERO",
         "url": "http://www.libero.it",
-        "icon": "libero.it.jpg",
+        "icon": "libero.it.png",
         "default": ["IT"]
     }, {
         "title": "La Repubblica",
@@ -408,7 +408,7 @@
     }, {
         "title": "Rambler.ru",
         "url": "http://www.Rambler.ru",
-        "icon": "Rambler.ru.jpg",
+        "icon": "Rambler.ru.png",
         "default": ["ru"]
     }, {
         "title": "Cafe Mom",
@@ -583,7 +583,7 @@
     }, {
         "title": "MSNBC",
         "url": "http://www.MSNBC.com",
-        "icon": "MSNBC.png",
+        "icon": "MSNBC.jpg",
         "tags": ["News & Weather"]
     }, {
         "title": "NOAA - National Oceanic and Atmospheric Administration",
@@ -648,7 +648,7 @@
     }, {
         "title": "Yahoo! News",
         "url": "http://news.Yahoo.com",
-        "icon": "yahoonews.png",
+        "icon": "yahoonews.jpg",
         "tags": ["News & Weather"]
     }, {
         "title": "ESPN",
