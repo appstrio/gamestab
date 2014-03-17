@@ -13,12 +13,12 @@ angular.module('aio.launcher').factory('Apps', [
 
         var systemApps = [{
             title: 'Settings',
-            icon: './img/dials/settings175x175.png',
+            icon: './img/preset_dials/settings175x175.png',
             overlay: 'settings',
             permanent: true
         }, {
             title: 'Apps Store',
-            icon: './img/dials/appstore175x175.png',
+            icon: './img/preset_dials/appstore175x175.png',
             overlay: 'store',
             permanent: true
         }];

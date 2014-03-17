@@ -693,12 +693,12 @@
     }, {
         "title": "WWE",
         "url": "http://www.wwe.com",
-        "icon": "wwe.png",
+        "icon": "wwe.jpg",
         "tags": ["Sport"]
     }, {
         "title": "MLB",
         "url": "http://www.mlb.com",
-        "icon": "mlb.jpg",
+        "icon": "mlb.png",
         "tags": ["Sport"]
     }, {
         "title": "CBS Sports",
@@ -713,7 +713,7 @@
     }, {
         "title": "101 Great Goals",
         "url": "http://www.101greatgoals.com",
-        "icon": "101greatgoals.jpg",
+        "icon": "101greatgoals.png",
         "tags": ["Sport"]
     }, {
         "title": "1000 Goals",
