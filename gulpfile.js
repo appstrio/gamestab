@@ -217,11 +217,6 @@ gulp.task('images', ['assets'], function () {
         .pipe(gulp.dest(targetDir));
 });
 
-//use alongside with chrome extension reload-extension
-gulp.task('reload', function () {
-    openBrowser('http://reload.extensions');
-});
-
 //minify html - only in deploy
 gulp.task('html', ['jade', 'scripts'], function () {
     return gulp.src(targetDir + '*.html')
@@ -231,7 +226,7 @@ gulp.task('html', ['jade', 'scripts'], function () {
         .pipe(gulp.dest(targetDir));
 });
 
-//all tasks are watch -> bump patch version -> reload extension (globally enabled)
+//all tasks are watched
 gulp.task('watch', function () {
     return gulp.watch(['src/**/*.{js,html,jade,css,less,json}'], ['build']);
 });
