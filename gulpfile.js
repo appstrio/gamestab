@@ -13,7 +13,6 @@ var imagemin = require('gulp-imagemin');
 var inject = require('gulp-inject');
 var jade = require('gulp-jade');
 var less = require('gulp-less');
-var openBrowser = require('open');
 var path = require('path');
 var semver = require('semver');
 var uglify = require('gulp-uglify');
