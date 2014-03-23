@@ -9,15 +9,15 @@ angular.module('background').controller('MainCtrl', [
         var redirectUrl;
         var accountData = {};
 
-        //try to load config from storage
+        //try to load config from storage -> always assign redirectUrl
         Helpers.loadFromStorage('gt.config').then(function (data) {
             if (data) {
                 accountData = data;
-                //assign redirect url
-                assignRedirectUrl();
             }
+            return assignRedirectUrl();
         }, function (e) {
-            console.warn('problems with localstorage', e);
+            console.info('could not read from localstorage', e);
+            return assignRedirectUrl();
         });
 
         // load analytics
