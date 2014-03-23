@@ -1,4 +1,3 @@
-/* global isWebsite */
 angular.module('aio.main').controller('MainCtrl', [
     '$scope', '$log', '$q', '$timeout', 'Apps', 'Config', 'Constants', 'Background', 'Analytics', 'Helpers',
     function ($scope, $log, $q, $timeout, Apps, Config, Constants, Background, Analytics, Helpers) {
@@ -83,7 +82,6 @@ angular.module('aio.main').controller('MainCtrl', [
 
             var analyticsParams = {
                 devMode: false,
-                useLocalGa: isWebsite,
                 firstBoot: _firstBoot,
                 partnerId: Config.get().partner_id,
                 analyticsId: Config.get().analytics_ua_account
