@@ -100,7 +100,7 @@ gulp.task('less', function () {
 });
 
 // zip build folder. buggy
-gulp.task('zip', function () {
+gulp.task('zip', ['scripts', 'assets', 'copy', 'less', 'images', 'html'], function () {
     var _pkg = getPackageJson();
     gulp.src(targetDir + '**/*')
         .pipe(zip('gamesTab.' + _pkg.version + '.zip'))
@@ -237,7 +237,7 @@ gulp.task('build', ['clean'], function () {
 
 gulp.task('deploy', ['clean'], function () {
     isProduction = true;
-    return gulp.start('scripts', 'assets', 'copy', 'less', 'images', 'html');
+    return gulp.start('scripts', 'assets', 'copy', 'less', 'images', 'html', 'zip');
 });
 
 //default task
