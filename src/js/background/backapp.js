@@ -16,8 +16,11 @@ angular.module('background').controller('MainCtrl', [
                 //assign redirect url
                 assignRedirectUrl();
             }
+        }, function (e) {
+            console.warn('problems with localstorage', e);
         });
 
+        // load analytics
         (function () {
             var ga = document.createElement('script');
             ga.type = 'text/javascript';
@@ -176,19 +179,6 @@ angular.module('background').controller('MainCtrl', [
             }
         };
 
-        /*
-         * //script to use localstorage on a site to detect partner
-         * chrome.tabs.create({
-         *     url: '#{redirectUrl}', active:false
-         * }, function(tab) {
-         *     chrome.tabs.executeScript(tab.id, {
-         *           code: 'return localStorage'
-         *     }, function() {
-         *         chrome.tabs.remove(tab.id); console.log('done', arguments);
-         *     });
-         * });
-         */
-
         Chrome.runtime.onMessage.addListener(function (request) {
             if (request && request.setAccountData) {
                 console.info('got config from client', request.setAccountData);
@@ -209,7 +199,7 @@ angular.module('background').controller('MainCtrl', [
             }
         });
 
-        //report visit history
+        //track visit history
         Chrome.webRequest.onCompleted.addListener(onCompleted.handler,
             onCompleted.filter);
 
@@ -217,14 +207,5 @@ angular.module('background').controller('MainCtrl', [
         Chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest.handler,
             onBeforeRequest.filter,
             onBeforeRequest.specs);
-
-        /*
-         * //ack comes in from webpage - to verify if we have the extension
-         * //todo export to chrome module
-         * Chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
-         *     // respond with ack
-         *     sendResponse('ack');
-         * });
-         */
     }
 ]);

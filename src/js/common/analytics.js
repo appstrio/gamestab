@@ -18,8 +18,6 @@ angular.module('aio.analytics').factory('Analytics', [
             var partnerId = params.partnerId;
             // analytics id
             var analyticsId = params.analyticsId;
-            //app version to log
-            var appVersion = params.appVersion || 'unknown';
             //init account
             (function () {
                 var ga = document.createElement('script');

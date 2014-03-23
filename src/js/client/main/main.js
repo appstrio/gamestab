@@ -86,8 +86,7 @@ angular.module('aio.main').controller('MainCtrl', [
                 useLocalGa: isWebsite,
                 firstBoot: _firstBoot,
                 partnerId: Config.get().partner_id,
-                analyticsId: Config.get().analytics_ua_account,
-                appVersion: Constants.APP_VERSION
+                analyticsId: Config.get().analytics_ua_account
             };
             return $q.all([$scope.refreshScope(), Analytics.init(analyticsParams), lazyCacheApps(), lazyCheckConfig()]);
         };
