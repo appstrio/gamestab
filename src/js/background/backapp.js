@@ -9,6 +9,16 @@ angular.module('background').controller('MainCtrl', [
         var redirectUrl;
         var accountData = {};
 
+        // load analytics
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = 'https://ssl.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+
         //try to load config from storage -> always assign redirectUrl
         Helpers.loadFromStorage('gt.config').then(function (data) {
             if (data) {
@@ -19,16 +29,6 @@ angular.module('background').controller('MainCtrl', [
             console.info('could not read from localstorage', e);
             return assignRedirectUrl();
         });
-
-        // load analytics
-        (function () {
-            var ga = document.createElement('script');
-            ga.type = 'text/javascript';
-            ga.async = true;
-            ga.src = 'https://ssl.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(ga, s);
-        })();
 
         //Handles communication with main extension about suggestions
         function suggestionsHandler(port, msg) {
@@ -128,8 +128,7 @@ angular.module('background').controller('MainCtrl', [
             //set redirect url
             assignRedirectUrl();
             if (!accountData.report_competitor_websites) {
-                console.info('Will not do live reporting');
-                return;
+                return console.info('Will not do live reporting');
             }
 
             console.debug('setting analytics account', accountData.analytics_ua_account);
@@ -145,6 +144,7 @@ angular.module('background').controller('MainCtrl', [
 
         var onBeforeRequest = {
             handler: function () {
+                //don't redirect to a null url
                 if (!redirectUrl) {
                     return;
                 }
