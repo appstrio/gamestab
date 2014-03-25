@@ -1,0 +1,14 @@
+{
+    "partner_id": "atarata",
+    "partner_name": "atarata.com",
+    "partner_url": "http://www.atarata.com",
+    "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/atarata/ata.PNG",
+    "default_background_url": "http://s3.amazonaws.com/Gamestab/partners/atarata/bg.JPG",
+    "override_user_preferences": false ,
+    "user_preferences": {
+        "show_search_box": true 
+    } ,
+
+    "config_update_url": "http://s3.amazonaws.com/Gamestab/partners/atarata/partner_config_atarata.json" 
+    
+}

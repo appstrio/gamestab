@@ -1,0 +1,65 @@
+{
+    "partner_id": "bored",
+    "partner_name": "bored",
+    "partner_url": "http://www.bored.com",
+    "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/bored/logo.png",
+    "override_user_preferences": false,
+    "default_background_url": "http://s3.amazonaws.com/Gamestab/partners/bored/wallpaper.jpg",
+
+    "user_preferences": {
+        "show_search_box": true 
+                        },
+    "config_update_url": "http://s3.amazonaws.com/Gamestab/partners/bored/partner_config_bored.json",
+
+    "web_apps_db": [{
+        "title": "Bored.com",
+        "url": "http://www.bored.com",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bored/dials/bored.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bored",
+        "overlay": "XXX"
+    },{
+        "title": "Gift Rush",
+        "url": "http://www.bored.com/game/play/152175/Gift_Rush.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bored/dials/giftrush.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bored",
+        "overlay": "XXX"
+    },{
+        "title": "Apple Boom",
+        "url": "http://www.bored.com/game/play/152141/Apple_Boom.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bored/dials/appleboom.png",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bored",
+        "overlay": "XXX"
+    },{
+        "title": "Spitter",
+        "url": "http://www.bored.com/game/play/152153/Spitter.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bored/dials/spitter.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bored",
+        "overlay": "XXX"
+    },{
+        "title": "Stickvaders",
+        "url": "http://www.bored.com/game/play/152134/Stickvaders.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bored/dials/sticks.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bored",
+        "overlay": "XXX"
+    
+    },{
+        "title": "Catch the Candy XMAS",
+        "url": "http://www.bored.com/game/play/151693/Catch_the_Candy_Xmas.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bored/dials/catch-the-candy-xmas.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bored",
+        "overlay": "XXX"
+    
+    }]
+}
