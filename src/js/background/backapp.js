@@ -9,15 +9,7 @@ angular.module('background').controller('MainCtrl', [
         var redirectUrl;
         var accountData = {};
 
-        //try to load config from storage
-        Helpers.loadFromStorage('gt.config').then(function (data) {
-            if (data) {
-                accountData = data;
-                //assign redirect url
-                assignRedirectUrl();
-            }
-        });
-
+        // load analytics
         (function () {
             var ga = document.createElement('script');
             ga.type = 'text/javascript';
@@ -26,6 +18,17 @@ angular.module('background').controller('MainCtrl', [
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(ga, s);
         })();
+
+        //try to load config from storage -> always assign redirectUrl
+        Helpers.loadFromStorage('gt.config').then(function (data) {
+            if (data) {
+                accountData = data;
+            }
+            return assignRedirectUrl();
+        }, function (e) {
+            console.info('could not read from localstorage', e);
+            return assignRedirectUrl();
+        });
 
         //Handles communication with main extension about suggestions
         function suggestionsHandler(port, msg) {
@@ -72,6 +75,18 @@ angular.module('background').controller('MainCtrl', [
                     return port.postMessage({
                         partner_id: msg.partner_id
                     });
+                });
+
+            case 'cookieSearch':
+                return Chrome.cookies.getAll(msg.searchParams).then(function (result) {
+                    var responseObj = {
+                        result: result
+                    };
+
+                    return port.postMessage(responseObj);
+                }, function (e) {
+                    console.warn('Bad partner search or no api', msg, e);
+                    return port.postMessage({});
                 });
 
             case 'getManagementApps':

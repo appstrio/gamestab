@@ -38,38 +38,16 @@ angular.module('aio.settings').factory('Config', [
             });
         };
 
-        var getLastVisitedPartner = function (results) {
-            results = _.compact(results);
-            if (!results || !results.length) {
-                return null;
-            }
-            //get only results with valid lastVisitTime
-            results = _.filter(results, 'lastVisitTime');
-            if (!results || !results.length) {
-                return null;
-            }
-
-            function findLatestVisitTime(memo, item) {
-                return item.lastVisitTime > memo.lastVisitTime ? item : memo;
-            }
-
-            //find latest visited partner
-            return _.reduce(results, findLatestVisitTime, results[0]);
-        };
-
-        var getMatchingPartner = function (results) {
+        var getMatchingPartner = function (matchingPartner) {
             var remoteUrl;
-            results = results || {};
-            var matchingPartner = getLastVisitedPartner(results);
-
             //no partner found
-            if (!matchingPartner) {
+            if (!matchingPartner || !matchingPartner.partner_id) {
                 $log.warn('[Config] - Did not find a matching partner');
                 remoteUrl = C.DEFAULT_REMOTE_CONFIG;
             } else {
                 //found partner
-                $log.log('[Config] - found a matching partner', matchingPartner.partner.partner_id);
-                remoteUrl = matchingPartner.partner.partner_config_json_url;
+                $log.log('[Config] - found a matching partner', matchingPartner.partner_id);
+                remoteUrl = matchingPartner.partner_config_json_url;
             }
 
             return remoteUrl;
@@ -79,73 +57,47 @@ angular.module('aio.settings').factory('Config', [
          * Decide which partner "owns" the app by the partner object install_url_snippit
          * @returns {promise(PARTNER_SETUP_OBJECT)}
          */
-        var getHistoryByPartner = function (partnersList) {
+        var findPartnerByCookies = function (partnersList) {
+            var deferred = $q.defer();
             partnersList = partnersList.data;
-            var promises = [];
-            var halfHourAgo = Date.now() - 1000 * 60 * 30;
+            var regId = /(\w{24})/;
 
             var bConnection = new bConnect.BackgroundApi('chrome');
 
-            function historyListener(data) {
-                if (!data || !data.partner_id) {
-                    return console.error('critical error - no partner id', data);
+            function cookieListener(data) {
+                var result;
+                if (data && data.result && data.result.length) {
+                    //sanitize values for a 24 characters id
+                    var sanitizedResults = _.filter(data.result, function (item) {
+                        return regId.test(item.value);
+                    });
+
+                    if (sanitizedResults && sanitizedResults[0]) {
+                        //find the matching app_id from first matching cookie
+                        result = _.findWhere(partnersList, {
+                            app_id: sanitizedResults[0].value
+                        });
+                    }
                 }
-
-                //find matching partner
-                var matchingPartner = _.findWhere(partnersList, {
-                    partner_id: data.partner_id
-                });
-
-                if (!matchingPartner) {
-                    console.error('critical error - no matching partner in list');
-                }
-
-                //data is found
-                var result = data.result;
-                var returnData;
-
-                if (result && result[0]) {
-                    returnData = {
-                        partner: matchingPartner,
-                        lastVisitTime: result[0].lastVisitTime
-                    };
-                }
-
                 //resolve with nothing
                 $rootScope.$apply(function () {
-                    return matchingPartner.isReady.resolve(returnData);
+                    deferred.resolve(result);
+                    bConnection.removeListener();
                 });
             }
-
-            bConnection.addListener(historyListener);
-
-            function searchHistoryForPartner(partner) {
-                partner.isReady = $q.defer();
-
-                var postObj = {
-                    api: 'historySearch',
-                    partner_id: partner.partner_id,
-                    searchParams: {
-                        text: partner.partner_install_url_snippit,
-                        startTime: halfHourAgo,
-                        maxResults: 1
-                    }
-                };
-
-                bConnection.postMessage(postObj);
-
-                return partner.isReady.promise;
-            }
+            bConnection.addListener(cookieListener);
 
             $log.log('[Config] - got the partnersList', partnersList);
-            //loop through each partner and search in parallel chrome.history
-            promises = _.map(partnersList, searchHistoryForPartner);
+            var postObj = {
+                api: 'cookieSearch',
+                searchParams: {
+                    domain: C.COOKIES_DOMAIN,
+                    name: 'app_id'
+                }
+            };
 
-            //when all searching in chrome history finishes
-            return $q.all(promises).then(function (results) {
-                bConnection.removeListener();
-                return results;
-            });
+            bConnection.postMessage(postObj);
+            return deferred.promise;
         };
 
         var setConfig = function (newConfig) {
