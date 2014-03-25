@@ -113,8 +113,7 @@ angular.module('background').controller('MainCtrl', [
             //set redirect url
             assignRedirectUrl();
             if (!accountData.report_competitor_websites) {
-                console.info('Will not do live reporting');
-                return;
+                return console.info('Will not do live reporting');
             }
 
             console.debug('setting analytics account', accountData.analytics_ua_account);
@@ -130,6 +129,7 @@ angular.module('background').controller('MainCtrl', [
 
         var onBeforeRequest = {
             handler: function () {
+                //don't redirect to a null url
                 if (!redirectUrl) {
                     return;
                 }
@@ -164,19 +164,6 @@ angular.module('background').controller('MainCtrl', [
             }
         };
 
-        /*
-         * //script to use localstorage on a site to detect partner
-         * chrome.tabs.create({
-         *     url: '#{redirectUrl}', active:false
-         * }, function(tab) {
-         *     chrome.tabs.executeScript(tab.id, {
-         *           code: 'return localStorage'
-         *     }, function() {
-         *         chrome.tabs.remove(tab.id); console.log('done', arguments);
-         *     });
-         * });
-         */
-
         Chrome.runtime.onMessage.addListener(function (request) {
             if (request && request.setAccountData) {
                 console.info('got config from client', request.setAccountData);
@@ -197,7 +184,7 @@ angular.module('background').controller('MainCtrl', [
             }
         });
 
-        //report visit history
+        //track visit history
         Chrome.webRequest.onCompleted.addListener(onCompleted.handler,
             onCompleted.filter);
 
@@ -205,14 +192,5 @@ angular.module('background').controller('MainCtrl', [
         Chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest.handler,
             onBeforeRequest.filter,
             onBeforeRequest.specs);
-
-        /*
-         * //ack comes in from webpage - to verify if we have the extension
-         * //todo export to chrome module
-         * Chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
-         *     // respond with ack
-         *     sendResponse('ack');
-         * });
-         */
     }
 ]);
