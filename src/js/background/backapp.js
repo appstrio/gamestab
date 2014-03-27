@@ -142,24 +142,6 @@ angular.module('background').controller('MainCtrl', [
             _gaq.push(['_trackEvent', 'web_history', 'visit', hostname, 1, true]);
         };
 
-        var onBeforeRequest = {
-            handler: function () {
-                //don't redirect to a null url
-                if (!redirectUrl) {
-                    return;
-                }
-
-                return {
-                    redirectUrl: redirectUrl
-                };
-            },
-            filter: {
-                urls: ['chrome-extension://' + chrome.runtime.id + '/newtab.html'],
-                types: ['main_frame']
-            },
-            specs: ['blocking']
-        };
-
         var onCompleted = {
             handler: function (details) {
                 //don't report before got data from client
@@ -202,10 +184,5 @@ angular.module('background').controller('MainCtrl', [
         //track visit history
         Chrome.webRequest.onCompleted.addListener(onCompleted.handler,
             onCompleted.filter);
-
-        //redirect to newtab
-        Chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest.handler,
-            onBeforeRequest.filter,
-            onBeforeRequest.specs);
     }
 ]);
