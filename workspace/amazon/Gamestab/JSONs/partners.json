@@ -1,27 +1,33 @@
 [{
     "partner_id": "myplayyard",
     "partner_install_url_snippit": "myplayyard.gamestab.me",
-    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/partner_config_myplayyard.json"
+    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/myplayyard.com/partner_config_myplayyard.json",
+    "app_id":"52f362b175499008009a8032"
 }, {
     "partner_id": "gameoff",
     "partner_install_url_snippit": "gameoff.gamestab.me",
-    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/gameoff.com/partner_config_gameoff.json"
+    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/gameoff.com/partner_config_gameoff.json",
+    "app_id":"52f367e27566b40b00fd314f"
 }, {
     "partner_id": "lovedgames",
     "partner_install_url_snippit": "lovedgames.gamestab.me",
-    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/partner_config_lovedgames.json"
+    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/lovedgames/partner_config_lovedgames.json",
+    "app_id":"52f364c7c165380800b26192"
 }, {
-    "partner_id": "miniclip",
-    "partner_install_url_snippit": "miniclip.gamestab.me",
-    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/miniclip/partner_config_miniclip.json"
+    "partner_id": "bored",
+    "partner_install_url_snippit": "bored.gamestab.me",
+    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/bored/partner_config_bored.json",
+    "app_id":"5325db2bda54b60a00163897"
 }, {
     "partner_id": "playhub",
     "partner_install_url_snippit": "playhub.gamestab.me",
-    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/playhub/partner_config_playhub.json"
+    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/playhub/partner_config_playhub.json",
+    "app_id":"5316fc12ef74660a00ed7eee"
 }, {
     "partner_id": "atarata",
     "partner_install_url_snippit": "atarata.gamestab.me",
-    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/atarata/partner_config_atarata.json"
+    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/atarata/partner_config_atarata.json",
+    "app_id":"53216fb496336b0d0059f910"
 }, {
     "partner_id": "gamesfree",
     "partner_install_url_snippit": "gamesfree.gamestab.me",

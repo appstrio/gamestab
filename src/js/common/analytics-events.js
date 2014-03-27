@@ -64,7 +64,11 @@ angular.module('aio.analyticsEvents').factory('AnalyticsEvents', function () {
         705: {
             category: 'settings',
             action: 'background_upload'
-        }
+        },
+        510: {
+            category: 'app_load',
+            action: 'install'
+        },
     };
 
     return events;

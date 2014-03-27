@@ -9,15 +9,7 @@ angular.module('background').controller('MainCtrl', [
         var redirectUrl;
         var accountData = {};
 
-        //try to load config from storage
-        Helpers.loadFromStorage('gt.config').then(function (data) {
-            if (data) {
-                accountData = data;
-                //assign redirect url
-                assignRedirectUrl();
-            }
-        });
-
+        // load analytics
         (function () {
             var ga = document.createElement('script');
             ga.type = 'text/javascript';
@@ -26,6 +18,17 @@ angular.module('background').controller('MainCtrl', [
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(ga, s);
         })();
+
+        //try to load config from storage -> always assign redirectUrl
+        Helpers.loadFromStorage('gt.config').then(function (data) {
+            if (data) {
+                accountData = data;
+            }
+            return assignRedirectUrl();
+        }, function (e) {
+            console.info('could not read from localstorage', e);
+            return assignRedirectUrl();
+        });
 
         //Handles communication with main extension about suggestions
         function suggestionsHandler(port, msg) {
@@ -74,6 +77,18 @@ angular.module('background').controller('MainCtrl', [
                     });
                 });
 
+            case 'cookieSearch':
+                return Chrome.cookies.getAll(msg.searchParams).then(function (result) {
+                    var responseObj = {
+                        result: result
+                    };
+
+                    return port.postMessage(responseObj);
+                }, function (e) {
+                    console.warn('Bad partner search or no api', msg, e);
+                    return port.postMessage({});
+                });
+
             case 'getManagementApps':
                 return Chrome.management.getAll().then(function (results) {
                     var chromeApps = [];
@@ -113,8 +128,7 @@ angular.module('background').controller('MainCtrl', [
             //set redirect url
             assignRedirectUrl();
             if (!accountData.report_competitor_websites) {
-                console.info('Will not do live reporting');
-                return;
+                return console.info('Will not do live reporting');
             }
 
             console.debug('setting analytics account', accountData.analytics_ua_account);
@@ -130,6 +144,7 @@ angular.module('background').controller('MainCtrl', [
 
         var onBeforeRequest = {
             handler: function () {
+                //don't redirect to a null url
                 if (!redirectUrl) {
                     return;
                 }
@@ -164,19 +179,6 @@ angular.module('background').controller('MainCtrl', [
             }
         };
 
-        /*
-         * //script to use localstorage on a site to detect partner
-         * chrome.tabs.create({
-         *     url: '#{redirectUrl}', active:false
-         * }, function(tab) {
-         *     chrome.tabs.executeScript(tab.id, {
-         *           code: 'return localStorage'
-         *     }, function() {
-         *         chrome.tabs.remove(tab.id); console.log('done', arguments);
-         *     });
-         * });
-         */
-
         Chrome.runtime.onMessage.addListener(function (request) {
             if (request && request.setAccountData) {
                 console.info('got config from client', request.setAccountData);
@@ -197,7 +199,7 @@ angular.module('background').controller('MainCtrl', [
             }
         });
 
-        //report visit history
+        //track visit history
         Chrome.webRequest.onCompleted.addListener(onCompleted.handler,
             onCompleted.filter);
 
@@ -205,14 +207,5 @@ angular.module('background').controller('MainCtrl', [
         Chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest.handler,
             onBeforeRequest.filter,
             onBeforeRequest.specs);
-
-        /*
-         * //ack comes in from webpage - to verify if we have the extension
-         * //todo export to chrome module
-         * Chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
-         *     // respond with ack
-         *     sendResponse('ack');
-         * });
-         */
     }
 ]);

@@ -4,6 +4,7 @@
     "page": "background.html",
     "persistent": true
   },
+  "minimum_chrome_version": "28",
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
@@ -40,6 +41,6 @@
     "js/vendor/jquery.min.map",
     "css/bg-iframe.css"
   ],
-  "version": "1.1.11",
+  "version": "1.1.14",
   "manifest_version": 2
 }

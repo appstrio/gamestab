@@ -10,7 +10,9 @@ angular.module('aio.common.helpers').factory('Helpers', [
          */
         var loadRemoteJson = function (remoteJsonUrl) {
             $log.log('[Helpers] - getting remote json', remoteJsonUrl);
-            return $http.get(remoteJsonUrl);
+            //break cache as well
+            var url = remoteJsonUrl + '?v=' + Date.now();
+            return $http.get(url);
         };
 
         /**
