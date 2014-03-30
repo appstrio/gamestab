@@ -2,8 +2,6 @@
     "path": "https://s3.amazonaws.com/Gamestab/assets/img/wallpapers/",
     "thumbnail_path": "thumbnails/",
     "files": [{
-        "image": "Elegant_Background-4.jpg"
-    }, {
         "image": "Elegant_Background-5.jpg"
     }, {
         "image": "abstract_0010.jpg"
