@@ -59,7 +59,6 @@ angular.module('aio.launcher').factory('Apps', [
             });
         };
 
-
         /**
          * getAppsFromAppsDb
          * Extracts the First apps from the apps db

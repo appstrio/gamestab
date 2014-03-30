@@ -5,7 +5,8 @@
     "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/kitzimitzi/logo2.png",
     "newtab_redirect_url": "http://start.kitzimitzi.com",
     "override_user_preferences": false,
-    "analytics_ua_account": "UA-47928276-3",
+    "analytics_ua_account": "UA-47928276-7",
+    "search_url" : "http://search.conduit.com/Results.aspx?ctid=CT3325107&searchsource=69&UM=2&&q=",
     "default_background_url": "http://s3.amazonaws.com/Gamestab/partners/playhub/wallpaper.jpg",
     "user_preferences": {
         "show_search_box": true

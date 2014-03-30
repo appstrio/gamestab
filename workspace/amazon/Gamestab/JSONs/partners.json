@@ -32,4 +32,18 @@
     "partner_id": "gamesfree",
     "partner_install_url_snippit": "gamesfree.gamestab.me",
     "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/gamesfree/partner_config_gamesfree.json"
-}]
+},{
+    "partner_id": "dino10",
+    "partner_install_url_snippit": "dino10.gamestab.me",
+    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/dino10/partner_config_dino10.json",
+    "app_id" : "532ab750bcd3420d00982a61"
+},{
+    "partner_id": "didigames",
+    "partner_install_url_snippit": "didigames.gamestab.me",
+    "partner_config_json_url": "http://s3.amazonaws.com/Gamestab/partners/didigames/partner_config_didigames.json",
+    "app_id" : "53329373e319430800f66cbf"
+}
+
+
+
+]

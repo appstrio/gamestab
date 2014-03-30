@@ -1,0 +1,56 @@
+{
+    "partner_id": "didigames",
+    "partner_name": "didigames",
+    "partner_url": "http://www.didigames.com",
+    "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/didigames/logo.jpg",
+    "newtab_redirect_url": "http://start.gamestab.me",
+    "override_user_preferences": false,
+    "default_background_url": "http://s3.amazonaws.com/Gamestab/partners/didigames/wallpaper.jpg",
+    "user_preferences": {
+        "show_search_box": true
+    },
+    "config_update_url": "http://s3.amazonaws.com/Gamestab/partners/didigames/partner_config_didigames.json",
+
+    "web_apps_db": [{
+        "title": "Baby Fairy Bath",
+        "url": "http://www.didigames.com/baby-fairy-bath.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/didigames/dials/baby-fairy-bath.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "didigames",
+        "overlay": "XXX"
+    },{
+        "title": "Gardening in Style 3",
+        "url": "http://www.didigames.com/gardening-in-style-3.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/didigames/dials/facial-yoga-style2.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "didigames",
+        "overlay": "XXX"
+    },{
+        "title": "Facial Yoga Style",
+        "url": "http://www.didigames.com/facial-yoga-style2.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/didigames/dials/gardening-in-style-3.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "didigames",
+        "overlay": "XXX"
+    },{
+        "title": "Holywood Ultimate Makeover",
+        "url": "http://voxcast.didigames.com/images/hollywood-ultimate-makeover.jpg",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/didigames/dials/hollywood-ultimate-makeover.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "didigames",
+        "overlay": "XXX"
+    },{
+        "title": "Kiddie Kitchen",
+        "url": "http://www.didigames.com/kiddiekitchenchickencacciatore.html",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/didigames/dials/kiddiekitchenchickencacciatore.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "didigames",
+        "overlay": "XXX"
+    }
+    ]
+}

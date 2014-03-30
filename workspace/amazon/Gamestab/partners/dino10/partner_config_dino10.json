@@ -1,0 +1,116 @@
+{
+    "partner_id": "dino10",
+    "partner_name": "dino10",
+    "partner_url": "http://www.dino10.com",
+    "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/dino10/logo.png",
+    "override_user_preferences": false,
+    "default_background_url": "http://s3.amazonaws.com/Gamestab/partners/dino10/wallpaper.jpg",
+
+    "user_preferences": {
+        "show_search_box": true 
+                        },
+    "config_update_url": "http://s3.amazonaws.com/Gamestab/partners/dino10/partner_config_dino10.json",
+
+    "web_apps_db": [
+    {
+        "title": "Mario and Sonic Zombie Killer",
+        "url": "http://dino10.com/super-mario/mario-and-sonic-zombie-killer",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/mario-and-sonic-zombie-killer.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    },{
+        "title": "Mario Combat",
+        "url": "http://dino10.com/super-mario/mario-combat",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/mario-combat.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    },{
+        "title": "Mario Forever",
+        "url": "http://dino10.com/super-mario/mario-forever",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/mario-forever.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    },{
+        "title": "Mario Tractor",
+        "url": "http://dino10.com/super-mario/mario-tractor",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/mario-tractor.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    
+    },{
+        "title": "Super Mario",
+        "url": "http://dino10.com/super-mario/super-mario",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/super-mario.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    },{
+        "title": "Super Mario 63",
+        "url": "http://dino10.com/super-mario/super-mario-63",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/super-mario-63.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    },{
+        "title": "Super Mario Bros Star Scramble",
+        "url": "http://dino10.com/super-mario/super-mario-bros-3-star-scramble",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/super-mario-bros-3-star-scramble.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    },{
+        "title": "Super Mario Bros Crossover 3",
+        "url": "http://dino10.com/super-mario/super-mario-crossover-3",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/super-mario-bros-crossover-3.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    },{
+        "title": "Super Mario Bros Defence",
+        "url": "http://dino10.com/super-mario/super-mario-defense",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/super-mario-bros-defence.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    },{
+        "title": "Super Mario Bros Gangster",
+        "url": "http://dino10.com/super-mario/gangster-bros",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/super-mario-bros-gangster.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    },{
+        "title": "Super Mario Kart",
+        "url": "http://dino10.com/super-mario/super-mario-kart",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/super-mario-kart.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    },{
+        "title": "Super Mario Remix Boss Edition",
+        "url": "http://dino10.com/super-mario/super-mario-remix-boss-edition",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/dino10/dials/super-mario-remix-boss-edition.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "dino10",
+        "overlay": "XXX"
+    }
+    ]
+}
+
+

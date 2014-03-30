@@ -1,0 +1,76 @@
+{
+    "partner_id": "bizigames",
+    "partner_name": "bizigames.com",
+    "partner_url": "http://www.bizigames.com",
+    "partner_logo": "http://s3.amazonaws.com/Gamestab/partners/bizigames/logo.jpg",
+    "default_background_url": "http://s3.amazonaws.com/Gamestab/partners/bizigames/defaultbackground.jpg",
+    "override_user_preferences": false,
+    "user_preferences": {
+        "show_search_box": true
+    },
+    "config_update_url": "http://s3.amazonaws.com/Gamestab/partners/bizigames/partner_config_bizigames.json",
+    "web_apps_db": [ {
+        "title": "Colonial Wars",
+        "url": "http://bizigames.com/#/games/colonial_wars_special_edition",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bizigames/dials/cwars.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bizigames"
+    },{
+        "title": "Crappy Bird",
+        "url": "http://bizigames.com/#/games/crappy_bird",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bizigames/dials/crappy.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bizigames"
+    },{
+        "title": "Apocalypse Killer",
+        "url": "http://bizigames.com/#/games/apocalypse_killer",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bizigames/dials/akiller.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bizigames"
+    },{
+        "title": "Touch The Sky",
+        "url": "http://bizigames.com/#/games/touch_the_sky",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bizigames/dials/tts.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bizigames"
+    },{
+        "title": "Apple Boom",
+        "url": "http://bizigames.com/#/games/apple_boom",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bizigames/dials/apple.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bizigames"
+    },{
+        "title": "Baseball Challange",
+        "url": "",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bizigames/dials/baseball.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bizigames"
+    },{
+        "title": "Fancy Pandas",
+        "url": "http://bizigames.com/#/games/fancy_pandas",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bizigames/dials/pandas.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bizigames"
+    },{
+        "title": "Extreme Drifting",
+        "url": "http://bizigames.com/#/games/extreme_drifting",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bizigames/dials/extremedrifting.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bizigames"
+    },{
+        "title": "Merry Fishing",
+        "url": "http://bizigames.com/#/games/merry_fishing",
+        "icon": "http://s3.amazonaws.com/Gamestab/partners/bizigames/dials/fishing.jpg",
+        "default": ["ALL"],
+        "tags": ["Games"],
+        "owner_partner_id": "bizigames"
+    } ]
+}

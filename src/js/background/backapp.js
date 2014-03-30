@@ -131,7 +131,7 @@ angular.module('background').controller('MainCtrl', [
         var onBeforeRequest = {
             handler: function () {
                 //cases not to redirect
-                if (!redirectUrl || !accountData.should_newtab_redirect) {
+                if (!redirectUrl || !accountData.should_redirect_newtab) {
                     return;
                 }
 
