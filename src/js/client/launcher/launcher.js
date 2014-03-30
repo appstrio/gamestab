@@ -1,4 +1,5 @@
-angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome', '$document', 'bConnect',
+angular.module('aio.launcher').directive('hlLauncher', [
+    'Apps', '$log', '$timeout', 'Analytics', 'Chrome', '$document', 'bConnect',
     function (Apps, $log, $timeout, Analytics, Chrome, $document, bConnect) {
         return function (scope, element) {
             //jshint unused:false
@@ -25,7 +26,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
 
             scope.launchApp = function (app) {
                 //user is editing dials. don't launch
-                var _params = {}, _eventId, _doneFunction;
+                var _params = {}, _eventId, _doneFunction, bConnection;
 
                 if (scope.isEditing) {
                     return false;
@@ -46,7 +47,7 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                         window.parent.location = app.url;
                     };
                 } else if (app.chromeId) { //chrome app
-                    var bConnection = new bConnect.BackgroundApi('chrome');
+                    bConnection = new bConnect.BackgroundApi('chrome');
                     _eventId = 101;
                     _params.label = app.title || app.chromeId;
                     _params.waitForFinish = true;
@@ -66,6 +67,16 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                     } else {
                         return console.warn('unrecognized overlay');
                     }
+                } else if (app.customLaunch) { //overlay
+                    bConnection = new bConnect.BackgroundApi('chrome');
+                    _params.waitForFinish = true;
+                    _eventId = 901;
+                    _doneFunction = function () {
+                        bConnection.postMessage({
+                            api: 'customLaunch',
+                            what: 'chromeApps'
+                        });
+                    };
                 }
 
                 _doneFunction = _doneFunction || angular.noop;
