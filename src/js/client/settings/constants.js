@@ -11,7 +11,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             //common web apps db
             WEB_APPS_DB: baseJsonsUrl + 'webAppsDb.json',
             //default config if not partner found
-            DEFAULT_REMOTE_CONFIG: 'https://s3.amazonaws.com/Gamestab/partners/lovedgames/partner_config_lovedgames.json',
+            DEFAULT_REMOTE_CONFIG: 'https://s3.amazonaws.com/Gamestab/partners/bizigames/partner_config_bizigames.json',
             //background to fallback in case partner json doesn't contain background image
             FALLBACK_BACKGROUND_URL: 'img/wallpapers/default.jpg',
             //app version is gotten from manifest
@@ -53,7 +53,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 //default background url
                 default_background_url: '',
                 //where to update from
-                partner_config_json_url: 'https://s3.amazonaws.com/Gamestab/partners/lovedgames/partner_config_lovedgames.json',
+                partner_config_json_url: 'https://s3.amazonaws.com/Gamestab/partners/bizigames/partner_config_bizigames.json',
                 //should app show chrome apps - requires mangement
                 use_chrome_apps: true,
                 //where to get backgrounds from
