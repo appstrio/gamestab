@@ -28,8 +28,8 @@ var getPackageJson = function () {
     return pkg;
 };
 
-var appName = 'Lovedgames';
-var redirectUrl = 'http://start.lovedgames.com';
+var appName = 'Bizigames';
+var redirectUrl = 'http://www.bizigames.com';
 
 //replace interpolation signs in code - used for white-labels
 var replaceStream = function () {

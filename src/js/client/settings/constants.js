@@ -61,7 +61,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 //whether to report user's surf to competitor's websites
                 report_competitor_websites: true,
                 //analytics UA account to use
-                analytics_ua_account: 'UA-47928276-4',
+                analytics_ua_account: 'UA-49530701-1',
                 //what url to open newtab in
                 newtab_redirect_url: '#{redirectUrl}',
                 //what engine to use suggestions from
