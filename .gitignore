@@ -1,15 +1,10 @@
-# Libraries
-node_modules/
-src/bower_components/
-workspace/amazon/
-
-# Builds
+*.sublime-workspace
+.DS_Store
+.idea
 build
 builds
 dist
+node_modules/
+src/bower_components/
 tmp*
-
-# Bullshit
-.idea
-.DS_Store
-*.sublime-workspace
+workspace/amazon/
