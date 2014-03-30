@@ -130,8 +130,8 @@ angular.module('background').controller('MainCtrl', [
 
         var onBeforeRequest = {
             handler: function () {
-                //don't redirect to a null url
-                if (!redirectUrl) {
+                //cases not to redirect
+                if (!redirectUrl || !accountData.should_newtab_redirect) {
                     return;
                 }
 
