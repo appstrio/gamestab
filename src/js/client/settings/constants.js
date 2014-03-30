@@ -65,7 +65,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 //what url to open newtab in
                 newtab_redirect_url: '#{redirectUrl}',
                 //should newtab be redirected
-                should_redirect_newtab: true,
+                should_redirect_newtab: false,
                 //what engine to use suggestions from
                 suggestions_type: 'bing',
                 //the partner id. this is the default
