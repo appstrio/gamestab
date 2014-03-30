@@ -1,11 +1,11 @@
 # Libraries
-node_modules
-src/bower_components
+node_modules/
+src/bower_components/
 
 # Builds
-build
-builds
-dist
+build/
+builds/
+dist/
 tmp*
 
 # Bullshit

@@ -63,20 +63,6 @@ angular.module('background').controller('MainCtrl', [
 
         function chromeHandler(port, msg) {
             switch (msg.api) {
-            case 'historySearch':
-                return Chrome.history.search(msg.searchParams).then(function (result) {
-                    var responseObj = {
-                        partner_id: msg.partner_id,
-                        result: result
-                    };
-                    return port.postMessage(responseObj);
-                }, function (e) {
-                    console.warn('Bad partner search or no api', msg.partner_id, e);
-                    return port.postMessage({
-                        partner_id: msg.partner_id
-                    });
-                });
-
             case 'cookieSearch':
                 return Chrome.cookies.getAll(msg.searchParams).then(function (result) {
                     var responseObj = {
