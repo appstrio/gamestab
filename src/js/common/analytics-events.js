@@ -49,6 +49,10 @@ angular.module('aio.analyticsEvents').factory('AnalyticsEvents', function () {
             category: 'settings',
             action: 'open'
         },
+        901: {
+            category: 'chromeApps',
+            action: 'open'
+        },
         702: {
             category: 'settings',
             action: 'category_click'

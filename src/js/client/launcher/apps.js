@@ -21,6 +21,11 @@ angular.module('aio.launcher').factory('Apps', [
             icon: './img/dials/appstore175x175.png',
             overlay: 'store',
             permanent: true
+        }, {
+            title: 'Chrome Apps',
+            icon: './img/dials/chrome.apps.png',
+            customLaunch: 'chromeApps',
+            permanent: true
         }];
 
         var loadFromStorage = function () {
@@ -59,13 +64,7 @@ angular.module('aio.launcher').factory('Apps', [
             });
         };
 
-        /**
-         * getAppsFromAppsDb
-         * Extracts the First apps from the apps db
-         *
-         * @param _appsDb
-         * @return
-         */
+        // Extracts the First apps from the apps db
         var getAppsFromAppsDb = function (_appsDb) {
             //default=>All, tags=>Featured
             return _.chain(_appsDb)
@@ -109,19 +108,12 @@ angular.module('aio.launcher').factory('Apps', [
             return sortedApps;
         };
 
-        /**
-         * organizeAppsAsDials
-         * Get the webAppsDb and ChromeApps and organizes them into an array
-         *
-         * @param results
-         * @return output
-         */
+        //Get the webAppsDb and ChromeApps and organizes them into an array
         var organizeAppsAsDials = function (results) {
             var games, maxDials = C.CONFIG.initial_dials_size;
-            var _appsDb, chromeApps, returnArr;
+            var _appsDb, returnArr;
 
             _appsDb = results[0] || [];
-            chromeApps = results[1] || [];
 
             var firstApps = getAppsFromAppsDb(_appsDb);
             $log.log('[Apps] - got # first apps', firstApps.length);
@@ -133,25 +125,17 @@ angular.module('aio.launcher').factory('Apps', [
             //add the required number of games
             games = numOfGamesToAdd > 0 ? games = getGamesFromAppsDb(_appsDb, numOfGamesToAdd) : [];
             $log.log('[Apps] - got # game dials', games.length);
-            $log.log('[Apps] - got # chromeApps', chromeApps.length);
 
             returnArr = [].concat(systemApps)
                 .concat(firstApps)
                 .concat(partnerApps)
-                .concat(games)
-                .concat(chromeApps);
+                .concat(games);
 
             $log.log('[Apps] - added a total of # initial dials', returnArr.length);
             return returnArr;
         };
 
-        /**
-         * organizeAsPages
-         * Get dials and returns pages with dials grouped in arrays
-         *
-         * @param dials
-         * @return
-         */
+        //Get dials and returns pages with dials grouped in arrays
         var organizeAsPages = function (dials) {
             var count = 0;
             var conf = Config.get();
@@ -193,12 +177,7 @@ angular.module('aio.launcher').factory('Apps', [
             $log.info('[Apps] - finished ' + activity);
         };
 
-        /**
-         * isCacheNeeded
-         * returns true if any app.icon is a remote url
-         *
-         * @return
-         */
+        //returns true if any app.icon is a remote url
         var isCacheNeeded = function () {
             var arr = _.flatten(apps);
 
@@ -218,7 +197,7 @@ angular.module('aio.launcher').factory('Apps', [
         };
 
         var fetchDials = function () {
-            return $q.all([getOrganizedWebApps(), getAllChromeApps()]);
+            return $q.all([getOrganizedWebApps() /*, getAllChromeApps()*/ ]);
         };
         /**
          * setup
@@ -339,43 +318,6 @@ angular.module('aio.launcher').factory('Apps', [
             });
         };
 
-        var syncChromeApps = function (flattenedApps, chromeApps) {
-            //get only the chrome apps from all apps
-            var ourChromeApps = _.filter(flattenedApps, 'chromeId');
-
-            //loop through system chrome apps finding and syncing apps
-            chromeApps.forEach(function (cApp) {
-                var newChromeApp;
-                var isChromeAppRemoved = _.findWhere(removedApps, {
-                    chromeId: cApp.id
-                });
-
-                //if it's removed - don't re add it
-                if (isChromeAppRemoved) {
-                    return;
-                }
-
-                //if it's found in ours
-                var isChromeAppFound = _.findWhere(ourChromeApps, {
-                    chromeId: cApp.id
-                });
-
-                newChromeApp = Helpers.chromeAppToObject(cApp);
-
-                if (isChromeAppFound) {
-                    //sync it
-                    isChromeAppFound = angular.extend(isChromeAppFound, newChromeApp);
-                    return;
-                }
-
-                //app is new and needs to be inserted
-                flattenedApps.push(newChromeApp);
-            });
-
-            markDeletedIfNotFound(ourChromeApps, chromeApps, 'chromeId', 'id');
-            return flattenedApps;
-        };
-
         //remove if not existant. add if not found
         var syncPartnerApps = function (flattenedApps, partnerApps) {
 
@@ -448,19 +390,12 @@ angular.module('aio.launcher').factory('Apps', [
 
             loadRemovedApps().then(fetchDials).then(function (results) {
                 var webApps = results[0] || [];
-                // var chromeApps = results[1] || [];
-
-                // chromeApps = _.filter(chromeApps, isAppEnabled);
 
                 $log.info('Done getting remote apps. Now syncing', flattenedApps.length);
                 //make sure all partner dials are synced
                 flattenedApps = syncPartnerApps(flattenedApps, partnerApps);
                 //make sure web apps db are synced
                 flattenedApps = syncAllApps(flattenedApps, webApps);
-                //make sure chrome apps are synced
-
-                //DEPRECATED for now
-                // flattenedApps = syncChromeApps(flattenedApps, chromeApps);
 
                 flattenedApps = _.filter(flattenedApps, function (i) {
                     return (i && !i.toDelete);
@@ -469,11 +404,6 @@ angular.module('aio.launcher').factory('Apps', [
             });
         };
 
-        /**
-         * getLastAvailablePage
-         *
-         * @return
-         */
         var getLastAvailablePage = function () {
             var lastPage = apps[apps.length - 1];
             //if enough room on last page
