@@ -1,5 +1,3 @@
-var isWebsite = true;
-
 angular.module('aio.settings', []);
 angular.module('aio.search', []);
 angular.module('aio.launcher', []);

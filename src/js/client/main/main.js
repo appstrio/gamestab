@@ -1,7 +1,7 @@
 angular.module('aio.main').controller('MainCtrl', [
     '$scope', '$log', '$q', '$timeout', 'Apps', 'Config', 'Constants', 'Background', 'Analytics', 'Helpers',
     function ($scope, $log, $q, $timeout, Apps, Config, Constants, Background, Analytics, Helpers) {
-        console.debug('[MainCtrl] - start');
+        console.debug('[MainCtrl] - start v' + Constants.APP_VERSION);
         var lazyCacheAppsTimeout;
         var checkConfigTimeout = 3000;
 
@@ -62,14 +62,17 @@ angular.module('aio.main').controller('MainCtrl', [
         };
 
         //second loading services
-        var initializeApp = function () {
+        var initApp = function () {
+            //save state
+            var _firstBoot = $scope.firstBoot || false;
+            //turn off firstBoot state
             $scope.firstBoot = false;
 
             var analyticsParams = {
                 devMode: false,
-                useLocalGa: false,
-                analyticsId: Config.get().analytics_ua_account,
-                appVersion: Constants.APP_VERSION
+                firstBoot: _firstBoot,
+                partnerId: Config.get().partner_id,
+                analyticsId: Config.get().analytics_ua_account
             };
             return $q.all([$scope.refreshScope(), Analytics.init(analyticsParams), lazyCheckConfig()]);
         };
@@ -95,7 +98,7 @@ angular.module('aio.main').controller('MainCtrl', [
         $q.all([Config.init(), Apps.init()])
         //load background or from remotes if no local configs
         .then(initBackground, loadFromRemotes)
-            .then(initializeApp)
+            .then(initApp)
             .then(function () {
                 console.debug('[MainCtrl] - boot took ' + (Date.now() - t0) + ' ms.');
             });

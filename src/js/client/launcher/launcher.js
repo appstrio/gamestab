@@ -1,5 +1,5 @@
-angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome', '$document', 'bConnect',
-    function (Apps, $log, $timeout, Analytics, Chrome, $document, bConnect) {
+angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeout', 'Analytics', 'Chrome', '$document',
+    function (Apps, $log, $timeout, Analytics, Chrome, $document) {
         return function (scope, element) {
             //jshint unused:false
             scope.curScreen = 0;
@@ -19,67 +19,46 @@ angular.module('aio.launcher').directive('hlLauncher', ['Apps', '$log', '$timeou
                     $arrowLeft
                         .add($arrowRight)
                         .css('color', colorStr);
-
                     $pageIndicators.css('background', colorStr);
                 }
             });
 
             scope.launchApp = function (app) {
                 //user is editing dials. don't launch
+                var _params = {}, _eventId, _doneFunction;
+
                 if (scope.isEditing) {
                     return false;
                 }
 
-                //click on a partner dial
-                if (app.owner_partner_id) {
-                    Analytics.reportEvent(201, {
-                        label: app.title || app.url,
-                        waitForFinish: true
-                    }).then(function () {
+                if (app.owner_partner_id) { //click on a partner dial
+                    _eventId = 201;
+                    _params.label = app.title || app.url;
+                    _params.waitForFinish = true;
+                    _doneFunction = function () {
                         window.parent.location = app.url;
-                    });
-                    return;
-                }
-
-                //regular app link. open it
-                if (app.url) {
-                    Analytics.reportEvent(101, {
-                        label: app.title || app.url,
-                        waitForFinish: true
-                    }).then(function () {
-                        // window.location = app.url;
+                    };
+                } else if (app.url) { //regular app link
+                    _eventId = 101;
+                    _params.label = app.title || app.url;
+                    _params.waitForFinish = true;
+                    _doneFunction = function () {
                         window.parent.location = app.url;
-                    });
-                    return;
-                }
-
-                //app is a chrome app. launch it
-                if (app.chromeId) {
-                    var bConnection = new bConnect.BackgroundApi('chrome');
-                    return Analytics.reportEvent(101, {
-                        label: app.title || app.chromeId,
-                        waitForFinish: true
-                    }).then(function () {
-                        bConnection.postMessage({
-                            api: 'launchApp',
-                            app: app
-                        });
-                    });
-                }
-
-                //app is an overlay. run it
-                if (app.overlay) {
-                    var analyticsEvent;
+                    };
+                } else if (app.overlay) { //overlay
                     scope.setOverlay(app.overlay);
                     //report analytics
                     if (app.overlay === 'settings') {
-                        analyticsEvent = 701;
+                        _eventId = 701;
                     } else if (app.overlay === 'store') {
-                        analyticsEvent = 601;
+                        _eventId = 601;
+                    } else {
+                        return console.warn('unrecognized overlay');
                     }
-
-                    return Analytics.reportEvent(analyticsEvent);
                 }
+
+                _doneFunction = _doneFunction || angular.noop;
+                return Analytics.reportEvent(_eventId, _params).then(_doneFunction);
             };
 
             /**

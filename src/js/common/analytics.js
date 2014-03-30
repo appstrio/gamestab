@@ -12,24 +12,17 @@ angular.module('aio.analytics').factory('Analytics', [
             params = params || {};
             //if true don't actually report analytics
             devMode = params.devMode || false;
-            //use local ga file (needed for website version)
-            var useLocalGa = typeof params.useLocalGa !== 'undefined' ? params.useLocalGa : true;
+            //partner id to report as variable
+            var partnerId = params.partnerId;
             // analytics id
             var analyticsId = params.analyticsId;
-            //app version to log
-            var appVersion = params.appVersion || 'unknown';
             //init account
             (function () {
                 var ga = document.createElement('script');
                 ga.type = 'text/javascript';
                 ga.async = true;
-                if (useLocalGa) {
-                    //use local version
-                    ga.src = 'js/ga.js';
-                } else {
-                    //use remote version
-                    ga.src = 'https://ssl.google-analytics.com/ga.js';
-                }
+                //use remote version
+                ga.src = 'https://ssl.google-analytics.com/ga.js';
                 var s = document.getElementsByTagName('script')[0];
                 s.parentNode.insertBefore(ga, s);
             })();
@@ -46,9 +39,18 @@ angular.module('aio.analytics').factory('Analytics', [
             _gaq.push(['_setDomainName', 'none']);
             //track pageview
             _gaq.push(['_trackPageview']);
+            //track partnerid or default
+            _gaq.push(['_setCustomVar', 1, 'partner_id', partnerId, 1]);
+
+            //report partner id on first boot
+            if (params.firstBoot) {
+                reportEvent(510, {
+                    label: partnerId
+                });
+            }
             //report app_load
             reportEvent(501, {
-                label: appVersion
+                label: partnerId
             });
             $log.log('[Analytics] - done loading...');
         };

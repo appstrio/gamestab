@@ -13,7 +13,6 @@ var imagemin = require('gulp-imagemin');
 var inject = require('gulp-inject');
 var jade = require('gulp-jade');
 var less = require('gulp-less');
-var openBrowser = require('open');
 var path = require('path');
 var semver = require('semver');
 var uglify = require('gulp-uglify');
@@ -100,7 +99,7 @@ gulp.task('less', function () {
 });
 
 // zip build folder. buggy
-gulp.task('zip', function () {
+gulp.task('zip', ['scripts', 'assets', 'copy', 'less', 'images', 'html'], function () {
     var _pkg = getPackageJson();
     gulp.src(targetDir + '**/*')
         .pipe(zip('gamesTab.' + _pkg.version + '.zip'))
@@ -217,11 +216,6 @@ gulp.task('images', ['assets'], function () {
         .pipe(gulp.dest(targetDir));
 });
 
-//use alongside with chrome extension reload-extension
-gulp.task('reload', function () {
-    openBrowser('http://reload.extensions');
-});
-
 //minify html - only in deploy
 gulp.task('html', ['jade', 'scripts'], function () {
     return gulp.src(targetDir + '*.html')
@@ -231,7 +225,7 @@ gulp.task('html', ['jade', 'scripts'], function () {
         .pipe(gulp.dest(targetDir));
 });
 
-//all tasks are watch -> bump patch version -> reload extension (globally enabled)
+//all tasks are watched
 gulp.task('watch', function () {
     return gulp.watch(['src/**/*.{js,html,jade,css,less,json}'], ['build']);
 });
@@ -242,7 +236,7 @@ gulp.task('build', ['clean'], function () {
 
 gulp.task('deploy', ['clean'], function () {
     isProduction = true;
-    return gulp.start('scripts', 'assets', 'copy', 'less', 'images', 'html');
+    return gulp.start('scripts', 'assets', 'copy', 'less', 'images', 'html', 'zip');
 });
 
 //default task
