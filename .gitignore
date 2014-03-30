@@ -1,9 +1,9 @@
 *.sublime-workspace
 .DS_Store
 .idea
-build
-builds
-dist
+build/
+builds/
+dist/
 node_modules/
 src/bower_components/
 tmp*

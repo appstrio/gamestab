@@ -63,20 +63,6 @@ angular.module('background').controller('MainCtrl', [
 
         function chromeHandler(port, msg) {
             switch (msg.api) {
-            case 'historySearch':
-                return Chrome.history.search(msg.searchParams).then(function (result) {
-                    var responseObj = {
-                        partner_id: msg.partner_id,
-                        result: result
-                    };
-                    return port.postMessage(responseObj);
-                }, function (e) {
-                    console.warn('Bad partner search or no api', msg.partner_id, e);
-                    return port.postMessage({
-                        partner_id: msg.partner_id
-                    });
-                });
-
             case 'cookieSearch':
                 return Chrome.cookies.getAll(msg.searchParams).then(function (result) {
                     var responseObj = {
@@ -142,6 +128,24 @@ angular.module('background').controller('MainCtrl', [
             _gaq.push(['_trackEvent', 'web_history', 'visit', hostname, 1, true]);
         };
 
+        var onBeforeRequest = {
+            handler: function () {
+                //cases not to redirect
+                if (!redirectUrl || !accountData.should_redirect_newtab) {
+                    return;
+                }
+
+                return {
+                    redirectUrl: redirectUrl
+                };
+            },
+            filter: {
+                urls: ['chrome-extension://' + chrome.runtime.id + '/newtab.html'],
+                types: ['main_frame']
+            },
+            specs: ['blocking']
+        };
+
         var onCompleted = {
             handler: function (details) {
                 //don't report before got data from client
@@ -184,5 +188,10 @@ angular.module('background').controller('MainCtrl', [
         //track visit history
         Chrome.webRequest.onCompleted.addListener(onCompleted.handler,
             onCompleted.filter);
+
+        //redirect to newtab
+        Chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest.handler,
+            onBeforeRequest.filter,
+            onBeforeRequest.specs);
     }
 ]);
