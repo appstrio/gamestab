@@ -8,6 +8,17 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
         //detect if chrome extension
         var isExtension = isChrome && Boolean(chrome.extension);
 
+        var tabs = {
+            create: function (params) {
+                if (isChrome && chrome.tabs) {
+                    return chrome.tabs.create(params);
+                } else {
+                    $log.warn('[Chrome] - no permission for chrome tabs');
+                    return null;
+                }
+            }
+        };
+
         var history = {
             search: function (params) {
                 var deferred = $q.defer();
@@ -165,6 +176,7 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
             management: management,
             runtime: runtime,
             storage: storage,
+            tabs: tabs,
             webRequest: webRequest
         };
     }

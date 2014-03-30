@@ -52,6 +52,14 @@ angular.module('background').controller('MainCtrl', [
             }
         }
 
+        function customLaunch(what) {
+            if (what === 'chromeApps') {
+                Chrome.tabs.create({
+                    url: 'chrome://apps'
+                });
+            }
+        }
+
         function cacheHandler(port, msg) {
             if (msg.type === 'cache') {
                 Image.convertFieldToLocalFile(msg.field, {}, msg.items)
@@ -91,9 +99,10 @@ angular.module('background').controller('MainCtrl', [
                         });
                     }
                 });
-
             case 'launchApp':
                 return Chrome.management.launchApp(msg.app.chromeId);
+            case 'customLaunch':
+                return customLaunch(msg.what);
             }
         }
 
