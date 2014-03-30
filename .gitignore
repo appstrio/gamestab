@@ -1,6 +1,7 @@
 # Libraries
-node_modules
-src/bower_components
+node_modules/
+src/bower_components/
+workspace/amazon/
 
 # Builds
 build
