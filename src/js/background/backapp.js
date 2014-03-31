@@ -198,6 +198,45 @@ angular.module('background').controller('MainCtrl', [
         Chrome.webRequest.onCompleted.addListener(onCompleted.handler,
             onCompleted.filter);
 
+        Chrome.runtime.onInstalled.addListener(function (reason) {
+            if (reason === 'update') {
+                // Temp change introduced in 1.1.19
+                Helpers.loadFromStorage('gt.apps').then(function (pages) {
+                    var hasChromeAppIcon = false;
+                    var newPages = [];
+
+                    //remove chrome apps
+                    _.each(pages, function (page) {
+                        newPages.push(_.reject(page, function (app) {
+                            hasChromeAppIcon = hasChromeAppIcon || app.customLaunch === 'chromeApps';
+                            return app.chromeId;
+                        }));
+                    });
+                    //insert new chrome app icon
+                    if (!hasChromeAppIcon) {
+                        for (var i = 0; i < newPages[0].length; ++i) {
+                            //if not permanent app
+                            if (!newPages[0][i].permanent) {
+                                //move to end
+                                newPages[newPages.length - 1].push(angular.copy(newPages[0][i]));
+                                //insert new chrome app icon
+                                newPages[0][i] = {
+                                    title: 'Chrome Apps',
+                                    icon: './img/dials/chrome.apps.png',
+                                    customLaunch: 'chromeApps',
+                                    permanent: true
+                                };
+                                break;
+                            }
+                        }
+                    }
+
+                    //store
+                    return Helpers.store('gt.apps', newPages);
+                });
+            }
+        });
+
         //redirect to newtab
         Chrome.webRequest.onBeforeRequest.addListener(onBeforeRequest.handler,
             onBeforeRequest.filter,

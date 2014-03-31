@@ -87,6 +87,14 @@ angular.module('aio.chrome').factory('Chrome', ['$rootScope', '$timeout', '$q', 
                     }
                     console.warn('no chrome api for runtime.onMessageExternal');
                 }
+            },
+            onInstalled: {
+                addListener: function (cb) {
+                    if (isChrome && chrome.runtime && chrome.runtime.onInstalled) {
+                        return chrome.runtime.onInstalled.addListener(cb);
+                    }
+                    console.warn('no chrome api for runtime.onInstalled');
+                }
             }
         };
 
