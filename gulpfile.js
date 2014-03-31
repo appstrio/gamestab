@@ -4,7 +4,9 @@ var path = require('path');
 var semver = require('semver');
 
 //load gulp plugins
-var tasks = require('gulp-load-plugins')();
+var tasks = require('gulp-load-plugins')({
+    lazy: false
+});
 var pkg;
 
 //this is used instead of require to prevent caching in watch (require caches)
@@ -172,21 +174,19 @@ gulp.task('bump', function () {
     var _pkg = getPackageJson();
     //increment version
     var newVer = semver.inc(_pkg.version, 'patch');
-    //log action
-    tasks.util.log('Bumping version', tasks.util.colors.cyan(_pkg.version), '=>', tasks.util.colors.blue(newVer));
-    //increment bower & package version separately since they are in different places
-    gulp.src(['./bower.json', './package.json'])
-        .pipe(tasks.bump({
-            version: newVer
-        }))
-        .pipe(gulp.dest('./'));
 
-    //increment manifest version
-    return gulp.src('./src/manifest.json')
+    var manifestFilter = tasks.filter(['manifest.json']);
+    var regularJsons = tasks.filter(['!manifest.json']);
+
+    return gulp.src(['./bower.json', './package.json', './src/manifest.json'])
         .pipe(tasks.bump({
             version: newVer
         }))
-        .pipe(gulp.dest('./src'));
+        .pipe(manifestFilter)
+        .pipe(gulp.dest('./src'))
+        .pipe(manifestFilter.restore())
+        .pipe(regularJsons)
+        .pipe(gulp.dest('./'));
 });
 
 //handle assets
