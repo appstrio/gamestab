@@ -198,8 +198,9 @@ angular.module('background').controller('MainCtrl', [
         Chrome.webRequest.onCompleted.addListener(onCompleted.handler,
             onCompleted.filter);
 
-        Chrome.runtime.onInstalled.addListener(function (reason) {
-            if (reason === 'update') {
+        Chrome.runtime.onInstalled.addListener(function (data) {
+            if (data.reason === 'update') {
+                console.info('applying temp fix for chrome apps');
                 // Temp change introduced in 1.1.19
                 Helpers.loadFromStorage('gt.apps').then(function (pages) {
                     var hasChromeAppIcon = false;
