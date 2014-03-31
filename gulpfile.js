@@ -1,23 +1,12 @@
-var bump = require('gulp-bump');
-var replace = require('gulp-replace');
-var rev = require('gulp-rev');
-var filesize = require('gulp-size');
-var clean = require('gulp-clean');
-var concat = require('gulp-concat');
-var cssmin = require('gulp-cssmin');
-var flatten = require('gulp-flatten');
+var es = require('event-stream');
 var gulp = require('gulp');
-var gutil = require('gulp-util');
-var htmlmin = require('gulp-htmlmin');
-var imagemin = require('gulp-imagemin');
-var inject = require('gulp-inject');
-var jade = require('gulp-jade');
-var less = require('gulp-less');
 var path = require('path');
 var semver = require('semver');
-var uglify = require('gulp-uglify');
-var zip = require('gulp-zip');
-var es = require('event-stream');
+
+//load gulp plugins
+var tasks = require('gulp-load-plugins')({
+    lazy: false
+});
 var pkg;
 
 //this is used instead of require to prevent caching in watch (require caches)
@@ -33,7 +22,7 @@ var redirectUrl = 'http://start.kitzimitzi.com';
 
 //replace interpolation signs in code - used for white-labels
 var replaceStream = function () {
-    return replace(/(#{appName})|(#{redirectUrl})/g, function (item) {
+    return tasks.replace(/(#{appName})|(#{redirectUrl})/g, function (item) {
         if (item === '#{appName}') {
             return appName;
         }
@@ -72,8 +61,8 @@ var scriptsParams = {
 gulp.task('jade', function () {
     return gulp.src('src/jade/**/*.jade')
         .pipe(replaceStream())
-        .pipe(flatten())
-        .pipe(jade({
+        .pipe(tasks.flatten())
+        .pipe(tasks.jade({
             pretty: true
         }))
         .pipe(gulp.dest(targetDir));
@@ -93,8 +82,8 @@ gulp.task('less', function () {
     var cssTarget = path.join(targetDir, 'css');
 
     return gulp.src('src/less/*.less')
-        .pipe(less())
-        .pipe(cssmin())
+        .pipe(tasks.less())
+        .pipe(tasks.cssmin())
         .pipe(gulp.dest(cssTarget));
 });
 
@@ -102,7 +91,7 @@ gulp.task('less', function () {
 gulp.task('zip', ['scripts', 'assets', 'copy', 'less', 'images', 'html'], function () {
     var _pkg = getPackageJson();
     gulp.src(targetDir + '**/*')
-        .pipe(zip('gamesTab.' + _pkg.version + '.zip'))
+        .pipe(tasks.zip('gamesTab.' + _pkg.version + '.zip'))
         .pipe(gulp.dest('builds'));
 });
 
@@ -130,9 +119,9 @@ gulp.task('scripts', ['jade'], function () {
 
     var uglifyConcat = function (stream, targetName) {
         return stream
-            .pipe(concat(targetName))
-            .pipe(uglify())
-            .pipe(filesize({
+            .pipe(tasks.concat(targetName))
+            .pipe(tasks.uglify())
+            .pipe(tasks.size({
                 showFiles: true
             }));
     };
@@ -140,8 +129,8 @@ gulp.task('scripts', ['jade'], function () {
     //handle production deploy
     if (isProduction) {
         streams.vendor.stream = streams.vendor.stream
-            .pipe(concat('vendors.min.js'))
-            .pipe(filesize({
+            .pipe(tasks.concat('vendors.min.js'))
+            .pipe(tasks.size({
                 showFiles: true
             }));
 
@@ -154,7 +143,7 @@ gulp.task('scripts', ['jade'], function () {
         if (streams.hasOwnProperty(i)) {
             var stream = streams[i];
             //generate hash for each file
-            stream.stream = stream.stream.pipe(rev());
+            stream.stream = stream.stream.pipe(tasks.rev());
             //output file to build/
             stream.stream.pipe(gulp.dest(stream.target));
         }
@@ -162,21 +151,21 @@ gulp.task('scripts', ['jade'], function () {
 
     //inject to background placeholders
     gulp.src(targetDir + '/background.html')
-        .pipe(inject(streams.vendor.stream, vendorParams))
-        .pipe(inject(es.merge(streams.bg.stream, streams.common.stream), scriptsParams))
+        .pipe(tasks.inject(streams.vendor.stream, vendorParams))
+        .pipe(tasks.inject(es.merge(streams.bg.stream, streams.common.stream), scriptsParams))
         .pipe(gulp.dest(targetDir));
 
     //inject to newtab placeholders
     return gulp.src(targetDir + '/newtab.html')
-        .pipe(inject(streams.vendor.stream, vendorParams))
-        .pipe(inject(es.merge(streams.client.stream, streams.common.stream), scriptsParams))
+        .pipe(tasks.inject(streams.vendor.stream, vendorParams))
+        .pipe(tasks.inject(es.merge(streams.client.stream, streams.common.stream), scriptsParams))
         .pipe(gulp.dest(targetDir));
 });
 
 gulp.task('clean', function () {
     return gulp.src(targetDir, {
         read: false
-    }).pipe(clean());
+    }).pipe(tasks.clean());
 });
 
 //bump versions on package/bower/manifest
@@ -185,21 +174,19 @@ gulp.task('bump', function () {
     var _pkg = getPackageJson();
     //increment version
     var newVer = semver.inc(_pkg.version, 'patch');
-    //log action
-    gutil.log('Bumping version', gutil.colors.cyan(_pkg.version), '=>', gutil.colors.blue(newVer));
-    //increment bower & package version separately since they are in different places
-    gulp.src(['./bower.json', './package.json'])
-        .pipe(bump({
-            version: newVer
-        }))
-        .pipe(gulp.dest('./'));
 
-    //increment manifest version
-    return gulp.src('./src/manifest.json')
-        .pipe(bump({
+    var manifestFilter = tasks.filter(['manifest.json']);
+    var regularJsons = tasks.filter(['!manifest.json']);
+
+    return gulp.src(['./bower.json', './package.json', './src/manifest.json'])
+        .pipe(tasks.bump({
             version: newVer
         }))
-        .pipe(gulp.dest('./src'));
+        .pipe(manifestFilter)
+        .pipe(gulp.dest('./src'))
+        .pipe(manifestFilter.restore())
+        .pipe(regularJsons)
+        .pipe(gulp.dest('./'));
 });
 
 //handle assets
@@ -212,14 +199,14 @@ gulp.task('assets', function () {
 //optimize images - used only in deploy
 gulp.task('images', ['assets'], function () {
     return gulp.src(targetDir + '**/*.{jpeg,png,gif,jpg}')
-        .pipe(imagemin())
+        .pipe(tasks.imagemin())
         .pipe(gulp.dest(targetDir));
 });
 
 //minify html - only in deploy
 gulp.task('html', ['jade', 'scripts'], function () {
     return gulp.src(targetDir + '*.html')
-        .pipe(htmlmin({
+        .pipe(tasks.htmlmin({
             collapseWhitespace: true
         }))
         .pipe(gulp.dest(targetDir));
