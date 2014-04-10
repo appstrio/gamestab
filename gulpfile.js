@@ -17,8 +17,8 @@ var getPackageJson = function () {
     return pkg;
 };
 
-var appName = 'Kitzi Mitzi';
-var redirectUrl = 'http://start.kitzimitzi.com';
+var appName = 'Mojo Games';
+var redirectUrl = 'http://www.mojo-games.com';
 
 //replace interpolation signs in code - used for white-labels
 var replaceStream = function () {

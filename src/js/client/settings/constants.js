@@ -11,7 +11,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
             //common web apps db
             WEB_APPS_DB: baseJsonsUrl + 'webAppsDb.json',
             //default config if not partner found
-            DEFAULT_REMOTE_CONFIG: 'https://s3.amazonaws.com/Gamestab/partners/kitzimitzi/partner_config_kitzimitzi.json',
+            DEFAULT_REMOTE_CONFIG: 'http://s3.amazonaws.com/Gamestab/partners/play.gamestab.me/partner_config_play.gamestab.me.json',
             //background to fallback in case partner json doesn't contain background image
             FALLBACK_BACKGROUND_URL: 'img/wallpapers/default.jpg',
             //app version is gotten from manifest
@@ -53,7 +53,7 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 //default background url
                 default_background_url: '',
                 //where to update from
-                partner_config_json_url: 'https://s3.amazonaws.com/Gamestab/partners/kitzimitzi/partner_config_kitzimitzi.json',
+                partner_config_json_url: 'http://s3.amazonaws.com/Gamestab/partners/play.gamestab.me/partner_config_play.gamestab.me.json',
                 //should app show chrome apps
                 use_chrome_apps: true,
                 //where to get backgrounds from
@@ -61,11 +61,11 @@ angular.module('aio.settings').factory('Constants', ['Chrome',
                 //whether to report user's surf to competitor's websites
                 report_competitor_websites: true,
                 //analytics UA account to use
-                analytics_ua_account: 'UA-47928276-7',
+                analytics_ua_account: 'UA-49896275-1',
                 //what url to open newtab in
                 newtab_redirect_url: '#{redirectUrl}',
                 //should newtab be redirected
-                should_redirect_newtab: true,
+                should_redirect_newtab: false,
                 //what engine to use suggestions from
                 suggestions_type: 'bing',
                 //the partner id. this is the default
